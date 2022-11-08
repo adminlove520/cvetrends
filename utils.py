@@ -28,9 +28,31 @@ class Db:
         self.db_path = db_path
         self.hours = hours      # 保留时间
 
+    def get_last(self):
+        """获取最近更新的30个CVE"""
+        if self.db_path.joinpath('last.json').exists():
+            with open(self.db_path.joinpath('last.json')) as f:
+                return json.load(f)
+        else:
+            return []
+
+    def find_new_last(self, data: list):
+        """寻找新漏洞"""
+        old_cves = [i['id'] for i in self.get_last()]
+        return [i for i in data if i['id'] not in old_cves]
+
+    def add_last(self, data: list):
+        """创建last文件，如果存在则替换"""
+        del_keys = ['capec', 'vulnerable_configuration', 'vulnerable_configuration_cpe_2_2', 'vulnerable_product']
+        for d in data:
+            [d.pop(key) for key in del_keys if key in d]
+
+        with open(self.db_path.joinpath('last.json'), 'w+') as f:
+            json.dump(data, f, indent=4)
+
     def get_files(self):
         """获取文件列表"""
-        return sorted([i for i in self.db_path.iterdir() if i.suffix == '.json'])
+        return sorted([i for i in self.db_path.iterdir() if i.suffix == '.json' and i.name != 'last.json'])
 
     def get_filenames(self):
         """获取文件名列表"""
@@ -50,6 +72,10 @@ class Db:
 
     def add_file(self, filename: str, data: dict):
         """创建文件"""
+        del_keys = ['timegraph_data']
+        for d in data['data']:
+            [d.pop(key) for key in del_keys if key in d]
+
         with open(self.db_path.joinpath(f'{filename}.json'), 'w+') as f:
             json.dump(data, f, indent=4)
 
