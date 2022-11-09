@@ -66,7 +66,7 @@ class feishuBot:
                 {
                     'tag': 'div',
                     'text': {
-                        'content': f'**漏洞概要**\n{cve["description"]}',
+                        'content': f'**漏洞概要**\n{cve["description"] or cve["tweets"][0]["tweet_text"]}',
                         'tag': 'lark_md'
                     }
                 },

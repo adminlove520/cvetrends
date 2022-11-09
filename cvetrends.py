@@ -40,7 +40,7 @@ def filter_trends(cve: dict):
             return True, product
 
     for i in keywords['others'] + keywords['vendor'] + keywords['product']:
-        if ' '+i.upper()+' ' in (cve['description'] or '').upper():     # 前后加空格，避免误伤
+        if ' '+i.upper()+' ' in (cve['description'] or cve['tweets'][0]['tweet_text']).upper(): # 前后加空格，避免误伤
             return True, i
 
     return False, vendor or product
