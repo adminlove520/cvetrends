@@ -118,7 +118,7 @@ def job_last():
     """获取最新漏洞"""
     try:
         r = requests.get(
-            'https://cve.circl.lu/api/last/100', proxies=conf['proxy']
+            'https://cve.circl.lu/api/last/100', timeout=300, proxies=conf['proxy']
         ).json()
     except Exception as e:
         Color.print_failed(f'[-] 获取数据失败：{e}')
