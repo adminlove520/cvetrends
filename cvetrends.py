@@ -95,9 +95,9 @@ def job_trends():
             filter_cves = []
             for cve in new_cves:
                 hit, vendor = filter_trends(cve)
-                filter_cves.append((hit, cve))
                 if hit:
                     Color.print_failed(f'命中：{cve["cve"]}\t{vendor}')
+                    filter_cves.append((hit, cve))
                 else:
                     Color.print_success(f'忽略：{cve["cve"]}\t{vendor}')
 

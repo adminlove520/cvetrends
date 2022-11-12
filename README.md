@@ -25,21 +25,22 @@ $ cd cvetrends && pip install -r requirements.txt
 
 ```sh
 $ ./cvetrends.py --help     
-usage: cvetrends.py [-h] [-t {day,week}] [-c CRON] [-f CONFIG]
+usage: cvetrends.py [-h] [-t {day,week}] [-c CRON] [-d DB] [-f CONFIG]
 
 options:
   -h, --help            show this help message and exit
   -t {day,week}, --time {day,week}
                         Time frame to search for CVEs
   -c CRON, --cron CRON  Execute scheduled tasks every X minutes
+  -d DB, --db DB        Keep database files X hours
   -f CONFIG, --config CONFIG
                         Use specified config file
 
 # 单次任务
 $ ./cvetrends.py -t day
 
-# 十分钟定时任务
-$ nohup ./cvetrends.py -t day -c 10 > run.log 2>&1 &
+# 10分钟定时任务，数据库保留6小时
+$ nohup ./cvetrends.py -t day -c 10 -d 6 > run.log 2>&1 &
 ```
 
 ### Github Actions
