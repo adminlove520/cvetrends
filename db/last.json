@@ -1,5 +1,679 @@
 [
     {
+        "Modified": "2023-01-23T20:19:00",
+        "Published": "2023-01-13T06:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2021-46872",
+        "impact": {},
+        "last-modified": "2023-01-23T20:19:00",
+        "references": [
+            "https://forum.nim-lang.org/t/8852",
+            "https://github.com/nim-lang/Nim/pull/19134",
+            "https://github.com/nim-lang/Nim/compare/v1.6.0...v1.6.2",
+            "https://github.com/nim-lang/nimforum",
+            "https://github.com/nim-lang/Nim/commit/46275126b89218e64844eee169e8ced05dd0e2d7"
+        ],
+        "summary": "An issue was discovered in Nim before 1.6.2. The RST module of the Nim language stdlib, as used in NimForum and other products, permits the javascript: URI scheme and thus can lead to XSS in some applications. (Nim versions 1.6.2 and later are fixed; there may be backports of the fix to some earlier versions. NimForum 2.2.0 is fixed.)"
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-12-05T22:15:00",
+        "access": {},
+        "assigner": "cve-assignments@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-668",
+        "id": "CVE-2022-32221",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://hackerone.com/reports/1704017",
+            "https://security.gentoo.org/glsa/202212-01",
+            "https://security.netapp.com/advisory/ntap-20230110-0006/",
+            "https://support.apple.com/kb/HT213604",
+            "https://support.apple.com/kb/HT213605"
+        ],
+        "summary": "When doing HTTP(S) transfers, libcurl might erroneously use the read callback (`CURLOPT_READFUNCTION`) to ask for data to send, even when the `CURLOPT_POSTFIELDS` option has been set, if the same handle previously was used to issue a `PUT` request which used that callback. This flaw may surprise the application and cause it to misbehave and either send off the wrong data or use memory after free or similar in the subsequent `POST` request. The problem exists in the logic for a reused handle when it is changed from a PUT to a POST."
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-12-05T22:15:00",
+        "access": {},
+        "assigner": "cve-assignments@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-35260",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://hackerone.com/reports/1721098",
+            "https://security.gentoo.org/glsa/202212-01",
+            "https://security.netapp.com/advisory/ntap-20230110-0006/",
+            "https://support.apple.com/kb/HT213604",
+            "https://support.apple.com/kb/HT213605"
+        ],
+        "summary": "curl can be told to parse a `.netrc` file for credentials. If that file endsin a line with 4095 consecutive non-white space letters and no newline, curlwould first read past the end of the stack-based buffer, and if the readworks, write a zero byte beyond its boundary.This will in most cases cause a segfault or similar, but circumstances might also cause different outcomes.If a malicious user can provide a custom netrc file to an application or otherwise affect its contents, this flaw could be used as denial-of-service."
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-11-01T20:15:00",
+        "access": {},
+        "assigner": "product-security@apple.com",
+        "cvss": null,
+        "cwe": "CWE-843",
+        "id": "CVE-2022-32915",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://support.apple.com/en-us/HT213488",
+            "https://support.apple.com/kb/HT213604"
+        ],
+        "summary": "A type confusion issue was addressed with improved checks. This issue is fixed in macOS Ventura 13. An app may be able to execute arbitrary code with kernel privileges."
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-10-29T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-415",
+        "id": "CVE-2022-42915",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://curl.se/docs/CVE-2022-42915.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HVU3IMZCKR4VE6KJ4GCWRL2ILLC6OV76/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Q27V5YYMXUVI6PRZQVECON32XPVWTKDK/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/37YEVVC6NAF6H7UHH6YAUY5QEVY6LIH2/",
+            "https://security.netapp.com/advisory/ntap-20221209-0010/",
+            "https://security.gentoo.org/glsa/202212-01",
+            "https://support.apple.com/kb/HT213604",
+            "https://support.apple.com/kb/HT213605"
+        ],
+        "summary": "curl before 7.86.0 has a double free. If curl is told to use an HTTP proxy for a transfer with a non-HTTP(S) URL, it sets up the connection to the remote server by issuing a CONNECT request to the proxy, and then tunnels the rest of the protocol through. An HTTP proxy might refuse this request (HTTP proxies often only allow outgoing connections to specific port numbers, like 443 for HTTPS) and instead return a non-200 status code to the client. Due to flaws in the error/cleanup handling, this could trigger a double free in curl if one of the following schemes were used in the URL for the transfer: dict, gopher, gophers, ldap, ldaps, rtmp, rtmps, or telnet. The earliest affected version is 7.77.0."
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-10-29T02:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-319",
+        "id": "CVE-2022-42916",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://curl.se/docs/CVE-2022-42916.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HVU3IMZCKR4VE6KJ4GCWRL2ILLC6OV76/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/Q27V5YYMXUVI6PRZQVECON32XPVWTKDK/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/37YEVVC6NAF6H7UHH6YAUY5QEVY6LIH2/",
+            "https://security.netapp.com/advisory/ntap-20221209-0010/",
+            "https://security.gentoo.org/glsa/202212-01",
+            "http://www.openwall.com/lists/oss-security/2022/12/21/1",
+            "https://support.apple.com/kb/HT213604",
+            "https://support.apple.com/kb/HT213605"
+        ],
+        "summary": "In curl before 7.86.0, the HSTS check could be bypassed to trick it into staying with HTTP. Using its HSTS support, curl can be instructed to use HTTPS directly (instead of using an insecure cleartext HTTP step) even when HTTP is provided in the URL. This mechanism could be bypassed if the host name in the given URL uses IDN characters that get replaced with ASCII counterparts as part of the IDN conversion, e.g., using the character UTF-8 U+3002 (IDEOGRAPHIC FULL STOP) instead of the common ASCII full stop of U+002E (.). The earliest affected version is 7.77.0 2021-05-26."
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-10-26T20:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2022-3705",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://github.com/vim/vim/commit/d0fab10ed2a86698937e3c3fed2f10bd9bb5e731",
+            "https://vuldb.com/?id.212324",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4JCW33NOLMELTTTDJH7WGDIFJZ5YEEMK/",
+            "https://lists.debian.org/debian-lts-announce/2022/11/msg00009.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/JYEK5RNMH7MVQH6RPBKLSCCA6NMIKHDV/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GTBVD4J2SKVSWK4VBN5JP5OEVK6GDS3N/",
+            "https://security.netapp.com/advisory/ntap-20221223-0004/",
+            "https://support.apple.com/kb/HT213605"
+        ],
+        "summary": "A vulnerability was found in vim and classified as problematic. Affected by this issue is the function qf_update_buffer of the file quickfix.c of the component autocmd Handler. The manipulation leads to use after free. The attack may be launched remotely. Upgrading to version 9.0.0805 is able to address this issue. The name of the patch is d0fab10ed2a86698937e3c3fed2f10bd9bb5e731. It is recommended to upgrade the affected component. The identifier of this vulnerability is VDB-212324."
+    },
+    {
+        "Modified": "2023-01-23T20:15:00",
+        "Published": "2022-09-23T14:15:00",
+        "access": {},
+        "assigner": "cve-assignments@hackerone.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2022-35252",
+        "impact": {},
+        "last-modified": "2023-01-23T20:15:00",
+        "references": [
+            "https://hackerone.com/reports/1613943",
+            "https://security.netapp.com/advisory/ntap-20220930-0005/",
+            "https://security.gentoo.org/glsa/202212-01",
+            "https://support.apple.com/kb/HT213604",
+            "https://support.apple.com/kb/HT213603"
+        ],
+        "summary": "When curl is used to retrieve and parse cookies from a HTTP(S) server, itaccepts cookies using control codes that when later are sent back to a HTTPserver might make the server return 400 responses. Effectively allowing a\"sister site\" to deny service to all siblings."
+    },
+    {
+        "Modified": "2023-01-23T20:14:00",
+        "Published": "2023-01-05T22:15:00",
+        "access": {},
+        "assigner": "cybersecurity@hitachienergy.com",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2021-40342",
+        "impact": {},
+        "last-modified": "2023-01-23T20:14:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000083&LanguageCode=en&DocumentPartId=&Action=Launch",
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000084&LanguageCode=en&DocumentPartId=&Action=Launch"
+        ],
+        "summary": "In the DES implementation, the affected product versions use a default key for encryption. Successful exploitation allows an attacker to obtain sensitive information and gain access to the network elements that are managed by the affected products versions. This issue affects * FOXMAN-UN product: FOXMAN-UN R16A, FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R16A, UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R16A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R16A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*"
+    },
+    {
+        "Modified": "2023-01-23T20:14:00",
+        "Published": "2023-01-05T22:15:00",
+        "access": {},
+        "assigner": "cybersecurity@hitachienergy.com",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2022-3927",
+        "impact": {},
+        "last-modified": "2023-01-23T20:14:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000083&LanguageCode=en&DocumentPartId=&Action=Launch",
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000084&LanguageCode=en&DocumentPartId=&Action=Launch"
+        ],
+        "summary": "The affected products store both public and private key that are used to sign and protect Custom Parameter Set (CPS) file from modification. An attacker that manages to exploit this vulnerability will be able to change the CPS file, sign it so that it is trusted as the legitimate CPS file. This issue affects * FOXMAN-UN product: FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*"
+    },
+    {
+        "Modified": "2023-01-23T20:14:00",
+        "Published": "2023-01-05T22:15:00",
+        "access": {},
+        "assigner": "cybersecurity@hitachienergy.com",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2022-3928",
+        "impact": {},
+        "last-modified": "2023-01-23T20:14:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000083&LanguageCode=en&DocumentPartId=&Action=Launch",
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000084&LanguageCode=en&DocumentPartId=&Action=Launch"
+        ],
+        "summary": "Hardcoded credential is found in affected products' message queue. An attacker that manages to exploit this vulnerability will be able to access data to the internal message queue. This issue affects * FOXMAN-UN product: FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*"
+    },
+    {
+        "Modified": "2023-01-23T20:14:00",
+        "Published": "2023-01-05T22:15:00",
+        "access": {},
+        "assigner": "cybersecurity@hitachienergy.com",
+        "cvss": null,
+        "cwe": "CWE-319",
+        "id": "CVE-2022-3929",
+        "impact": {},
+        "last-modified": "2023-01-23T20:14:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000083&LanguageCode=en&DocumentPartId=&Action=Launch",
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000084&LanguageCode=en&DocumentPartId=&Action=Launch"
+        ],
+        "summary": "Communication between the client and the server application of the affected products is partially done using CORBA (Common Object Request Broker Architecture) over TCP/IP. This protocol is not encrypted and allows tracing of internal messages. This issue affects * FOXMAN-UN product: FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*"
+    },
+    {
+        "Modified": "2023-01-23T20:03:00",
+        "Published": "2023-01-14T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2023-22853",
+        "impact": {},
+        "last-modified": "2023-01-23T20:03:00",
+        "references": [
+            "https://tiki.org/articles",
+            "https://karmainsecurity.com/KIS-2023-02"
+        ],
+        "summary": "Tiki before 24.1, when feature_create_webhelp is enabled, allows lib/structures/structlib.php PHP Object Injection because of an eval."
+    },
+    {
+        "Modified": "2023-01-23T20:00:00",
+        "Published": "2023-01-14T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-22852",
+        "impact": {},
+        "last-modified": "2023-01-23T20:00:00",
+        "references": [
+            "https://karmainsecurity.com/KIS-2023-01",
+            "https://tiki.org/articles"
+        ],
+        "summary": "Tiki through 25.0 allows CSRF attacks that are related to tiki-importer.php and tiki-import_sheet.php."
+    },
+    {
+        "Modified": "2023-01-23T19:42:00",
+        "Published": "2023-01-13T21:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2015-10042",
+        "impact": {},
+        "last-modified": "2023-01-23T19:42:00",
+        "references": [
+            "https://vuldb.com/?id.218305",
+            "https://github.com/Dovgalyuk/AIBattle-disabled-/commit/448e9880aac18ae7832f8d065e03e46ce0f1d3e3",
+            "https://vuldb.com/?ctiid.218305"
+        ],
+        "summary": "** UNSUPPPORTED WHEN ASSIGNED **** UNSUPPORTED WHEN ASSIGNED ** A vulnerability classified as critical was found in Dovgalyuk AIBattle. Affected by this vulnerability is the function registerUser of the file site/procedures.php. The manipulation of the argument postLogin leads to sql injection. The name of the patch is 448e9880aac18ae7832f8d065e03e46ce0f1d3e3. It is recommended to apply a patch to fix this issue. The identifier VDB-218305 was assigned to this vulnerability. NOTE: This vulnerability only affects products that are no longer supported by the maintainer."
+    },
+    {
+        "Modified": "2023-01-23T19:41:00",
+        "Published": "2022-11-15T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-78",
+        "id": "CVE-2022-41395",
+        "impact": {},
+        "last-modified": "2023-01-23T19:41:00",
+        "references": [
+            "https://boschko.ca/tenda_ac1200_router",
+            "https://boschko.ca/tenda_ac1200_router/"
+        ],
+        "summary": "Tenda AC1200 Router Model W15Ev2 V15.11.0.10(1576) was discovered to contain a command injection vulnerability via the dmzHost parameter in the setDMZ function."
+    },
+    {
+        "Modified": "2023-01-23T19:41:00",
+        "Published": "2022-11-15T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-78",
+        "id": "CVE-2022-41396",
+        "impact": {},
+        "last-modified": "2023-01-23T19:41:00",
+        "references": [
+            "https://boschko.ca/tenda_ac1200_router",
+            "https://boschko.ca/tenda_ac1200_router/"
+        ],
+        "summary": "Tenda AC1200 Router Model W15Ev2 V15.11.0.10(1576) was discovered to contain multiple command injection vulnerabilities in the function setIPsecTunnelList via the IPsecLocalNet and IPsecRemoteNet parameters."
+    },
+    {
+        "Modified": "2023-01-23T19:41:00",
+        "Published": "2022-11-15T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-42058",
+        "impact": {},
+        "last-modified": "2023-01-23T19:41:00",
+        "references": [
+            "https://boschko.ca/tenda_ac1200_router",
+            "https://boschko.ca/tenda_ac1200_router/"
+        ],
+        "summary": "Tenda AC1200 Router Model W15Ev2 V15.11.0.10(1576) was discovered to contain a stack overflow via the setRemoteWebManage function. This vulnerability allows attackers to cause a Denial of Service (DoS) via crafted overflow data."
+    },
+    {
+        "Modified": "2023-01-23T19:41:00",
+        "Published": "2022-11-15T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-42060",
+        "impact": {},
+        "last-modified": "2023-01-23T19:41:00",
+        "references": [
+            "https://boschko.ca/tenda_ac1200_router",
+            "https://boschko.ca/tenda_ac1200_router/"
+        ],
+        "summary": "Tenda AC1200 Router Model W15Ev2 V15.11.0.10(1576) was discovered to contain a stack overflow via the setWanPpoe function. This vulnerability allows attackers to cause a Denial of Service (DoS) via crafted overflow data."
+    },
+    {
+        "Modified": "2023-01-23T19:36:00",
+        "Published": "2023-01-05T22:15:00",
+        "access": {},
+        "assigner": "cybersecurity@hitachienergy.com",
+        "cvss": null,
+        "cwe": "CWE-326",
+        "id": "CVE-2021-40341",
+        "impact": {},
+        "last-modified": "2023-01-23T19:36:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000083&LanguageCode=en&DocumentPartId=&Action=Launch",
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000084&LanguageCode=en&DocumentPartId=&Action=Launch"
+        ],
+        "summary": "DES cipher, which has inadequate encryption strength, is used Hitachi Energy FOXMAN-UN to encrypt user credentials used to access the Network Elements. Successful exploitation allows sensitive information to be decrypted easily. This issue affects * FOXMAN-UN product: FOXMAN-UN R16A, FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R16A, UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R16A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R16A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*"
+    },
+    {
+        "Modified": "2023-01-23T19:35:00",
+        "Published": "2023-01-17T17:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-2893",
+        "impact": {},
+        "last-modified": "2023-01-23T19:35:00",
+        "references": [
+            "https://www.cisa.gov/uscert/ics/advisories/icsa-23-012-02"
+        ],
+        "summary": "RONDS EPM version 1.19.5 does not properly validate the filename parameter, which could allow an unauthorized user to specify file paths and download files."
+    },
+    {
+        "Modified": "2023-01-23T19:35:00",
+        "Published": "2023-01-17T17:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2022-3091",
+        "impact": {},
+        "last-modified": "2023-01-23T19:35:00",
+        "references": [
+            "https://www.cisa.gov/uscert/ics/advisories/icsa-23-012-02"
+        ],
+        "summary": "RONDS EPM version 1.19.5 has a vulnerability in which a function could allow unauthenticated users to leak credentials. In some circumstances, an attacker can exploit this vulnerability to execute operating system (OS) commands."
+    },
+    {
+        "Modified": "2023-01-23T19:35:00",
+        "Published": "2023-01-17T16:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-0337",
+        "impact": {},
+        "last-modified": "2023-01-23T19:35:00",
+        "references": [
+            "https://huntr.dev/bounties/1c50a5a5-3f55-4b6f-b861-4d5cdb6eb81b",
+            "https://github.com/lirantal/daloradius/commit/e77a769c7503e63a2e3c05262cb5f8f81a4a7bbe"
+        ],
+        "summary": "Cross-site Scripting (XSS) - Reflected in GitHub repository lirantal/daloradius prior to master-branch."
+    },
+    {
+        "Modified": "2023-01-23T19:35:00",
+        "Published": "2023-01-17T16:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-0338",
+        "impact": {},
+        "last-modified": "2023-01-23T19:35:00",
+        "references": [
+            "https://huntr.dev/bounties/fcae1b67-db37-4d24-9137-8dda95573e77",
+            "https://github.com/lirantal/daloradius/commit/e77a769c7503e63a2e3c05262cb5f8f81a4a7bbe"
+        ],
+        "summary": "Cross-site Scripting (XSS) - Reflected in GitHub repository lirantal/daloradius prior to master-branch."
+    },
+    {
+        "Modified": "2023-01-23T19:33:00",
+        "Published": "2023-01-17T18:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2022-41858",
+        "impact": {},
+        "last-modified": "2023-01-23T19:33:00",
+        "references": [
+            "https://github.com/torvalds/linux/commit/ec4eb8a86ade4d22633e1da2a7d85a846b7d1798"
+        ],
+        "summary": "A flaw was found in the Linux kernel. A NULL pointer dereference may occur while a slip driver is in progress to detach in sl_tx_timeout in drivers/net/slip/slip.c. This issue could allow an attacker to crash the system or leak internal kernel information."
+    },
+    {
+        "Modified": "2023-01-23T19:32:00",
+        "Published": "2023-01-17T18:15:00",
+        "access": {},
+        "assigner": "patrick@puiterwijk.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2022-4121",
+        "impact": {},
+        "last-modified": "2023-01-23T19:32:00",
+        "references": [
+            "https://github.com/dinhvh/libetpan/issues/420",
+            "https://github.com/dinhvh/libetpan/commit/5c9eb6b6ba64c4eb927d7a902317410181aacbba"
+        ],
+        "summary": "In libetpan a null pointer dereference in mailimap_mailbox_data_status_free in low-level/imap/mailimap_types.c was found that could lead to a remote denial of service or other potential consequences."
+    },
+    {
+        "Modified": "2023-01-23T19:31:00",
+        "Published": "2023-01-17T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-46475",
+        "impact": {},
+        "last-modified": "2023-01-23T19:31:00",
+        "references": [
+            "https://github.com/Insight8991/iot/blob/main/DIR-645%20genacgi%20Stack%20overflow.md"
+        ],
+        "summary": "D-Link DIR 645A1 1.06B01_Beta01 was discovered to contain a stack overflow via the service= variable in the genacgi_main function."
+    },
+    {
+        "Modified": "2023-01-23T19:31:00",
+        "Published": "2023-01-17T21:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-0122",
+        "impact": {},
+        "last-modified": "2023-01-23T19:31:00",
+        "references": [
+            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=da0342a3aa0357795224e6283df86444e1117168",
+            "http://www.openwall.com/lists/oss-security/2023/01/18/1"
+        ],
+        "summary": "A NULL pointer dereference vulnerability in the Linux kernel NVMe functionality, in nvmet_setup_auth(), allows an attacker to perform a Pre-Auth Denial of Service (DoS) attack on a remote machine. Affected versions v6.0-rc1 to v6.0-rc3, fixed in v6.0-rc4."
+    },
+    {
+        "Modified": "2023-01-23T19:31:00",
+        "Published": "2023-01-17T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2022-47929",
+        "impact": {},
+        "last-modified": "2023-01-23T19:31:00",
+        "references": [
+            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=96398560f26aa07e8f2969d73c8197e6a6d10407",
+            "https://tldp.org/HOWTO/Traffic-Control-HOWTO/components.html",
+            "https://www.spinics.net/lists/netdev/msg555705.html",
+            "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.1.6"
+        ],
+        "summary": "In the Linux kernel before 6.1.6, a NULL pointer dereference bug in the traffic control subsystem allows an unprivileged user to trigger a denial of service (system crash) via a crafted traffic control configuration that is set up with \"tc qdisc\" and \"tc class\" commands. This affects qdisc_graft in net/sched/sch_api.c."
+    },
+    {
+        "Modified": "2023-01-23T19:31:00",
+        "Published": "2023-01-17T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-611",
+        "id": "CVE-2023-22624",
+        "impact": {},
+        "last-modified": "2023-01-23T19:31:00",
+        "references": [
+            "https://www.manageengine.com/products/exchange-reports/advisory/CVE-2023-22624.html"
+        ],
+        "summary": "Zoho ManageEngine Exchange Reporter Plus before 5708 allows attackers to conduct XXE attacks."
+    },
+    {
+        "Modified": "2023-01-23T19:31:00",
+        "Published": "2023-01-17T19:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2015-10063",
+        "impact": {},
+        "last-modified": "2023-01-23T19:31:00",
+        "references": [
+            "https://vuldb.com/?ctiid.218453",
+            "https://vuldb.com/?id.218453",
+            "https://github.com/saemorris/TheRadSystem/commit/bfba26bd34af31648a11af35a0bb66f1948752a6"
+        ],
+        "summary": "A vulnerability was found in saemorris TheRadSystem and classified as critical. This issue affects the function redirect of the file _login.php. The manipulation of the argument user/pass leads to sql injection. The attack may be initiated remotely. The name of the patch is bfba26bd34af31648a11af35a0bb66f1948752a6. It is recommended to apply a patch to fix this issue. The identifier VDB-218453 was assigned to this vulnerability."
+    },
+    {
+        "Modified": "2023-01-23T19:29:00",
+        "Published": "2023-01-13T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-190",
+        "id": "CVE-2023-23559",
+        "impact": {},
+        "last-modified": "2023-01-23T19:29:00",
+        "references": [
+            "https://patchwork.kernel.org/project/linux-wireless/patch/20230110173007.57110-1-szymon.heidrich@gmail.com/"
+        ],
+        "summary": "In rndis_query_oid in drivers/net/wireless/rndis_wlan.c in the Linux kernel through 6.1.5, there is an integer overflow in an addition."
+    },
+    {
+        "Modified": "2023-01-23T19:15:00",
+        "Published": "2023-01-23T19:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-23824",
+        "impact": {},
+        "last-modified": "2023-01-23T19:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/wp-topbar/wordpress-wp-topbar-plugin-5-36-sql-injection?_s_id=cve"
+        ],
+        "summary": "Auth. SQL Injection (SQLi) vulnerability in WP-TopBar <= 5.36 versions."
+    },
+    {
+        "Modified": "2023-01-23T19:09:00",
+        "Published": "2023-01-13T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2022-48258",
+        "impact": {},
+        "last-modified": "2023-01-23T19:09:00",
+        "references": [
+            "https://github.com/MisterTea/EternalTerminal/issues/555",
+            "https://github.com/MisterTea/EternalTerminal/pull/556"
+        ],
+        "summary": "In Eternal Terminal 6.2.1, etserver and etclient have world-readable logfiles."
+    },
+    {
+        "Modified": "2023-01-23T19:06:00",
+        "Published": "2023-01-13T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2022-48257",
+        "impact": {},
+        "last-modified": "2023-01-23T19:06:00",
+        "references": [
+            "https://github.com/MisterTea/EternalTerminal/issues/555",
+            "https://github.com/MisterTea/EternalTerminal/pull/556"
+        ],
+        "summary": "In Eternal Terminal 6.2.1, etserver and etclient have predictable logfile names in /tmp."
+    },
+    {
+        "Modified": "2023-01-23T19:06:00",
+        "Published": "2023-01-12T23:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-78",
+        "id": "CVE-2023-22598",
+        "impact": {},
+        "last-modified": "2023-01-23T19:06:00",
+        "references": [
+            "https://www.cisa.gov/uscert/ics/advisories/icsa-23-012-03"
+        ],
+        "summary": "InHand Networks InRouter 302, prior to version IR302 V3.5.56, and InRouter 615, prior to version InRouter6XX-S-V2.3.0.r5542, contain vulnerability CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection'). An unauthorized user with privileged access to the local web interface or the cloud account managing the affected devices could push a specially crafted configuration update file to gain root access. This could lead to remote code execution with root privileges."
+    },
+    {
+        "Modified": "2023-01-23T19:05:00",
+        "Published": "2023-01-13T06:15:00",
+        "access": {},
+        "assigner": "psirt@nvidia.com",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2022-42268",
+        "impact": {},
+        "last-modified": "2023-01-23T19:05:00",
+        "references": [
+            "https://nvidia.custhelp.com/app/answers/detail/a_id/5418"
+        ],
+        "summary": "Omniverse Kit contains a vulnerability in the reference applications Create, Audio2Face, Isaac Sim, View, Code, and Machinima. These applications allow executable Python code to be embedded in Universal Scene Description (USD) files to customize all aspects of a scene. If a user opens a USD file that contains embedded Python code in one of these applications, the embedded Python code automatically runs with the privileges of the user who opened the file. As a result, an unprivileged remote attacker could craft a USD file containing malicious Python code and persuade a local user to open the file, which may lead to information disclosure, data tampering, and denial of service."
+    },
+    {
+        "Modified": "2023-01-23T19:04:00",
+        "Published": "2022-12-15T19:15:00",
+        "access": {},
+        "assigner": "product-security@apple.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2022-42855",
+        "impact": {},
+        "last-modified": "2023-01-23T19:04:00",
+        "references": [
+            "https://support.apple.com/en-us/HT213531",
+            "https://support.apple.com/en-us/HT213532",
+            "https://support.apple.com/en-us/HT213530",
+            "https://support.apple.com/en-us/HT213535",
+            "https://support.apple.com/en-us/HT213533",
+            "http://seclists.org/fulldisclosure/2022/Dec/26",
+            "http://seclists.org/fulldisclosure/2022/Dec/20",
+            "http://seclists.org/fulldisclosure/2022/Dec/21",
+            "http://seclists.org/fulldisclosure/2022/Dec/23",
+            "http://seclists.org/fulldisclosure/2022/Dec/24",
+            "http://packetstormsecurity.com/files/170518/libCoreEntitlements-CEContextQuery-Arbitrary-Entitlement-Returns.html"
+        ],
+        "summary": "A logic issue was addressed with improved state management. This issue is fixed in tvOS 16.2, macOS Monterey 12.6.2, macOS Ventura 13.1, iOS 15.7.2 and iPadOS 15.7.2, iOS 16.2 and iPadOS 16.2. An app may be able to use arbitrary entitlements."
+    },
+    {
+        "Modified": "2023-01-23T19:03:00",
+        "Published": "2022-12-15T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2021-39427",
+        "impact": {},
+        "last-modified": "2023-01-23T19:03:00",
+        "references": [
+            "https://github.com/vtime-tech/188Jianzhan/issues/4"
+        ],
+        "summary": "Cross site scripting vulnerability in 188Jianzhan 2.10 allows attackers to execute arbitrary code via the username parameter to /admin/reg.php."
+    },
+    {
+        "Modified": "2023-01-23T19:02:00",
+        "Published": "2023-01-03T22:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-38723",
+        "impact": {},
+        "last-modified": "2023-01-23T19:02:00",
+        "references": [
+            "https://community.gravitee.io/t/whats-new-in-access-management-3-15-lts/164",
+            "https://gist.github.com/garatc/d86cdb1fa2e35a7ee719d9a0de0b5ca3"
+        ],
+        "summary": "Gravitee API Management before 3.15.13 allows path traversal through HTML injection."
+    },
+    {
         "Modified": "2023-01-23T18:59:00",
         "Published": "2023-01-13T04:15:00",
         "access": {},
@@ -1027,615 +1701,5 @@
             "https://www.cryptnetix.com/blog/2022/09/14/Edge-Nexus-Vulnerability-Disclosure.html"
         ],
         "summary": "A Cross-Site Request Forgery (CSRF) in the management portal of JetNexus/EdgeNexus ADC 4.2.8 allows attackers to escalate privileges and execute arbitrary code via unspecified vectors."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T17:15:00",
-        "access": {},
-        "assigner": "psirt@lenovo.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-3430",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://support.lenovo.com/us/en/product_security/LEN-94952"
-        ],
-        "summary": "A potential vulnerability in the WMI Setup driver on some consumer Lenovo Notebook devices may allow an attacker with elevated privileges to modify secure boot setting by modifying an NVRAM variable."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T17:15:00",
-        "access": {},
-        "assigner": "psirt@lenovo.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-4816",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://iknow.lenovo.com.cn/detail/dc_205899.html"
-        ],
-        "summary": "A denial-of-service vulnerability has been identified in Lenovo Safecenter that could allow a local user to crash the application."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T17:15:00",
-        "access": {},
-        "assigner": "security@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-0446",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=2844200%40youtube-channel&new=2844200%40youtube-channel&sfp_email=&sfph_mail=",
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/d979f899-8cdc-4230-b1b5-865c025dc86a"
-        ],
-        "summary": "The My YouTube Channel plugin for WordPress is vulnerable to Stored Cross-Site Scripting via its settings parameters in versions up to, and including, 3.0.12.1 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with administrator-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T17:15:00",
-        "access": {},
-        "assigner": "security@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-0447",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=2844200%40youtube-channel&new=2844200%40youtube-channel&sfp_email=&sfph_mail=",
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/486b6a75-d101-4f3a-8436-6c23dd0ff200",
-            "https://plugins.trac.wordpress.org/browser/youtube-channel/trunk/youtube-channel.php?rev=2482795#L1502"
-        ],
-        "summary": "The My YouTube Channel plugin for WordPress is vulnerable to authorization bypass due to a missing capability check on the clear_all_cache function in versions up to, and including, 3.0.12.1. This makes it possible for authenticated attackers, with subscriber-level permissions and above, to clear the plugin's cache."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-3811",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/262924da-e269-4008-a24f-9f26a033b23e"
-        ],
-        "summary": "The EU Cookie Law for GDPR/CCPA WordPress plugin through 3.1.6 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2022-4323",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/ce8027b8-9473-463e-ba80-49b3d6d16228"
-        ],
-        "summary": "The Analyticator WordPress plugin before 6.5.6 unserializes user input provided via the settings, which could allow high privilege users such as admin to perform PHP Object Injection when a suitable gadget is present"
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4475",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/3b5c377c-3148-4373-996c-89851d5e39e5"
-        ],
-        "summary": "The Collapse-O-Matic WordPress plugin before 1.8.3 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admin."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4542",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/f0bef96f-dfe2-4988-adf8-e1bd493c5242"
-        ],
-        "summary": "The Compact WP Audio Player WordPress plugin before 1.9.8 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-284",
-        "id": "CVE-2022-4548",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/0ff435bc-ea20-4993-98ae-1f61b1732b59"
-        ],
-        "summary": "The Optimize images ALT Text & names for SEO using AI WordPress plugin before 2.0.8 does not have CSRF check in place when updating its settings, which could allow attackers to make a logged-in admin change them via a CSRF attack."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4570",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/a2483ecf-42a6-470a-b965-4e05069d1cef"
-        ],
-        "summary": "The Top 10 WordPress plugin before 3.2.3 does not validate and escape some of its Block attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4576",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/0d679e0e-891b-44f1-ac7f-a766e12956e0"
-        ],
-        "summary": "The Easy Bootstrap Shortcode WordPress plugin through 4.5.4 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4624",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/e7dc0202-6be4-46fc-a451-fb3a25727b51"
-        ],
-        "summary": "The GS Logo Slider WordPress plugin before 3.3.8 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4625",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/cd6657d5-810c-4d0c-8bbf-1f8d4a2d8d15"
-        ],
-        "summary": "The Login Logout Menu WordPress plugin before 1.4.0 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4627",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/be9e8870-0682-441d-8955-d096d1346bd1"
-        ],
-        "summary": "The ShiftNav WordPress plugin before 1.7.2 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-43445",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://github.com/ONLYOFFICE/server",
-            "https://www.onlyoffice.com/",
-            "https://labs.nettitude.com/blog/exploiting-onlyoffice-web-sockets-for-unauthenticated-remote-code-execution/"
-        ],
-        "summary": "ONLYOFFICE all versions as of 2021-11-08 is affected by Incorrect Access Control. An attacker can authenticate with the web socket service of the ONLYOFFICE document editor which is protected by JWT auth by using a default JWT signing key."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4629",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/cf0a51f9-21d3-4ae8-b7d2-361921038fe8"
-        ],
-        "summary": "The Product Slider for WooCommerce WordPress plugin before 2.6.4 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-43446",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://github.com/ONLYOFFICE/server",
-            "https://onlyoffice.com/",
-            "https://labs.nettitude.com/blog/exploiting-onlyoffice-web-sockets-for-unauthenticated-remote-code-execution/"
-        ],
-        "summary": "ONLYOFFICE all versions as of 2021-11-08 is vulnerable to Cross Site Scripting (XSS). The \"macros\" feature of the document editor allows malicious cross site scripting payloads to be used."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4650",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/b430fdaa-191a-429e-b6d2-479b32bb1075"
-        ],
-        "summary": "The HashBar WordPress plugin before 1.3.6 does not validate and escape one of its shortcode attributes, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attack."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-43449",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://github.com/ONLYOFFICE/server",
-            "https://www.onlyoffice.com/",
-            "https://labs.nettitude.com/blog/exploiting-onlyoffice-web-sockets-for-unauthenticated-remote-code-execution/"
-        ],
-        "summary": "ONLYOFFICE all versions as of 2021-11-08 is vulnerable to Server-Side Request Forgery (SSRF). The document editor service can be abused to read and serve arbitrary URLs as a document."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4668",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/3e43156a-b784-4066-be69-23b139aafbad"
-        ],
-        "summary": "The Easy Appointments WordPress plugin before 3.11.2 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4672",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/6500271f-9d1c-40ed-be58-a6cea8d1110d"
-        ],
-        "summary": "The WordPress Simple Shopping Cart WordPress plugin before 4.6.2 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2022-0316",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/9ab3d6cf-aad7-41bc-9aae-dc5313f12f7c"
-        ],
-        "summary": "The WeStand WordPress theme before 2.1, footysquare WordPress theme, aidreform WordPress theme, statfort WordPress theme, club-theme WordPress theme, kingclub-theme WordPress theme, spikes WordPress theme, spikes-black WordPress theme, soundblast WordPress theme, bolster WordPress theme from ChimpStudio and PixFill does not have any authorisation and upload validation in the lang_upload.php file, allowing any unauthenticated attacker to upload arbitrary files to the web server."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4673",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/1c4f379d-252a-487b-81c9-bf711ab71dff"
-        ],
-        "summary": "The Rate my Post WordPress plugin before 3.3.9 does not validate and escape one of its shortcode attributes, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attack."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4675",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/21f4cc5d-c4b4-495f-acf3-9fdf53591052"
-        ],
-        "summary": "The Mongoose Page Plugin WordPress plugin before 1.9.0 does not validate and escape one of its shortcode attributes, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attack."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-47065",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://github.com/chunklhit/cve/blob/master/TRENDNet/TEW-820AP/01/README.md"
-        ],
-        "summary": "** UNSUPPORTED WHEN ASSIGNED ** TrendNet Wireless AC Easy-Upgrader TEW-820AP v1.0R, firmware version 1.01.B01 was discovered to contain a stack overflow via the submit-url parameter at /formNewSchedule. This vulnerability allows attackers to execute arbitrary code via a crafted payload. NOTE: This vulnerability only affects products that are no longer supported by the maintainer."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2022-4693",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/1eee10a8-135f-4b76-8289-c381ff1f51ea",
-            "https://lana.codes/lanavdb/eeabe1d3-6f64-400a-8fb2-0865efdf6957"
-        ],
-        "summary": "The User Verification WordPress plugin before 1.0.94 was affected by an Auth Bypass security vulnerability. To bypass authentication, we only need to know the user\u2019s username. Depending on whose username we know, which can be easily queried because it is usually public data, we may even be given an administrative role on the website."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4706",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/30882a45-ca03-4ff1-a36d-758d9b9b641c"
-        ],
-        "summary": "The Genesis Columns Advanced WordPress plugin before 2.0.4 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as a contributor to perform Stored Cross-Site Scripting attacks which could be used against high-privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-41505",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://github.com/hemant70072/Access-control-issue-in-TP-Link-Tapo-C200-V1."
-        ],
-        "summary": "An access control issue on TP-LInk Tapo C200 V1 devices allows physically proximate attackers to obtain root access by connecting to the UART pins, interrupting the boot process, and setting an init=/bin/sh value."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4715",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/4394fe86-4240-4454-b724-81464b04123a"
-        ],
-        "summary": "The Structured Content WordPress plugin before 1.5.1 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4716",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/24176ad3-2317-4853-b4db-8394384d52cd"
-        ],
-        "summary": "The WP Popups WordPress plugin before 2.1.4.8 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-4230",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/a0e40cfd-b217-481c-8fc4-027a0a023312"
-        ],
-        "summary": "The WP Statistics WordPress plugin before 13.2.9 does not escape a parameter, which could allow authenticated users to perform SQL Injection attacks. By default, the affected feature is available to users with the manage_options capability (admin+), however the plugin has a settings to allow low privilege users to access it as well."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4718",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/04d7cd44-9e18-42b9-9f79-cc9cd6980526"
-        ],
-        "summary": "The Landing Page Builder WordPress plugin before 1.4.9.9 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2022-4303",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/8428a5e1-dbef-4516-983f-f95605c6dd09"
-        ],
-        "summary": "The WP Limit Login Attempts WordPress plugin through 2.6.4 prioritizes getting a visitor's IP from certain HTTP headers over PHP's REMOTE_ADDR, which makes it possible to bypass IP-based restrictions on login forms."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2022-4746",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/62e3babc-00c6-4a35-972f-8f03ba70ba32"
-        ],
-        "summary": "The FluentAuth WordPress plugin before 1.0.2 prioritizes getting a visitor's IP address from certain HTTP headers over PHP's REMOTE_ADDR, which makes it possible to bypass the IP-based blocks set by the plugin."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4751",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/dd5cc04a-042d-402a-ab7a-96aff3d57478"
-        ],
-        "summary": "The Word Balloon WordPress plugin before 4.19.3 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2022-4305",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/286d972d-7bda-455c-a226-fd9ce5f925bd"
-        ],
-        "summary": "The Login as User or Customer WordPress plugin before 3.3 lacks authorization checks to ensure that users are allowed to log in as another one, which could allow unauthenticated attackers to obtain a valid admin session."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4753",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/5d72ec1f-5379-4d8e-850c-afe8b41bb126"
-        ],
-        "summary": "The Print-O-Matic WordPress plugin before 2.1.8 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4758",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/c2c89234-5e9c-47c8-9827-8ab0b10fb7d6"
-        ],
-        "summary": "The 10WebMapBuilder WordPress plugin before 1.0.72 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4307",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/4000ba69-d73f-4c5b-a299-82898304cebb"
-        ],
-        "summary": "The ?????? ?????? ?????? WordPress plugin before 2.9.3 does not sanitise and escape some parameters, allowing unauthenticated attackers to send a request with XSS payloads, which will be triggered when a high privilege users such as admin visits a page from the plugin."
-    },
-    {
-        "Modified": "2023-01-23T17:17:00",
-        "Published": "2023-01-23T15:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2022-4760",
-        "impact": {},
-        "last-modified": "2023-01-23T17:17:00",
-        "references": [
-            "https://wpscan.com/vulnerability/ad710c22-878a-441b-9c5a-90511b913d9d"
-        ],
-        "summary": "The OneClick Chat to Order WordPress plugin before 1.0.4.2 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admins."
     }
 ]
