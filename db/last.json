@@ -1,5 +1,35 @@
 [
     {
+        "Modified": "2023-02-04T21:15:00",
+        "Published": "2023-02-04T21:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2022-45786",
+        "impact": {},
+        "last-modified": "2023-02-04T21:15:00",
+        "references": [
+            "https://lists.apache.org/thread/of8x0gt5d2vfrm5ksxw55bwn2849ck1w"
+        ],
+        "summary": "There are issues with the AGE drivers for Golang and Python that enable SQL injections to occur. This impacts AGE for PostgreSQL 11 & AGE for PostgreSQL 12, all versions up-to-and-including 1.1.0, when using those drivers. The fix is to update to the latest Golang and Python drivers in addition to the latest version of AGE that is used for PostgreSQL 11 or PostgreSQL 12. The update of AGE will add a new function to enable parameterization of the cypher() function, which, in conjunction with the driver updates, will resolve this issue. Background (for those who want more information): After thoroughly researching this issue, we found that due to the nature of the cypher() function, it was not easy to parameterize the values passed into it. This enabled SQL injections, if the developer of the driver wasn't careful. The developer of the Golang and Pyton drivers didn't fully utilize parameterization, likely because of this, thus enabling SQL injections. The obvious fix to this issue is to use parameterization in the drivers for all PG SQL queries. However, parameterizing all PG queries is complicated by the fact that the cypher() function call itself cannot be parameterized directly, as it isn't a real function. At least, not the parameters that would take the graph name and cypher query. The reason the cypher() function cannot have those values parameterized is because the function is a placeholder and never actually runs. The cypher() function node, created by PG in the query tree, is transformed and replaced with a query tree for the actual cypher query during the analyze phase. The problem is that parameters - that would be passed in and that the cypher() function transform needs to be resolved - are only resolved in the execution phase, which is much later. Since the transform of the cypher() function needs to know the graph name and cypher query prior to execution, they can't be passed as parameters. The fix that we are testing right now, and are proposing to use, is to create a function that will be called prior to the execution of the cypher() function transform. This new function will allow values to be passed as parameters for the graph name and cypher query. As this command will be executed prior to the cypher() function transform, its values will be resolved. These values can then be cached for the immediately following cypher() function transform to use. As added features, the cached values will store the calling session's pid, for validation. And, the cypher() function transform will clear this cached information after function invocation, regardless of whether it was used. This method will allow the parameterizing of the cypher() function indirectly and provide a way to lock out SQL injection attacks."
+    },
+    {
+        "Modified": "2023-02-04T21:15:00",
+        "Published": "2023-02-04T21:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-22849",
+        "impact": {},
+        "last-modified": "2023-02-04T21:15:00",
+        "references": [
+            "https://sling.apache.org/news.html"
+        ],
+        "summary": "An improper neutralization of input during web page generation ('Cross-site Scripting') [CWE-79] vulnerability in Sling App CMS version 1.1.4 and prior may allow an authenticated remote attacker to perform a reflected cross-site scripting (XSS) attack in multiple features. Upgrade to Apache Sling App CMS >= 1.1.6"
+    },
+    {
         "Modified": "2023-02-04T20:15:00",
         "Published": "2023-02-04T20:15:00",
         "access": {},
@@ -2098,58 +2128,5 @@
             "https://lists.debian.org/debian-lts-announce/2022/12/msg00022.html"
         ],
         "summary": "There's a flaw in OpenEXR in versions before 3.0.0-beta. A crafted input file that is processed by OpenEXR could cause a shift overflow in the FastHufDecoder, potentially leading to problems with application availability."
-    },
-    {
-        "Modified": "2023-02-03T23:52:00",
-        "Published": "2020-12-09T21:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.3,
-        "cvss-time": "2023-02-03T23:52:00",
-        "cvss-vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
-        "cwe": "CWE-476",
-        "id": "CVE-2020-16588",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2023-02-03T23:52:00",
-        "references": [
-            "https://github.com/AcademySoftwareFoundation/openexr/commit/74504503cff86e986bac441213c403b0ba28d58f",
-            "https://github.com/AcademySoftwareFoundation/openexr/issues/493",
-            "https://lists.debian.org/debian-lts-announce/2022/12/msg00022.html"
-        ],
-        "summary": "A Null Pointer Deference issue exists in Academy Software Foundation OpenEXR 2.3.0 in generatePreview in makePreview.cpp that can cause a denial of service via a crafted EXR file."
-    },
-    {
-        "Modified": "2023-02-03T23:49:00",
-        "Published": "2019-10-29T00:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "psirt@us.ibm.com",
-        "cvss": 2.1,
-        "cvss-time": "2023-02-03T23:49:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:N/A:N",
-        "cwe": "CWE-522",
-        "id": "CVE-2019-4307",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "PARTIAL",
-            "integrity": "NONE"
-        },
-        "last-modified": "2023-02-03T23:49:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/1096288",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/160987"
-        ],
-        "summary": "IBM Security Guardium Big Data Intelligence (SonarG) 4.0 stores user credentials in plain in clear text which can be read by a local user. IBM X-Force ID: 160987."
     }
 ]
