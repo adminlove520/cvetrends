@@ -1,5 +1,126 @@
 [
     {
+        "Modified": "2023-04-21T23:15:00",
+        "Published": "2023-04-21T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-384",
+        "id": "CVE-2023-29019",
+        "impact": {},
+        "last-modified": "2023-04-21T23:15:00",
+        "references": [
+            "https://github.com/fastify/fastify-passport/security/advisories/GHSA-4m3m-ppvx-xgw9",
+            "https://github.com/fastify/fastify-passport/commit/43c82c321db58ea3e375dd475de60befbfcf2a11",
+            "https://owasp.org/www-community/attacks/Session_fixation"
+        ],
+        "summary": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. Applications using `@fastify/passport` in affected versions for user authentication, in combination with `@fastify/session` as the underlying session management mechanism, are vulnerable to session fixation attacks from network and same-site attackers. fastify applications rely on the `@fastify/passport` library for user authentication. The login and user validation are performed by the `authenticate` function. When executing this function, the `sessionId` is preserved between the pre-login and the authenticated session. Network and same-site attackers can hijack the victim's session by tossing a valid `sessionId` cookie in the victim's browser and waiting for the victim to log in on the website. As a solution, newer versions of `@fastify/passport` regenerate `sessionId` upon login, preventing the attacker-controlled pre-session cookie from being upgraded to an authenticated session. Users are advised to upgrade. There are no known workarounds for this vulnerability.\n"
+    },
+    {
+        "Modified": "2023-04-21T23:15:00",
+        "Published": "2023-04-21T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-384",
+        "id": "CVE-2023-29020",
+        "impact": {},
+        "last-modified": "2023-04-21T23:15:00",
+        "references": [
+            "https://github.com/fastify/fastify-passport/security/advisories/GHSA-2ccf-ffrj-m4qw",
+            "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#synchronizer-token-pattern",
+            "https://github.com/fastify/fastify-passport/commit/07c90feab9cba0dd4779e47cfb0717a7e2f01d3d",
+            "https://owasp.org/www-community/attacks/csrf"
+        ],
+        "summary": "@fastify/passport is a port of passport authentication library for the Fastify ecosystem. The CSRF (Cross-Site Request Forger) protection enforced by the `@fastify/csrf-protection` library, when combined with `@fastify/passport` in affected versions, can be bypassed by network and same-site attackers. `fastify/csrf-protection` implements the synchronizer token pattern (using plugins `@fastify/session` and `@fastify/secure-session`) by storing a random value used for CSRF token generation in the `_csrf` attribute of a user's session. The `@fastify/passport` library does not clear the session object upon authentication, preserving the `_csrf` attribute between pre-login and authenticated sessions. Consequently, CSRF tokens generated before authentication are still valid. Network and same-site attackers can thus obtain a CSRF token for their pre-session, fixate that pre-session in the victim's browser via cookie tossing, and then perform a CSRF attack after the victim authenticates. As a solution, newer versions of `@fastify/passport` include the configuration options: `clearSessionOnLogin (default: true)` and `clearSessionIgnoreFields (default: ['passport', 'session'])` to clear all the session attributes by default, preserving those explicitly defined in `clearSessionIgnoreFields`."
+    },
+    {
+        "Modified": "2023-04-21T23:15:00",
+        "Published": "2023-03-30T20:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-27535",
+        "impact": {},
+        "last-modified": "2023-04-21T23:15:00",
+        "references": [
+            "https://hackerone.com/reports/1892780",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/36NBD5YLJXXEDZLDGNFCERWRYJQ6LAQW/",
+            "https://security.netapp.com/advisory/ntap-20230420-0010/",
+            "https://lists.debian.org/debian-lts-announce/2023/04/msg00025.html"
+        ],
+        "summary": "An authentication bypass vulnerability exists in libcurl <8.0.0 in the FTP connection reuse feature that can result in wrong credentials being used during subsequent transfers. Previously created connections are kept in a connection pool for reuse if they match the current setup. However, certain FTP settings such as CURLOPT_FTP_ACCOUNT, CURLOPT_FTP_ALTERNATIVE_TO_USER, CURLOPT_FTP_SSL_CCC, and CURLOPT_USE_SSL were not included in the configuration match checks, causing them to match too easily. This could lead to libcurl using the wrong credentials when performing a transfer, potentially allowing unauthorized access to sensitive information."
+    },
+    {
+        "Modified": "2023-04-21T23:15:00",
+        "Published": "2023-03-30T20:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-27536",
+        "impact": {},
+        "last-modified": "2023-04-21T23:15:00",
+        "references": [
+            "https://hackerone.com/reports/1895135",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/36NBD5YLJXXEDZLDGNFCERWRYJQ6LAQW/",
+            "https://security.netapp.com/advisory/ntap-20230420-0010/",
+            "https://lists.debian.org/debian-lts-announce/2023/04/msg00025.html"
+        ],
+        "summary": "An authentication bypass vulnerability exists libcurl <8.0.0 in the connection reuse feature which can reuse previously established connections with incorrect user permissions due to a failure to check for changes in the CURLOPT_GSSAPI_DELEGATION option. This vulnerability affects krb5/kerberos/negotiate/GSSAPI transfers and could potentially result in unauthorized access to sensitive information. The safest option is to not reuse connections if the CURLOPT_GSSAPI_DELEGATION option has been changed."
+    },
+    {
+        "Modified": "2023-04-21T23:15:00",
+        "Published": "2023-03-30T20:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-27538",
+        "impact": {},
+        "last-modified": "2023-04-21T23:15:00",
+        "references": [
+            "https://hackerone.com/reports/1898475",
+            "https://security.netapp.com/advisory/ntap-20230420-0010/",
+            "https://lists.debian.org/debian-lts-announce/2023/04/msg00025.html"
+        ],
+        "summary": "An authentication bypass vulnerability exists in libcurl prior to v8.0.0 where it reuses a previously established SSH connection despite the fact that an SSH option was modified, which should have prevented reuse. libcurl maintains a pool of previously used connections to reuse them for subsequent transfers if the configurations match. However, two SSH settings were omitted from the configuration check, allowing them to match easily, potentially leading to the reuse of an inappropriate connection."
+    },
+    {
+        "Modified": "2023-04-21T23:15:00",
+        "Published": "2023-03-30T20:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-74",
+        "id": "CVE-2023-27533",
+        "impact": {},
+        "last-modified": "2023-04-21T23:15:00",
+        "references": [
+            "https://hackerone.com/reports/1891474",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/36NBD5YLJXXEDZLDGNFCERWRYJQ6LAQW/",
+            "https://security.netapp.com/advisory/ntap-20230420-0011/",
+            "https://lists.debian.org/debian-lts-announce/2023/04/msg00025.html"
+        ],
+        "summary": "A vulnerability in input validation exists in curl <8.0 during communication using the TELNET protocol may allow an attacker to pass on maliciously crafted user name and \"telnet options\" during server negotiation. The lack of proper input scrubbing allows an attacker to send content or perform option negotiation without the application's intent. This vulnerability could be exploited if an application allows user input, thereby enabling attackers to execute arbitrary code on the system."
+    },
+    {
+        "Modified": "2023-04-21T22:15:00",
+        "Published": "2023-04-21T22:15:00",
+        "access": {},
+        "assigner": "security@devolutions.net",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2118",
+        "impact": {},
+        "last-modified": "2023-04-21T22:15:00",
+        "references": [
+            "https://devolutions.net/security/advisories/DEVO-2023-0010"
+        ],
+        "summary": "Insufficient access control\u00a0in support ticket feature in Devolutions Server\u00a02023.1.5.0 and below\u00a0allows an authenticated attacker to send support tickets and download diagnostic files via specific endpoints."
+    },
+    {
         "Modified": "2023-04-21T21:15:00",
         "Published": "2023-04-21T21:15:00",
         "access": {},
@@ -1521,110 +1642,5 @@
             "https://hackmd.io/@0dayResearch/S1TusiR1n"
         ],
         "summary": "H3C Magic R200 R200V100R004 was discovered to contain a stack overflow via the DelvsList interface at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29907",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/rk-6aRRyn"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via the Edit_BasicSSID_5G interface at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29913",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/HyvnMn013"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via the SetAPWifiorLedInfoById interface at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29914",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/H1Cn2sAk3"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via the DeltriggerList interface at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29908",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/Ski-S20J2"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via the SetMobileAPInfoById interface at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29915",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/HJBc2lyl2"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via CMD parameter at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29916",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/rkpbC1Jgh"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via the UpdateWanParams interface at /goform/aspForm."
-    },
-    {
-        "Modified": "2023-04-21T15:15:00",
-        "Published": "2023-04-21T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29917",
-        "impact": {},
-        "last-modified": "2023-04-21T15:15:00",
-        "references": [
-            "https://hackmd.io/@0dayResearch/rJJzEg1e3"
-        ],
-        "summary": "H3C Magic R200 version R200V100R004 was discovered to contain a stack overflow via go parameter at /goform/aspForm."
     }
 ]
