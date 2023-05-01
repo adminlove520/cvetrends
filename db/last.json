@@ -1,5 +1,219 @@
 [
     {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2023-04-25T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-134",
+        "id": "CVE-2023-25815",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://github.com/git-for-windows/git/releases/tag/v2.40.1.windows.1",
+            "https://axcheron.github.io/exploit-101-format-strings/#writing-to-the-stack",
+            "https://github.com/msys2/MINGW-packages/pull/10461",
+            "https://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html",
+            "https://github.com/git-for-windows/git/security/advisories/GHSA-9w66-8mq8-5vm8",
+            "http://www.openwall.com/lists/oss-security/2023/04/25/2",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PI7FZ4NNR5S5J5K6AMVQBH2JFP6NE4L7/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YFZWGQKB6MM5MNF2DLFTD7KS2KWPICKL/"
+        ],
+        "summary": "In Git for Windows, the Windows port of Git, no localized messages are shipped with the installer. As a consequence, Git is expected not to localize messages at all, and skips the gettext initialization. However, due to a change in MINGW-packages, the `gettext()` function's implicit initialization no longer uses the runtime prefix but uses the hard-coded path `C:\\mingw64\\share\\locale` to look for localized messages. And since any authenticated user has the permission to create folders in `C:\\` (and since `C:\\mingw64` does not typically exist), it is possible for low-privilege users to place fake messages in that location where `git.exe` will pick them up in version 2.40.1.\n\nThis vulnerability is relatively hard to exploit and requires social engineering. For example, a legitimate message at the end of a clone could be maliciously modified to ask the user to direct their web browser to a malicious website, and the user might think that the message comes from Git and is legitimate. It does require local write access by the attacker, though, which makes this attack vector less likely. Version 2.40.1 contains a patch for this issue. Some workarounds are available. Do not work on a Windows machine with shared accounts, or alternatively create a `C:\\mingw64` folder and leave it empty. Users who have administrative rights may remove the permission to create folders in `C:\\`."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2023-04-25T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-74",
+        "id": "CVE-2023-29007",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://github.com/git/git/security/advisories/GHSA-v48j-4xgg-4844",
+            "https://github.com/git/git/commit/528290f8c61222433a8cf02fb7cfffa8438432b4",
+            "https://github.com/git/git/blob/9ce9dea4e1c2419cca126d29fa7730baa078a11b/Documentation/RelNotes/2.30.9.txt",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PI7FZ4NNR5S5J5K6AMVQBH2JFP6NE4L7/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YFZWGQKB6MM5MNF2DLFTD7KS2KWPICKL/"
+        ],
+        "summary": "Git is a revision control system. Prior to versions 2.30.9, 2.31.8, 2.32.7, 2.33.8, 2.34.8, 2.35.8, 2.36.6, 2.37.7, 2.38.5, 2.39.3, and 2.40.1, a specially crafted `.gitmodules` file with submodule URLs that are longer than 1024 characters can used to exploit a bug in `config.c::git_config_copy_or_rename_section_in_file()`. This bug can be used to inject arbitrary configuration into a user's `$GIT_DIR/config` when attempting to remove the configuration section associated with that submodule. When the attacker injects configuration values which specify executables to run (such as `core.pager`, `core.editor`, `core.sshCommand`, etc.) this can lead to a remote code execution. A fix A fix is available in versions 2.30.9, 2.31.8, 2.32.7, 2.33.8, 2.34.8, 2.35.8, 2.36.6, 2.37.7, 2.38.5, 2.39.3, and 2.40.1. As a workaround, avoid running `git submodule deinit` on untrusted repositories or without prior inspection of any submodule sections in `$GIT_DIR/config`."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2023-04-25T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2023-25652",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://github.com/git/git/commit/668f2d53613ac8fd373926ebe219f2c29112d93e",
+            "https://github.com/git/git/security/advisories/GHSA-2hvf-7c8p-28fx",
+            "https://github.com/git/git/commit/18e2b1cfc80990719275d7b08e6e50f3e8cbc902",
+            "http://www.openwall.com/lists/oss-security/2023/04/25/2",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/PI7FZ4NNR5S5J5K6AMVQBH2JFP6NE4L7/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YFZWGQKB6MM5MNF2DLFTD7KS2KWPICKL/"
+        ],
+        "summary": "Git is a revision control system. Prior to versions 2.30.9, 2.31.8, 2.32.7, 2.33.8, 2.34.8, 2.35.8, 2.36.6, 2.37.7, 2.38.5, 2.39.3, and 2.40.1, by feeding specially crafted input to `git apply --reject`, a path outside the working tree can be overwritten with partially controlled contents (corresponding to the rejected hunk(s) from the given patch). A fix is available in versions 2.30.9, 2.31.8, 2.32.7, 2.33.8, 2.34.8, 2.35.8, 2.36.6, 2.37.7, 2.38.5, 2.39.3, and 2.40.1. As a workaround, avoid using `git apply` with `--reject` when applying patches from an untrusted source. Use `git apply --stat` to inspect a patch before applying; avoid applying one that create a conflict where a link corresponding to the `*.rej` file exists."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2023-04-10T22:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-670",
+        "id": "CVE-2023-1668",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://www.openwall.com/lists/oss-security/2023/04/06/1",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2137666",
+            "https://www.debian.org/security/2023/dsa-5387",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/V2GUNS3WSJG4TUDKZ5L7FXGJMVOD6EJZ/",
+            "https://lists.debian.org/debian-lts-announce/2023/05/msg00000.html"
+        ],
+        "summary": "A flaw was found in openvswitch (OVS). When processing an IP packet with protocol 0, OVS will install the datapath flow without the action modifying the IP header. This issue results (for both kernel and userspace datapath) in installing a datapath flow matching all IP protocols (nw_proto is wildcarded) for this flow, but with an incorrect action, possibly causing incorrect handling of other IP packets with a != 0 IP protocol that matches this dp flow."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2023-04-10T19:15:00",
+        "access": {},
+        "assigner": "product-security@apple.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2023-28205",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://support.apple.com/en-us/HT213722",
+            "https://support.apple.com/en-us/HT213723",
+            "https://support.apple.com/en-us/HT213720",
+            "https://support.apple.com/en-us/HT213721",
+            "http://seclists.org/fulldisclosure/2023/Apr/3",
+            "http://seclists.org/fulldisclosure/2023/Apr/2",
+            "http://seclists.org/fulldisclosure/2023/Apr/1",
+            "http://seclists.org/fulldisclosure/2023/Apr/5",
+            "http://www.openwall.com/lists/oss-security/2023/04/21/3",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/6QL5OGMSHRQ26FTYWZUXVNWB2VHOSVXK/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5OKKVEUQAAGH3NHMX3WHWKRPYU4QFKTQ/"
+        ],
+        "summary": "A use after free issue was addressed with improved memory management. This issue is fixed in iOS 15.7.5 and iPadOS 15.7.5, Safari 16.4.1, iOS 16.4.1 and iPadOS 16.4.1, macOS Ventura 13.3.1. Processing maliciously crafted web content may lead to arbitrary code execution. Apple is aware of a report that this issue may have been actively exploited."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2023-03-02T15:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2023-25358",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://bugs.webkit.org/show_bug.cgi?id=242683",
+            "http://www.openwall.com/lists/oss-security/2023/04/21/3",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/6QL5OGMSHRQ26FTYWZUXVNWB2VHOSVXK/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5OKKVEUQAAGH3NHMX3WHWKRPYU4QFKTQ/"
+        ],
+        "summary": "A use-after-free vulnerability in WebCore::RenderLayer::addChild in WebKitGTK before 2.36.8 allows attackers to execute code remotely."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2022-12-23T00:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2022-40897",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://github.com/pypa/setuptools/blob/fe8a98e696241487ba6ac9f91faa38ade939ec5d/setuptools/package_index.py#L200",
+            "https://pyup.io/posts/pyup-discovers-redos-vulnerabilities-in-top-python-packages/",
+            "https://github.com/pypa/setuptools/compare/v65.5.0...v65.5.1",
+            "https://github.com/pypa/setuptools/commit/43a9c9bfa6aa626ec2a22540bea28d2ca77964be",
+            "https://pyup.io/vulnerabilities/CVE-2022-40897/52495/",
+            "https://security.netapp.com/advisory/ntap-20230214-0001/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YNA2BAH2ACBZ4TVJZKFLCR7L23BG5C3H/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ADES3NLOE5QJKBLGNZNI2RGVOSQXA37R/"
+        ],
+        "summary": "Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2022-12-16T15:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2022-3109",
+        "impact": {},
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2153551",
+            "https://github.com/FFmpeg/FFmpeg/commit/656cb0450aeb73b25d7d26980af342b37ac4c568",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KOMB6WRUC55VWV25IKJTV22KARBUGWGQ/",
+            "https://www.debian.org/security/2023/dsa-5394"
+        ],
+        "summary": "An issue was discovered in the FFmpeg package, where vp3_decode_frame in libavcodec/vp3.c lacks check of the return value of av_malloc() and will cause a null pointer dereference, impacting availability."
+    },
+    {
+        "Modified": "2023-05-01T06:15:00",
+        "Published": "2022-02-12T00:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "MEDIUM",
+            "vector": "NETWORK"
+        },
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": 4.3,
+        "cvss-time": "2023-05-01T06:15:00",
+        "cvss-vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
+        "cwe": "CWE-346",
+        "id": "CVE-2022-0108",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "PARTIAL",
+            "integrity": "NONE"
+        },
+        "last-modified": "2023-05-01T06:15:00",
+        "references": [
+            "https://crbug.com/1248444",
+            "https://chromereleases.googleblog.com/2022/01/stable-channel-update-for-desktop.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5PAGL5M2KGYPN3VEQCRJJE6NA7D5YG5X/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/KQJB6ZPRLKV6WCMX2PRRRQBFAOXFBK6B/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MRWRAXAFR3JR7XCFWTHC2KALSZKWACCE/",
+            "http://www.openwall.com/lists/oss-security/2023/04/21/3",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/6QL5OGMSHRQ26FTYWZUXVNWB2VHOSVXK/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5OKKVEUQAAGH3NHMX3WHWKRPYU4QFKTQ/"
+        ],
+        "summary": "Inappropriate implementation in Navigation in Google Chrome prior to 97.0.4692.71 allowed a remote attacker to leak cross-origin data via a crafted HTML page."
+    },
+    {
+        "Modified": "2023-05-01T05:15:00",
+        "Published": "2023-05-01T05:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2018-25085",
+        "impact": {},
+        "last-modified": "2023-05-01T05:15:00",
+        "references": [
+            "https://vuldb.com/?ctiid.227755",
+            "https://www.drupal.org/sa-contrib-2018-079",
+            "https://git.drupalcode.org/project/responsive_menus/-/commit/3c554b31d32a367188f44d44857b061eac949fb8",
+            "https://www.drupal.org/project/responsive_menus/releases/7.x-1.7",
+            "https://vuldb.com/?id.227755"
+        ],
+        "summary": "A vulnerability classified as problematic was found in Responsive Menus 7.x-1.x-dev on Drupal. Affected by this vulnerability is the function responsive_menus_admin_form_submit of the file responsive_menus.module of the component Configuration Setting Handler. The manipulation leads to cross site scripting. The attack can be launched remotely. Upgrading to version 7.x-1.7 is able to address this issue. The name of the patch is 3c554b31d32a367188f44d44857b061eac949fb8. It is recommended to upgrade the affected component. The associated identifier of this vulnerability is VDB-227755."
+    },
+    {
         "Modified": "2023-05-01T02:15:00",
         "Published": "2023-05-01T02:15:00",
         "access": {},
@@ -578,27 +792,6 @@
             "https://lists.debian.org/debian-lts-announce/2023/04/msg00030.html"
         ],
         "summary": "A buffer overflow vulnerability exists in the handling of wildcard backend hosts of SNIProxy 0.6.0-2 and the master branch (commit: 822bb80df9b7b345cc9eba55df74a07b498819ba). A specially crafted HTTP or TLS packet can lead to arbitrary code execution. An attacker could send a malicious packet to trigger this vulnerability."
-    },
-    {
-        "Modified": "2023-04-30T04:15:00",
-        "Published": "2022-12-23T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2022-40897",
-        "impact": {},
-        "last-modified": "2023-04-30T04:15:00",
-        "references": [
-            "https://github.com/pypa/setuptools/blob/fe8a98e696241487ba6ac9f91faa38ade939ec5d/setuptools/package_index.py#L200",
-            "https://pyup.io/posts/pyup-discovers-redos-vulnerabilities-in-top-python-packages/",
-            "https://github.com/pypa/setuptools/compare/v65.5.0...v65.5.1",
-            "https://github.com/pypa/setuptools/commit/43a9c9bfa6aa626ec2a22540bea28d2ca77964be",
-            "https://pyup.io/vulnerabilities/CVE-2022-40897/52495/",
-            "https://security.netapp.com/advisory/ntap-20230214-0001/",
-            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YNA2BAH2ACBZ4TVJZKFLCR7L23BG5C3H/"
-        ],
-        "summary": "Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py."
     },
     {
         "Modified": "2023-04-30T03:15:00",
@@ -1748,149 +1941,5 @@
             "https://source.android.com/security/bulletin/2023-04-01"
         ],
         "summary": "In buildPropFile of filesystem.go, there is a possible insecure hash due to an improperly used crypto. This could lead to local escalation of privilege with System execution privileges needed. User interaction is not needed for exploitation.Product: AndroidVersions: Android-13Android ID: A-262892300"
-    },
-    {
-        "Modified": "2023-04-29T01:52:00",
-        "Published": "2023-04-19T20:15:00",
-        "access": {},
-        "assigner": "security@android.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-21082",
-        "impact": {},
-        "last-modified": "2023-04-29T01:52:00",
-        "references": [
-            "https://source.android.com/security/bulletin/2023-04-01"
-        ],
-        "summary": "In getNumberFromCallIntent of NewOutgoingCallIntentBroadcaster.java, there is a possible way to enumerate other user's contact phone number due to a confused deputy. This could lead to local information disclosure with User execution privileges needed. User interaction is not needed for exploitation.Product: AndroidVersions: Android-11 Android-12 Android-12L Android-13Android ID: A-257030107"
-    },
-    {
-        "Modified": "2023-04-29T01:52:00",
-        "Published": "2023-04-19T20:15:00",
-        "access": {},
-        "assigner": "security@android.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-21083",
-        "impact": {},
-        "last-modified": "2023-04-29T01:52:00",
-        "references": [
-            "https://source.android.com/security/bulletin/2023-04-01"
-        ],
-        "summary": "In onNullBinding of CallScreeningServiceHelper.java, there is a possible way to record audio without showing a privacy indicator due to a permissions bypass. This could lead to local escalation of privilege with User execution privileges needed. User interaction is not needed for exploitation.Product: AndroidVersions: Android-11 Android-12 Android-12L Android-13Android ID: A-252762941"
-    },
-    {
-        "Modified": "2023-04-29T01:50:00",
-        "Published": "2023-04-19T20:15:00",
-        "access": {},
-        "assigner": "security@android.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-20941",
-        "impact": {},
-        "last-modified": "2023-04-29T01:50:00",
-        "references": [
-            "https://source.android.com/security/bulletin/2023-04-01"
-        ],
-        "summary": "In acc_ctrlrequest_composite of f_accessory.c, there is a possible out of bounds write due to a missing bounds check. This could lead to physical escalation of privilege with no additional execution privileges needed. User interaction is needed for exploitation.Product: AndroidVersions: Android kernelAndroid ID: A-264029575References: Upstream kernel"
-    },
-    {
-        "Modified": "2023-04-29T01:15:00",
-        "Published": "2023-04-29T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-428",
-        "id": "CVE-2023-2417",
-        "impact": {},
-        "last-modified": "2023-04-29T01:15:00",
-        "references": [
-            "https://vuldb.com/?id.227714",
-            "https://vuldb.com/?ctiid.227714"
-        ],
-        "summary": "A vulnerability was found in ks-soft Advanced Host Monitor up to 12.56 and classified as problematic. Affected by this issue is some unknown functionality of the file C:\\Program Files (x86)\\HostMonitor\\RMA-Win\\rma_active.exe. The manipulation leads to unquoted search path. It is possible to launch the attack on the local host. Upgrading to version 12.60 is able to address this issue. It is recommended to upgrade the affected component. VDB-227714 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2023-04-29T01:15:00",
-        "Published": "2023-04-29T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-330",
-        "id": "CVE-2023-2418",
-        "impact": {},
-        "last-modified": "2023-04-29T01:15:00",
-        "references": [
-            "https://vuldb.com/?id.227715",
-            "https://vuldb.com/?ctiid.227715",
-            "https://www.cnblogs.com/andao/p/17330864.html"
-        ],
-        "summary": "A vulnerability was found in Konga 2.8.3 on Kong. It has been classified as problematic. This affects an unknown part of the component Login API. The manipulation leads to insufficiently random values. The complexity of an attack is rather high. The exploitability is told to be difficult. The exploit has been disclosed to the public and may be used. It is recommended to change the configuration settings. The associated identifier of this vulnerability is VDB-227715."
-    },
-    {
-        "Modified": "2023-04-29T01:15:00",
-        "Published": "2023-04-29T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2023-2419",
-        "impact": {},
-        "last-modified": "2023-04-29T01:15:00",
-        "references": [
-            "https://github.com/crmeb/CRMEB/issues/77",
-            "https://vuldb.com/?id.227716",
-            "https://vuldb.com/?ctiid.227716"
-        ],
-        "summary": "A vulnerability was found in Zhong Bang CRMEB 4.6.0. It has been declared as critical. This vulnerability affects the function videoUpload of the file \\crmeb\\app\\services\\system\\attachment\\SystemAttachmentServices.php. The manipulation of the argument filename leads to unrestricted upload. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-227716."
-    },
-    {
-        "Modified": "2023-04-29T01:15:00",
-        "Published": "2023-03-23T04:17:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-427",
-        "id": "CVE-2023-28759",
-        "impact": {},
-        "last-modified": "2023-04-29T01:15:00",
-        "references": [
-            "https://www.veritas.com/content/support/en_US/security/VTS23-006"
-        ],
-        "summary": "An issue was discovered in Veritas NetBackup before 10.0 on Windows. A vulnerability in the way the client validates the path to a DLL prior to loading may allow a lower-level user to elevate privileges and compromise the system."
-    },
-    {
-        "Modified": "2023-04-29T00:15:00",
-        "Published": "2023-04-29T00:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-2412",
-        "impact": {},
-        "last-modified": "2023-04-29T00:15:00",
-        "references": [
-            "https://vuldb.com/?id.227706",
-            "https://vuldb.com/?ctiid.227706",
-            "https://github.com/Yp1oneer/cve_hub/blob/main/AC%20Repair%20and%20Services%20System/SQL-Injection-5.pdf"
-        ],
-        "summary": "A vulnerability was found in SourceCodester AC Repair and Services System 1.0. It has been classified as critical. Affected is an unknown function of the file /admin/user/manage_user.php. The manipulation of the argument id leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-227706 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2023-04-29T00:15:00",
-        "Published": "2023-04-29T00:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-2413",
-        "impact": {},
-        "last-modified": "2023-04-29T00:15:00",
-        "references": [
-            "https://vuldb.com/?id.227707",
-            "https://vuldb.com/?ctiid.227707",
-            "https://github.com/Yp1oneer/cve_hub/blob/main/AC%20Repair%20and%20Services%20System/SQL-Injection-6.pdf"
-        ],
-        "summary": "A vulnerability was found in SourceCodester AC Repair and Services System 1.0. It has been declared as critical. Affected by this vulnerability is an unknown functionality of the file /admin/bookings/manage_booking.php. The manipulation of the argument id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-227707."
     }
 ]
