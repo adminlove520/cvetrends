@@ -1,5 +1,66 @@
 [
     {
+        "Modified": "2023-05-08T09:15:00",
+        "Published": "2023-05-08T09:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-31038",
+        "impact": {},
+        "last-modified": "2023-05-08T09:15:00",
+        "references": [
+            "https://lists.apache.org/thread/vgjlpdf353vv91gryspwxrzj6p0fbjd9"
+        ],
+        "summary": "SQL injection in Log4cxx when using the ODBC appender to send log messages to a database.\u00a0 No fields sent to the database were properly escaped for SQL injection.\u00a0 This has been the case since at least version 0.9.0(released 2003-08-06)\n\n\n\n\nNote that Log4cxx is a C++ framework, so only C++ applications are affected.\n\nBefore version 1.1.0, the ODBC appender was automatically part of Log4cxx if the library was found when compiling the library.\u00a0 As of version 1.1.0, this must be both explicitly enabled in order to be compiled in.\n\n\n\n\nThree preconditions must be met for this vulnerability to be possible:\n\n1. Log4cxx compiled with ODBC support(before version 1.1.0, this was auto-detected at compile time)\n\n2. ODBCAppender enabled for logging messages to, generally done via a config file\n\n3. User input is logged at some point. If your application does not have user input, it is unlikely to be affected.\n\n\n\n\n\nUsers are recommended to upgrade to version 1.1.0 which properly binds the parameters to the SQL statement, or migrate to the new DBAppender class which supports an ODBC connection in addition to other databases. \nNote that this fix does require a configuration file update, as the old configuration files will not configure properly.\u00a0 An example is shown below, and more information may be found in the Log4cxx documentation on the ODBCAppender.\n\n\n\n\n\nExample of old configuration snippet:\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\u00a0\u00a0\u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES ('%m')\" />\n\n\u00a0\u00a0\u00a0 ... other params here ...\n\n</appender>\n\n\n\n\nThe migrated configuration snippet with new ColumnMapping parameters:\n\n\n<appender name=\"SqlODBCAppender\" class=\"ODBCAppender\">\n\n\n\n\n\u00a0 \u00a0 <param name=\"sql\" value=\"INSERT INTO logs (message) VALUES (?)\" />\n\n\u00a0\u00a0\u00a0 <param name=\"ColumnMapping\" value=\"message\"/>\n\u00a0\u00a0\u00a0 ... other params here ...\n\n\n</appender>\n\n\n\n\n\n"
+    },
+    {
+        "Modified": "2023-05-08T09:15:00",
+        "Published": "2023-05-08T09:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-20",
+        "id": "CVE-2023-31039",
+        "impact": {},
+        "last-modified": "2023-05-08T09:15:00",
+        "references": [
+            "https://lists.apache.org/thread/jqpttrqbc38yhckgp67xk399hqxnz7jn"
+        ],
+        "summary": "Security vulnerability\u00a0in Apache bRPC <1.5.0 on all platforms allows attackers to execute arbitrary code via ServerOptions::pid_file.\nAn attacker that can influence the ServerOptions pid_file parameter with which the bRPC server is started can execute arbitrary code with the permissions of the bRPC process.\n\nSolution:\n1. upgrade to bRPC >= 1.5.0, download link:\u00a0 https://dist.apache.org/repos/dist/release/brpc/1.5.0/ https://dist.apache.org/repos/dist/release/brpc/1.5.0/ \n2. If you are using an old version of bRPC and hard to upgrade, you can apply this patch:\u00a0 https://github.com/apache/brpc/pull/2218 https://github.com/apache/brpc/pull/2218 "
+    },
+    {
+        "Modified": "2023-05-08T08:15:00",
+        "Published": "2023-05-08T08:15:00",
+        "access": {},
+        "assigner": "security@otrs.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2534",
+        "impact": {},
+        "last-modified": "2023-05-08T08:15:00",
+        "references": [
+            "https://otrs.com/release-notes/otrs-security-advisory-2023-03/"
+        ],
+        "summary": "Improper Authorization vulnerability in OTRS AG OTRS 8 (Websocket API backend) allows any as Agent authenticated attacker to track user behaviour and to gain live insight into overall system usage. User IDs can easily be correlated with real names e. g. via\nticket histories by any user. (Fuzzing for garnering other adjacent user/sensitive data).\u00a0Subscribing to all possible push events could also lead to performance implications on the server side, depending on the size of the installation\nand the number of active users. (Flooding)This issue affects OTRS: from 8.0.X before 8.0.32.\n\n"
+    },
+    {
+        "Modified": "2023-05-08T05:15:00",
+        "Published": "2023-05-08T05:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-2566",
+        "impact": {},
+        "last-modified": "2023-05-08T05:15:00",
+        "references": [
+            "https://github.com/openemr/openemr/commit/a2adac7320dfc631b1da688c3b04f54b8240fc7b",
+            "https://huntr.dev/bounties/47d6fc2a-989a-44eb-9cb7-ab4f8bd44496"
+        ],
+        "summary": "Cross-site Scripting (XSS) - Stored in GitHub repository openemr/openemr prior to 7.0.1."
+    },
+    {
         "Modified": "2023-05-08T04:15:00",
         "Published": "2023-05-08T04:15:00",
         "access": {},
@@ -1555,69 +1616,5 @@
             "https://www.debian.org/security/2023/dsa-5399"
         ],
         "summary": "A sandboxing issue in Odoo Community 15.0 and earlier and Odoo Enterprise 15.0 and earlier allows authenticated administrators to access and modify database contents of other tenants, in a multi-tenant system."
-    },
-    {
-        "Modified": "2023-05-05T21:15:00",
-        "Published": "2023-04-25T19:15:00",
-        "access": {},
-        "assigner": "security@odoo.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2021-23203",
-        "impact": {},
-        "last-modified": "2023-05-05T21:15:00",
-        "references": [
-            "https://github.com/odoo/odoo/issues/107695",
-            "https://www.debian.org/security/2023/dsa-5399"
-        ],
-        "summary": "Improper access control in reporting engine of Odoo Community 14.0 through 15.0, and Odoo Enterprise 14.0 through 15.0, allows remote attackers to download PDF reports for arbitrary documents, via crafted requests."
-    },
-    {
-        "Modified": "2023-05-05T21:15:00",
-        "Published": "2023-04-25T19:15:00",
-        "access": {},
-        "assigner": "security@odoo.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2021-26263",
-        "impact": {},
-        "last-modified": "2023-05-05T21:15:00",
-        "references": [
-            "https://github.com/odoo/odoo/issues/107693",
-            "https://www.debian.org/security/2023/dsa-5399"
-        ],
-        "summary": "Cross-site scripting (XSS) issue in Discuss app of Odoo Community 14.0 through 15.0, and Odoo Enterprise 14.0 through 15.0, allows remote attackers to inject arbitrary web script in the browser of a victim, by posting crafted contents."
-    },
-    {
-        "Modified": "2023-05-05T21:15:00",
-        "Published": "2023-04-25T19:15:00",
-        "access": {},
-        "assigner": "security@odoo.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2021-26947",
-        "impact": {},
-        "last-modified": "2023-05-05T21:15:00",
-        "references": [
-            "https://github.com/odoo/odoo/issues/107694",
-            "https://www.debian.org/security/2023/dsa-5399"
-        ],
-        "summary": "Cross-site scripting (XSS) issue Odoo Community 15.0 and earlier and Odoo Enterprise 15.0 and earlier, allows remote attackers to inject arbitrary web script in the browser of a victim, via a crafted link."
-    },
-    {
-        "Modified": "2023-05-05T21:15:00",
-        "Published": "2023-04-25T19:15:00",
-        "access": {},
-        "assigner": "security@odoo.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2021-44476",
-        "impact": {},
-        "last-modified": "2023-05-05T21:15:00",
-        "references": [
-            "https://github.com/odoo/odoo/issues/107684",
-            "https://www.debian.org/security/2023/dsa-5399"
-        ],
-        "summary": "A sandboxing issue in Odoo Community 15.0 and earlier and Odoo Enterprise 15.0 and earlier allows authenticated administrators to read local files on the server, including sensitive configuration files."
     }
 ]
