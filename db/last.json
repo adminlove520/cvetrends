@@ -1,5 +1,481 @@
 [
     {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-24535",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://pkg.go.dev/vuln/GO-2023-1631",
+            "https://github.com/golang/protobuf/issues/1530",
+            "https://go.dev/cl/475995"
+        ],
+        "summary": "Parsing invalid messages can panic. Parsing a text-format message which contains a potential number consisting of a minus sign, one or more characters of whitespace, and no further input will cause a panic."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-29401",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://pkg.go.dev/vuln/GO-2023-1737",
+            "https://github.com/gin-gonic/gin/releases/tag/v1.9.1",
+            "https://github.com/gin-gonic/gin/issues/3555",
+            "https://github.com/gin-gonic/gin/pull/3556"
+        ],
+        "summary": "The filename parameter of the Context.FileAttachment function is not properly sanitized. A maliciously crafted filename can cause the Content-Disposition header to be sent with an unexpected filename value or otherwise modify the Content-Disposition header. For example, a filename of \"setup.bat&quot;;x=.txt\" will be sent as a file named \"setup.bat\". If the FileAttachment function is called with names provided by an untrusted source, this may permit an attacker to cause a file to be served with a name different than provided. Maliciously crafted attachment file name can modify the Content-Disposition header."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-29402",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://groups.google.com/g/golang-announce/c/q5135a9d924/m/j0ZoAJOHAwAJ",
+            "https://pkg.go.dev/vuln/GO-2023-1839",
+            "https://go.dev/issue/60167",
+            "https://go.dev/cl/501226"
+        ],
+        "summary": "The go command may generate unexpected code at build time when using cgo. This may result in unexpected behavior when running a go program which uses cgo. This may occur when running an untrusted module which contains directories with newline characters in their names. Modules which are retrieved using the go command, i.e. via \"go get\", are not affected (modules retrieved using GOPATH-mode, i.e. GO111MODULE=off, may be affected)."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-29403",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://groups.google.com/g/golang-announce/c/q5135a9d924/m/j0ZoAJOHAwAJ",
+            "https://pkg.go.dev/vuln/GO-2023-1840",
+            "https://go.dev/cl/501223",
+            "https://go.dev/issue/60272"
+        ],
+        "summary": "On Unix platforms, the Go runtime does not behave differently when a binary is run with the setuid/setgid bits. This can be dangerous in certain cases, such as when dumping memory state, or assuming the status of standard i/o file descriptors. If a setuid/setgid binary is executed with standard I/O file descriptors closed, opening any files can result in unexpected content being read or written with elevated privileges. Similarly, if a setuid/setgid program is terminated, either via panic or signal, it may leak the contents of its registers."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-29404",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://go.dev/issue/60305",
+            "https://groups.google.com/g/golang-announce/c/q5135a9d924/m/j0ZoAJOHAwAJ",
+            "https://pkg.go.dev/vuln/GO-2023-1841",
+            "https://go.dev/cl/501225"
+        ],
+        "summary": "The go command may execute arbitrary code at build time when using cgo. This may occur when running \"go get\" on a malicious module, or when running any other command which builds untrusted code. This is can by triggered by linker flags, specified via a \"#cgo LDFLAGS\" directive. The arguments for a number of flags which are non-optional are incorrectly considered optional, allowing disallowed flags to be smuggled through the LDFLAGS sanitization. This affects usage of both the gc and gccgo compilers."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-29405",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://go.dev/issue/60306",
+            "https://pkg.go.dev/vuln/GO-2023-1842",
+            "https://groups.google.com/g/golang-announce/c/q5135a9d924/m/j0ZoAJOHAwAJ",
+            "https://go.dev/cl/501224"
+        ],
+        "summary": "The go command may execute arbitrary code at build time when using cgo. This may occur when running \"go get\" on a malicious module, or when running any other command which builds untrusted code. This is can by triggered by linker flags, specified via a \"#cgo LDFLAGS\" directive. Flags containing embedded spaces are mishandled, allowing disallowed flags to be smuggled through the LDFLAGS sanitization by including them in the argument of another flag. This only affects usage of the gccgo compiler."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-32750",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://www.redteam-pentesting.de/en/advisories/-advisories-publicised-vulnerability-analyses",
+            "https://www.redteam-pentesting.de/advisories/rt-sa-2023-005/"
+        ],
+        "summary": "Pydio Cells through 4.1.2 allows SSRF. For longer running processes, Pydio Cells allows for the creation of jobs, which are run in the background. The job \"remote-download\" can be used to cause the backend to send a HTTP GET request to a specified URL and save the response to a new file. The response file is then available in a user-specified folder in Pydio Cells."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-32751",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://www.redteam-pentesting.de/en/advisories/-advisories-publicised-vulnerability-analyses",
+            "https://www.redteam-pentesting.de/advisories/rt-sa-2023-004/"
+        ],
+        "summary": "Pydio Cells through 4.1.2 allows XSS. Pydio Cells implements the download of files using presigned URLs which are generated using the Amazon AWS SDK for JavaScript [1]. The secrets used to sign these URLs are hardcoded and exposed through the JavaScript files of the web application. Therefore, it is possible to generate valid signatures for arbitrary download URLs. By uploading an HTML file and modifying the download URL to serve the file inline instead of as an attachment, any included JavaScript code is executed when the URL is opened in a browser, leading to a cross-site scripting vulnerability."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2023-34230",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/snowflakedb/snowflake-connector-net/security/advisories/GHSA-223g-8w3x-98wr"
+        ],
+        "summary": "snowflake-connector-net, the Snowflake Connector for .NET, is vulnerable to command injection prior to version 2.0.18 via SSO URL authentication. In order to exploit the potential for command injection, an attacker would need to be successful in (1) establishing a malicious resource and (2) redirecting users to utilize the resource. The attacker could set up a malicious, publicly accessible server which responds to the SSO URL with an attack payload. If the attacker then tricked a user into visiting the maliciously crafted connection URL, the user\u2019s local machine would render the malicious payload, leading to a remote code execution. This attack scenario can be mitigated through URL whitelisting as well as common anti-phishing resources. Version 2.0.18 fixes this issue."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2023-34232",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/snowflakedb/snowflake-connector-nodejs/pull/465",
+            "https://github.com/snowflakedb/snowflake-connector-nodejs/commit/0c9622ae12cd7d627df404b73a783b4a5f60728a",
+            "https://github.com/snowflakedb/snowflake-connector-nodejs/security/advisories/GHSA-h53w-7qw7-vh5c",
+            "https://community.snowflake.com/s/article/Node-js-Driver-Release-Notes"
+        ],
+        "summary": "snowflake-connector-nodejs, a NodeJS driver for Snowflake, is vulnerable to command injection via single sign on (SSO) browser URL authentication in versions prior to 1.6.21. In order to exploit the potential for command injection, an attacker would need to be successful in (1) establishing a malicious resource and (2) redirecting users to utilize the resource. The attacker could set up a malicious, publicly accessible server which responds to the SSO URL with an attack payload. If the attacker then tricked a user into visiting the maliciously crafted connection URL, the user\u2019s local machine would render the malicious payload, leading to a remote code execution. This attack scenario can be mitigated through URL whitelisting as well as common anti-phishing resources. Version 1.6.21 contains a patch for this issue."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2023-34233",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/snowflakedb/snowflake-connector-python/commit/1cdbd3b1403c5ef520d7f4d9614fe35165e101ac",
+            "https://github.com/snowflakedb/snowflake-connector-python/security/advisories/GHSA-5w5m-pfw9-c8fp",
+            "https://github.com/snowflakedb/snowflake-connector-python/pull/1480"
+        ],
+        "summary": "The Snowflake Connector for Python provides an interface for developing Python applications that can connect to Snowflake and perform all standard operations. Versions prior to 3.0.2 are vulnerable to command injection via single sign-on(SSO) browser URL authentication. In order to exploit the potential for command injection, an attacker would need to be successful in (1) establishing a malicious resource and (2) redirecting users to utilize the resource. The attacker could set up a malicious, publicly accessible server which responds to the SSO URL with an attack payload. If the attacker then tricked a user into visiting the maliciously crafted connection URL, the user\u2019s local machine would render the malicious payload, leading to a remote code execution. This attack scenario can be mitigated through URL whitelisting as well as common anti-phishing resources. Version 3.0.2 contains a patch for this issue."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2023-06-08T21:15:00",
+        "access": {},
+        "assigner": "productsecurity@jci.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-0954",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://www.johnsoncontrols.com/cyber-solutions/security-advisories",
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-23-159-02"
+        ],
+        "summary": "A debug feature in Sensormatic Electronics Illustra Pro Gen 4 Dome and PTZ cameras allows a user to compromise credentials after a long period of sustained attack."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-12-27T22:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2018-25046",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/cloudfoundry/archiver/commit/09b5706aa9367972c09144a450bb4523049ee840",
+            "https://pkg.go.dev/vuln/GO-2020-0025",
+            "https://snyk.io/research/zip-slip-vulnerability"
+        ],
+        "summary": "Due to improper path sanitization, archives containing relative file paths can cause files to be written (or overwritten) outside of the target directory."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-12-27T22:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2019-25073",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/goadesign/goa/commit/70b5a199d0f813d74423993832c424e1fc73fb39",
+            "https://pkg.go.dev/vuln/GO-2020-0032",
+            "https://github.com/goadesign/goa/pull/2388"
+        ],
+        "summary": "Improper path sanitization in github.com/goadesign/goa before v3.0.9, v2.0.10, or v1.4.3 allow remote attackers to read files outside of the intended directory."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-12-27T22:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2020-36559",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/go-aah/aah/pull/267",
+            "https://github.com/go-aah/aah/issues/266",
+            "https://pkg.go.dev/vuln/GO-2020-0033",
+            "https://github.com/go-aah/aah/commit/881dc9f71d1f7a4e8a9a39df9c5c081d3a2da1ec"
+        ],
+        "summary": "Due to improper sanitization of user input, HTTPEngine.Handle allows for directory traversal, allowing an attacker to read files outside of the target directory that the server has permission to read."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-12-27T22:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2020-36560",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/artdarek/go-unzip/pull/2",
+            "https://pkg.go.dev/vuln/GO-2020-0034",
+            "https://snyk.io/research/zip-slip-vulnerability",
+            "https://github.com/artdarek/go-unzip/commit/4975cbe0a719dc50b12da8585f1f207c82f7dfe0"
+        ],
+        "summary": "Due to improper path sanitization, archives containing relative file paths can cause files to be written (or overwritten) outside of the target directory."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-12-27T22:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2020-36561",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://github.com/yi-ge/unzip/commit/2adbaa4891b9690853ef10216189189f5ad7dc73",
+            "https://pkg.go.dev/vuln/GO-2020-0035",
+            "https://github.com/yi-ge/unzip/pull/1",
+            "https://snyk.io/research/zip-slip-vulnerability"
+        ],
+        "summary": "Due to improper path sanitization, archives containing relative file paths can cause files to be written (or overwritten) outside of the target directory."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-12-27T22:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2020-36566",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://snyk.io/research/zip-slip-vulnerability",
+            "https://github.com/whyrusleeping/tar-utils/commit/20a61371de5b51380bbdb0c7935b30b0625ac227",
+            "https://pkg.go.dev/vuln/GO-2021-0106"
+        ],
+        "summary": "Due to improper path sanitization, archives containing relative file paths can cause files to be written (or overwritten) outside of the target directory."
+    },
+    {
+        "Modified": "2023-06-08T21:15:00",
+        "Published": "2022-10-14T15:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "CWE-444",
+        "id": "CVE-2022-2880",
+        "impact": {},
+        "last-modified": "2023-06-08T21:15:00",
+        "references": [
+            "https://go.dev/issue/54663",
+            "https://groups.google.com/g/golang-announce/c/xtuG5faxtaU",
+            "https://go.dev/cl/432976",
+            "https://pkg.go.dev/vuln/GO-2022-1038"
+        ],
+        "summary": "Requests forwarded by ReverseProxy include the raw query parameters from the inbound request, including unparsable parameters rejected by net/http. This could permit query parameter smuggling when a Go proxy forwards a parameter with an unparsable value. After fix, ReverseProxy sanitizes the query parameters in the forwarded query when the outbound request's Form field is set after the ReverseProxy. Director function returns, indicating that the proxy has parsed the query parameters. Proxies which do not parse query parameters continue to forward the original query parameters unchanged."
+    },
+    {
+        "Modified": "2023-06-08T20:35:00",
+        "Published": "2023-06-02T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-33761",
+        "impact": {},
+        "last-modified": "2023-06-08T20:35:00",
+        "references": [
+            "https://github.com/rauschecker/CVEs/tree/main/CVE-2023-33761"
+        ],
+        "summary": "eMedia Consulting simpleRedak up to v2.47.23.05 was discovered to contain a reflected cross-site scripting (XSS) vulnerability via the component /view/cb/format_642.php."
+    },
+    {
+        "Modified": "2023-06-08T20:34:00",
+        "Published": "2023-06-02T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-33762",
+        "impact": {},
+        "last-modified": "2023-06-08T20:34:00",
+        "references": [
+            "https://github.com/rauschecker/CVEs/tree/main/CVE-2023-33762"
+        ],
+        "summary": "eMedia Consulting simpleRedak up to v2.47.23.05 was discovered to contain a SQL injection vulnerability via the Activity parameter."
+    },
+    {
+        "Modified": "2023-06-08T20:27:00",
+        "Published": "2023-06-02T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-33763",
+        "impact": {},
+        "last-modified": "2023-06-08T20:27:00",
+        "references": [
+            "https://github.com/rauschecker/CVEs/tree/main/CVE-2023-33763"
+        ],
+        "summary": "eMedia Consulting simpleRedak up to v2.47.23.05 was discovered to contain a reflected cross-site scripting (XSS) vulnerability via the component /scheduler/index.php."
+    },
+    {
+        "Modified": "2023-06-08T20:21:00",
+        "Published": "2023-06-02T17:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-28163",
+        "impact": {},
+        "last-modified": "2023-06-08T20:21:00",
+        "references": [
+            "https://www.mozilla.org/security/advisories/mfsa2023-11/",
+            "https://bugzilla.mozilla.org/show_bug.cgi?id=1817768",
+            "https://www.mozilla.org/security/advisories/mfsa2023-10/",
+            "https://www.mozilla.org/security/advisories/mfsa2023-09/"
+        ],
+        "summary": "When downloading files through the Save As dialog on Windows with suggested filenames containing environment variable names, Windows would have resolved those in the context of the current user. <br>*This bug only affects Firefox on Windows. Other versions of Firefox are unaffected.*. This vulnerability affects Firefox < 111, Firefox ESR < 102.9, and Thunderbird < 102.9."
+    },
+    {
+        "Modified": "2023-06-08T20:15:00",
+        "Published": "2023-06-08T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2023-34231",
+        "impact": {},
+        "last-modified": "2023-06-08T20:15:00",
+        "references": [
+            "https://github.com/snowflakedb/gosnowflake/security/advisories/GHSA-fwv2-65wh-2w8c",
+            "https://github.com/snowflakedb/gosnowflake/commit/e11a2a555f1b9f7adc1f01fb7b5e7f38fbbb2a1c",
+            "https://github.com/snowflakedb/gosnowflake/pull/757"
+        ],
+        "summary": "gosnowflake is th Snowflake Golang driver. Prior to version 1.6.19, a command injection vulnerability exists in the Snowflake Golang driver via single sign-on (SSO) browser URL authentication. In order to exploit the potential for command injection, an attacker would need to be successful in (1) establishing a malicious resource and (2) redirecting users to utilize the resource. The attacker could set up a malicious, publicly accessible server which responds to the SSO URL with an attack payload. If the attacker then tricked a user into visiting the maliciously crafted connection URL, the user\u2019s local machine would render the malicious payload, leading to a remote code execution. This attack scenario can be mitigated through URL whitelisting as well as common anti-phishing resources. A patch is available in version 1.6.19."
+    },
+    {
+        "Modified": "2023-06-08T20:15:00",
+        "Published": "2023-06-08T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-32749",
+        "impact": {},
+        "last-modified": "2023-06-08T20:15:00",
+        "references": [
+            "https://www.redteam-pentesting.de/en/advisories/-advisories-publicised-vulnerability-analyses",
+            "http://packetstormsecurity.com/files/172645/Pydio-Cells-4.1.2-Privilege-Escalation.html",
+            "http://seclists.org/fulldisclosure/2023/May/18",
+            "https://www.redteam-pentesting.de/en/advisories/rt-sa-2023-003/-pydio-cells-unauthorised-role-assignments"
+        ],
+        "summary": "Pydio Cells allows users by default to create so-called external users in order to share files with them. By modifying the HTTP request sent when creating such an external user, it is possible to assign the new user arbitrary roles. By assigning all roles to a newly created user, access to all cells and non-personal workspaces is granted."
+    },
+    {
+        "Modified": "2023-06-08T20:07:00",
+        "Published": "2023-06-02T17:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-28160",
+        "impact": {},
+        "last-modified": "2023-06-08T20:07:00",
+        "references": [
+            "https://bugzilla.mozilla.org/show_bug.cgi?id=1802385",
+            "https://www.mozilla.org/security/advisories/mfsa2023-09/"
+        ],
+        "summary": "When following a redirect to a publicly accessible web extension file, the URL may have been translated to the actual local path, leaking potentially sensitive information. This vulnerability affects Firefox < 111."
+    },
+    {
+        "Modified": "2023-06-08T20:01:00",
+        "Published": "2023-06-01T07:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2018-25086",
+        "impact": {},
+        "last-modified": "2023-06-08T20:01:00",
+        "references": [
+            "https://github.com/sea75300/fanpresscm3/releases/tag/v3.6.4",
+            "https://github.com/sea75300/fanpresscm3/commit/c380d343c2107fcee55ab00eb8d189ce5e03369b",
+            "https://vuldb.com/?ctiid.230235",
+            "https://vuldb.com/?id.230235"
+        ],
+        "summary": "A vulnerability was found in sea75300 FanPress CM up to 3.6.3. It has been classified as problematic. This affects the function getArticlesPreview of the file inc/controller/action/system/templatepreview.php of the component Template Preview. The manipulation leads to cross site scripting. It is possible to initiate the attack remotely. Upgrading to version 3.6.4 is able to address this issue. The name of the patch is c380d343c2107fcee55ab00eb8d189ce5e03369b. It is recommended to upgrade the affected component. The associated identifier of this vulnerability is VDB-230235."
+    },
+    {
+        "Modified": "2023-06-08T20:00:00",
+        "Published": "2023-06-02T17:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-28159",
+        "impact": {},
+        "last-modified": "2023-06-08T20:00:00",
+        "references": [
+            "https://www.mozilla.org/security/advisories/mfsa2023-09/",
+            "https://bugzilla.mozilla.org/show_bug.cgi?id=1783561"
+        ],
+        "summary": "The fullscreen notification could have been hidden on Firefox for Android by using download popups, resulting in potential user confusion or spoofing attacks. <br>*This bug only affects Firefox for Android. Other operating systems are unaffected.*. This vulnerability affects Firefox < 111."
+    },
+    {
         "Modified": "2023-06-08T19:53:00",
         "Published": "2023-06-02T17:15:00",
         "access": {},
@@ -1433,475 +1909,5 @@
             "https://github.com/StarsAlliance/PsychoStats/commit/5d3b7311fd5085ec6ea1b1bfa9a05285964e07e4"
         ],
         "summary": "A vulnerability classified as problematic has been found in Stars Alliance PsychoStats up to 3.2.2a. This affects an unknown part of the file upload/admin/login.php. The manipulation of the argument ref leads to cross site scripting. It is possible to initiate the attack remotely. Upgrading to version 3.2.2b is able to address this issue. The name of the patch is 5d3b7311fd5085ec6ea1b1bfa9a05285964e07e4. It is recommended to upgrade the affected component. The identifier VDB-230265 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2023-06-08T16:34:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-754",
-        "id": "CVE-2023-23602",
-        "impact": {},
-        "last-modified": "2023-06-08T16:34:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-01/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-03/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-02/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1800890"
-        ],
-        "summary": "A mishandled security check when creating a WebSocket in a WebWorker caused the Content Security Policy connect-src header to be ignored. This could lead to connections to restricted origins from inside WebWorkers. This vulnerability affects Firefox < 109, Thunderbird < 102.7, and Firefox ESR < 102.7."
-    },
-    {
-        "Modified": "2023-06-08T16:33:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25740",
-        "impact": {},
-        "last-modified": "2023-06-08T16:33:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1812354",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/"
-        ],
-        "summary": "After downloading a Windows <code>.scf</code> script from the local filesystem, an attacker could supply a remote path that would lead to unexpected network requests from the operating system. This also had the potential to leak NTLM credentials to the resource.<br>*This bug only affects Firefox for Windows. Other operating systems are unaffected.*. This vulnerability affects Firefox < 110."
-    },
-    {
-        "Modified": "2023-06-08T16:15:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-25739",
-        "impact": {},
-        "last-modified": "2023-06-08T16:15:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1811939",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "Module load requests that failed were not being checked as to whether or not they were cancelled causing a use-after-free in <code>ScriptLoadContext</code>. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T16:10:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2023-25738",
-        "impact": {},
-        "last-modified": "2023-06-08T16:10:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1811852",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "Members of the <code>DEVMODEW</code> struct set by the printer device driver weren't being validated and could have resulted in invalid values which in turn would cause the browser to attempt out of bounds access to related variables.<br>*This bug only affects Firefox on Windows. Other operating systems are unaffected.*. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T16:09:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25737",
-        "impact": {},
-        "last-modified": "2023-06-08T16:09:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1811464",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "An invalid downcast from <code>nsTextNode</code> to <code>SVGElement</code> could have lead to undefined behavior. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T16:05:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-25735",
-        "impact": {},
-        "last-modified": "2023-06-08T16:05:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1810711",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "Cross-compartment wrappers wrapping a scripted proxy could have caused objects from other compartments to be stored in the main compartment resulting in a use-after-free after unwrapping the proxy. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T15:57:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25734",
-        "impact": {},
-        "last-modified": "2023-06-08T15:57:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1810143",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1812338",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1809923",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1784451"
-        ],
-        "summary": "After downloading a Windows <code>.url</code> shortcut from the local filesystem, an attacker could supply a remote path that would lead to unexpected network requests from the operating system. This also had the potential to leak NTLM credentials to the resource.<br>*This bug only affects Firefox on Windows. Other operating systems are unaffected.*. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T15:54:00",
-        "Published": "2023-06-01T05:15:00",
-        "access": {},
-        "assigner": "disclosures@gallagher.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2023-24584",
-        "impact": {},
-        "last-modified": "2023-06-08T15:54:00",
-        "references": [
-            "https://security.gallagher.com/en-NZ/Security-Advisories/CVE-2023-24584"
-        ],
-        "summary": "\nController 6000 is vulnerable to a buffer overflow via the Controller diagnostic web interface upload feature. \n\n\n\n\nThis issue affects Controller 6000: before vCR8.80.230201a, before vCR8.70.230201a, before vCR8.60.230201b, before vCR8.50.230201a,\u00a0all versions of vCR8.40 and prior.\n\n"
-    },
-    {
-        "Modified": "2023-06-08T15:52:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-25732",
-        "impact": {},
-        "last-modified": "2023-06-08T15:52:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1804564",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "When encoding data from an <code>inputStream</code> in <code>xpcom</code> the size of the input being encoded was not correctly calculated potentially leading to an out of bounds memory write. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T15:47:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25731",
-        "impact": {},
-        "last-modified": "2023-06-08T15:47:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1801542"
-        ],
-        "summary": "Due to URL previews in the network panel of developer tools improperly storing URLs, query parameters could potentially be used to overwrite global objects in privileged code. This vulnerability affects Firefox < 110."
-    },
-    {
-        "Modified": "2023-06-08T15:46:00",
-        "Published": "2023-05-31T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-918",
-        "id": "CVE-2023-3015",
-        "impact": {},
-        "last-modified": "2023-06-08T15:46:00",
-        "references": [
-            "https://vuldb.com/?id.230359",
-            "https://github.com/Xor-Gerke/webray.com.cn/blob/main/cve/VIP-video-analysis/SSRF.md",
-            "https://vuldb.com/?ctiid.230359"
-        ],
-        "summary": "A vulnerability has been found in yiwent Vip Video Analysis 1.0 and classified as critical. Affected by this vulnerability is an unknown functionality of the file data/title.php. The manipulation of the argument titurl leads to server-side request forgery. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-230359."
-    },
-    {
-        "Modified": "2023-06-08T15:43:00",
-        "Published": "2023-05-23T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-31994",
-        "impact": {},
-        "last-modified": "2023-06-08T15:43:00",
-        "references": [
-            "https://www.hanwhavision.com/wp-content/uploads/2023/04/Camera-Vulnerability-Report.pdf",
-            "https://hanwhavisionamerica.com/download/50042/"
-        ],
-        "summary": "Certain Hanwha products are vulnerable to Denial of Service (DoS). ck vector is: When an empty UDP packet is sent to the listening service, the service thread results in a non-functional service (DoS) via WS Discovery and Hanwha proprietary discovery services. This affects IP Camera ANE-L7012R 1.41.01 and IP Camera XNV-9082R 2.10.02."
-    },
-    {
-        "Modified": "2023-06-08T15:40:00",
-        "Published": "2023-05-31T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-3016",
-        "impact": {},
-        "last-modified": "2023-06-08T15:40:00",
-        "references": [
-            "https://vuldb.com/?ctiid.230360",
-            "https://vuldb.com/?id.230360",
-            "https://github.com/Xor-Gerke/webray.com.cn/blob/main/cve/VIP-video-analysis/XSS.md"
-        ],
-        "summary": "A vulnerability was found in yiwent Vip Video Analysis 1.0 and classified as problematic. Affected by this issue is some unknown functionality of the file admin/admincore.php. The manipulation leads to cross site scripting. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-230360."
-    },
-    {
-        "Modified": "2023-06-08T15:34:00",
-        "Published": "2023-06-01T13:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2014-125104",
-        "impact": {},
-        "last-modified": "2023-06-08T15:34:00",
-        "references": [
-            "https://github.com/wp-plugins/vaultpress/commit/e3b92b14edca6291c5f998d54c90cbe98a1fb0e3",
-            "https://vuldb.com/?ctiid.230263",
-            "https://vuldb.com/?id.230263",
-            "https://github.com/wp-plugins/vaultpress/releases/tag/1.6.1"
-        ],
-        "summary": "A vulnerability was found in VaultPress Plugin up to 1.6.0 on WordPress. It has been declared as critical. Affected by this vulnerability is the function protect_aioseo_ajax of the file class.vaultpress-hotfixes.php of the component MailPoet Plugin. The manipulation leads to unrestricted upload. The attack can be launched remotely. Upgrading to version 1.6.1 is able to address this issue. The name of the patch is e3b92b14edca6291c5f998d54c90cbe98a1fb0e3. It is recommended to upgrade the affected component. The associated identifier of this vulnerability is VDB-230263."
-    },
-    {
-        "Modified": "2023-06-08T15:33:00",
-        "Published": "2023-05-26T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-31227",
-        "impact": {},
-        "last-modified": "2023-06-08T15:33:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/5/"
-        ],
-        "summary": "The hwPartsDFR module has a vulnerability in API calling verification. Successful exploitation of this vulnerability may affect device confidentiality."
-    },
-    {
-        "Modified": "2023-06-08T15:30:00",
-        "Published": "2023-05-26T23:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-190",
-        "id": "CVE-2023-32307",
-        "impact": {},
-        "last-modified": "2023-06-08T15:30:00",
-        "references": [
-            "https://github.com/freeswitch/sofia-sip/security/advisories/GHSA-rm4c-ccvf-ff9c",
-            "https://lists.debian.org/debian-lts-announce/2023/06/msg00002.html"
-        ],
-        "summary": "Sofia-SIP is an open-source SIP User-Agent library, compliant with the IETF RFC3261 specification.\nReferring to [GHSA-8599-x7rq-fr54](https://github.com/freeswitch/sofia-sip/security/advisories/GHSA-8599-x7rq-fr54), several other potential heap-over-flow and integer-overflow in stun_parse_attr_error_code and stun_parse_attr_uint32 were found because the lack of attributes length check when Sofia-SIP handles STUN packets. The previous patch of [GHSA-8599-x7rq-fr54](https://github.com/freeswitch/sofia-sip/security/advisories/GHSA-8599-x7rq-fr54) fixed the vulnerability when attr_type did not match the enum value, but there are also vulnerabilities in the handling of other valid cases. The OOB read and integer-overflow made by attacker may lead to crash, high consumption of memory or even other more serious consequences. These issue have been addressed in version 1.13.15. Users are advised to upgrade."
-    },
-    {
-        "Modified": "2023-06-08T15:23:00",
-        "Published": "2023-05-30T16:15:00",
-        "access": {},
-        "assigner": "secure@dell.com",
-        "cvss": null,
-        "cwe": "CWE-295",
-        "id": "CVE-2023-24568",
-        "impact": {},
-        "last-modified": "2023-06-08T15:23:00",
-        "references": [
-            "https://www.dell.com/support/kbdoc/en-us/000210963/dsa-2023-059-dell-networker-security-update-for-a-rabbitmq-vulnerability-related-to-improper-validation-of-hostname-in-rabbitmq-startup-script-which-fails-to-replace-ca-signed-certificates"
-        ],
-        "summary": "\nDell NetWorker, contains an Improper Validation of Certificate with Host Mismatch vulnerability in Rabbitmq port which could disallow replacing CA signed certificates.\n\n"
-    },
-    {
-        "Modified": "2023-06-08T15:19:00",
-        "Published": "2023-06-01T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-3035",
-        "impact": {},
-        "last-modified": "2023-06-08T15:19:00",
-        "references": [
-            "https://gitee.com/gouguopen/office/issues/I74ZPU",
-            "https://vuldb.com/?ctiid.230467",
-            "https://vuldb.com/?id.230467"
-        ],
-        "summary": "A vulnerability has been found in Guangdong Pythagorean OA Office System up to 4.50.31 and classified as problematic. Affected by this vulnerability is an unknown functionality of the component Schedule Handler. The manipulation of the argument description leads to cross site scripting. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-230467."
-    },
-    {
-        "Modified": "2023-06-08T15:06:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-1945",
-        "impact": {},
-        "last-modified": "2023-06-08T15:06:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-14/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1777588",
-            "https://www.mozilla.org/security/advisories/mfsa2023-15/"
-        ],
-        "summary": "Unexpected data returned from the Safe Browsing API could have led to memory corruption and a potentially exploitable crash. This vulnerability affects Thunderbird < 102.10 and Firefox ESR < 102.10."
-    },
-    {
-        "Modified": "2023-06-08T15:01:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-23598",
-        "impact": {},
-        "last-modified": "2023-06-08T15:01:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-01/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-03/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-02/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1800425"
-        ],
-        "summary": "Due to the Firefox GTK wrapper code's use of text/plain for drag data and GTK treating all text/plain MIMEs containing file URLs as being dragged a website could arbitrarily read a file via a call to <code>DataTransfer.setData</code>. This vulnerability affects Firefox < 109, Thunderbird < 102.7, and Firefox ESR < 102.7."
-    },
-    {
-        "Modified": "2023-06-08T14:48:00",
-        "Published": "2023-06-01T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-29736",
-        "impact": {},
-        "last-modified": "2023-06-08T14:48:00",
-        "references": [
-            "https://github.com/LianKee/SO-CVEs/blob/main/CVEs/CVE-2023-29736/CVE%20detail.md"
-        ],
-        "summary": "Keyboard Themes 1.275.1.164 for Android contains a dictionary traversal vulnerability that allows unauthorized apps to overwrite arbitrary files in its internal storage and achieve arbitrary code execution."
-    },
-    {
-        "Modified": "2023-06-08T14:43:00",
-        "Published": "2023-05-26T17:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2023-2002",
-        "impact": {},
-        "last-modified": "2023-06-08T14:43:00",
-        "references": [
-            "https://www.openwall.com/lists/oss-security/2023/04/16/3"
-        ],
-        "summary": "A vulnerability was found in the HCI sockets implementation due to a missing capability check in net/bluetooth/hci_sock.c in the Linux Kernel. This flaw allows an attacker to unauthorized execution of management commands, compromising the confidentiality, integrity, and availability of Bluetooth communication."
-    },
-    {
-        "Modified": "2023-06-08T14:40:00",
-        "Published": "2023-05-26T17:15:00",
-        "access": {},
-        "assigner": "security@vmware.com",
-        "cvss": null,
-        "cwe": "CWE-400",
-        "id": "CVE-2023-20883",
-        "impact": {},
-        "last-modified": "2023-06-08T14:40:00",
-        "references": [
-            "https://spring.io/security/cve-2023-20883"
-        ],
-        "summary": "In Spring Boot versions 3.0.0 - 3.0.6, 2.7.0 - 2.7.11, 2.6.0 - 2.6.14, 2.5.0 - 2.5.14 and older unsupported versions, there is potential for a denial-of-service (DoS) attack if Spring MVC is used together with a reverse proxy cache."
-    },
-    {
-        "Modified": "2023-06-08T14:32:00",
-        "Published": "2023-06-01T17:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-32324",
-        "impact": {},
-        "last-modified": "2023-06-08T14:32:00",
-        "references": [
-            "https://github.com/OpenPrinting/cups/security/advisories/GHSA-cxc6-w2g7-69p7",
-            "https://lists.debian.org/debian-lts-announce/2023/06/msg00001.html"
-        ],
-        "summary": "OpenPrinting CUPS is an open source printing system. In versions 2.4.2 and prior, a heap buffer overflow vulnerability would allow a remote attacker to launch a denial of service (DoS) attack. A buffer overflow vulnerability in the function `format_log_line` could allow remote attackers to cause a DoS on the affected system. Exploitation of the vulnerability can be triggered when the configuration file `cupsd.conf` sets the value of `loglevel `to `DEBUG`. No known patches or workarounds exist at time of publication."
-    },
-    {
-        "Modified": "2023-06-08T14:03:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25729",
-        "impact": {},
-        "last-modified": "2023-06-08T14:03:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1792138",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "Permission prompts for opening external schemes were only shown for <code>ContentPrincipals</code> resulting in extensions being able to open them without user interaction via <code>ExpandedPrincipals</code>. This could lead to further malicious actions such as downloading files or interacting with software already installed on the system. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T14:03:00",
-        "Published": "2023-05-17T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-522",
-        "id": "CVE-2023-1763",
-        "impact": {},
-        "last-modified": "2023-06-08T14:03:00",
-        "references": [
-            "https://psirt.canon/advisory-information/cp2023-002/",
-            "https://psirt.canon/hardening/"
-        ],
-        "summary": "Canon IJ Network Tool/Ver.4.7.5 and earlier (supported OS: OS X 10.9.5-macOS 13),IJ Network Tool/Ver.4.7.3 and earlier (supported OS: OS X 10.7.5-OS X 10.8) allows an attacker to acquire sensitive information on the Wi-Fi connection setup of the printer from the software."
-    },
-    {
-        "Modified": "2023-06-08T14:01:00",
-        "Published": "2023-06-02T17:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25728",
-        "impact": {},
-        "last-modified": "2023-06-08T14:01:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1790345",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-07/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-06/"
-        ],
-        "summary": "The <code>Content-Security-Policy-Report-Only</code> header could allow an attacker to leak a child iframe's unredacted URI when interaction with that iframe triggers a redirect. This vulnerability affects Firefox < 110, Thunderbird < 102.8, and Firefox ESR < 102.8."
-    },
-    {
-        "Modified": "2023-06-08T14:01:00",
-        "Published": "2023-05-26T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2023-31226",
-        "impact": {},
-        "last-modified": "2023-06-08T14:01:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/5/"
-        ],
-        "summary": "The SDK for the MediaPlaybackController module has improper permission verification. Successful exploitation of this vulnerability may affect confidentiality."
     }
 ]
