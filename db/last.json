@@ -1,5 +1,22 @@
 [
     {
+        "Modified": "2023-06-16T23:15:00",
+        "Published": "2023-06-16T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-354",
+        "id": "CVE-2023-34459",
+        "impact": {},
+        "last-modified": "2023-06-16T23:15:00",
+        "references": [
+            "https://github.com/OpenZeppelin/openzeppelin-contracts/commit/4d2383e17186be3e8ccf5a442e9686ecc7de1c55",
+            "https://github.com/OpenZeppelin/openzeppelin-contracts/releases/tag/v4.9.2",
+            "https://github.com/OpenZeppelin/openzeppelin-contracts/security/advisories/GHSA-wprv-93r4-jj2p"
+        ],
+        "summary": "OpenZeppelin Contracts is a library for smart contract development. Starting in version 4.7.0 and prior to version 4.9.2, when the `verifyMultiProof`, `verifyMultiProofCalldata`, `procesprocessMultiProof`, or `processMultiProofCalldat` functions are in use, it is possible to construct merkle trees that allow forging a valid multiproof for an arbitrary set of leaves.\n\nA contract may be vulnerable if it uses multiproofs for verification and the merkle tree that is processed includes a node with value 0 at depth 1 (just under the root). This could happen inadvertedly for balanced trees with 3 leaves or less, if the leaves are not hashed. This could happen deliberately if a malicious tree builder includes such a node in the tree.\n\nA contract is not vulnerable if it uses single-leaf proving (`verify`, `verifyCalldata`, `processProof`, or `processProofCalldata`), or if it uses multiproofs with a known tree that has hashed leaves. Standard merkle trees produced or validated with the @openzeppelin/merkle-tree library are safe.\n\nThe problem has been patched in version 4.9.2.\n\nSome workarounds are available. For those using multiproofs: When constructing merkle trees hash the leaves and do not insert empty nodes in your trees. Using the @openzeppelin/merkle-tree package eliminates this issue. Do not accept user-provided merkle roots without reconstructing at least the first level of the tree. Verify the merkle tree structure by reconstructing it from the leaves."
+    },
+    {
         "Modified": "2023-06-16T21:15:00",
         "Published": "2023-06-16T21:15:00",
         "access": {},
@@ -1624,20 +1641,5 @@
             "https://www.zeroscience.mk/en/vulnerabilities/ZSL-2023-5771.php"
         ],
         "summary": "Weak session management in DB Elettronica Telecomunicazioni SpA SFT DAB 600/C Firmware: 1.9.3 Bios firmware: 7.1 (Apr 19 2021) Gui: 2.46 FPGA: 169.55 uc: 6.15 allows attackers on the same network to bypass authentication by re-using the IP address assigned to the device by the NAT protocol."
-    },
-    {
-        "Modified": "2023-06-16T16:26:00",
-        "Published": "2023-06-09T20:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-29758",
-        "impact": {},
-        "last-modified": "2023-06-16T16:26:00",
-        "references": [
-            "https://github.com/LianKee/SO-CVEs/blob/main/CVEs/CVE-2023-29758/CVE%20detailed.md"
-        ],
-        "summary": "An issue found in Blue Light Filter v.1.5.5 for Android allows unauthorized apps to cause a persistent denial of service by manipulating the SharedPreference files."
     }
 ]
