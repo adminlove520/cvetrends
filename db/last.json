@@ -1,1590 +1,1689 @@
 [
     {
-        "Modified": "2023-06-27T13:52:00",
-        "Published": "2023-06-19T12:15:00",
+        "Modified": "2023-06-27T15:59:00",
+        "Published": "2023-06-15T17:15:00",
         "access": {},
-        "assigner": "audit@patchstack.com",
+        "assigner": "security-advisories@github.com",
         "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-47586",
+        "cwe": "CWE-190",
+        "id": "CVE-2023-34453",
         "impact": {},
-        "last-modified": "2023-06-27T13:52:00",
+        "last-modified": "2023-06-27T15:59:00",
         "references": [
-            "https://patchstack.com/database/vulnerability/ultimate-addons-for-contact-form-7/wordpress-ultimate-addons-for-contact-form-7-plugin-3-1-23-sql-injection?_s_id=cve"
+            "https://github.com/xerial/snappy-java/blob/master/src/main/java/org/xerial/snappy/BitShuffle.java",
+            "https://github.com/xerial/snappy-java/security/advisories/GHSA-pqr6-cmr2-h8hf",
+            "https://github.com/xerial/snappy-java/commit/820e2e074c58748b41dbd547f4edba9e108ad905",
+            "https://github.com/xerial/snappy-java/blob/05c39b2ca9b5b7b39611529cc302d3d796329611/src/main/java/org/xerial/snappy/BitShuffle.java#L107"
         ],
-        "summary": "Unauth. SQL Injection (SQLi) vulnerability in Themefic Ultimate Addons for Contact Form 7 plugin <=\u00a03.1.23 versions."
+        "summary": "snappy-java is a fast compressor/decompressor for Java. Due to unchecked multiplications, an integer overflow may occur in versions prior to 1.1.10.1, causing a fatal error.\n\nThe function `shuffle(int[] input)` in the file `BitShuffle.java` receives an array of integers and applies a bit shuffle on it. It does so by multiplying the length by 4 and passing it to the natively compiled shuffle function. Since the length is not tested, the multiplication by four can cause an integer overflow and become a smaller value than the true size, or even zero or negative. In the case of a negative value, a `java.lang.NegativeArraySizeException` exception will raise, which can crash the program. In a case of a value that is zero or too small, the code that afterwards references the shuffled array will assume a bigger size of the array, which might cause exceptions such as `java.lang.ArrayIndexOutOfBoundsException`.\n\nThe same issue exists also when using the `shuffle` functions that receive a double, float, long and short, each using a different multiplier that may cause the same issue.\n\nVersion 1.1.10.1 contains a patch for this vulnerability."
     },
     {
-        "Modified": "2023-06-27T13:39:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2899",
-        "impact": {},
-        "last-modified": "2023-06-27T13:39:00",
-        "references": [
-            "https://wpscan.com/vulnerability/92dcbeb3-17db-4d10-8ae7-c99acdb48c78"
-        ],
-        "summary": "The Google Map Shortcode WordPress plugin through 3.1.2 does not validate and escape some of its shortcode attributes before outputting them back in the page, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks which could be used against high privilege users such as admin"
-    },
-    {
-        "Modified": "2023-06-27T13:33:00",
-        "Published": "2023-02-17T17:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2022-43927",
-        "impact": {},
-        "last-modified": "2023-06-27T13:33:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/241671",
-            "https://www.ibm.com/support/pages/node/6953759"
-        ],
-        "summary": "IBM Db2 for Linux, UNIX and Windows 10.5, 11.1, and 11.5 is vulnerable to information Disclosure due to improper privilege management when a specially crafted table access is used. IBM X-Force ID: 241671."
-    },
-    {
-        "Modified": "2023-06-27T13:32:00",
-        "Published": "2022-12-23T15:15:00",
-        "access": {},
-        "assigner": "support@hackerone.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2022-44565",
-        "impact": {},
-        "last-modified": "2023-06-27T13:32:00",
-        "references": [
-            "https://community.ui.com/releases/Security-Advisory-Bulletin-027-027/123e4577-9f00-4777-abe1-64a1d56fee05"
-        ],
-        "summary": "An improper access validation vulnerability exists in airMAX AC <8.7.11, airFiber 60/LR <2.6.2, airFiber 60 XG/HD <v1.0.0 and airFiber GBE <1.4.1 that allows a malicious actor to retrieve status and usage data from the UISP device."
-    },
-    {
-        "Modified": "2023-06-27T13:32:00",
-        "Published": "2022-12-22T22:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2022-41981",
-        "impact": {},
-        "last-modified": "2023-06-27T13:32:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1628",
-            "https://www.debian.org/security/2023/dsa-5384",
-            "https://security.gentoo.org/glsa/202305-33"
-        ],
-        "summary": "A stack-based buffer overflow vulnerability exists in the TGA file format parser of OpenImageIO v2.3.19.0. A specially-crafted targa file can lead to out of bounds read and write on the process stack, which can lead to arbitrary code execution. An attacker can provide a malicious file to trigger this vulnerability."
-    },
-    {
-        "Modified": "2023-06-27T13:31:00",
-        "Published": "2023-01-19T18:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-1188",
-        "id": "CVE-2022-47194",
-        "impact": {},
-        "last-modified": "2023-06-27T13:31:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1686"
-        ],
-        "summary": "An insecure default vulnerability exists in the Post Creation functionality of Ghost Foundation Ghost 5.9.4. Default installations of Ghost allow non-administrator users to inject arbitrary Javascript in posts, which allow privilege escalation to administrator via XSS. To trigger this vulnerability, an attacker can send an HTTP request to inject Javascript in a post to trick an administrator into visiting the post.A stored XSS vulnerability exists in the `twitter` field for a user."
-    },
-    {
-        "Modified": "2023-06-27T13:29:00",
-        "Published": "2023-02-15T10:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2022-42735",
-        "impact": {},
-        "last-modified": "2023-06-27T13:29:00",
-        "references": [
-            "https://lists.apache.org/thread/2k8764jmckmc19qc8x51nlnngq71pcf7"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Apache Software Foundation Apache ShenYu. ShenYu Admin allows low-privilege low-level administrators create users with higher privileges than their own. This issue affects Apache ShenYu: 2.5.0. Upgrade to Apache ShenYu 2.5.1 or apply patch https://github.com/apache/shenyu/pull/3958 https://github.com/apache/shenyu/pull/3958 ."
-    },
-    {
-        "Modified": "2023-06-27T13:23:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2812",
-        "impact": {},
-        "last-modified": "2023-06-27T13:23:00",
-        "references": [
-            "https://wpscan.com/vulnerability/7de4c313-359e-4450-85f5-d29f3c2f046a"
-        ],
-        "summary": "The Ultimate Dashboard WordPress plugin before 3.7.6 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2023-06-27T13:23:00",
-        "Published": "2022-12-08T00:15:00",
-        "access": {},
-        "assigner": "security@nortonlifelock.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2022-4291",
-        "impact": {},
-        "last-modified": "2023-06-27T13:23:00",
-        "references": [
-            "https://support.norton.com/sp/static/external/tools/security-advisories.html"
-        ],
-        "summary": "The aswjsflt.dll library from Avast Antivirus windows contained a potentially exploitable heap corruption vulnerability that could enable an attacker to bypass the sandbox of the application it was loaded into, if applicable. This issue was fixed in version 18.0.1478 of the Script Shield Component."
-    },
-    {
-        "Modified": "2023-06-27T13:23:00",
-        "Published": "2022-12-07T18:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2022-43581",
-        "impact": {},
-        "last-modified": "2023-06-27T13:23:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/6844453",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/238805"
-        ],
-        "summary": "IBM Content Navigator 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.0.4, 3.0.5, 3.0.6, 3.0.7, 3.0.8, 3.0.9, 3.0.10, 3.0.11, and 3.0.12 is vulnerable to missing authorization and could allow an authenticated user to load external plugins and execute code. IBM X-Force ID: 238805."
-    },
-    {
-        "Modified": "2023-06-27T13:23:00",
-        "Published": "2022-10-21T14:15:00",
-        "access": {},
-        "assigner": "productcert@siemens.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2022-43400",
-        "impact": {},
-        "last-modified": "2023-06-27T13:23:00",
-        "references": [
-            "https://cert-portal.siemens.com/productcert/pdf/ssa-640732.pdf"
-        ],
-        "summary": "A vulnerability has been identified in Siveillance Video Mobile Server V2022 R2 (All versions < V22.2a (80)). The mobile server component of affected applications improperly handles the log in for Active Directory accounts that are part of Administrators group. This could allow an unauthenticated remote attacker to access the application without a valid account."
-    },
-    {
-        "Modified": "2023-06-27T13:22:00",
-        "Published": "2022-12-08T08:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2022-4349",
-        "impact": {},
-        "last-modified": "2023-06-27T13:22:00",
-        "references": [
-            "https://vuldb.com/?id.215109",
-            "https://gitee.com/CTF-hacker/pwn/issues/I5WAAB"
-        ],
-        "summary": "A vulnerability classified as problematic has been found in CTF-hacker pwn. This affects an unknown part of the file delete.html. The manipulation leads to cross-site request forgery. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-215109 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2023-06-27T13:19:00",
-        "Published": "2022-12-08T19:15:00",
-        "access": {},
+        "Modified": "2023-06-27T15:58:00",
+        "Published": "2022-06-20T04:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
         "assigner": "security@huntr.dev",
+        "cvss": 7.5,
+        "cvss-time": "2023-06-27T15:58:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "cwe": "CWE-269",
+        "id": "CVE-2022-2023",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:58:00",
+        "references": [
+            "https://huntr.dev/bounties/0f35b1d3-56e6-49e4-bc5a-830f52e094b3",
+            "https://github.com/polonel/trudesk/commit/83fd5a89319ba2c2f5934722e39b08aba9b3a4ac"
+        ],
+        "summary": "Incorrect Use of Privileged APIs in GitHub repository polonel/trudesk prior to 1.2.4."
+    },
+    {
+        "Modified": "2023-06-27T15:57:00",
+        "Published": "2022-07-08T00:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert@redhat.com",
+        "cvss": 7.5,
+        "cvss-time": "2023-06-27T15:57:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "cwe": "CWE-639",
+        "id": "CVE-2022-1245",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:57:00",
+        "references": [
+            "https://github.com/keycloak/keycloak/security/advisories/GHSA-75p6-52g3-rqc8"
+        ],
+        "summary": "A privilege escalation flaw was found in the token exchange feature of keycloak. Missing authorization allows a client application holding a valid access token to exchange tokens for any target client by passing the client_id of the target. This could allow a client to gain unauthorized access to additional services."
+    },
+    {
+        "Modified": "2023-06-27T15:57:00",
+        "Published": "2022-06-27T09:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "contact@wpscan.com",
+        "cvss": 7.5,
+        "cvss-time": "2023-06-27T15:57:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "cwe": "CWE-862",
+        "id": "CVE-2022-1574",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:57:00",
+        "references": [
+            "https://wpscan.com/vulnerability/c36d0ea8-bf5c-4af9-bd3d-911eb02adc14"
+        ],
+        "summary": "The HTML2WP WordPress plugin through 1.0.0 does not have authorisation and CSRF checks when importing files, and does not validate them, as a result, unauthenticated attackers can upload arbitrary files (such as PHP) on the remote server"
+    },
+    {
+        "Modified": "2023-06-27T15:57:00",
+        "Published": "2022-06-27T09:15:00",
+        "access": {
+            "authentication": "SINGLE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "contact@wpscan.com",
+        "cvss": 5.5,
+        "cvss-time": "2023-06-27T15:57:00",
+        "cvss-vector": "AV:N/AC:L/Au:S/C:N/I:P/A:P",
+        "cwe": "CWE-862",
+        "id": "CVE-2022-1572",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "NONE",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:57:00",
+        "references": [
+            "https://wpscan.com/vulnerability/9afd1805-d449-4551-986a-f92cb47c95c5"
+        ],
+        "summary": "The HTML2WP WordPress plugin through 1.0.0 does not have authorisation and CSRF checks in an AJAX action, available to any authenticated users such as subscriber, which could allow them to delete arbitrary file"
+    },
+    {
+        "Modified": "2023-06-27T15:57:00",
+        "Published": "2022-06-20T15:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "MEDIUM",
+            "vector": "NETWORK"
+        },
+        "assigner": "security@huntr.dev",
+        "cvss": 6.8,
+        "cvss-time": "2023-06-27T15:57:00",
+        "cvss-vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+        "cwe": "CWE-126",
+        "id": "CVE-2022-1720",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:57:00",
+        "references": [
+            "https://github.com/vim/vim/commit/395bd1f6d3edc9f7edb5d1f2d7deaf5a9e3ab93c",
+            "https://huntr.dev/bounties/5ccfb386-7eb9-46e5-98e5-243ea4b358a8",
+            "https://lists.debian.org/debian-lts-announce/2022/06/msg00014.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GFD2A4YLBR7OIRHTL7CK6YNMEIQ264CN/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/U743FMJGFQ35GBPCQ6OWMVZEJPDFVEWM/",
+            "https://security.gentoo.org/glsa/202208-32",
+            "https://support.apple.com/kb/HT213488",
+            "https://support.apple.com/kb/HT213443",
+            "https://support.apple.com/kb/HT213444",
+            "http://seclists.org/fulldisclosure/2022/Oct/41",
+            "http://seclists.org/fulldisclosure/2022/Oct/28",
+            "http://seclists.org/fulldisclosure/2022/Oct/43",
+            "http://seclists.org/fulldisclosure/2022/Oct/45",
+            "https://lists.debian.org/debian-lts-announce/2022/11/msg00009.html",
+            "https://security.gentoo.org/glsa/202305-16"
+        ],
+        "summary": "Buffer Over-read in function grab_file_name in GitHub repository vim/vim prior to 8.2.4956. This vulnerability is capable of crashing the software, memory modification, and possible remote execution."
+    },
+    {
+        "Modified": "2023-06-27T15:56:00",
+        "Published": "2022-07-11T11:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "MEDIUM",
+            "vector": "LOCAL"
+        },
+        "assigner": "info@cert.vde.com",
+        "cvss": 4.7,
+        "cvss-time": "2023-06-27T15:56:00",
+        "cvss-vector": "AV:L/AC:M/Au:N/C:C/I:N/A:N",
+        "cwe": "CWE-522",
+        "id": "CVE-2022-1794",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "COMPLETE",
+            "integrity": "NONE"
+        },
+        "last-modified": "2023-06-27T15:56:00",
+        "references": [
+            "https://customers.codesys.com/index.php?eID=dumpFile&t=f&f=17129&token=1c1485c4a700c04f2069699f5be7558d276ca117&download="
+        ],
+        "summary": "The CODESYS OPC DA Server prior V3.5.18.20 stores PLC passwords as plain text in its configuration file so that it is visible to all authorized Microsoft Windows users of the system."
+    },
+    {
+        "Modified": "2023-06-27T15:55:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41167",
+        "impact": {},
+        "last-modified": "2023-06-27T15:55:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated AutoCAD (.dwg, TeighaTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:54:00",
+        "Published": "2023-01-09T23:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
         "cvss": null,
         "cwe": "CWE-862",
-        "id": "CVE-2022-4366",
+        "id": "CVE-2022-4103",
         "impact": {},
-        "last-modified": "2023-06-27T13:19:00",
+        "last-modified": "2023-06-27T15:54:00",
         "references": [
-            "https://huntr.dev/bounties/f225d69a-d971-410d-a8f9-b0026143aed8",
-            "https://github.com/lirantal/daloradius/commit/3d11f375a76ddb3741200296e15f81d82dfb80ce"
+            "https://wpscan.com/vulnerability/5e1244f7-39b5-4f37-8fef-e3f35fc388f1"
         ],
-        "summary": "Exposure of Sensitive System Information to an Unauthorized Control Sphere in GitHub repository lirantal/daloradius prior to master branch."
+        "summary": "The Royal Elementor Addons WordPress plugin before 1.3.56 does not have authorisation and CSRF checks when creating a template, and does not ensure that the post created is a template. This could allow any authenticated users, such as subscriber to create a post (as well as any post type) with an arbitrary title"
     },
     {
-        "Modified": "2023-06-27T13:15:00",
-        "Published": "2023-06-26T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2020-23064",
-        "impact": {},
-        "last-modified": "2023-06-27T13:15:00",
-        "references": [
-            "https://blog.jquery.com/2020/04/10/jquery-3-5-0-released/",
-            "https://snyk.io/vuln/SNYK-JS-JQUERY-565129"
-        ],
-        "summary": "Cross Site Scripting vulnerability in jQuery 2.2.0 through 3.x before 3.5.0 allows a remote attacker to execute arbitrary code via the <options> element."
-    },
-    {
-        "Modified": "2023-06-27T13:15:00",
-        "Published": "2023-06-16T08:15:00",
-        "access": {},
-        "assigner": "security@kubernetes.io",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-2431",
-        "impact": {},
-        "last-modified": "2023-06-27T13:15:00",
-        "references": [
-            "https://groups.google.com/g/kubernetes-security-announce/c/QHmx0HOQa10",
-            "https://github.com/kubernetes/kubernetes/issues/118690",
-            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/XBX4RL4UOC7JHWWYB2AJCKSUM7EG5Y5G/"
-        ],
-        "summary": "A security issue was discovered in Kubelet that allows pods to bypass the seccomp profile enforcement. Pods that use localhost type for seccomp profile but specify an empty profile field, are affected by this issue. In this scenario, this vulnerability allows the pod to run in unconfined (seccomp disabled) mode. This bug affects Kubelet."
-    },
-    {
-        "Modified": "2023-06-27T13:15:00",
-        "Published": "2023-05-25T14:15:00",
-        "access": {},
-        "assigner": "security@m-files.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-2480",
-        "impact": {},
-        "last-modified": "2023-06-27T13:15:00",
-        "references": [
-            "https://https://www.m-files.com/about/trust-center/security-advisories/cve-2023-2480/",
-            "https://www.m-files.com/about/trust-center/security-advisories/cve-2023-2480/"
-        ],
-        "summary": "Missing access permissions checks in M-Files Client before 23.5.12598.0 (excluding 23.2 SR2 and newer) allows elevation of privilege via UI extension applications"
-    },
-    {
-        "Modified": "2023-06-27T13:15:00",
-        "Published": "2023-01-03T19:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-116",
-        "id": "CVE-2022-45143",
-        "impact": {},
-        "last-modified": "2023-06-27T13:15:00",
-        "references": [
-            "https://lists.apache.org/thread/yqkd183xrw3wqvnpcg3osbcryq85fkzj",
-            "https://security.gentoo.org/glsa/202305-37"
-        ],
-        "summary": "The JsonErrorReportValve in Apache Tomcat 8.5.83, 9.0.40 to 9.0.68 and 10.1.0-M1 to 10.1.1 did not escape the type, message or description values. In some circumstances these are constructed from user provided data and it was therefore possible for users to supply values that invalidated or manipulated the JSON output."
-    },
-    {
-        "Modified": "2023-06-27T13:15:00",
-        "Published": "2022-11-14T14:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-306",
-        "id": "CVE-2022-45378",
-        "impact": {},
-        "last-modified": "2023-06-27T13:15:00",
-        "references": [
-            "https://lists.apache.org/thread/g4l64s283njhnph2otx7q4gs2j952d31",
-            "http://www.openwall.com/lists/oss-security/2022/11/14/4"
-        ],
-        "summary": "** UNSUPPPORTED WHEN ASSIGNED ** In the default configuration of Apache SOAP, an RPCRouterServlet is available without authentication. This gives an attacker the possibility to invoke methods on the classpath that meet certain criteria. Depending on what classes are available on the classpath this might even lead to arbitrary remote code execution. NOTE: This vulnerability only affects products that are no longer supported by the maintainer."
-    },
-    {
-        "Modified": "2023-06-27T13:14:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2811",
-        "impact": {},
-        "last-modified": "2023-06-27T13:14:00",
-        "references": [
-            "https://wpscan.com/vulnerability/82a81721-0435-45a6-bd5b-dc90186cf803"
-        ],
-        "summary": "The AI ChatBot WordPress plugin before 4.5.6 does not sanitise and escape numerous of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks to all admin when setting chatbot and all client when using chatbot"
-    },
-    {
-        "Modified": "2023-06-27T13:12:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-2805",
-        "impact": {},
-        "last-modified": "2023-06-27T13:12:00",
-        "references": [
-            "https://wpscan.com/vulnerability/bdb75c8c-87e2-4358-ad3b-f4236e9a43c0"
-        ],
-        "summary": "The SupportCandy WordPress plugin before 3.1.7 does not properly sanitise and escape the agents[] parameter in the set_add_agent_leaves AJAX function before using it in a SQL statement, leading to a SQL injection exploitable by high privilege users such as admin."
-    },
-    {
-        "Modified": "2023-06-27T13:10:00",
-        "Published": "2023-06-12T21:15:00",
-        "access": {},
-        "assigner": "cna@cyber.gov.il",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2023-32220",
-        "impact": {},
-        "last-modified": "2023-06-27T13:10:00",
-        "references": [
-            "https://www.gov.il/en/Departments/faq/cve_advisories"
-        ],
-        "summary": "Milesight NCR/camera version 71.8.0.6-r5 allows authentication bypass through an unspecified method."
-    },
-    {
-        "Modified": "2023-06-27T13:09:00",
-        "Published": "2023-06-12T15:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-3208",
-        "impact": {},
-        "last-modified": "2023-06-27T13:09:00",
-        "references": [
-            "https://github.com/yangxixx/vulhub/blob/master/activemq/RoadFlow.md",
-            "https://vuldb.com/?ctiid.231230",
-            "https://vuldb.com/?id.231230"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in RoadFlow Visual Process Engine .NET Core Mvc 2.13.3. Affected by this issue is some unknown functionality of the file /Log/Query?appid=0B736354-9473-4D66-B9C0-15CAC149EB05&tabid=tab_0B73635494734D66B9C015CAC149EB05 of the component Login. The manipulation of the argument sidx/sord leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. VDB-231230 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2023-06-27T13:07:00",
-        "Published": "2023-06-12T15:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2023-3206",
-        "impact": {},
-        "last-modified": "2023-06-27T13:07:00",
-        "references": [
-            "https://vuldb.com/?id.231229",
-            "https://vuldb.com/?ctiid.231229",
-            "https://github.com/shulao2020/cve/blob/main/Flying%20Fish.md"
-        ],
-        "summary": "A vulnerability classified as problematic was found in Chengdu VEC40G 3.0. Affected by this vulnerability is an unknown functionality of the file /send_order.cgi?parameter=restart. The manipulation of the argument restart with the input reboot leads to denial of service. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-231229 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2023-06-27T12:56:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2779",
-        "impact": {},
-        "last-modified": "2023-06-27T12:56:00",
-        "references": [
-            "https://wpscan.com/vulnerability/fe9b7696-3b0e-42e2-9dbc-55167605f5c5",
-            "http://packetstormsecurity.com/files/173053/WordPress-Super-Socializer-7.13.52-Cross-Site-Scripting.html"
-        ],
-        "summary": "The Social Share, Social Login and Social Comments WordPress plugin before 7.13.52 does not sanitise and escape a parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against high privilege users such as admin."
-    },
-    {
-        "Modified": "2023-06-27T12:52:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-32387",
-        "impact": {},
-        "last-modified": "2023-06-27T12:52:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213760",
-            "https://support.apple.com/en-us/HT213759",
-            "https://support.apple.com/en-us/HT213758"
-        ],
-        "summary": "A use-after-free issue was addressed with improved memory management. This issue is fixed in macOS Ventura 13.4, macOS Big Sur 11.7.7, macOS Monterey 12.6.6. A remote attacker may be able to cause unexpected app termination or arbitrary code execution"
-    },
-    {
-        "Modified": "2023-06-27T12:50:00",
-        "Published": "2023-06-19T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-34641",
-        "impact": {},
-        "last-modified": "2023-06-27T12:50:00",
-        "references": [
-            "https://www.kioware.com/versionhistory.aspx?pid=15",
-            "https://github.com/huntergregal/CVE/tree/main/TBD-KIOWARE-001"
-        ],
-        "summary": "KioWare for Windows through v8.33 was discovered to contain an incomplete blacklist filter for blocked dialog boxes on Windows 10. This issue can allow attackers to open a file dialog box via the function window.print() which can then be used to open an unprivileged command prompt."
-    },
-    {
-        "Modified": "2023-06-27T12:50:00",
-        "Published": "2023-06-19T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-34642",
-        "impact": {},
-        "last-modified": "2023-06-27T12:50:00",
-        "references": [
-            "https://www.kioware.com/versionhistory.aspx?pid=15",
-            "https://github.com/huntergregal/CVE/tree/main/TBD-KIOWARE-002"
-        ],
-        "summary": "KioWare for Windows through v8.33 was discovered to contain an incomplete blacklist filter for blocked dialog boxes on Windows 10. This issue can allow attackers to open a file dialog box via the function showDirectoryPicker() which can then be used to open an unprivileged command prompt."
-    },
-    {
-        "Modified": "2023-06-27T12:50:00",
-        "Published": "2023-06-19T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2023-35862",
-        "impact": {},
-        "last-modified": "2023-06-27T12:50:00",
-        "references": [
-            "https://github.com/obgm/libcoap/tags",
-            "https://github.com/obgm/libcoap/issues/1117",
-            "https://github.com/obgm/libcoap/pull/1118"
-        ],
-        "summary": "libcoap 4.3.1 contains a buffer over-read via the function coap_parse_oscore_conf_mem at coap_oscore.c."
-    },
-    {
-        "Modified": "2023-06-27T12:49:00",
-        "Published": "2023-06-19T12:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2023-27992",
-        "impact": {},
-        "last-modified": "2023-06-27T12:49:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-pre-authentication-command-injection-vulnerability-in-nas-products"
-        ],
-        "summary": "The pre-authentication command injection vulnerability in the Zyxel NAS326 firmware versions prior to\u00a0V5.21(AAZF.14)C0, NAS540 firmware versions prior to\u00a0V5.21(AATB.11)C0, and NAS542\u00a0firmware versions prior to V5.21(ABAG.11)C0 could allow an unauthenticated attacker to execute some operating system (OS) commands remotely by sending a crafted HTTP request."
-    },
-    {
-        "Modified": "2023-06-27T12:49:00",
-        "Published": "2023-06-19T12:15:00",
-        "access": {},
-        "assigner": "security@jfrog.com",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2023-3316",
-        "impact": {},
-        "last-modified": "2023-06-27T12:49:00",
-        "references": [
-            "https://research.jfrog.com/vulnerabilities/libtiff-nullderef-dos-xray-522144/"
-        ],
-        "summary": "A NULL pointer dereference in TIFFClose() is caused by a failure to open an output file (non-existent path or a path that requires permissions like /dev/null) while specifying zones.\n\n"
-    },
-    {
-        "Modified": "2023-06-27T12:47:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-28191",
-        "impact": {},
-        "last-modified": "2023-06-27T12:47:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213760",
-            "https://support.apple.com/en-us/HT213761",
-            "https://support.apple.com/en-us/HT213759",
-            "https://support.apple.com/en-us/HT213757",
-            "https://support.apple.com/en-us/HT213758",
-            "https://support.apple.com/en-us/HT213764"
-        ],
-        "summary": "This issue was addressed with improved redaction of sensitive information. This issue is fixed in watchOS 9.5, macOS Ventura 13.4, tvOS 16.5, iOS 16.5 and iPadOS 16.5, macOS Big Sur 11.7.7, macOS Monterey 12.6.6. An app may be able to bypass Privacy preferences"
-    },
-    {
-        "Modified": "2023-06-27T12:47:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-32373",
-        "impact": {},
-        "last-modified": "2023-06-27T12:47:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213762",
-            "https://support.apple.com/en-us/HT213761",
-            "https://support.apple.com/en-us/HT213757",
-            "https://support.apple.com/en-us/HT213758",
-            "https://support.apple.com/en-us/HT213764",
-            "https://support.apple.com/en-us/HT213765"
-        ],
-        "summary": "A use-after-free issue was addressed with improved memory management. This issue is fixed in watchOS 9.5, iOS 15.7.6 and iPadOS 15.7.6, macOS Ventura 13.4, Safari 16.5, tvOS 16.5, iOS 16.5 and iPadOS 16.5. Processing maliciously crafted web content may lead to arbitrary code execution. Apple is aware of a report that this issue may have been actively exploited."
-    },
-    {
-        "Modified": "2023-06-27T12:45:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2023-32372",
-        "impact": {},
-        "last-modified": "2023-06-27T12:45:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213761",
-            "https://support.apple.com/en-us/HT213757",
-            "https://support.apple.com/en-us/HT213758",
-            "https://support.apple.com/en-us/HT213764"
-        ],
-        "summary": "An out-of-bounds read was addressed with improved input validation. This issue is fixed in iOS 16.5 and iPadOS 16.5, macOS Ventura 13.4, watchOS 9.5, tvOS 16.5. Processing an image may result in disclosure of process memory"
-    },
-    {
-        "Modified": "2023-06-27T12:44:00",
-        "Published": "2023-06-20T20:15:00",
+        "Modified": "2023-06-27T15:54:00",
+        "Published": "2022-07-19T20:15:00",
         "access": {},
         "assigner": "secalert@redhat.com",
         "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2023-3220",
+        "cwe": "CWE-190",
+        "id": "CVE-2022-1922",
         "impact": {},
-        "last-modified": "2023-06-27T12:44:00",
+        "last-modified": "2023-06-27T15:54:00",
         "references": [
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=93340e10b9c5fc86730d149636e0aa8b47bb5a34"
+            "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1225",
+            "https://www.debian.org/security/2022/dsa-5204",
+            "https://lists.debian.org/debian-lts-announce/2022/08/msg00001.html"
         ],
-        "summary": "An issue was discovered in the Linux kernel through 6.1-rc8. dpu_crtc_atomic_check in drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c lacks check of the return value of kzalloc() and will cause the NULL Pointer Dereference."
+        "summary": "DOS / potential heap overwrite in mkv demuxing using zlib decompression. Integer overflow in matroskademux element in gst_matroska_decompress_data function which causes a segfault, or could cause a heap overwrite, depending on libc and OS. Depending on the libc used, and the underlying OS capabilities, it could be just a segfault or a heap overwrite. If the libc uses mmap for large chunks, and the OS supports mmap, then it is just a segfault (because the realloc before the integer overflow will use mremap to reduce the size of the chunk, and it will start to write to unmapped memory). However, if using a libc implementation that does not use mmap, or if the OS does not support mmap while using libc, then this could result in a heap overwrite."
     },
     {
-        "Modified": "2023-06-27T12:44:00",
-        "Published": "2023-06-20T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-35884",
-        "impact": {},
-        "last-modified": "2023-06-27T12:44:00",
+        "Modified": "2023-06-27T15:54:00",
+        "Published": "2022-07-12T21:15:00",
+        "access": {
+            "authentication": "SINGLE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert@redhat.com",
+        "cvss": 9.0,
+        "cvss-time": "2023-06-27T15:54:00",
+        "cvss-vector": "AV:N/AC:L/Au:S/C:C/I:C/A:C",
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2022-1025",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2023-06-27T15:54:00",
         "references": [
-            "https://patchstack.com/database/vulnerability/eventprime-event-calendar-management/wordpress-eventprime-plugin-3-0-5-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2f5v-8r3f-8pww"
         ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in EventPrime plugin <=\u00a03.0.5 versions."
+        "summary": "All unpatched versions of Argo CD starting with v1.0.0 are vulnerable to an improper access control bug, allowing a malicious user to potentially escalate their privileges to admin-level."
     },
     {
-        "Modified": "2023-06-27T12:44:00",
-        "Published": "2023-06-19T18:15:00",
+        "Modified": "2023-06-27T15:51:00",
+        "Published": "2022-07-19T20:15:00",
         "access": {},
         "assigner": "secalert@redhat.com",
         "cvss": null,
-        "cwe": "CWE-415",
-        "id": "CVE-2023-3312",
+        "cwe": "CWE-190",
+        "id": "CVE-2022-1923",
         "impact": {},
-        "last-modified": "2023-06-27T12:44:00",
+        "last-modified": "2023-06-27T15:51:00",
         "references": [
-            "https://patchwork.kernel.org/project/linux-pm/patch/20230323174026.950622-1-krzysztof.kozlowski@linaro.org/"
+            "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1225",
+            "https://www.debian.org/security/2022/dsa-5204",
+            "https://lists.debian.org/debian-lts-announce/2022/08/msg00001.html"
         ],
-        "summary": "A vulnerability was found in drivers/cpufreq/qcom-cpufreq-hw.c in cpufreq subsystem in the Linux Kernel. This flaw, during device unbind will lead to double release problem leading to denial of service."
+        "summary": "DOS / potential heap overwrite in mkv demuxing using bzip decompression. Integer overflow in matroskademux element in bzip decompression function which causes a segfault, or could cause a heap overwrite, depending on libc and OS. Depending on the libc used, and the underlying OS capabilities, it could be just a segfault or a heap overwrite. If the libc uses mmap for large chunks, and the OS supports mmap, then it is just a segfault (because the realloc before the integer overflow will use mremap to reduce the size of the chunk, and it will start to write to unmapped memory). However, if using a libc implementation that does not use mmap, or if the OS does not support mmap while using libc, then this could result in a heap overwrite."
     },
     {
-        "Modified": "2023-06-27T12:42:00",
-        "Published": "2023-06-23T15:15:00",
+        "Modified": "2023-06-27T15:51:00",
+        "Published": "2022-07-19T20:15:00",
         "access": {},
-        "assigner": "cve@mitre.org",
+        "assigner": "secalert@redhat.com",
         "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-36273",
+        "cwe": "CWE-190",
+        "id": "CVE-2022-1924",
         "impact": {},
-        "last-modified": "2023-06-27T12:42:00",
+        "last-modified": "2023-06-27T15:51:00",
         "references": [
-            "https://github.com/LibreDWG/libredwg/issues/677#BUG1"
+            "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1225",
+            "https://www.debian.org/security/2022/dsa-5204",
+            "https://lists.debian.org/debian-lts-announce/2022/08/msg00001.html"
         ],
-        "summary": "LibreDWG v0.12.5 was discovered to contain a heap buffer overflow via the function bit_calc_CRC at bits.c."
+        "summary": "DOS / potential heap overwrite in mkv demuxing using lzo decompression. Integer overflow in matroskademux element in lzo decompression function which causes a segfault, or could cause a heap overwrite, depending on libc and OS. Depending on the libc used, and the underlying OS capabilities, it could be just a segfault or a heap overwrite. If the libc uses mmap for large chunks, and the OS supports mmap, then it is just a segfault (because the realloc before the integer overflow will use mremap to reduce the size of the chunk, and it will start to write to unmapped memory). However, if using a libc implementation that does not use mmap, or if the OS does not support mmap while using libc, then this could result in a heap overwrite."
     },
     {
-        "Modified": "2023-06-27T12:42:00",
-        "Published": "2023-06-21T07:15:00",
+        "Modified": "2023-06-27T15:50:00",
+        "Published": "2022-08-08T14:15:00",
         "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-3339",
-        "impact": {},
-        "last-modified": "2023-06-27T12:42:00",
-        "references": [
-            "https://vuldb.com/?ctiid.232015",
-            "https://github.com/6rignard/CveReport/blob/main/Agro-School%20Management%20System%20exam-delete.php%20has%20Sqlinjection.pdf",
-            "https://vuldb.com/?id.232015"
-        ],
-        "summary": "A vulnerability has been found in code-projects Agro-School Management System 1.0 and classified as critical. Affected by this vulnerability is an unknown functionality of the file exam-delete.php. The manipulation of the argument test_id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-232015."
-    },
-    {
-        "Modified": "2023-06-27T12:41:00",
-        "Published": "2023-06-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-36274",
-        "impact": {},
-        "last-modified": "2023-06-27T12:41:00",
-        "references": [
-            "https://github.com/LibreDWG/libredwg/issues/677#BUG2"
-        ],
-        "summary": "LibreDWG v0.12.5 was discovered to contain a heap buffer overflow via the function bit_write_TF at bits.c."
-    },
-    {
-        "Modified": "2023-06-27T12:41:00",
-        "Published": "2023-06-21T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-33584",
-        "impact": {},
-        "last-modified": "2023-06-27T12:41:00",
-        "references": [
-            "https://github.com/sudovivek/CVE/blob/main/CVE-2023-33584/CVE-2023-33584.txt",
-            "https://packetstormsecurity.com/files/cve/CVE-2023-33584",
-            "https://www.sourcecodester.com/php/14444/enrollment-system-project-source-code-using-phpmysql.html",
-            "http://packetstormsecurity.com/files/172718/Enrollment-System-Project-1.0-Authentication-Bypass-SQL-Injection.html"
-        ],
-        "summary": "Sourcecodester Enrollment System Project V1.0 is vulnerable to SQL Injection (SQLI) attacks, which allow an attacker to manipulate the SQL queries executed by the application. The application fails to properly validate user-supplied input in the username and password fields during the login process, enabling an attacker to inject malicious SQL code."
-    },
-    {
-        "Modified": "2023-06-27T12:18:00",
-        "Published": "2023-06-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-36272",
-        "impact": {},
-        "last-modified": "2023-06-27T12:18:00",
-        "references": [
-            "https://github.com/LibreDWG/libredwg/issues/681#BUG1"
-        ],
-        "summary": "LibreDWG v0.12.5 was discovered to contain a heap buffer overflow via the function bit_utf8_to_TU at bits.c."
-    },
-    {
-        "Modified": "2023-06-27T12:18:00",
-        "Published": "2023-06-23T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-36271",
-        "impact": {},
-        "last-modified": "2023-06-27T12:18:00",
-        "references": [
-            "https://github.com/LibreDWG/libredwg/issues/681#BUG2"
-        ],
-        "summary": "LibreDWG v0.12.5 was discovered to contain a heap buffer overflow via the function bit_wcs2nlen at bits.c."
-    },
-    {
-        "Modified": "2023-06-27T12:15:00",
-        "Published": "2023-06-27T12:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-88",
-        "id": "CVE-2023-34395",
-        "impact": {},
-        "last-modified": "2023-06-27T12:15:00",
-        "references": [
-            "https://github.com/apache/airflow/pull/31713",
-            "https://lists.apache.org/thread/l26yykftzbhc9tgcph8cso88bc2lqwwd"
-        ],
-        "summary": "Improper Neutralization of Argument Delimiters in a Command ('Argument Injection') vulnerability in Apache Software Foundation Apache Airflow ODBC Provider.\nIn OdbcHook, A privilege escalation vulnerability exists in a system due to controllable ODBC driver parameters that allow the loading of arbitrary dynamic-link libraries, resulting in command execution.\nStarting version 4.0.0 driver can be set only from the hook constructor.\nThis issue affects Apache Airflow ODBC Provider: before 4.0.0.\n\n"
-    },
-    {
-        "Modified": "2023-06-27T12:15:00",
-        "Published": "2023-06-27T12:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-20",
-        "id": "CVE-2023-35798",
-        "impact": {},
-        "last-modified": "2023-06-27T12:15:00",
-        "references": [
-            "https://lists.apache.org/thread/951rb9m7wwox5p30tdvcfjxq8j1mp4pj",
-            "https://github.com/apache/airflow/pull/31984"
-        ],
-        "summary": "Input Validation vulnerability in Apache Software Foundation Apache Airflow ODBC Provider, Apache Software Foundation Apache Airflow MSSQL Provider.This\u00a0vulnerability is considered low since it requires DAG code to use `get_sqlalchemy_connection` and someone with access to connection resources specifically\u00a0updating the connection to exploit it.\n\nThis issue affects Apache Airflow ODBC Provider: before 4.0.0; Apache Airflow MSSQL Provider: before 3.4.1.\n\nIt is recommended to\u00a0upgrade to a version that is not affected\n\n"
-    },
-    {
-        "Modified": "2023-06-27T10:58:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-32385",
-        "impact": {},
-        "last-modified": "2023-06-27T10:58:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213757",
-            "https://support.apple.com/en-us/HT213758"
-        ],
-        "summary": "A denial-of-service issue was addressed with improved memory handling. This issue is fixed in iOS 16.5 and iPadOS 16.5, macOS Ventura 13.4. Opening a PDF file may lead to unexpected app termination"
-    },
-    {
-        "Modified": "2023-06-27T10:58:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2023-32384",
-        "impact": {},
-        "last-modified": "2023-06-27T10:58:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213760",
-            "https://support.apple.com/en-us/HT213761",
-            "https://support.apple.com/en-us/HT213759",
-            "https://support.apple.com/en-us/HT213757",
-            "https://support.apple.com/en-us/HT213758",
-            "https://support.apple.com/en-us/HT213764",
-            "https://support.apple.com/en-us/HT213765"
-        ],
-        "summary": "A buffer overflow was addressed with improved bounds checking. This issue is fixed in watchOS 9.5, iOS 15.7.6 and iPadOS 15.7.6, macOS Ventura 13.4, tvOS 16.5, iOS 16.5 and iPadOS 16.5, macOS Big Sur 11.7.7, macOS Monterey 12.6.6. Processing an image may lead to arbitrary code execution"
-    },
-    {
-        "Modified": "2023-06-27T10:56:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-42792",
-        "impact": {},
-        "last-modified": "2023-06-27T10:56:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213489"
-        ],
-        "summary": "This issue was addressed with improved data protection. This issue is fixed in iOS 16.1 and iPadOS 16. An app may be able to read sensitive location information"
-    },
-    {
-        "Modified": "2023-06-27T10:53:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-42860",
-        "impact": {},
-        "last-modified": "2023-06-27T10:53:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213488",
-            "https://support.apple.com/en-us/HT213494",
-            "https://support.apple.com/en-us/HT213493"
-        ],
-        "summary": "This issue was addressed with improved checks to prevent unauthorized actions. This issue is fixed in macOS Monterey 12.6.1, macOS Big Sur 11.7.1, macOS Ventura 13. An app may be able to modify protected parts of the file system"
-    },
-    {
-        "Modified": "2023-06-27T10:52:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-46715",
-        "impact": {},
-        "last-modified": "2023-06-27T10:52:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213489"
-        ],
-        "summary": "A logic issue was addressed with improved checks. This issue is fixed in iOS 16.1 and iPadOS 16. An app may be able to bypass certain Privacy preferences"
-    },
-    {
-        "Modified": "2023-06-27T10:51:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-46718",
-        "impact": {},
-        "last-modified": "2023-06-27T10:51:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213531",
-            "https://support.apple.com/en-us/HT213532",
-            "https://support.apple.com/en-us/HT213533",
-            "https://support.apple.com/en-us/HT213534"
-        ],
-        "summary": "A logic issue was addressed with improved restrictions. This issue is fixed in iOS 15.7.2 and iPadOS 15.7.2, macOS Ventura 13.1, macOS Big Sur 11.7.2, macOS Monterey 12.6.2. An app may be able to read sensitive location information"
-    },
-    {
-        "Modified": "2023-06-27T10:50:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-23516",
-        "impact": {},
-        "last-modified": "2023-06-27T10:50:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213605",
-            "https://support.apple.com/en-us/HT213603",
-            "https://support.apple.com/en-us/HT213604"
-        ],
-        "summary": "The issue was addressed with improved memory handling. This issue is fixed in macOS Monterey 12.6.3, macOS Big Sur 11.7.3, macOS Ventura 13.2. An app may be able to execute arbitrary code with kernel privileges"
-    },
-    {
-        "Modified": "2023-06-27T10:42:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "CWE-843",
-        "id": "CVE-2023-27930",
-        "impact": {},
-        "last-modified": "2023-06-27T10:42:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213761",
-            "https://support.apple.com/en-us/HT213757",
-            "https://support.apple.com/en-us/HT213758",
-            "https://support.apple.com/en-us/HT213764"
-        ],
-        "summary": "A type confusion issue was addressed with improved checks. This issue is fixed in iOS 16.5 and iPadOS 16.5, macOS Ventura 13.4, watchOS 9.5, tvOS 16.5. An app may be able to execute arbitrary code with kernel privileges"
-    },
-    {
-        "Modified": "2023-06-27T10:41:00",
-        "Published": "2023-06-23T18:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-27940",
-        "impact": {},
-        "last-modified": "2023-06-27T10:41:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213759",
-            "https://support.apple.com/en-us/HT213758",
-            "https://support.apple.com/en-us/HT213765"
-        ],
-        "summary": "The issue was addressed with additional permissions checks. This issue is fixed in macOS Ventura 13.4, iOS 15.7.6 and iPadOS 15.7.6, macOS Monterey 12.6.6. A sandboxed app may be able to observe system-wide network connections"
-    },
-    {
-        "Modified": "2023-06-27T09:25:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48498",
-        "impact": {},
-        "last-modified": "2023-06-27T09:25:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:25:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48499",
-        "impact": {},
-        "last-modified": "2023-06-27T09:25:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:25:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48500",
-        "impact": {},
-        "last-modified": "2023-06-27T09:25:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:25:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48501",
-        "impact": {},
-        "last-modified": "2023-06-27T09:25:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:24:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-34155",
-        "impact": {},
-        "last-modified": "2023-06-27T09:24:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Vulnerability of unauthorized calling on HUAWEI phones and tablets.Successful exploitation of this vulnerability may affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:24:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-34156",
-        "impact": {},
-        "last-modified": "2023-06-27T09:24:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Vulnerability of services denied by early fingerprint APIs on HarmonyOS products.Successful exploitation of this vulnerability may cause services to be denied."
-    },
-    {
-        "Modified": "2023-06-27T09:22:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48487",
-        "impact": {},
-        "last-modified": "2023-06-27T09:22:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:22:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2022-48488",
-        "impact": {},
-        "last-modified": "2023-06-27T09:22:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Vulnerability of bypassing the default desktop security controls.Successful exploitation of this vulnerability may cause unauthorized modifications to the desktop."
-    },
-    {
-        "Modified": "2023-06-27T09:22:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48489",
-        "impact": {},
-        "last-modified": "2023-06-27T09:22:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:22:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48486",
-        "impact": {},
-        "last-modified": "2023-06-27T09:22:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:21:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48492",
-        "impact": {},
-        "last-modified": "2023-06-27T09:21:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:21:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48490",
-        "impact": {},
-        "last-modified": "2023-06-27T09:21:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:20:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48493",
-        "impact": {},
-        "last-modified": "2023-06-27T09:20:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:20:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2022-48494",
-        "impact": {},
-        "last-modified": "2023-06-27T09:20:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Vulnerability of lax app identity verification in the pre-authorization function.Successful exploitation of this vulnerability will cause malicious apps to become pre-authorized."
-    },
-    {
-        "Modified": "2023-06-27T09:20:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2022-48495",
-        "impact": {},
-        "last-modified": "2023-06-27T09:20:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Vulnerability of unauthorized access to foreground app information.Successful exploitation of this vulnerability may cause foreground app information to be obtained."
-    },
-    {
-        "Modified": "2023-06-27T09:19:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2022-48496",
-        "impact": {},
-        "last-modified": "2023-06-27T09:19:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Vulnerability of lax app identity verification in the pre-authorization function.Successful exploitation of this vulnerability will cause malicious apps to become pre-authorized."
-    },
-    {
-        "Modified": "2023-06-27T09:19:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-48497",
-        "impact": {},
-        "last-modified": "2023-06-27T09:19:00",
-        "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
-        ],
-        "summary": "Configuration defects in the secure OS module.Successful exploitation of this vulnerability will affect availability."
-    },
-    {
-        "Modified": "2023-06-27T09:18:00",
-        "Published": "2023-06-19T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-35776",
-        "impact": {},
-        "last-modified": "2023-06-27T09:18:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/sermone-online-sermons-management/wordpress-sermon-e-sermons-online-plugin-1-0-0-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability in Beplus Sermon'e \u2013 Sermons Online plugin <=\u00a01.0.0 versions."
-    },
-    {
-        "Modified": "2023-06-27T09:18:00",
-        "Published": "2023-06-19T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-35779",
-        "impact": {},
-        "last-modified": "2023-06-27T09:18:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/seed-fonts/wordpress-seed-fonts-plugin-2-3-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Auth. (admin+) Stored Cross-Site Scripting (XSS) vulnerability in Seed Webs Seed Fonts plugin <=\u00a02.3.1 versions."
-    },
-    {
-        "Modified": "2023-06-27T09:16:00",
-        "Published": "2023-06-19T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-35772",
-        "impact": {},
-        "last-modified": "2023-06-27T09:16:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/google-map-shortcode/wordpress-google-map-shortcode-plugin-3-1-2-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in Alain Gonzalez Google Map Shortcode plugin <=\u00a03.1.2 versions."
-    },
-    {
-        "Modified": "2023-06-27T09:16:00",
-        "Published": "2023-06-19T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-35775",
-        "impact": {},
-        "last-modified": "2023-06-27T09:16:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-backup-manager/wordpress-wp-backup-manager-plugin-1-13-1-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in WP Backup Solutions WP Backup Manager plugin <=\u00a01.13.1 versions."
-    },
-    {
-        "Modified": "2023-06-27T09:14:00",
-        "Published": "2023-06-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@huawei.com",
+        "assigner": "contact@wpscan.com",
         "cvss": null,
         "cwe": "CWE-862",
-        "id": "CVE-2022-48491",
+        "id": "CVE-2022-1323",
         "impact": {},
-        "last-modified": "2023-06-27T09:14:00",
+        "last-modified": "2023-06-27T15:50:00",
         "references": [
-            "https://consumer.huawei.com/en/support/bulletin/2023/6/"
+            "https://wpscan.com/vulnerability/2d8020e1-6489-4555-9956-2dc190aaa61b"
         ],
-        "summary": "Vulnerability of missing authentication on certain HUAWEI phones.Successful exploitation of this vulnerability can lead to ads and other windows to display at any time."
+        "summary": "The Discy WordPress theme before 5.0 lacks authorization checks then processing ajax requests to the discy_update_options action, allowing any logged in users (with privileges as low as Subscriber,) to change Theme options by sending a crafted POST request."
     },
     {
-        "Modified": "2023-06-27T09:12:00",
-        "Published": "2023-06-19T11:15:00",
+        "Modified": "2023-06-27T15:50:00",
+        "Published": "2022-07-21T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@ch.abb.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-0902",
+        "impact": {},
+        "last-modified": "2023-06-27T15:50:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=9AKK108467A0927&LanguageCode=en&DocumentPartId=&Action=Launch&_ga"
+        ],
+        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'), Improper Neutralization of Special Elements used in a Command ('Command Injection') vulnerability in flow computer and remote controller products of ABB ( RMC-100 (Standard), RMC-100-LITE, XIO, XFCG5 , XRCG5 , uFLOG5 , UDC) allows an attacker who successfully exploited this vulnerability could insert and run arbitrary code in an affected system node."
+    },
+    {
+        "Modified": "2023-06-27T15:50:00",
+        "Published": "2022-07-19T20:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-190",
+        "id": "CVE-2022-1925",
+        "impact": {},
+        "last-modified": "2023-06-27T15:50:00",
+        "references": [
+            "https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1225",
+            "https://www.debian.org/security/2022/dsa-5204",
+            "https://lists.debian.org/debian-lts-announce/2022/08/msg00001.html"
+        ],
+        "summary": "DOS / potential heap overwrite in mkv demuxing using HEADERSTRIP decompression. Integer overflow in matroskaparse element in gst_matroska_decompress_data function which causes a heap overflow. Due to restrictions on chunk sizes in the matroskademux element, the overflow can't be triggered, however the matroskaparse element has no size checks."
+    },
+    {
+        "Modified": "2023-06-27T15:49:00",
+        "Published": "2022-08-17T21:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-1373",
+        "impact": {},
+        "last-modified": "2023-06-27T15:49:00",
+        "references": [
+            "https://www.cisa.gov/uscert/ics/advisories/icsa-22-228-04",
+            "https://industrial.softing.com/fileadmin/psirt/downloads/syt-2022-5.html"
+        ],
+        "summary": "The \u201crestore configuration\u201d feature of Softing Secure Integration Server V1.22 is vulnerable to a directory traversal vulnerability when processing zip files. An attacker can craft a zip file to load an arbitrary dll and execute code. Using the \"restore configuration\" feature to upload a zip file containing a path traversal file may cause a file to be created and executed upon touching the disk."
+    },
+    {
+        "Modified": "2023-06-27T15:48:00",
+        "Published": "2023-06-19T02:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2023-35844",
+        "impact": {},
+        "last-modified": "2023-06-27T15:48:00",
+        "references": [
+            "https://github.com/lightdash/lightdash/compare/0.510.2...0.510.3",
+            "https://github.com/lightdash/lightdash/commit/fcc808c84c2cc3afb343063e32a49440d32a553c",
+            "https://github.com/lightdash/lightdash/pull/5090",
+            "https://advisory.dw1.io/59"
+        ],
+        "summary": "packages/backend/src/routers in Lightdash before 0.510.3 has insecure file endpoints, e.g., they allow .. directory traversal and do not ensure that an intended file extension (.csv or .png) is used."
+    },
+    {
+        "Modified": "2023-06-27T15:47:00",
+        "Published": "2022-09-14T18:15:00",
+        "access": {},
+        "assigner": "cybersecurity@hitachienergy.com",
+        "cvss": null,
+        "cwe": "CWE-119",
+        "id": "CVE-2022-1778",
+        "impact": {},
+        "last-modified": "2023-06-27T15:47:00",
+        "references": [
+            "https://search.abb.com/library/Download.aspx?DocumentID=8DBD000106&LanguageCode=en&DocumentPartId=&Action=Launch"
+        ],
+        "summary": "Improper Input Validation vulnerability in Hitachi Energy MicroSCADA X SYS600 while reading a specific configuration file causes a buffer-overflow that causes a failure to start the SYS600. The configuration file can only be accessed by an administrator access. This issue affects: Hitachi Energy MicroSCADA X SYS600 version 10 to version 10.3.1. cpe:2.3:a:hitachienergy:microscada_x_sys600:10:*:*:*:*:*:*:* cpe:2.3:a:hitachienergy:microscada_x_sys600:10.1:*:*:*:*:*:*:* cpe:2.3:a:hitachienergy:microscada_x_sys600:10.1.1:*:*:*:*:*:*:* cpe:2.3:a:hitachienergy:microscada_x_sys600:10.2:*:*:*:*:*:*:* cpe:2.3:a:hitachienergy:microscada_x_sys600:10.2.1:*:*:*:*:*:*:* cpe:2.3:a:hitachienergy:microscada_x_sys600:10.3:*:*:*:*:*:*:* cpe:2.3:a:hitachienergy:microscada_x_sys600:10.3.1:*:*:*:*:*:*:*"
+    },
+    {
+        "Modified": "2023-06-27T15:47:00",
+        "Published": "2022-08-31T16:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-367",
+        "id": "CVE-2022-1974",
+        "impact": {},
+        "last-modified": "2023-06-27T15:47:00",
+        "references": [
+            "https://github.com/torvalds/linux/commit/da5c0f119203ad9728920456a0f52a6d850c01cd"
+        ],
+        "summary": "A use-after-free flaw was found in the Linux kernel's NFC core functionality due to a race condition between kobject creation and delete. This vulnerability allows a local attacker with CAP_NET_ADMIN privilege to leak kernel information."
+    },
+    {
+        "Modified": "2023-06-27T15:47:00",
+        "Published": "2022-08-29T18:15:00",
         "access": {},
         "assigner": "contact@wpscan.com",
         "cvss": null,
         "cwe": "CWE-639",
-        "id": "CVE-2023-2751",
+        "id": "CVE-2022-2034",
         "impact": {},
-        "last-modified": "2023-06-27T09:12:00",
+        "last-modified": "2023-06-27T15:47:00",
         "references": [
-            "https://wpscan.com/vulnerability/1b0fe0ac-d0d1-473d-af5b-dad6217933d4"
+            "https://hackerone.com/reports/1590237",
+            "https://wpscan.com/vulnerability/aba3dd58-7a8e-4129-add5-4dd5972c0426"
         ],
-        "summary": "The Upload Resume WordPress plugin through 1.2.0 does not validate the captcha parameter when uploading a resume via the resume_upload_form shortcode, allowing unauthenticated visitors to upload arbitrary media files to the site."
+        "summary": "The Sensei LMS WordPress plugin before 4.5.0 does not have proper permissions set in one of its REST endpoint, allowing unauthenticated users to access private messages sent to teachers"
     },
     {
-        "Modified": "2023-06-27T09:11:00",
-        "Published": "2023-06-19T11:15:00",
+        "Modified": "2023-06-27T15:47:00",
+        "Published": "2022-08-29T15:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-909",
+        "id": "CVE-2022-1016",
+        "impact": {},
+        "last-modified": "2023-06-27T15:47:00",
+        "references": [
+            "https://seclists.org/oss-sec/2022/q1/205",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2066614",
+            "https://access.redhat.com/security/cve/CVE-2022-1016",
+            "http://blog.dbouman.nl/2022/04/02/How-The-Tables-Have-Turned-CVE-2022-1015-1016/"
+        ],
+        "summary": "A flaw was found in the Linux kernel in net/netfilter/nf_tables_core.c:nft_do_chain, which can cause a use-after-free. This issue needs to handle 'return' with proper preconditions, as it can lead to a kernel information leak problem caused by a local, unprivileged attacker."
+    },
+    {
+        "Modified": "2023-06-27T15:45:00",
+        "Published": "2022-09-22T15:15:00",
+        "access": {},
+        "assigner": "security@google.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2022-1941",
+        "impact": {},
+        "last-modified": "2023-06-27T15:45:00",
+        "references": [
+            "https://cloud.google.com/support/bulletins#GCP-2022-019",
+            "https://github.com/protocolbuffers/protobuf/security/advisories/GHSA-8gq9-2x98-w8hf",
+            "http://www.openwall.com/lists/oss-security/2022/09/27/1",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CBAUKJQL6O4TIWYBENORSY5P43TVB4M3/",
+            "https://lists.debian.org/debian-lts-announce/2023/04/msg00019.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MPCGUT3T5L6C3IDWUPSUO22QDCGQKTOP/"
+        ],
+        "summary": "A parsing vulnerability for the MessageSet type in the ProtocolBuffers versions prior to and including 3.16.1, 3.17.3, 3.18.2, 3.19.4, 3.20.1 and 3.21.5 for protobuf-cpp, and versions prior to and including 3.16.1, 3.17.3, 3.18.2, 3.19.4, 3.20.1 and 4.21.5 for protobuf-python can lead to out of memory failures. A specially crafted message with multiple key-value per elements creates parsing issues, and can lead to a Denial of Service against services receiving unsanitized input. We recommend upgrading to versions 3.18.3, 3.19.5, 3.20.2, 3.21.6 for protobuf-cpp and 3.18.3, 3.19.5, 3.20.2, 4.21.6 for protobuf-python. Versions for 3.16 and 3.17 are no longer updated."
+    },
+    {
+        "Modified": "2023-06-27T15:39:00",
+        "Published": "2022-06-13T13:15:00",
+        "access": {
+            "authentication": "SINGLE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "security@wordfence.com",
+        "cvss": 5.5,
+        "cvss-time": "2023-06-27T15:39:00",
+        "cvss-vector": "AV:N/AC:L/Au:S/C:P/I:P/A:N",
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2022-1656",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:39:00",
+        "references": [
+            "https://www.wordfence.com/blog/2022/05/critical-privilege-escalation-vulnerability-in-jupiter-and-jupiterx-premium-themes/"
+        ],
+        "summary": "Vulnerable versions of the JupiterX Theme (<=2.0.6) allow any logged-in user, including subscriber-level users, to access any of the functions registered in lib/api/api/ajax.php, which also grant access to the jupiterx_api_ajax_ actions registered by the JupiterX Core Plugin (<=2.0.6). This includes the ability to deactivate arbitrary plugins as well as update the theme\u2019s API key."
+    },
+    {
+        "Modified": "2023-06-27T15:35:00",
+        "Published": "2023-01-09T23:15:00",
         "access": {},
         "assigner": "contact@wpscan.com",
         "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2742",
+        "cwe": "CWE-862",
+        "id": "CVE-2022-4102",
         "impact": {},
-        "last-modified": "2023-06-27T09:11:00",
+        "last-modified": "2023-06-27T15:35:00",
         "references": [
-            "https://wpscan.com/vulnerability/f689442a-a851-4140-a10c-ac579f9da142"
+            "https://wpscan.com/vulnerability/c177f763-0bb5-4734-ba2e-7ba816578937"
         ],
-        "summary": "The AI ChatBot WordPress plugin before 4.5.5 does not sanitize and escape its settings, allowing high-privilege users such as admin to perform Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed."
+        "summary": "The Royal Elementor Addons WordPress plugin before 1.3.56 does not have authorization and CSRF checks when deleting a template and does not ensure that the post to be deleted is a template. This could allow any authenticated users, such as subscribers, to delete arbitrary posts assuming they know the related slug."
     },
     {
-        "Modified": "2023-06-27T09:10:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-2719",
-        "impact": {},
-        "last-modified": "2023-06-27T09:10:00",
-        "references": [
-            "https://wpscan.com/vulnerability/d9f6f4e7-a237-49c0-aba0-2934ab019e35"
-        ],
-        "summary": "The SupportCandy WordPress plugin before 3.1.7 does not properly sanitise and escape the `id` parameter for an Agent in the REST API before using it in an SQL statement, leading to an SQL Injection exploitable by users with a role as low as Subscriber."
-    },
-    {
-        "Modified": "2023-06-27T09:10:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2684",
-        "impact": {},
-        "last-modified": "2023-06-27T09:10:00",
-        "references": [
-            "https://wpscan.com/vulnerability/42b1f017-c497-4825-b12a-8dce3e108a55"
-        ],
-        "summary": "The File Renaming on Upload WordPress plugin before 2.5.2 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2023-06-27T09:09:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2600",
-        "impact": {},
-        "last-modified": "2023-06-27T09:09:00",
-        "references": [
-            "https://wpscan.com/vulnerability/8e1d65c3-14e4-482f-ae9e-323e847a8613"
-        ],
-        "summary": "The Custom Base Terms WordPress plugin before 1.0.3 does not sanitize and escape some of its settings, which could allow high-privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2023-06-27T09:09:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2654",
-        "impact": {},
-        "last-modified": "2023-06-27T09:09:00",
-        "references": [
-            "https://wpscan.com/vulnerability/506ecee9-8e42-46de-9c5c-fc252ab2646e"
-        ],
-        "summary": "The Conditional Menus WordPress plugin before 1.2.1 does not escape a parameter before outputting it back in an attribute, leading to a Reflected Cross-Site Scripting which could be used against high privilege users such as admin"
-    },
-    {
-        "Modified": "2023-06-27T09:07:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2527",
-        "impact": {},
-        "last-modified": "2023-06-27T09:07:00",
-        "references": [
-            "https://wpscan.com/vulnerability/8051142a-4e55-4dc2-9cb1-1b724c67574f"
-        ],
-        "summary": "The Integration for Contact Form 7 and Zoho CRM, Bigin WordPress plugin before 1.2.4 does not sanitize and escape some of its settings, which could allow high-privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2023-06-27T09:06:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2401",
-        "impact": {},
-        "last-modified": "2023-06-27T09:06:00",
-        "references": [
-            "https://wpscan.com/vulnerability/0746ea56-dd88-4fc3-86a3-54408eef1f94"
-        ],
-        "summary": "The QuBot WordPress plugin before 1.1.6 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)."
-    },
-    {
-        "Modified": "2023-06-27T09:06:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-2492",
-        "impact": {},
-        "last-modified": "2023-06-27T09:06:00",
-        "references": [
-            "https://wpscan.com/vulnerability/fa7c54c2-5653-4d3d-8163-f3d63272c050"
-        ],
-        "summary": "The QueryWall: Plug'n Play Firewall WordPress plugin through 1.1.1 does not properly sanitise and escape a parameter before using it in a SQL statement, leading to a SQL injection exploitable by high privilege users such as admin."
-    },
-    {
-        "Modified": "2023-06-27T09:05:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-2399",
-        "impact": {},
-        "last-modified": "2023-06-27T09:05:00",
-        "references": [
-            "https://wpscan.com/vulnerability/deca3cd3-f7cf-469f-9f7e-3612f7ae514d"
-        ],
-        "summary": "The QuBot WordPress plugin before 1.1.6 doesn't filter user input on chat, leading to bad code inserted on it be reflected on the user dashboard."
-    },
-    {
-        "Modified": "2023-06-27T09:05:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2023-2359",
-        "impact": {},
-        "last-modified": "2023-06-27T09:05:00",
-        "references": [
-            "https://wpscan.com/vulnerability/a8350890-e6d4-4b04-a158-2b0ee3748e65"
-        ],
-        "summary": "The Slider Revolution WordPress plugin through 6.6.12 does not check for valid image files upon import, leading to an arbitrary file upload which may be escalated to Remote Code Execution in some server configurations."
-    },
-    {
-        "Modified": "2023-06-27T09:04:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-2221",
-        "impact": {},
-        "last-modified": "2023-06-27T09:04:00",
-        "references": [
-            "https://wpscan.com/vulnerability/6666688e-7239-4d40-a348-307cf8f3b657"
-        ],
-        "summary": "The WP Custom Cursors WordPress plugin before 3.2 does not properly sanitise and escape a parameter before using it in a SQL statement, leading to a SQL injection exploitable by users with a role as low as Admin."
-    },
-    {
-        "Modified": "2023-06-27T09:02:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-0489",
-        "impact": {},
-        "last-modified": "2023-06-27T09:02:00",
-        "references": [
-            "https://wpscan.com/vulnerability/238842ee-6392-4eb2-96cb-08e4ece6fca1"
-        ],
-        "summary": "The SlideOnline WordPress plugin through 1.2.1 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
-    },
-    {
-        "Modified": "2023-06-27T09:02:00",
-        "Published": "2023-06-19T09:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-35005",
-        "impact": {},
-        "last-modified": "2023-06-27T09:02:00",
-        "references": [
-            "https://lists.apache.org/thread/o4f2cxh0054m9tlxpb81c1yhylor5gjd",
-            "https://github.com/apache/airflow/pull/31788",
-            "https://github.com/apache/airflow/pull/31820"
-        ],
-        "summary": "In Apache Airflow, some potentially sensitive values were being shown to the user in certain situations.\n\nThis vulnerability is mitigated by the fact configuration is not shown in the UI by default (only if `[webserver] expose_config` is set to `non-sensitive-only`), and not all uncensored values are actually sentitive.\n\n\nThis issue affects Apache Airflow: from 2.5.0 before 2.6.2. Users are recommended to update to version 2.6.2 or later.\n\n\n"
-    },
-    {
-        "Modified": "2023-06-27T09:00:00",
-        "Published": "2023-06-19T06:15:00",
+        "Modified": "2023-06-27T15:34:00",
+        "Published": "2023-06-14T14:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-34602",
-        "impact": {},
-        "last-modified": "2023-06-27T09:00:00",
-        "references": [
-            "https://github.com/jeecgboot/jeecg-boot/issues/4983"
-        ],
-        "summary": "JeecgBoot up to v 3.5.1 was discovered to contain a SQL injection vulnerability via the component queryTableDictItemsByCode at org.jeecg.modules.api.controller.SystemApiController."
-    },
-    {
-        "Modified": "2023-06-27T09:00:00",
-        "Published": "2023-06-19T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-34603",
-        "impact": {},
-        "last-modified": "2023-06-27T09:00:00",
-        "references": [
-            "https://github.com/jeecgboot/jeecg-boot/issues/4984"
-        ],
-        "summary": "JeecgBoot up to v 3.5.1 was discovered to contain a SQL injection vulnerability via the component queryFilterTableDictInfo at org.jeecg.modules.api.controller.SystemApiController."
-    },
-    {
-        "Modified": "2023-06-27T08:52:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-29546",
-        "impact": {},
-        "last-modified": "2023-06-27T08:52:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-13/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1780842"
-        ],
-        "summary": "When recording the screen while in Private Browsing on Firefox for Android the address bar and keyboard were not hidden, potentially leaking sensitive information. \n\n*This bug only affects Firefox for Android. Other operating systems are unaffected.* This vulnerability affects Firefox for Android < 112 and Focus for Android < 112.\n\n"
-    },
-    {
-        "Modified": "2023-06-27T08:51:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-29542",
-        "impact": {},
-        "last-modified": "2023-06-27T08:51:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-14/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-13/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1815062",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1810793",
-            "https://www.mozilla.org/security/advisories/mfsa2023-15/"
-        ],
-        "summary": "A newline in a filename could have been used to bypass the file extension security mechanisms that replace malicious file extensions such as .lnk  with .download. This could have led to accidental execution of malicious code.\n\n*This bug only affects Firefox and Thunderbird on Windows. Other versions of Firefox\u00a0and Thunderbird are unaffected.* This vulnerability affects Firefox < 112, Firefox ESR < 102.10, and Thunderbird < 102.10.\n\n"
-    },
-    {
-        "Modified": "2023-06-27T08:51:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-29545",
-        "impact": {},
-        "last-modified": "2023-06-27T08:51:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1823077",
-            "https://www.mozilla.org/security/advisories/mfsa2023-14/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-13/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-15/"
-        ],
-        "summary": "Similar to CVE-2023-28163, this time when choosing 'Save Link As', suggested filenames containing environment variable names would have resolved those in the context of the current user. \n\n*This bug only affects Firefox and\u00a0Thunderbird on Windows. Other versions of Firefox and\u00a0Thunderbird are unaffected.* This vulnerability affects Firefox < 112, Firefox ESR < 102.10, and Thunderbird < 102.10.\n\n"
-    },
-    {
-        "Modified": "2023-06-27T08:30:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-29534",
-        "impact": {},
-        "last-modified": "2023-06-27T08:30:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1816059",
-            "https://www.mozilla.org/security/advisories/mfsa2023-13/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1822298",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1821906",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1821576",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1821155",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1822305",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1816007"
-        ],
-        "summary": "Different techniques existed to obscure the fullscreen notification in Firefox and Focus for Android.  These could have led to potential user confusion and spoofing attacks.\n\n*This bug only affects Firefox and Focus for Android. Other versions of Firefox are unaffected.* This vulnerability affects Firefox for Android < 112 and Focus for Android < 112.\n\n"
-    },
-    {
-        "Modified": "2023-06-27T08:29:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-252",
-        "id": "CVE-2023-25733",
-        "impact": {},
-        "last-modified": "2023-06-27T08:29:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1808632",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/"
-        ],
-        "summary": "The return value from `gfx::SourceSurfaceSkia::Map()` wasn't being verified which could have potentially lead to a null pointer dereference. This vulnerability affects Firefox < 110."
-    },
-    {
-        "Modified": "2023-06-27T08:29:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25736",
-        "impact": {},
-        "last-modified": "2023-06-27T08:29:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1811331",
-            "https://www.mozilla.org/security/advisories/mfsa2023-05/"
-        ],
-        "summary": "An invalid downcast from `nsHTMLDocument` to `nsIContent` could have lead to undefined behavior. This vulnerability affects Firefox < 110."
-    },
-    {
-        "Modified": "2023-06-27T08:29:00",
-        "Published": "2023-06-19T11:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-25747",
-        "impact": {},
-        "last-modified": "2023-06-27T08:29:00",
-        "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-08/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1815801"
-        ],
-        "summary": "A potential use-after-free in libaudio was fixed by disabling the AAudio backend when running on Android API below version 30.\n*This bug only affects Firefox for Android. Other versions of Firefox are unaffected.* This vulnerability affects Firefox for Android < 110.1.0."
-    },
-    {
-        "Modified": "2023-06-27T08:28:00",
-        "Published": "2023-06-19T10:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
         "cvss": null,
         "cwe": "CWE-787",
-        "id": "CVE-2023-29531",
+        "id": "CVE-2023-34615",
         "impact": {},
-        "last-modified": "2023-06-27T08:28:00",
+        "last-modified": "2023-06-27T15:34:00",
         "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-14/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-13/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1794292",
-            "https://www.mozilla.org/security/advisories/mfsa2023-15/"
+            "https://github.com/billdavidson/JSONUtil/issues/10"
         ],
-        "summary": "An attacker could have caused an out of bounds memory access using WebGL APIs, leading to memory corruption and a potentially exploitable crash.\n\n*This bug only affects Firefox and\u00a0Thunderbird for macOS. Other operating systems are unaffected.* This vulnerability affects Firefox < 112, Firefox ESR < 102.10, and Thunderbird < 102.10.\n\n"
+        "summary": "An issue was discovered JSONUtil thru 5.0 allows attackers to cause a denial of service or other unspecified impacts via crafted object that uses cyclic dependencies."
     },
     {
-        "Modified": "2023-06-27T08:27:00",
-        "Published": "2023-06-19T10:15:00",
+        "Modified": "2023-06-27T15:33:00",
+        "Published": "2022-12-19T14:15:00",
         "access": {},
-        "assigner": "security@mozilla.org",
+        "assigner": "contact@wpscan.com",
         "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-29532",
+        "cwe": "CWE-862",
+        "id": "CVE-2022-4024",
         "impact": {},
-        "last-modified": "2023-06-27T08:27:00",
+        "last-modified": "2023-06-27T15:33:00",
         "references": [
-            "https://www.mozilla.org/security/advisories/mfsa2023-14/",
-            "https://www.mozilla.org/security/advisories/mfsa2023-13/",
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1806394",
-            "https://www.mozilla.org/security/advisories/mfsa2023-15/"
+            "https://wpscan.com/vulnerability/a087fb45-6f6c-40ac-b48b-2cbceda86cbe"
         ],
-        "summary": "A local attacker can trick the Mozilla Maintenance Service into applying an unsigned update file by pointing the service at an update file on a malicious SMB server. The update file can be replaced after the signature check, before the use, because the write-lock requested by the service does not work on a SMB server.\n\n*Note: This attack requires local system access and only affects Windows. Other operating systems are not affected.* This vulnerability affects Firefox < 112, Firefox ESR < 102.10, and Thunderbird < 102.10.\n\n"
+        "summary": "The Registration Forms WordPress plugin before 3.8.1.3 does not have authorisation and CSRF when deleting users via an init action handler, allowing unauthenticated attackers to delete arbitrary users (along with their posts)"
+    },
+    {
+        "Modified": "2023-06-27T15:31:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41195",
+        "impact": {},
+        "last-modified": "2023-06-27T15:31:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated EAAmiga Interchange File Format (.iff, 2d.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:31:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41198",
+        "impact": {},
+        "last-modified": "2023-06-27T15:31:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated SketchUp (.skp, SketchUp.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:31:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41196",
+        "impact": {},
+        "last-modified": "2023-06-27T15:31:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated VRML Worlds (.wrl, vrml.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:30:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41193",
+        "impact": {},
+        "last-modified": "2023-06-27T15:30:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Encapsulated Post Script (.eps, ai.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:27:00",
+        "Published": "2023-06-14T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-34623",
+        "impact": {},
+        "last-modified": "2023-06-27T15:27:00",
+        "references": [
+            "https://github.com/trajano/jtidy/issues/4"
+        ],
+        "summary": "An issue was discovered jtidy thru r938 allows attackers to cause a denial of service or other unspecified impacts via crafted object that uses cyclic dependencies."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2023-06-14T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-34620",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://github.com/hjson/hjson-java/issues/24"
+        ],
+        "summary": "An issue was discovered hjson thru 3.0.0 allows attackers to cause a denial of service or other unspecified impacts via crafted object that uses cyclic dependencies."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41202",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Visual Design Stream (.vds, vds.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41175",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Enhanced Metafile (.emf, emf.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41200",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Scalable Vector Graphic (.svg, svg.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41177",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Iges Part and Assembly (.igs, .iges, CoreCadTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41172",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated AutoCAD (.dxf, TeighaTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41201",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Right Hemisphere Binary (.rh, rh.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41191",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Jupiter Tesselation (.jt, JTReader.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:22:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41199",
+        "impact": {},
+        "last-modified": "2023-06-27T15:22:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Open Inventor File (.iv, vrml.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:20:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41179",
+        "impact": {},
+        "last-modified": "2023-06-27T15:20:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Jupiter Tesselation (.jt, JtTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:20:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41185",
+        "impact": {},
+        "last-modified": "2023-06-27T15:20:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Visual Design Stream (.vds, MataiPersistence.dll) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:20:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41180",
+        "impact": {},
+        "last-modified": "2023-06-27T15:20:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Portable Document Format (.pdf, PDFPublishing.dll) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:20:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41184",
+        "impact": {},
+        "last-modified": "2023-06-27T15:20:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245929",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Windows Cursor File (.cur, ico.x3d) file received from untrusted sources in SAP 3D Visual Enterprise Author - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:18:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41189",
+        "impact": {},
+        "last-modified": "2023-06-27T15:18:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated AutoCAD (.dwg, TeighaTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:18:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41187",
+        "impact": {},
+        "last-modified": "2023-06-27T15:18:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated Wavefront Object (.obj, ObjTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:18:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41190",
+        "impact": {},
+        "last-modified": "2023-06-27T15:18:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens a manipulated AutoCAD (.dxf, TeighaTranslator.exe) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, it is possible that a Remote Code Execution can be triggered when payload forces a stack-based overflow or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:17:00",
+        "Published": "2022-10-11T21:15:00",
+        "access": {},
+        "assigner": "cna@sap.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2022-41186",
+        "impact": {},
+        "last-modified": "2023-06-27T15:17:00",
+        "references": [
+            "https://launchpad.support.sap.com/#/notes/3245928",
+            "https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html"
+        ],
+        "summary": "Due to lack of proper memory management, when a victim opens manipulated Computer Graphics Metafile (.cgm, CgmCore.dll) file received from untrusted sources in SAP 3D Visual Enterprise Viewer - version 9, a Remote Code Execution can be triggered when payload forces a stack-based overflow and or a re-use of dangling pointer which refers to overwritten space in memory."
+    },
+    {
+        "Modified": "2023-06-27T15:16:00",
+        "Published": "2023-06-20T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-35878",
+        "impact": {},
+        "last-modified": "2023-06-27T15:16:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/extra-user-details/wordpress-extra-user-details-plugin-0-5-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Auth. (admin+) Stored Cross-Site Scripting (XSS) vulnerability in Vadym K. Extra User Details plugin <=\u00a00.5 versions."
+    },
+    {
+        "Modified": "2023-06-27T15:16:00",
+        "Published": "2023-06-20T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-35882",
+        "impact": {},
+        "last-modified": "2023-06-27T15:16:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/super-socializer/wordpress-super-socializer-plugin-7-13-52-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability in Team Heateor Super Socializer plugin <=\u00a07.13.52 versions."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@proofpoint.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2818",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://www.proofpoint.com/us/security/security-advisories/pfpt-sa-2023-005"
+        ],
+        "summary": "An insecure filesystem permission in the Insider Threat Management Agent for Windows enables local unprivileged users to disrupt agent monitoring. All versions prior to 7.14.3 are affected. Agents for MacOS and Linux and Cloud are unaffected."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@proofpoint.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-36000",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://www.proofpoint.com/us/security/security-advisories/pfpt-sa-2023-005"
+        ],
+        "summary": "A missing authorization check in the MacOS agent configuration endpoint of the Insider Threat Management Server enables an anonymous attacker on an adjacent network to obtain sensitive information. Successful exploitation requires an attacker to first obtain a valid agent authentication token. All versions before 7.14.3 are affected."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@proofpoint.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-35998",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://www.proofpoint.com/us/security/security-advisories/pfpt-sa-2023-005"
+        ],
+        "summary": "A missing authorization check in multiple SOAP endpoints of the Insider Threat Management Server enables an attacker on an adjacent network to read and write unauthorized objects. Successful exploitation requires an attacker to first obtain a valid agent authentication token. All versions before 7.14.3 are affected."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@proofpoint.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-36002",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://www.proofpoint.com/us/security/security-advisories/pfpt-sa-2023-005"
+        ],
+        "summary": "A missing authorization check in multiple URL validation endpoints of the Insider Threat Management Server enables an anonymous attacker on an adjacent network to smuggle content via DNS lookups. All versions before 7.14.3 are affected."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@m-files.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-3405",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://www.m-files.com/about/trust-center/security-advisories/cve-2023-3405"
+        ],
+        "summary": "Unchecked parameter value in M-Files Server in versions before 23.6.12695.3 (excluding 23.2 SR2 and newer) allows anonymous user to cause denial of service"
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-284",
+        "id": "CVE-2023-3431",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://huntr.dev/bounties/fa741f95-b53c-4ed7-b157-e32c5145164c",
+            "https://github.com/plantuml/plantuml/commit/fbe7fa3b25b4c887d83927cffb1009ec6cb8ab1e"
+        ],
+        "summary": "Improper Access Control in GitHub repository plantuml/plantuml prior to 1.2023.9."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-27T15:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-918",
+        "id": "CVE-2023-3432",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://github.com/plantuml/plantuml/commit/b32500bb61ae617bb312496d6d832e4be8190797",
+            "https://huntr.dev/bounties/8ac3316f-431c-468d-87e4-3dafff2ecf51"
+        ],
+        "summary": "Server-Side Request Forgery (SSRF) in GitHub repository plantuml/plantuml prior to 1.2023.9."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2023-06-14T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-34616",
+        "impact": {},
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://github.com/InductiveComputerScience/pbJson/issues/2"
+        ],
+        "summary": "An issue was discovered pbjson thru 0.4.0 allows attackers to cause a denial of service or other unspecified impacts via crafted object that uses cyclic dependencies."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2022-06-13T07:15:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "security@apache.org",
+        "cvss": 7.5,
+        "cvss-time": "2023-06-27T15:15:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "cwe": "CWE-787",
+        "id": "CVE-2021-37404",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://lists.apache.org/thread/2h56ztcj3ojc66qzf1nno88vjw9vd4wo",
+            "https://security.netapp.com/advisory/ntap-20220715-0007/"
+        ],
+        "summary": "There is a potential heap buffer overflow in Apache Hadoop libhdfs native code. Opening a file path provided by user without validation may result in a denial of service or arbitrary code execution. Users should upgrade to Apache Hadoop 2.10.2, 3.2.3, 3.3.2 or higher."
+    },
+    {
+        "Modified": "2023-06-27T15:15:00",
+        "Published": "2018-01-29T16:29:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "security@vmware.com",
+        "cvss": 10.0,
+        "cvss-time": "2023-06-27T15:15:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+        "cwe": "CWE-502",
+        "id": "CVE-2017-4947",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2023-06-27T15:15:00",
+        "references": [
+            "https://www.vmware.com/security/advisories/VMSA-2018-0006.html",
+            "http://www.securitytracker.com/id/1040290",
+            "http://www.securitytracker.com/id/1040289",
+            "http://www.securityfocus.com/bid/102852"
+        ],
+        "summary": "VMware vRealize Automation (7.3 and 7.2) and vSphere Integrated Containers (1.x before 1.3) contain a deserialization vulnerability via Xenon. Successful exploitation of this issue may allow remote attackers to execute arbitrary code on the appliance.\n\n"
+    },
+    {
+        "Modified": "2023-06-27T15:14:00",
+        "Published": "2023-01-17T18:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2022-41858",
+        "impact": {},
+        "last-modified": "2023-06-27T15:14:00",
+        "references": [
+            "https://github.com/torvalds/linux/commit/ec4eb8a86ade4d22633e1da2a7d85a846b7d1798",
+            "https://security.netapp.com/advisory/ntap-20230223-0006/"
+        ],
+        "summary": "A flaw was found in the Linux kernel. A NULL pointer dereference may occur while a slip driver is in progress to detach in sl_tx_timeout in drivers/net/slip/slip.c. This issue could allow an attacker to crash the system or leak internal kernel information."
+    },
+    {
+        "Modified": "2023-06-27T15:13:00",
+        "Published": "2023-01-09T14:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-319",
+        "id": "CVE-2022-23509",
+        "impact": {},
+        "last-modified": "2023-06-27T15:13:00",
+        "references": [
+            "https://github.com/weaveworks/weave-gitops/pull/3098/commits/babd91574b99b310b84aeec9f8f895bd18acb967",
+            "https://github.com/weaveworks/weave-gitops/pull/3106/commits/ce2bbff0a3609c33396050ed544a5a21f8d0797f",
+            "https://github.com/weaveworks/weave-gitops/security/advisories/GHSA-89qm-wcmw-3mgg"
+        ],
+        "summary": "Weave GitOps is a simple open source developer platform for people who want cloud native applications, without needing Kubernetes expertise. GitOps run has a local S3 bucket which it uses for synchronizing files that are later applied against a Kubernetes cluster. The communication between GitOps Run and the local S3 bucket is not encrypted. This allows privileged users or process to tap the local traffic to gain information permitting access to the s3 bucket. From that point, it would be possible to alter the bucket content, resulting in changes in the Kubernetes cluster's resources. There are no known workaround(s) for this vulnerability. This vulnerability has been fixed by commits ce2bbff and babd915. Users should upgrade to Weave GitOps version >= v0.12.0 released on 08/12/2022."
+    },
+    {
+        "Modified": "2023-06-27T15:12:00",
+        "Published": "2022-12-19T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2022-4124",
+        "impact": {},
+        "last-modified": "2023-06-27T15:12:00",
+        "references": [
+            "https://wpscan.com/vulnerability/60786bf8-c0d7-4d80-b189-866aba79bce2"
+        ],
+        "summary": "The Popup Manager WordPress plugin through 1.6.6 does not have authorisation and CSRF checks when deleting popups, which could allow unauthenticated users to delete them"
+    },
+    {
+        "Modified": "2023-06-27T15:11:00",
+        "Published": "2022-12-17T01:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-863",
+        "id": "CVE-2022-23488",
+        "impact": {},
+        "last-modified": "2023-06-27T15:11:00",
+        "references": [
+            "https://github.com/bigbluebutton/bigbluebutton/releases/tag/v2.4-rc-6",
+            "https://github.com/bigbluebutton/bigbluebutton/security/advisories/GHSA-j5g3-f74q-rvfq"
+        ],
+        "summary": "BigBlueButton is an open source web conferencing system. Versions prior to 2.4-rc-6 are vulnerable to Insertion of Sensitive Information Into Sent Data. The moderators-only webcams lock setting is not enforced on the backend, which allows an attacker to subscribe to viewers' webcams, even when the lock setting is applied. (The required streamId was being sent to all users even with lock setting applied). This issue is fixed in version 2.4-rc-6. There are no workarounds."
+    },
+    {
+        "Modified": "2023-06-27T15:03:00",
+        "Published": "2023-06-14T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-34614",
+        "impact": {},
+        "last-modified": "2023-06-27T15:03:00",
+        "references": [
+            "https://bitbucket.org/jmarsden/jsonij/issues/7/stack-overflow-error-caused-by-jsonij"
+        ],
+        "summary": "An issue was discovered jmarsden/jsonij thru 0.5.2 allows attackers to cause a denial of service or other unspecified impacts via crafted object that uses cyclic dependencies."
+    },
+    {
+        "Modified": "2023-06-27T14:59:00",
+        "Published": "2022-12-13T08:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2022-23523",
+        "impact": {},
+        "last-modified": "2023-06-27T14:59:00",
+        "references": [
+            "https://github.com/rust-vmm/linux-loader/pull/125",
+            "https://github.com/rust-vmm/linux-loader/security/advisories/GHSA-52h2-m2cf-9jh6"
+        ],
+        "summary": "In versions prior to 0.8.1, the linux-loader crate uses the offsets and sizes provided in the ELF headers to determine the offsets to read from. If those offsets point beyond the end of the file this could lead to Virtual Machine Monitors using the `linux-loader` crate entering an infinite loop if the ELF header of the kernel they are loading was modified in a malicious manner. This issue has been addressed in 0.8.1. The issue can be mitigated by ensuring that only trusted kernel images are loaded or by verifying that the headers do not point beyond the end of the file."
+    },
+    {
+        "Modified": "2023-06-27T14:59:00",
+        "Published": "2022-12-08T16:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-4123",
+        "impact": {},
+        "last-modified": "2023-06-27T14:59:00",
+        "references": [
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2144989"
+        ],
+        "summary": "A flaw was found in Buildah. The local path and the lowest subdirectory may be disclosed due to incorrect absolute path traversal, resulting in an impact to confidentiality."
+    },
+    {
+        "Modified": "2023-06-27T14:58:00",
+        "Published": "2022-12-06T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2022-41902",
+        "impact": {},
+        "last-modified": "2023-06-27T14:58:00",
+        "references": [
+            "https://github.com/tensorflow/tensorflow/commit/a65411a1d69edfb16b25907ffb8f73556ce36bb7",
+            "https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/grappler/utils/functions.cc#L221",
+            "https://github.com/tensorflow/tensorflow/security/advisories/GHSA-cg88-rpvp-cjv5"
+        ],
+        "summary": "TensorFlow is an open source platform for machine learning. The function MakeGrapplerFunctionItem takes arguments that determine the sizes of inputs and outputs. If the inputs given are greater than or equal to the sizes of the outputs, an out-of-bounds memory read or a crash is triggered. We have patched the issue in GitHub commit a65411a1d69edfb16b25907ffb8f73556ce36bb7. The fix will be included in TensorFlow 2.11.0. We will also cherrypick this commit on TensorFlow 2.8.4, 2.9.3, and 2.10.1."
+    },
+    {
+        "Modified": "2023-06-27T14:58:00",
+        "Published": "2022-11-25T19:15:00",
+        "access": {},
+        "assigner": "vuln@krcert.or.kr",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-41158",
+        "impact": {},
+        "last-modified": "2023-06-27T14:58:00",
+        "references": [
+            "https://www.krcert.or.kr/krcert/secNoticeView.do?bulletin_writing_sequence=67043"
+        ],
+        "summary": "Remote code execution vulnerability can be achieved by using cookie values as paths to a file by this builder program. A remote attacker could exploit the vulnerability to execute or inject malicious code."
+    },
+    {
+        "Modified": "2023-06-27T14:53:00",
+        "Published": "2023-06-14T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-34613",
+        "impact": {},
+        "last-modified": "2023-06-27T14:53:00",
+        "references": [
+            "https://github.com/maddingo/sojo/issues/15"
+        ],
+        "summary": "An issue was discovered sojo thru 1.1.1 allows attackers to cause a denial of service or other unspecified impacts via crafted object that uses cyclic dependencies."
+    },
+    {
+        "Modified": "2023-06-27T14:47:00",
+        "Published": "2023-06-19T13:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2022-46850",
+        "impact": {},
+        "last-modified": "2023-06-27T14:47:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/easy-media-replace/wordpress-easy-media-replace-plugin-0-1-3-arbitrary-file-deletion?_s_id=cve"
+        ],
+        "summary": "Auth. (author+) Broken Access Control vulnerability leading to Arbitrary File Deletion in Nabil Lemsieh Easy Media Replace plugin <=\u00a00.1.3 versions."
+    },
+    {
+        "Modified": "2023-06-27T14:39:00",
+        "Published": "2022-11-23T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-116",
+        "id": "CVE-2022-41934",
+        "impact": {},
+        "last-modified": "2023-06-27T14:39:00",
+        "references": [
+            "https://github.com/xwiki/xwiki-platform/security/advisories/GHSA-6w8h-26xx-cf8q",
+            "https://github.com/xwiki/xwiki-platform/commit/59ccca24a8465a19f40c51d65fcc2c09c1edea16",
+            "https://jira.xwiki.org/browse/XWIKI-19857",
+            "https://www.xwiki.org/xwiki/bin/view/Documentation/UserGuide/Features/Imports#HImportingXWikipages",
+            "https://github.com/xwiki/xwiki-platform/commit/2fc20891e6c6b0ca05ee07e315e7f435e8919f8d"
+        ],
+        "summary": "XWiki Platform is a generic wiki platform offering runtime services for applications built on top of it. Any user with view rights on commonly accessible documents including the menu macro can execute arbitrary Groovy, Python or Velocity code in XWiki leading to full access to the XWiki installation due to improper escaping of the macro content and parameters of the menu macro. The problem has been patched in XWiki 14.6RC1, 13.10.8 and 14.4.3. The patch (commit `2fc20891`) for the document `Menu.MenuMacro` can be manually applied or a XAR archive of a patched version can be imported. The menu macro was basically unchanged since XWiki 11.6 so on XWiki 11.6 or later the patch for version of 13.10.8 (commit `59ccca24a`) can most likely be applied, on XWiki version 14.0 and later the versions in XWiki 14.6 and 14.4.3 should be appropriate."
+    },
+    {
+        "Modified": "2023-06-27T14:39:00",
+        "Published": "2022-11-02T16:15:00",
+        "access": {},
+        "assigner": "security@golang.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2022-41716",
+        "impact": {},
+        "last-modified": "2023-06-27T14:39:00",
+        "references": [
+            "https://go.dev/cl/446916",
+            "https://pkg.go.dev/vuln/GO-2022-1095",
+            "https://go.dev/issue/56284",
+            "https://groups.google.com/g/golang-announce/c/mbHY1UY3BaM/m/hSpmRzk-AgAJ"
+        ],
+        "summary": "Due to unsanitized NUL values, attackers may be able to maliciously set environment variables on Windows. In syscall.StartProcess and os/exec.Cmd, invalid environment variable values containing NUL values are not properly checked for. A malicious environment variable value can exploit this behavior to set a value for a different environment variable. For example, the environment variable string \"A=B\\x00C=D\" sets the variables \"A=B\" and \"C=D\"."
+    },
+    {
+        "Modified": "2023-06-27T14:39:00",
+        "Published": "2022-09-21T16:15:00",
+        "access": {},
+        "assigner": "jenkinsci-cert@googlegroups.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2022-41230",
+        "impact": {},
+        "last-modified": "2023-06-27T14:39:00",
+        "references": [
+            "https://www.jenkins.io/security/advisory/2022-09-21/#SECURITY-1994"
+        ],
+        "summary": "Jenkins Build-Publisher Plugin 1.22 and earlier does not perform a permission check in an HTTP endpoint, allowing attackers with Overall/Read permission to obtain names and URLs of Jenkins servers that the plugin is configured to publish builds to, as well as builds pending for publication to those Jenkins servers."
+    },
+    {
+        "Modified": "2023-06-27T14:39:00",
+        "Published": "2022-09-21T16:15:00",
+        "access": {},
+        "assigner": "jenkinsci-cert@googlegroups.com",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2022-41255",
+        "impact": {},
+        "last-modified": "2023-06-27T14:39:00",
+        "references": [
+            "https://www.jenkins.io/security/advisory/2022-09-21/#SECURITY-2759",
+            "http://www.openwall.com/lists/oss-security/2022/09/21/5"
+        ],
+        "summary": "Jenkins CONS3RT Plugin 1.0.0 and earlier stores Cons3rt API token unencrypted in job config.xml files on the Jenkins controller where it can be viewed by users with access to the Jenkins controller file system."
+    },
+    {
+        "Modified": "2023-06-27T14:18:00",
+        "Published": "2022-11-23T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-346",
+        "id": "CVE-2022-41924",
+        "impact": {},
+        "last-modified": "2023-06-27T14:18:00",
+        "references": [
+            "https://github.com/tailscale/tailscale/security/advisories/GHSA-vqp6-rc3h-83cp",
+            "https://emily.id.au/tailscale",
+            "https://tailscale.com/security-bulletins/#ts-2022-004"
+        ],
+        "summary": "A vulnerability identified in the Tailscale Windows client allows a malicious website to reconfigure the Tailscale daemon `tailscaled`, which can then be used to remotely execute code. In the Tailscale Windows client, the local API was bound to a local TCP socket, and communicated with the Windows client GUI in cleartext with no Host header verification. This allowed an attacker-controlled website visited by the node to rebind DNS to an attacker-controlled DNS server, and then make local API requests in the client, including changing the coordination server to an attacker-controlled coordination server. An attacker-controlled coordination server can send malicious URL responses to the client, including pushing executables or installing an SMB share. These allow the attacker to remotely execute code on the node. All Windows clients prior to version v.1.32.3 are affected. If you are running Tailscale on Windows, upgrade to v1.32.3 or later to remediate the issue."
+    },
+    {
+        "Modified": "2023-06-27T14:18:00",
+        "Published": "2022-11-16T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-1284",
+        "id": "CVE-2022-41877",
+        "impact": {},
+        "last-modified": "2023-06-27T14:18:00",
+        "references": [
+            "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-pmv3-wpw4-pw5h",
+            "https://github.com/FreeRDP/FreeRDP/commit/6655841cf2a00b764f855040aecb8803cfc5eaba",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/YGQN3OWQNHSMWKOF4D35PF5ASKNLC74B/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/UDOTAOJBCZKREZJPT6VZ25GESI5T6RBG/"
+        ],
+        "summary": "FreeRDP is a free remote desktop protocol library and clients. Affected versions of FreeRDP are missing input length validation in `drive` channel. A malicious server can trick a FreeRDP based client to read out of bound data and send it back to the server. This issue has been addressed in version 2.9.0 and all users are advised to upgrade. Users unable to upgrade should not use the drive redirection channel - command line options `/drive`, `+drives` or `+home-drive`."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-2605",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/372cb940-71ba-4d19-b35a-ab15f8c2fdeb"
+        ],
+        "summary": "The wpbrutalai WordPress plugin before 2.0.1 does not sanitise and escape a parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against a logged in high privilege users such as admin."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-2711",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/71c5b5b5-8694-4738-8e4b-8670a8d21c86"
+        ],
+        "summary": "The Ultimate Product Catalog WordPress plugin before 5.2.6 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-2842",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/0357ecc7-56f5-4843-a928-bf2d3ce75596"
+        ],
+        "summary": "The WP Inventory Manager WordPress plugin before 2.1.0.14 does not have CSRF checks, which could allow attackers to make logged-in admins delete Inventory Items via a CSRF attack"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-1166",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/825eccf9-f351-4a5b-b238-9969141b94fa"
+        ],
+        "summary": "The USM-Premium WordPress plugin before 16.3 does not sanitize and escape some of its settings, which could allow high-privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example, in multisite setup)."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-2032",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/17acde5d-44ea-4e77-8670-260d22e28ffe"
+        ],
+        "summary": "The Custom 404 Pro WordPress plugin before 3.8.1 does not properly sanitize database inputs, leading to multiple SQL Injection vulnerabilities."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-30203",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://github.com/zyx0814/dzzoffice/issues/183"
+        ],
+        "summary": "A reflected cross-site scripting (XSS) vulnerability in the zero parameter of dzzoffice 2.02.1_SC_UTF8 allows attackers to execute arbitrary web scripts or HTML."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-2592",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/d4298960-eaba-4185-a730-3e621d9680e1"
+        ],
+        "summary": "The FormCraft WordPress plugin before 3.9.7 does not properly sanitise and escape a parameter before using it in a SQL statement, leading to a SQL injection exploitable by high privilege users such as admin."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2023-2068",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/58f72953-56d2-4d86-a49b-311b5fc58056"
+        ],
+        "summary": "The File Manager Advanced Shortcode WordPress plugin through 2.3.2 does not adequately prevent uploading files with disallowed MIME types when using the shortcode. This leads to RCE in cases where the allowed MIME type list does not include PHP files. In the worst case, this is available to unauthenticated users."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2023-2623",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/85cc39b1-416f-4d23-84c1-fdcbffb0dda0"
+        ],
+        "summary": "The KiviCare WordPress plugin before 3.2.1 does not restrict the information returned in a response and returns all user data, allowing low privilege users such as subscriber to retrieve sensitive information such as the user email and hashed password of other users"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-2482",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/c0f73781-be7e-482e-91de-ad7991ad4bd5"
+        ],
+        "summary": "The Responsive CSS EDITOR WordPress plugin through 1.0 does not properly sanitise and escape a parameter before using it in a SQL statement, leading to a SQL injection exploitable by high-privilege users such as admin."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-2601",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/57769468-3802-4985-bf5e-44ec1d59f5fd"
+        ],
+        "summary": "The wpbrutalai WordPress plugin before 2.0.0 does not properly sanitise and escape a parameter before using it in a SQL statement, leading to a SQL injection exploitable by admin via CSRF."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-2624",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/dc3a841d-a95b-462e-be4b-acaa44e77264"
+        ],
+        "summary": "The KiviCare WordPress plugin before 3.2.1 does not sanitise and escape a parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against high privilege users such as administrator"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2023-2627",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/162d0029-2adc-4925-9985-1d5d672dbe75"
+        ],
+        "summary": "The KiviCare WordPress plugin before 3.2.1 does not have proper CSRF and authorisation checks in various AJAX actions, allowing any authenticated users, such as subscriber to call them. Attacks include but are not limited to: Add arbitrary Clinic Admin/Doctors/etc and update plugin's settings"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-2743",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/517c6aa4-a56d-4f13-b370-7c864dd9c7db"
+        ],
+        "summary": "The ERP WordPress plugin before 1.12.4 does not sanitise and escape the employee_name parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against high privilege users such as admin."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-2744",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/435da8a1-9955-46d7-a508-b5738259e731"
+        ],
+        "summary": "The ERP WordPress plugin before 1.12.4 does not properly sanitise and escape the `type` parameter in the `erp/v1/accounting/v1/people` REST API endpoint before using it in a SQL statement, leading to a SQL injection exploitable by high privilege users such as admin."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-2795",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/2d6ecd21-3dd4-423d-80e7-277c45080a9f"
+        ],
+        "summary": "The CodeColorer WordPress plugin before 0.10.1 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-863",
+        "id": "CVE-2023-2877",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/33765da5-c56e-42c1-83dd-fcaad976b402"
+        ],
+        "summary": "The Formidable Forms WordPress plugin before 6.3.1 does not adequately authorize the user or validate the plugin URL in its functionality for installing add-ons. This allows a user with a role as low as Subscriber to install and activate arbitrary plugins of arbitrary versions from the WordPress.org plugin repository onto the site, leading to Remote Code Execution."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-20",
+        "id": "CVE-2023-2996",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://jetpack.com/blog/jetpack-12-1-1-critical-security-update/",
+            "https://wpscan.com/vulnerability/52d221bd-ae42-435d-a90a-60a5ae530663"
+        ],
+        "summary": "The Jetpack WordPress plugin before 12.1.1 does not validate uploaded files, allowing users with author roles or above to manipulate existing files on the site, deleting arbitrary files, and in rare cases achieve Remote Code Execution via phar deserialization."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-30205",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://github.com/zyx0814/dzzoffice/issues/184"
+        ],
+        "summary": "Incorrect access control in the component /index.php?mod=system&op=orgtree of dzzoffice 2.02.1_SC_UTF8 allows unauthenticated attackers to browse departments and usernames."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-0588",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/84be272e-0891-461c-91ad-496b64f92f8f"
+        ],
+        "summary": "The Catalyst Connect Zoho CRM Client Portal WordPress plugin before 2.1.0 does not sanitize and escape a parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against high-privilege users such as admin."
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-0873",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/8816d4c1-9e8e-4b6f-a36a-10a98a7ccfcd"
+        ],
+        "summary": "The Kanban Boards for WordPress plugin before 2.5.21 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2023-06-27T14:15:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-1891",
+        "impact": {},
+        "last-modified": "2023-06-27T14:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/4e5d993f-cc20-4b5f-b4c8-c13004151828"
+        ],
+        "summary": "The Accordion & FAQ WordPress plugin before 1.9.9 does not escape various generated URLs, before outputting them in attributes when some notices are displayed, leading to Reflected Cross-Site Scripting"
     }
 ]
