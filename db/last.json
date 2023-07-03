@@ -1,5 +1,499 @@
 [
     {
+        "Modified": "2023-07-03T17:53:00",
+        "Published": "2023-06-27T17:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-32339",
+        "impact": {},
+        "last-modified": "2023-07-03T17:53:00",
+        "references": [
+            "https://https://www.ibm.com/support/pages/node/6998727",
+            "https://https://www.ibm.com/support/pages/node/7001291",
+            "https://www.ibm.com/support/pages/node/6998727"
+        ],
+        "summary": "IBM Business Automation Workflow is vulnerable to cross-site scripting. This vulnerability allows users to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.  IBM X-Force ID:  255587."
+    },
+    {
+        "Modified": "2023-07-03T17:37:00",
+        "Published": "2023-06-16T04:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2023-32752",
+        "impact": {},
+        "last-modified": "2023-07-03T17:37:00",
+        "references": [
+            "https://www.twcert.org.tw/en/cp-139-7189-5995e-2.html"
+        ],
+        "summary": "L7 Networks InstantScan IS-8000 & InstantQoS IQ-8000\u2019s file uploading function does not restrict upload of file with dangerous type. An unauthenticated remote attacker can exploit this vulnerability to upload and run arbitrary executable files to perform arbitrary system commands or disrupt service."
+    },
+    {
+        "Modified": "2023-07-03T17:30:00",
+        "Published": "2023-06-15T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-916",
+        "id": "CVE-2023-33243",
+        "impact": {},
+        "last-modified": "2023-07-03T17:30:00",
+        "references": [
+            "https://www.redteam-pentesting.de/en/advisories/rt-sa-2022-004/-starface-authentication-with-password-hash-possible",
+            "https://www.redteam-pentesting.de/en/advisories/-advisories-publicised-vulnerability-analyses"
+        ],
+        "summary": "RedTeam Pentesting discovered that the web interface of STARFACE as well as its REST API allows authentication using the SHA512 hash of the password instead of the cleartext password. While storing password hashes instead of cleartext passwords in an application's database generally has become best practice to protect users' passwords in case of a database compromise, this is rendered ineffective when allowing to authenticate using the password hash."
+    },
+    {
+        "Modified": "2023-07-03T17:15:00",
+        "Published": "2023-07-03T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-770",
+        "id": "CVE-2023-34450",
+        "impact": {},
+        "last-modified": "2023-07-03T17:15:00",
+        "references": [
+            "https://github.com/cometbft/cometbft/security/advisories/GHSA-mvj3-qrqh-cjvr",
+            "https://github.com/cometbft/cometbft/pull/863",
+            "https://github.com/cometbft/cometbft/pull/524",
+            "https://github.com/cometbft/cometbft/pull/865"
+        ],
+        "summary": "CometBFT is a Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine and replicates it on many machines. An internal modification made in versions 0.34.28 and 0.37.1 to the way struct `PeerState` is serialized to JSON introduced a deadlock when new function MarshallJSON is called. This function can be called from two places. The first is via logs, setting the `consensus` logging module to \"debug\" level (should not happen in production), and setting the log output format to JSON. The second is via RPC `dump_consensus_state`.\n\nCase 1, which should not be hit in production, will eventually hit the deadlock in most goroutines, effectively halting the node.\n\nIn case 2, only the data structures related to the first peer will be deadlocked, together with the thread(s) dealing with the RPC request(s). This means that only one of the channels of communication to the node's peers will be blocked. Eventually the peer will timeout and excluded from the list (typically after 2 minutes). The goroutines involved in the deadlock will not be garbage collected, but they will not interfere with the system after the peer is excluded.\n\nThe theoretical worst case for case 2, is a network with only two validator nodes. In this case, each of the nodes only has one `PeerState` struct. If `dump_consensus_state` is called in either node (or both), the chain will halt until the peer connections time out, after which the nodes will reconnect (with different `PeerState` structs) and the chain will progress again. Then, the same process can be repeated.\n\nAs the number of nodes in a network increases, and thus, the number of peer struct each node maintains, the possibility of reproducing the perturbation visible with two nodes decreases. Only the first `PeerState` struct will deadlock, and not the others (RPC `dump_consensus_state` accesses them in a for loop, so the deadlock at the first iteration causes the rest of the iterations of that \"for\" loop to never be reached).\n\nThis regression was fixed in versions 0.34.29 and 0.37.2. Some workarounds are available. For case 1 (hitting the deadlock via logs), either don't set the log output to \"json\", leave at \"plain\", or don't set the consensus logging module to \"debug\", leave it at \"info\" or higher. For case 2 (hitting the deadlock via RPC `dump_consensus_state`), do not expose `dump_consensus_state` RPC endpoint to the public internet (e.g., via rules in one's nginx setup)."
+    },
+    {
+        "Modified": "2023-07-03T17:15:00",
+        "Published": "2023-07-03T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-401",
+        "id": "CVE-2023-34451",
+        "impact": {},
+        "last-modified": "2023-07-03T17:15:00",
+        "references": [
+            "https://github.com/cometbft/cometbft/pull/890",
+            "https://github.com/cometbft/cometbft/security/advisories/GHSA-w24w-wp77-qffm",
+            "https://github.com/tendermint/tendermint/pull/2778"
+        ],
+        "summary": "CometBFT is a Byzantine Fault Tolerant (BFT) middleware that takes a state transition machine and replicates it on many machines. The mempool maintains two data structures to keep track of outstanding transactions: a list and a map.\nThese two data structures are supposed to be in sync all the time in the sense that the map tracks the index (if any) of the transaction in the list. In `v0.37.0`, and `v0.37.1`, as well as in `v0.34.28`, and all previous releases of the CometBFT repo2, it is possible to have them out of sync. When this happens, the list may contain several copies of the same transaction. Because the map tracks a single index, it is then no longer possible to remove all the copies of the transaction from the list. This happens even if the duplicated transaction is later committed in a block. The only way to remove the transaction is by restarting the node.\n\nThe above problem can be repeated on and on until a sizable number of transactions are stuck in the mempool, in order to try to bring down the target node. The problem is fixed in releases `v0.34.29` and `v0.37.2`. Some workarounds are available. Increasing the value of `cache_size` in `config.toml` makes it very difficult to effectively attack a full node. Not exposing the transaction submission RPC's would mitigate the probability of a successful attack, as the attacker would then have to create a modified (byzantine) full node to be able to perform the attack via p2p."
+    },
+    {
+        "Modified": "2023-07-03T17:15:00",
+        "Published": "2023-07-03T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-35935",
+        "impact": {},
+        "last-modified": "2023-07-03T17:15:00",
+        "references": [
+            "https://github.com/fastify/fastify-oauth2/commit/bff756b456cbb769080631af2beb85671ff4c79c",
+            "https://github.com/fastify/fastify-oauth2/releases/tag/v7.2.0",
+            "https://auth0.com/docs/secure/attack-protection/state-parameters",
+            "https://github.com/fastify/fastify-oauth2/security/advisories/GHSA-g8x5-p9qc-cf95"
+        ],
+        "summary": "@fastify/oauth2, a wrapper around the `simple-oauth2` library, is vulnerable to cross site request forgery (CSRF) prior to version 7.2.0.. All versions of @fastify/oauth2 used a statically generated `state` parameter at startup time and were used across all requests for all users. The purpose of the Oauth2 `state` parameter is to prevent CSRF attacks. As such, it should be unique per user and should be connected to the user's session in some way that will allow the server to validate it. Version 7.2.0 changes the default behavior to store the `state` in a cookie with the `http-only` and `same-site=lax` attributes set. The state is now by default generated for every user. Note that this contains a breaking change in the `checkStateFunction` function, which now accepts the full `Request` object. There are no known workarounds for the issue."
+    },
+    {
+        "Modified": "2023-07-03T17:15:00",
+        "Published": "2023-07-03T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-770",
+        "id": "CVE-2023-36814",
+        "impact": {},
+        "last-modified": "2023-07-03T17:15:00",
+        "references": [
+            "https://github.com/zopefoundation/Products.CMFCore/security/advisories/GHSA-4hpj-8rhv-9x87",
+            "https://github.com/zopefoundation/Products.CMFCore/commit/40f03f43a60f28ca9485c8ef429efef729be54e5"
+        ],
+        "summary": "Products.CMFCore are the key framework services for the Zope Content Management Framework (CMF). The use of Python's marshal module to handle unchecked input in a public method on `PortalFolder` objects can lead to an unauthenticated denial of service and crash situation. The code in question is exposed by all portal software built on top of `Products.CMFCore`, such as Plone. All deployments are vulnerable. The code has been fixed in `Products.CMFCore` version 3.2."
+    },
+    {
+        "Modified": "2023-07-03T17:15:00",
+        "Published": "2023-07-03T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-36816",
+        "impact": {},
+        "last-modified": "2023-07-03T17:15:00",
+        "references": [
+            "https://github.com/Bubka/2FAuth/security/advisories/GHSA-cwhq-2mcq-pp9q",
+            "https://github.com/Bubka/2FAuth/releases/tag/v4.0.3"
+        ],
+        "summary": "2FA is a Web app to manage Two-Factor Authentication (2FA) accounts and generate their security codes. Cross site scripting (XSS) injection can be done via the account/service field. This was tested in docker-compose environment. This vulnerability has been patched in version 4.0.3.\n"
+    },
+    {
+        "Modified": "2023-07-03T17:15:00",
+        "Published": "2023-07-03T17:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-3497",
+        "impact": {},
+        "last-modified": "2023-07-03T17:15:00",
+        "references": [
+            "https://crbug.com/1459277",
+            "https://chromereleases.googleblog.com/2023/05/stable-channel-update-for-desktop_30.html"
+        ],
+        "summary": "Out of bounds read in Google Security Processor firmware in Google Chrome on Chrome OS prior to 114.0.5735.90 allowed a local attacker to perform denial of service via physical access to the device. (Chromium security severity: Medium)"
+    },
+    {
+        "Modified": "2023-07-03T16:53:00",
+        "Published": "2023-06-26T07:15:00",
+        "access": {},
+        "assigner": "security@checkmk.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-22359",
+        "impact": {},
+        "last-modified": "2023-07-03T16:53:00",
+        "references": [
+            "https://checkmk.com/werk/15890"
+        ],
+        "summary": "User enumeration in Checkmk <=2.2.0p4 allows an authenticated attacker to enumerate usernames."
+    },
+    {
+        "Modified": "2023-07-03T16:48:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-0873",
+        "impact": {},
+        "last-modified": "2023-07-03T16:48:00",
+        "references": [
+            "https://wpscan.com/vulnerability/8816d4c1-9e8e-4b6f-a36a-10a98a7ccfcd"
+        ],
+        "summary": "The Kanban Boards for WordPress plugin before 2.5.21 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2023-07-03T16:43:00",
+        "Published": "2023-06-19T12:15:00",
+        "access": {},
+        "assigner": "security@jfrog.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-3316",
+        "impact": {},
+        "last-modified": "2023-07-03T16:43:00",
+        "references": [
+            "https://research.jfrog.com/vulnerabilities/libtiff-nullderef-dos-xray-522144/",
+            "https://gitlab.com/libtiff/libtiff/-/merge_requests/468",
+            "https://gitlab.com/libtiff/libtiff/-/issues/515"
+        ],
+        "summary": "A NULL pointer dereference in TIFFClose() is caused by a failure to open an output file (non-existent path or a path that requires permissions like /dev/null) while specifying zones.\n\n"
+    },
+    {
+        "Modified": "2023-07-03T16:32:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-1166",
+        "impact": {},
+        "last-modified": "2023-07-03T16:32:00",
+        "references": [
+            "https://wpscan.com/vulnerability/825eccf9-f351-4a5b-b238-9969141b94fa"
+        ],
+        "summary": "The USM-Premium WordPress plugin before 16.3 does not sanitize and escape some of its settings, which could allow high-privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example, in multisite setup)."
+    },
+    {
+        "Modified": "2023-07-03T16:24:00",
+        "Published": "2023-06-23T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-35759",
+        "impact": {},
+        "last-modified": "2023-07-03T16:24:00",
+        "references": [
+            "https://community.progress.com/s/article/Product-Alert-Bulletin-June-2023"
+        ],
+        "summary": "In Progress WhatsUp Gold before 23.0.0, an SNMP-related application endpoint failed to adequately sanitize malicious input. This could allow an unauthenticated attacker to execute arbitrary code in a victim's browser, aka XSS."
+    },
+    {
+        "Modified": "2023-07-03T16:16:00",
+        "Published": "2023-06-23T20:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-3212",
+        "impact": {},
+        "last-modified": "2023-07-03T16:16:00",
+        "references": [
+            "https://github.com/torvalds/linux/commit/504a10d9e46bc37b23d0a1ae2f28973c8516e636",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2214348"
+        ],
+        "summary": "A NULL pointer dereference issue was found in the gfs2 file system in the Linux kernel. It occurs on corrupt gfs2 file systems when the evict code tries to reference the journal descriptor structure after it has been freed and set to NULL. A privileged local user could use this flaw to cause a kernel panic."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-06-21T17:15:00",
+        "access": {},
+        "assigner": "security-officer@isc.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2828",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://kb.isc.org/docs/cve-2023-2828",
+            "http://www.openwall.com/lists/oss-security/2023/06/21/6",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/U3K6AJK7RRSR53HRF5GGKPA6PDUDWOD2/",
+            "https://www.debian.org/security/2023/dsa-5439",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SEFCEVCTYEMKTWA7V7EYPI5YQQ4JWDLI/",
+            "https://security.netapp.com/advisory/ntap-20230703-0010/"
+        ],
+        "summary": "Every `named` instance configured to run as a recursive resolver maintains a cache database holding the responses to the queries it has recently sent to authoritative servers. The size limit for that cache database can be configured using the `max-cache-size` statement in the configuration file; it defaults to 90% of the total amount of memory available on the host. When the size of the cache reaches 7/8 of the configured limit, a cache-cleaning algorithm starts to remove expired and/or least-recently used RRsets from the cache, to keep memory use below the configured limit.\n\nIt has been discovered that the effectiveness of the cache-cleaning algorithm used in `named` can be severely diminished by querying the resolver for specific RRsets in a certain order, effectively allowing the configured `max-cache-size` limit to be significantly exceeded.\nThis issue affects BIND 9 versions 9.11.0 through 9.16.41, 9.18.0 through 9.18.15, 9.19.0 through 9.19.13, 9.11.3-S1 through 9.16.41-S1, and 9.18.11-S1 through 9.18.15-S1."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-06-21T17:15:00",
+        "access": {},
+        "assigner": "security-officer@isc.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2829",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://kb.isc.org/docs/cve-2023-2829",
+            "https://security.netapp.com/advisory/ntap-20230703-0010/"
+        ],
+        "summary": "A `named` instance configured to run as a DNSSEC-validating recursive resolver with the Aggressive Use of DNSSEC-Validated Cache (RFC 8198) option (`synth-from-dnssec`) enabled can be remotely terminated using a zone with a malformed NSEC record.\nThis issue affects BIND 9 versions 9.16.8-S1 through 9.16.41-S1 and 9.18.11-S1 through 9.18.15-S1."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-06-21T17:15:00",
+        "access": {},
+        "assigner": "security-officer@isc.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2911",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://kb.isc.org/docs/cve-2023-2911",
+            "http://www.openwall.com/lists/oss-security/2023/06/21/6",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/U3K6AJK7RRSR53HRF5GGKPA6PDUDWOD2/",
+            "https://www.debian.org/security/2023/dsa-5439",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SEFCEVCTYEMKTWA7V7EYPI5YQQ4JWDLI/",
+            "https://security.netapp.com/advisory/ntap-20230703-0010/"
+        ],
+        "summary": "If the `recursive-clients` quota is reached on a BIND 9 resolver configured with both `stale-answer-enable yes;` and `stale-answer-client-timeout 0;`, a sequence of serve-stale-related lookups could cause `named` to loop and terminate unexpectedly due to a stack overflow.\nThis issue affects BIND 9 versions 9.16.33 through 9.16.41, 9.18.7 through 9.18.15, 9.16.33-S1 through 9.16.41-S1, and 9.18.11-S1 through 9.18.15-S1."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-06-05T21:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2023-3111",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://patchwork.kernel.org/project/linux-btrfs/patch/20220721074829.2905233-1-r33s3n6@gmail.com/",
+            "https://security.netapp.com/advisory/ntap-20230703-0007/"
+        ],
+        "summary": "A use after free vulnerability was found in prepare_to_relocate in fs/btrfs/relocation.c in btrfs in the Linux Kernel. This possible flaw can be triggered by calling btrfs_ioctl_balance() before calling btrfs_ioctl_defrag()."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-06-01T01:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-2598",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://www.openwall.com/lists/oss-security/2023/05/08/3",
+            "https://security.netapp.com/advisory/ntap-20230703-0006/"
+        ],
+        "summary": "A flaw was found in the fixed buffer registration code for io_uring (io_sqe_buffer_register in io_uring/rsrc.c) in the Linux kernel that allows out-of-bounds access to physical memory beyond the end of the buffer. This flaw enables full local privilege escalation."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-31T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2022-48502",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0e8235d28f3a0e9eda9f02ff67ee566d5f42b66b",
+            "https://syzkaller.appspot.com/bug?extid=8778f030156c6cd16d72",
+            "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.2",
+            "https://security.netapp.com/advisory/ntap-20230703-0004/"
+        ],
+        "summary": "An issue was discovered in the Linux kernel before 6.2. The ntfs3 subsystem does not properly check for correctness during disk reads, leading to an out-of-bounds read in ntfs_set_ea in fs/ntfs3/xattr.c."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-30T22:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-2953",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://bugs.openldap.org/show_bug.cgi?id=9904",
+            "https://access.redhat.com/security/cve/CVE-2023-2953",
+            "https://security.netapp.com/advisory/ntap-20230703-0005/"
+        ],
+        "summary": "A vulnerability was found in openldap. This security flaw causes a null pointer dereference in ber_memalloc_x() function."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-30T14:15:00",
+        "access": {},
+        "assigner": "openssl-security@openssl.org",
+        "cvss": null,
+        "cwe": "CWE-770",
+        "id": "CVE-2023-2650",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=423a2bc737a908ad0c77bda470b2b59dc879936b",
+            "https://www.openssl.org/news/secadv/20230530.txt",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=853c5e56ee0b8650c73140816bb8b91d6163422c",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9e209944b35cf82368071f160a744b6178f9b098",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=db779b0e10b047f2585615e0b8f2acdf21f8544a",
+            "http://www.openwall.com/lists/oss-security/2023/05/30/1",
+            "https://www.debian.org/security/2023/dsa-5417",
+            "https://lists.debian.org/debian-lts-announce/2023/06/msg00011.html",
+            "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0009",
+            "https://security.netapp.com/advisory/ntap-20230703-0001/"
+        ],
+        "summary": "Issue summary: Processing some specially crafted ASN.1 object identifiers or\ndata containing them may be very slow.\n\nImpact summary: Applications that use OBJ_obj2txt() directly, or use any of\nthe OpenSSL subsystems OCSP, PKCS7/SMIME, CMS, CMP/CRMF or TS with no message\nsize limit may experience notable to very long delays when processing those\nmessages, which may lead to a Denial of Service.\n\nAn OBJECT IDENTIFIER is composed of a series of numbers - sub-identifiers -\nmost of which have no size limit.  OBJ_obj2txt() may be used to translate\nan ASN.1 OBJECT IDENTIFIER given in DER encoding form (using the OpenSSL\ntype ASN1_OBJECT) to its canonical numeric text form, which are the\nsub-identifiers of the OBJECT IDENTIFIER in decimal form, separated by\nperiods.\n\nWhen one of the sub-identifiers in the OBJECT IDENTIFIER is very large\n(these are sizes that are seen as absurdly large, taking up tens or hundreds\nof KiBs), the translation to a decimal number in text may take a very long\ntime.  The time complexity is O(n^2) with 'n' being the size of the\nsub-identifiers in bytes (*).\n\nWith OpenSSL 3.0, support to fetch cryptographic algorithms using names /\nidentifiers in string form was introduced.  This includes using OBJECT\nIDENTIFIERs in canonical numeric text form as identifiers for fetching\nalgorithms.\n\nSuch OBJECT IDENTIFIERs may be received through the ASN.1 structure\nAlgorithmIdentifier, which is commonly used in multiple protocols to specify\nwhat cryptographic algorithm should be used to sign or verify, encrypt or\ndecrypt, or digest passed data.\n\nApplications that call OBJ_obj2txt() directly with untrusted data are\naffected, with any version of OpenSSL.  If the use is for the mere purpose\nof display, the severity is considered low.\n\nIn OpenSSL 3.0 and newer, this affects the subsystems OCSP, PKCS7/SMIME,\nCMS, CMP/CRMF or TS.  It also impacts anything that processes X.509\ncertificates, including simple things like verifying its signature.\n\nThe impact on TLS is relatively low, because all versions of OpenSSL have a\n100KiB limit on the peer's certificate chain.  Additionally, this only\nimpacts clients, or servers that have explicitly enabled client\nauthentication.\n\nIn OpenSSL 1.1.1 and 1.0.2, this only affects displaying diverse objects,\nsuch as X.509 certificates.  This is assumed to not happen in such a way\nthat it would cause a Denial of Service, so these versions are considered\nnot affected by this issue in such a way that it would be cause for concern,\nand the severity is therefore considered low."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-27T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2015-20108",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://github.com/SAML-Toolkits/ruby-saml/pull/225",
+            "https://github.com/rubysec/ruby-advisory-db/blob/master/gems/ruby-saml/OSVDB-124991.yml",
+            "https://github.com/SAML-Toolkits/ruby-saml/commit/9853651b96b99653ea8627d757d46bfe62ab6448",
+            "https://github.com/SAML-Toolkits/ruby-saml/compare/v0.9.2...v1.0.0",
+            "https://security.netapp.com/advisory/ntap-20230703-0003/"
+        ],
+        "summary": "xml_security.rb in the ruby-saml gem before 1.0.0 for Ruby allows XPath injection and code execution because prepared statements are not used."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-26T17:15:00",
+        "access": {},
+        "assigner": "security@vmware.com",
+        "cvss": null,
+        "cwe": "CWE-400",
+        "id": "CVE-2023-20883",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://spring.io/security/cve-2023-20883",
+            "https://security.netapp.com/advisory/ntap-20230703-0008/"
+        ],
+        "summary": "In Spring Boot versions 3.0.0 - 3.0.6, 2.7.0 - 2.7.11, 2.6.0 - 2.6.14, 2.5.0 - 2.5.14 and older unsupported versions, there is potential for a denial-of-service (DoS) attack if Spring MVC is used together with a reverse proxy cache."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-19T15:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-30774",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://gitlab.com/libtiff/libtiff/-/issues/463",
+            "https://access.redhat.com/security/cve/CVE-2023-30774",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2187139",
+            "https://security.netapp.com/advisory/ntap-20230703-0002/"
+        ],
+        "summary": "A vulnerability was found in the libtiff library. This flaw causes a heap buffer overflow issue via the TIFFTAG_INKNAMES and TIFFTAG_NUMBEROFINKS values."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-19T15:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-30775",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://gitlab.com/libtiff/libtiff/-/issues/464",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2187141",
+            "https://access.redhat.com/security/cve/CVE-2023-30775",
+            "https://security.netapp.com/advisory/ntap-20230703-0002/"
+        ],
+        "summary": "A vulnerability was found in the libtiff library. This security flaw causes a heap buffer overflow in extractContigSamples32bits, tiffcrop.c."
+    },
+    {
+        "Modified": "2023-07-03T16:15:00",
+        "Published": "2023-05-17T22:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-2731",
+        "impact": {},
+        "last-modified": "2023-07-03T16:15:00",
+        "references": [
+            "https://github.com/libsdl-org/libtiff/commit/9be22b639ea69e102d3847dca4c53ef025e9527b",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2207635",
+            "https://gitlab.com/libtiff/libtiff/-/issues/548",
+            "https://access.redhat.com/security/cve/CVE-2023-2731",
+            "https://security.netapp.com/advisory/ntap-20230703-0009/"
+        ],
+        "summary": "A NULL pointer dereference flaw was found in Libtiff's LZWDecode() function in the libtiff/tif_lzw.c file. This flaw allows a local attacker to craft specific input data that can cause the program to dereference a NULL pointer when decompressing a TIFF format file, resulting in a program crash or denial of service."
+    },
+    {
+        "Modified": "2023-07-03T16:06:00",
+        "Published": "2023-06-27T14:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-1891",
+        "impact": {},
+        "last-modified": "2023-07-03T16:06:00",
+        "references": [
+            "https://wpscan.com/vulnerability/4e5d993f-cc20-4b5f-b4c8-c13004151828"
+        ],
+        "summary": "The Accordion & FAQ WordPress plugin before 1.9.9 does not escape various generated URLs, before outputting them in attributes when some notices are displayed, leading to Reflected Cross-Site Scripting"
+    },
+    {
         "Modified": "2023-07-03T15:15:00",
         "Published": "2023-07-03T15:15:00",
         "access": {},
@@ -1347,499 +1841,5 @@
             "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-5/"
         ],
         "summary": "The Feed Them Social \u2013 Page, Post, Video, and Photo Galleries plugin for WordPress is vulnerable to Cross-Site Request Forgery in versions up to, and including, 2.8.6. This is due to missing or incorrect nonce validation on the my_fts_fb_load_more() function. This makes it possible for unauthenticated attackers to load feeds via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-07-01T04:15:00",
-        "access": {},
-        "assigner": "security@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2021-4384",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://plugins.trac.wordpress.org/browser/photo-contest/tags/1.0.6/includes/admin/admin-page-galleries.php#L102",
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/1355bc94-7110-4d61-855e-78889e58dcad?source=cve",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-4/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-3/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-2/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-1/",
-            "https://blog.nintechnet.com/more-wordpress-plugins-and-themes-vulnerable-to-csrf-attacks/",
-            "https://blog.nintechnet.com/25-wordpress-plugins-vulnerable-to-csrf-attacks/",
-            "https://plugins.trac.wordpress.org/browser/photo-contest/tags/1.0.6/includes/view/ajax-function.php#L559",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-5/"
-        ],
-        "summary": "The WordPress Photo Gallery \u2013 Image Gallery plugin for WordPress is vulnerable to Cross-Site Request Forgery in versions up to, and including, 1.0.6. This is due to missing or incorrect nonce validation on the load_images_thumbnail() and edit_gallery() functions. This makes it possible for unauthenticated attackers to edit galleries via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-07-01T04:15:00",
-        "access": {},
-        "assigner": "security@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2021-4385",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=2473452%40wp-private-content-plus&new=2473452%40wp-private-content-plus&sfp_email=&sfph_mail=",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-4/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-3/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-2/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-1/",
-            "https://blog.nintechnet.com/more-wordpress-plugins-and-themes-vulnerable-to-csrf-attacks/",
-            "https://blog.nintechnet.com/25-wordpress-plugins-vulnerable-to-csrf-attacks/",
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/238f6d81-78ba-426c-866a-31f9279e4f99?source=cve",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-5/"
-        ],
-        "summary": "The WP Private Content Plus plugin for WordPress is vulnerable to Cross-Site Request Forgery in versions up to, and including, 3.1. This is due to missing or incorrect nonce validation on the save_groups() function. This makes it possible for unauthenticated attackers to add new group members via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-07-01T04:15:00",
-        "access": {},
-        "assigner": "security@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2021-4386",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/23f9d758-4b5e-44e5-9f58-a37b01c4ffdb?source=cve",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-4/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-3/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-2/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-1/",
-            "https://blog.nintechnet.com/more-wordpress-plugins-and-themes-vulnerable-to-csrf-attacks/",
-            "https://plugins.trac.wordpress.org/browser/wp-security-questions/trunk/modules/settings/model.settings.php#L34",
-            "https://blog.nintechnet.com/25-wordpress-plugins-vulnerable-to-csrf-attacks/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-5/"
-        ],
-        "summary": "The WP Security Question plugin for WordPress is vulnerable to Cross-Site Request Forgery in versions up to, and including, 1.0.5. This is due to missing or incorrect nonce validation on the save() function. This makes it possible for unauthenticated attackers to modify the plugin's settings via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-07-01T04:15:00",
-        "access": {},
-        "assigner": "security@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2021-4387",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-4/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-3/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-2/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-1/",
-            "https://plugins.trac.wordpress.org/browser/opal-estate/trunk/inc/ajax-functions.php#L177",
-            "https://blog.nintechnet.com/more-wordpress-plugins-and-themes-vulnerable-to-csrf-attacks/",
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2645899c-2b6b-48bd-8f33-2a837a951c5e?source=cve",
-            "https://blog.nintechnet.com/25-wordpress-plugins-vulnerable-to-csrf-attacks/",
-            "https://blog.nintechnet.com/multiple-wordpress-plugins-fixed-csrf-vulnerabilities-part-5/"
-        ],
-        "summary": "The Opal Estate plugin for WordPress is vulnerable to Cross-Site Request Forgery in versions up to, and including, 1.6.11. This is due to missing or incorrect nonce validation on the opalestate_set_feature_property() and opalestate_remove_feature_property() functions. This makes it possible for unauthenticated attackers to set and remove featured properties via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "psirt@wdc.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-22816",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://www.westerndigital.com/support/product-security/wdc-23010-my-cloud-firmware-version-5-26-300"
-        ],
-        "summary": "A post-authentication remote command injection vulnerability in a CGI file in Western Digital My Cloud OS 5 devices that could allow an attacker to build files with redirects and execute larger payloads.\nThis issue affects My Cloud OS 5 devices: before 5.26.300.\n\n"
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "psirt@bosch.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29241",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://psirt.bosch.com/security-advisories/BOSCH-SA-988400-BT.html"
-        ],
-        "summary": "Improper Information in Cybersecurity Guidebook in Bosch Building Integration System (BIS) 5.0 may lead to wrong configuration which allows local users to access data via network"
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-2908",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-2908",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2218830",
-            "https://gitlab.com/libtiff/libtiff/-/commit/9bd48f0dbd64fb94dc2b5b05238fde0bfdd4ff3f",
-            "https://gitlab.com/libtiff/libtiff/-/merge_requests/479"
-        ],
-        "summary": "A null pointer dereference issue was discovered in Libtiff's tif_dir.c file. This flaw allows an attacker to pass a crafted TIFF image file to the tiffcp utility, which triggers runtime error, causing an undefined behavior, resulting in an application crash, eventually leading to a denial of service."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-33298",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://support.perimeter81.com/docs/macos-agent-release-notes",
-            "https://www.ns-echo.com/posts/cve_2023_33298.html"
-        ],
-        "summary": "com.perimeter81.osx.HelperTool in Perimeter81 10.0.0.19 on macOS allows Local Privilege Escalation (to root) via shell metacharacters in usingCAPath."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-3338",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://seclists.org/oss-sec/2023/q2/276"
-        ],
-        "summary": "A flaw null pointer dereference in the Linux kernel DECnet networking protocol was found. A remote user could use this flaw to crash the system."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-1206",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2175903"
-        ],
-        "summary": "A hash collision flaw was found in the IPv6 connection lookup table in the Linux kernel\u2019s IPv6 functionality when a user makes a new kind of SYN flood attack. A user located in the local network or with a high bandwidth connection can increase the CPU usage of the server that accepts IPV6 connections up to 95%."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-3490",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://huntr.dev/bounties/4e60ebc1-e00f-48cb-b011-3cefce688ecd",
-            "https://github.com/fossbilling/fossbilling/commit/2ddb7438ee0d05f9a9d01555edcfed820960f114"
-        ],
-        "summary": " SQL Injection in GitHub repository fossbilling/fossbilling prior to 0.5.3."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "psirt@wdc.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-22815",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://www.westerndigital.com/support/product-security/wdc-23010-my-cloud-firmware-version-5-26-300"
-        ],
-        "summary": "\nPost-authentication remote command injection vulnerabilities in Western Digital My Cloud OS 5 devices that could allow an attacker to execute code in the context of the root user on vulnerable CGI files.\n\n\n\nThis issue affects My Cloud OS 5 devices: before 5.26.300.\n\n"
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2023-3491",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/fossbilling/fossbilling/commit/2ddb7438ee0d05f9a9d01555edcfed820960f114",
-            "https://huntr.dev/bounties/043bd900-ac78-44d2-a340-84ddd0bc4a1d"
-        ],
-        "summary": "Unrestricted Upload of File with Dangerous Type in GitHub repository fossbilling/fossbilling prior to 0.5.3."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-1236",
-        "id": "CVE-2023-3493",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/fossbilling/fossbilling/commit/9402d6c4d44b77ccd68d98d1e6cedf782bd913dc",
-            "https://huntr.dev/bounties/e9a272ca-b050-441d-a8cb-4fdecb76ccce"
-        ],
-        "summary": "Improper Neutralization of Formula Elements in a CSV File in GitHub repository fossbilling/fossbilling prior to 0.5.3."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T22:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-3117",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1240eb93f0616b21c675416516ff3d74798fdc97"
-        ],
-        "summary": "A use-after-free flaw was found in the Netfilter subsystem of the Linux kernel when processing named and anonymous sets in batch requests, which can lead to performing arbitrary reads and writes in kernel memory. This flaw allows a local user with CAP_NET_ADMIN capability to crash or potentially escalate their privileges on the system."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-36144",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/leonardobg/CVE-2023-36144",
-            "http://intelbras.com"
-        ],
-        "summary": "An authentication bypass in Intelbras Switch SG 2404 MR in firmware 1.00.54 allows an unauthenticated attacker to download the backup file of the device, exposing critical information about the device configuration."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T23:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-74",
-        "id": "CVE-2023-36812",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/OpenTSDB/opentsdb/commit/fa88d3e4b5369f9fb73da384fab0b23e246309ba",
-            "https://github.com/OpenTSDB/opentsdb/security/advisories/GHSA-76f7-9v52-v2fw",
-            "https://github.com/OpenTSDB/opentsdb/commit/07c4641471c6f5c2ab5aab615969e97211eb50d9"
-        ],
-        "summary": "OpenTSDB is a open source, distributed, scalable Time Series Database (TSDB). OpenTSDB is vulnerable to Remote Code Execution vulnerability by writing user-controlled input to Gnuplot configuration file and running Gnuplot with the generated configuration. This issue has been patched in  commit `07c4641471c` and further refined in commit `fa88d3e4b`. These patches are available in the `2.4.2` release. Users are advised to upgrade. User unable to upgrade may disable Gunuplot via the config option`tsd.core.enable_ui = true` and remove the shell files `mygnuplot.bat` and `mygnuplot.sh`."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T20:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-27469",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://malwarebytes.com",
-            "https://www.malwarebytes.com/secure/cves/cve-2023-27469"
-        ],
-        "summary": "Malwarebytes Anti-Exploit 4.4.0.220 is vulnerable to arbitrary file deletion and denial of service via an ALPC message in which FullFileNamePath lacks a '\\0' character."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T20:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29145",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://www.malwarebytes.com/secure/cves/cve-2023-29145",
-            "https://malwarebytes.com"
-        ],
-        "summary": "The Malwarebytes EDR 1.0.11 for Linux driver doesn't properly ensure whitelisting of executable libraries loaded by executable files, allowing arbitrary code execution. The attacker can set LD_LIBRARY_PATH, set LD_PRELOAD, or run an executable file in a debugger."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T20:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-31543",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/bndr/pipreqs/pull/364",
-            "https://gist.github.com/adeadfed/ccc834440af354a5638f889bee34bafe"
-        ],
-        "summary": "A dependency confusion in pipreqs v0.3.0 to v0.4.11 allows attackers to execute arbitrary code via uploading a crafted PyPI package to the chosen repository server."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-29147",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://www.malwarebytes.com/secure/cves/cve-2023-29147",
-            "https://malwarebytes.com"
-        ],
-        "summary": "In Malwarebytes EDR 1.0.11 for Linux, it is possible to bypass the detection layers that depend on inode identifiers, because an identifier may be reused when a file is replaced, and because two files on different filesystems can have the same identifier."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T21:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-35946",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/gradle/gradle/commit/859eae2b2acf751ae7db3c9ffefe275aa5da0d5d",
-            "https://github.com/gradle/gradle/security/advisories/GHSA-2h6c-rv6q-494v",
-            "https://github.com/gradle/gradle/commit/b07e528feb3a5ffa66bdcc358549edd73e4c8a12",
-            "https://docs.gradle.org/current/userguide/dependency_verification.html"
-        ],
-        "summary": "Gradle is a build tool with a focus on build automation and support for multi-language development. When Gradle writes a dependency into its dependency cache, it uses the dependency's coordinates to compute a file location. With specially crafted dependency coordinates, Gradle can be made to write files into an unintended location. The file may be written outside the dependency cache or over another file in the dependency cache. This vulnerability could be used to poison the dependency cache or overwrite important files elsewhere on the filesystem where the Gradle process has write permissions. Exploiting this vulnerability requires an attacker to have control over a dependency repository used by the Gradle build or have the ability to modify the build's configuration. It is unlikely that this would go unnoticed. A fix has been released in Gradle 7.6.2 and 8.2 to protect against this vulnerability. Gradle will refuse to cache dependencies that have path traversal elements in their dependency coordinates. It is recommended that users upgrade to a patched version. If you are unable to upgrade to Gradle 7.6.2 or 8.2, `dependency verification` will make this vulnerability more difficult to exploit."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T21:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-35947",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/gradle/gradle/commit/1096b309520a8c315e3b6109a6526de4eabcb879",
-            "https://github.com/gradle/gradle/security/advisories/GHSA-84mw-qh6q-v842",
-            "https://github.com/gradle/gradle/commit/2e5c34d57d0c0b7f0e8b039a192b91e5c8249d91"
-        ],
-        "summary": "Gradle is a build tool with a focus on build automation and support for multi-language development. In affected versions when unpacking Tar archives, Gradle did not check that files could be written outside of the unpack location. This could lead to important files being overwritten anywhere the Gradle process has write permissions. For a build reading Tar entries from a Tar archive, this issue could allow Gradle to disclose information from sensitive files through an arbitrary file read. To exploit this behavior, an attacker needs to either control the source of an archive already used by the build or modify the build to interact with a malicious archive. It is unlikely that this would go unnoticed. A fix has been released in Gradle 7.6.2 and 8.2 to protect against this vulnerability. Starting from these versions, Gradle will refuse to handle Tar archives which contain path traversal elements in a Tar entry name. Users are advised to upgrade. There are no known workarounds for this vulnerability.\n\n\n\n### Impact\n\nThis is a path traversal vulnerability when Gradle deals with Tar archives, often referenced as TarSlip, a variant of ZipSlip.\n\n* When unpacking Tar archives, Gradle did not check that files could be written outside of the unpack location. This could lead to important files being overwritten anywhere the Gradle process has write permissions.\n* For a build reading Tar entries from a Tar archive, this issue could allow Gradle to disclose information from sensitive files through an arbitrary file read.\n\nTo exploit this behavior, an attacker needs to either control the source of an archive already used by the build or modify the build to interact with a malicious archive. It is unlikely that this would go unnoticed.\n\nGradle uses Tar archives for its [Build Cache](https://docs.gradle.org/current/userguide/build_cache.html). These archives are safe when created by Gradle. But if an attacker had control of a remote build cache server, they could inject malicious build cache entries that leverage this vulnerability. This attack vector could also be exploited if a man-in-the-middle can be performed between the remote cache and the build.\n\n### Patches\n\nA fix has been released in Gradle 7.6.2 and 8.2 to protect against this vulnerability. Starting from these versions, Gradle will refuse to handle Tar archives which contain path traversal elements in a Tar entry name.\n\nIt is recommended that users upgrade to a patched version.\n\n### Workarounds\n\nThere is no workaround.\n\n* If your build deals with Tar archives that you do not fully trust, you need to inspect them to confirm they do not attempt to leverage this vulnerability.\n* If you use the Gradle remote build cache, make sure only trusted parties have write access to it and that connections to the remote cache are properly secured.\n\n### References\n\n* [CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')](https://cwe.mitre.org/data/definitions/22.html)\n* [Gradle Build Cache](https://docs.gradle.org/current/userguide/build_cache.html)\n* [ZipSlip](https://security.snyk.io/research/zip-slip-vulnerability)\n"
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T18:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-37360",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/manugarg/pacparser/security/advisories/GHSA-62q6-v997-f7v9"
-        ],
-        "summary": "pacparser_find_proxy in Pacparser before 1.4.2 allows JavaScript injection, and possibly privilege escalation, when the attacker controls the URL (which may be realistic within enterprise security products)."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T18:15:00",
-        "access": {},
-        "assigner": "tbd@nist.gov",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-3485",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/temporalio/temporal/releases/tag/v1.20.0"
-        ],
-        "summary": "Insecure defaults in open-source Temporal Server before version 1.20 on all platforms allows an attacker to craft a task token with access to a namespace other than the one specified in the request. Creation of this task token must be done outside of the normal Temporal server flow. It requires the namespace UUID and information from the workflow history for the target namespace. Under these conditions, it is possible to interfere with pending tasks in other namespaces, such as marking a task failed or completed.\nIf a task is targeted for completion by the attacker, the targeted namespace must also be using the same data converter configuration as the initial, valid, namespace for the task completion payload to be decoded by workers in the target namespace.\n\n\n\n"
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T19:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-36477",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/xwiki/xwiki-platform/security/advisories/GHSA-793w-g325-hrw2",
-            "https://github.com/xwiki/xwiki-platform/commit/9d9d86179457cb8dc48b4491510537878800be4f",
-            "https://jira.xwiki.org/browse/XWIKI-20590",
-            "https://jira.xwiki.org/browse/CKEDITOR-508"
-        ],
-        "summary": "XWiki Platform is a generic wiki platform offering runtime services for applications built on top of it. Any user with edit rights can edit all pages in the `CKEditor' space. This makes it possible to perform a variety of harmful actions, such as removing technical documents, leading to loss of service and editing the javascript configuration of CKEditor, leading to persistent XSS. This issue has been patched in XWiki 14.10.6 and XWiki 15.1. This issue has been patched on the CKEditor Integration extension 1.64.9 for XWiki version older than 14.6RC1. Users are advised to upgrade. Users unable to upgrade may manually address the issue by restricting the `edit` and `delete` rights to a trusted user or group (e.g. the `XWiki.XWikiAdminGroup` group), implicitly disabling those rights for all other users. See commit `9d9d86179` for details.\n\n\n\n"
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T19:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-835",
-        "id": "CVE-2023-36807",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/py-pdf/pypdf/pull/1331",
-            "https://github.com/py-pdf/pypdf/issues/1329",
-            "https://github.com/py-pdf/pypdf/security/advisories/GHSA-hm9v-vj3r-r55m"
-        ],
-        "summary": "pypdf is a pure-python PDF library capable of splitting, merging, cropping, and transforming the pages of PDF files. In version 2.10.5 an attacker who uses this vulnerability can craft a PDF which leads to an infinite loop. This infinite loop blocks the current process and can utilize a single core of the CPU by 100%. It does not affect memory usage. That is, for example, the case if the user extracted metadata from such a malformed PDF. Versions prior to 2.10.5 throw an error, but do not hang forever. This issue was fixed with https://github.com/py-pdf/pypdf/pull/1331 which has been included in release 2.10.6. Users are advised to upgrade. Users unable to upgrade should modify `PyPDF2/generic/_data_structures.py::read_object` to an an error throwing case. See GHSA-hm9v-vj3r-r55m for details. "
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T19:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-407",
-        "id": "CVE-2023-36810",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/py-pdf/pypdf/issues/582",
-            "https://github.com/py-pdf/pypdf/security/advisories/GHSA-jrm6-h9cq-8gqw",
-            "https://github.com/py-pdf/pypdf/pull/808"
-        ],
-        "summary": "pypdf is a pure-python PDF library capable of splitting, merging, cropping, and transforming the pages of PDF files. An attacker who uses this vulnerability can craft a PDF which leads to unexpected long runtime. This quadratic runtime blocks the current process and can utilize a single core of the CPU by 100%. It does not affect memory usage. This issue has been addressed in PR 808 and versions from 1.27.9 include this fix. Users are advised to upgrade. There are no known workarounds for this vulnerability."
-    },
-    {
-        "Modified": "2023-07-03T01:10:00",
-        "Published": "2023-06-30T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-37365",
-        "impact": {},
-        "last-modified": "2023-07-03T01:10:00",
-        "references": [
-            "https://github.com/nmslib/hnswlib/issues/467"
-        ],
-        "summary": "Hnswlib 0.7.0 has a double free in init_index when the M argument is a large integer."
     }
 ]
