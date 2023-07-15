@@ -1,5 +1,23 @@
 [
     {
+        "Modified": "2023-07-15T13:15:00",
+        "Published": "2023-07-14T12:15:00",
+        "access": {},
+        "assigner": "openssl-security@openssl.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-2975",
+        "impact": {},
+        "last-modified": "2023-07-15T13:15:00",
+        "references": [
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=6a83f0c958811f07e0d11dfc6b5a6a98edfd5bdc",
+            "https://www.openssl.org/news/secadv/20230714.txt",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=00e2f5eea29994d19293ec4e8c8775ba73678598",
+            "http://www.openwall.com/lists/oss-security/2023/07/15/1"
+        ],
+        "summary": "Issue summary: The AES-SIV cipher implementation contains a bug that causes\nit to ignore empty associated data entries which are unauthenticated as\na consequence.\n\nImpact summary: Applications that use the AES-SIV algorithm and want to\nauthenticate empty data entries as associated data can be mislead by removing\nadding or reordering such empty entries as these are ignored by the OpenSSL\nimplementation. We are currently unaware of any such applications.\n\nThe AES-SIV algorithm allows for authentication of multiple associated\ndata entries along with the encryption. To authenticate empty data the\napplication has to call EVP_EncryptUpdate() (or EVP_CipherUpdate()) with\nNULL pointer as the output buffer and 0 as the input buffer length.\nThe AES-SIV implementation in OpenSSL just returns success for such a call\ninstead of performing the associated data authentication operation.\nThe empty data thus will not be authenticated.\n\nAs this issue does not affect non-empty associated data authentication and\nwe expect it to be rare for an application to use empty associated data\nentries this is qualified as Low severity issue."
+    },
+    {
         "Modified": "2023-07-15T10:15:00",
         "Published": "2023-07-15T10:15:00",
         "access": {},
@@ -1543,20 +1561,5 @@
             "https://github.com/Trinity-SYT-SECURITY/arbitrary-file-upload-RCE/blob/main/Online%20Security%20Guards%20Hiring%20System%201.0.md"
         ],
         "summary": "File upload vulnerability in PHPGurukul Online Security Guards Hiring System v.1.0 allows a remote attacker to execute arbitrary code via a crafted php file to the \\osghs\\admin\\images file."
-    },
-    {
-        "Modified": "2023-07-14T19:46:00",
-        "Published": "2023-07-14T15:15:00",
-        "access": {},
-        "assigner": "sirt@juniper.net",
-        "cvss": null,
-        "cwe": "CWE-703",
-        "id": "CVE-2023-36831",
-        "impact": {},
-        "last-modified": "2023-07-14T19:46:00",
-        "references": [
-            "https://supportportal.juniper.net/JSA71636"
-        ],
-        "summary": "An Improper Check or Handling of Exceptional Conditions vulnerability in the UTM (Unified Threat Management) Web-Filtering feature of Juniper Networks Junos OS on SRX Series causes a jbuf memory leak to occur when accessing certain websites, eventually leading to a Denial of Service (DoS) condition.  Service restoration is only possible by rebooting the system.\n\nThe jbuf memory leak only occurs in SSL Proxy and UTM Web-Filtering configurations.  Other products, platforms, and configurations are not affected by this vulnerability.\n\nThis issue affects Juniper Networks Junos OS on SRX Series:\n22.2 versions prior to 22.2R3;\n22.3 versions prior to 22.3R2-S1, 22.3R3;\n22.4 versions prior to 22.4R1-S2, 22.4R2.\n\nThis issue does not affect Juniper Networks Junos OS versions prior to 22.2R2.\n"
     }
 ]
