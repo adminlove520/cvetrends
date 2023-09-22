@@ -1,5 +1,120 @@
 [
     {
+        "Modified": "2023-09-22T21:15:00",
+        "Published": "2023-07-31T16:15:00",
+        "access": {},
+        "assigner": "openssl-security@openssl.org",
+        "cvss": null,
+        "cwe": "CWE-834",
+        "id": "CVE-2023-3817",
+        "impact": {},
+        "last-modified": "2023-09-22T21:15:00",
+        "references": [
+            "https://www.openssl.org/news/secadv/20230731.txt",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=6a1eb62c29db6cb5eec707f9338aee00f44e26f5",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9002fd07327a91f35ba6c1307e71fa6fd4409b7f",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=91ddeba0f2269b017dc06c46c993a788974b1aa5",
+            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=869ad69aadd985c7b8ca6f4e5dd0eb274c9f3644",
+            "http://www.openwall.com/lists/oss-security/2023/07/31/1",
+            "http://seclists.org/fulldisclosure/2023/Jul/43",
+            "https://lists.debian.org/debian-lts-announce/2023/08/msg00019.html",
+            "https://security.netapp.com/advisory/ntap-20230818-0014/",
+            "http://www.openwall.com/lists/oss-security/2023/09/22/9"
+        ],
+        "summary": "Issue summary: Checking excessively long DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_check(), DH_check_ex()\nor EVP_PKEY_param_check() to check a DH key or DH parameters may experience long\ndelays. Where the key or parameters that are being checked have been obtained\nfrom an untrusted source this may lead to a Denial of Service.\n\nThe function DH_check() performs various checks on DH parameters. After fixing\nCVE-2023-3446 it was discovered that a large q parameter value can also trigger\nan overly long computation during some of these checks. A correct q value,\nif present, cannot be larger than the modulus p parameter, thus it is\nunnecessary to perform these checks if q is larger than p.\n\nAn application that calls DH_check() and supplies a key or parameters obtained\nfrom an untrusted source could be vulnerable to a Denial of Service attack.\n\nThe function DH_check() is itself called by a number of other OpenSSL functions.\nAn application calling any of those other functions may similarly be affected.\nThe other functions affected by this are DH_check_ex() and\nEVP_PKEY_param_check().\n\nAlso vulnerable are the OpenSSL dhparam and pkeyparam command line applications\nwhen using the \"-check\" option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue."
+    },
+    {
+        "Modified": "2023-09-22T21:15:00",
+        "Published": "2023-07-24T20:15:00",
+        "access": {},
+        "assigner": "psirt@amd.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2023-20593",
+        "impact": {},
+        "last-modified": "2023-09-22T21:15:00",
+        "references": [
+            "https://www.amd.com/en/corporate/product-security/bulletin/AMD-SB-7008",
+            "http://www.openwall.com/lists/oss-security/2023/07/24/3",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/6",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/5",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/1",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/17",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/12",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/16",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/15",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/14",
+            "http://www.openwall.com/lists/oss-security/2023/07/25/13",
+            "http://seclists.org/fulldisclosure/2023/Jul/43",
+            "https://cmpxchg8b.com/zenbleed.html",
+            "http://www.openwall.com/lists/oss-security/2023/07/26/1",
+            "http://xenbits.xen.org/xsa/advisory-433.html",
+            "https://www.debian.org/security/2023/dsa-5459",
+            "https://lists.debian.org/debian-lts-announce/2023/07/msg00030.html",
+            "https://www.debian.org/security/2023/dsa-5462",
+            "https://www.debian.org/security/2023/dsa-5461",
+            "https://lists.debian.org/debian-lts-announce/2023/07/msg00033.html",
+            "http://www.openwall.com/lists/oss-security/2023/07/31/2",
+            "https://lists.debian.org/debian-lts-announce/2023/08/msg00001.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SD2G74BXS2SWOE3FIQJ6X76S3A7PDGML/",
+            "http://www.openwall.com/lists/oss-security/2023/08/08/8",
+            "http://www.openwall.com/lists/oss-security/2023/08/08/7",
+            "http://www.openwall.com/lists/oss-security/2023/08/08/6",
+            "http://www.openwall.com/lists/oss-security/2023/08/16/4",
+            "http://www.openwall.com/lists/oss-security/2023/08/16/5",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CP6WQO3CDPLE5O635N7TAL5KCZ6HZ4FE/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/HKKYIK2EASDNUV4I7EFJKNBVO3KCKGRR/",
+            "http://www.openwall.com/lists/oss-security/2023/09/22/9"
+        ],
+        "summary": "\nAn issue in \u201cZen 2\u201d CPUs, under specific microarchitectural circumstances, may allow an attacker to potentially access sensitive information.\n\n\n\n\n\n\n"
+    },
+    {
+        "Modified": "2023-09-22T21:15:00",
+        "Published": "2023-07-20T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-428",
+        "id": "CVE-2023-38408",
+        "impact": {},
+        "last-modified": "2023-09-22T21:15:00",
+        "references": [
+            "https://github.com/openbsd/src/commit/7bc29a9d5cd697290aa056e94ecee6253d3425f8",
+            "https://www.openssh.com/txt/release-9.3p2",
+            "https://www.qualys.com/2023/07/19/cve-2023-38408/rce-openssh-forwarded-ssh-agent.txt",
+            "https://blog.qualys.com/vulnerabilities-threat-research/2023/07/19/cve-2023-38408-remote-code-execution-in-opensshs-forwarded-ssh-agent",
+            "https://news.ycombinator.com/item?id=36790196",
+            "https://github.com/openbsd/src/commit/f8f5a6b003981bb824329dc987d101977beda7ca",
+            "https://github.com/openbsd/src/commit/f03a4faa55c4ce0818324701dadbf91988d7351d",
+            "https://www.openssh.com/security.html",
+            "https://security.gentoo.org/glsa/202307-01",
+            "http://www.openwall.com/lists/oss-security/2023/07/20/1",
+            "http://www.openwall.com/lists/oss-security/2023/07/20/2",
+            "http://packetstormsecurity.com/files/173661/OpenSSH-Forwarded-SSH-Agent-Remote-Code-Execution.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/RAXVQS6ZYTULFAK3TEJHRLKZALJS3AOU/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CEBTJJINE2I3FHAUKKNQWMFGYMLSMWKQ/",
+            "https://security.netapp.com/advisory/ntap-20230803-0010/",
+            "https://lists.debian.org/debian-lts-announce/2023/08/msg00021.html",
+            "http://www.openwall.com/lists/oss-security/2023/09/22/9"
+        ],
+        "summary": "The PKCS#11 feature in ssh-agent in OpenSSH before 9.3p2 has an insufficiently trustworthy search path, leading to remote code execution if an agent is forwarded to an attacker-controlled system. (Code in /usr/lib is not necessarily safe for loading into ssh-agent.) NOTE: this issue exists because of an incomplete fix for CVE-2016-10009."
+    },
+    {
+        "Modified": "2023-09-22T20:15:00",
+        "Published": "2023-09-22T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-40989",
+        "impact": {},
+        "last-modified": "2023-09-22T20:15:00",
+        "references": [
+            "https://github.com/Zone1-Z/CVE-2023-40989/blob/main/CVE-2023-40989"
+        ],
+        "summary": "SQL injection vulnerbility in jeecgboot jeecg-boot v 3.0, 3.5.3 that allows a remote attacker to execute arbitrary code via a crafted request to the report/jeecgboot/jmreport/queryFieldBySql component."
+    },
+    {
         "Modified": "2023-09-22T19:33:00",
         "Published": "2023-09-20T13:15:00",
         "access": {},
@@ -1584,69 +1699,5 @@
             "https://greenrocketsecurity.com/cve-2023-4951/"
         ],
         "summary": "A cross site scripting issue was discovered with the pagination function on the \"Client-based Authentication Policy Configuration\" screen of the GreenRADIUS web admin interface.\u00a0This issue is found in GreenRADIUS v5.1.1.1 and prior. A fix was included in v5.1.2.2.\n\n\n"
-    },
-    {
-        "Modified": "2023-09-22T15:14:00",
-        "Published": "2023-09-19T13:16:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-916",
-        "id": "CVE-2022-47557",
-        "impact": {},
-        "last-modified": "2023-09-22T15:14:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso-sci/multiple-vulnerabilities-ormazabal-products"
-        ],
-        "summary": "** UNSUPPPORTED WHEN ASSIGNED ** Vulnerability in ekorCCP and ekorRCI that could allow an attacker with access to the network where the device is located to decrypt the credentials of privileged users, and subsequently gain access to the system to perform malicious actions."
-    },
-    {
-        "Modified": "2023-09-22T15:10:00",
-        "Published": "2023-09-19T13:16:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-798",
-        "id": "CVE-2022-47558",
-        "impact": {},
-        "last-modified": "2023-09-22T15:10:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso-sci/multiple-vulnerabilities-ormazabal-products"
-        ],
-        "summary": "** UNSUPPPORTED WHEN ASSIGNED ** Devices ekorCCP and ekorRCI are vulnerable due to access to the FTP service using default credentials. Exploitation of this vulnerability can allow an attacker to modify critical files that could allow the creation of new users, delete or modify existing users, modify configuration files, install rootkits or backdoors."
-    },
-    {
-        "Modified": "2023-09-22T15:08:00",
-        "Published": "2023-09-19T14:15:00",
-        "access": {},
-        "assigner": "security@trendmicro.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-41179",
-        "impact": {},
-        "last-modified": "2023-09-22T15:08:00",
-        "references": [
-            "https://success.trendmicro.com/solution/000294994",
-            "https://success.trendmicro.com/jp/solution/000294706",
-            "https://jvn.jp/en/vu/JVNVU90967486/"
-        ],
-        "summary": "A vulnerability in the 3rd party AV uninstaller module contained in Trend Micro Apex One (on-prem and SaaS), Worry-Free Business Security and Worry-Free Business Security Services could allow an attacker to manipulate the module to execute arbitrary commands on an affected installation.\r\n\r\nNote that an attacker must first obtain administrative console access on the target system in order to exploit this vulnerability."
-    },
-    {
-        "Modified": "2023-09-22T15:06:00",
-        "Published": "2023-09-19T15:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-294",
-        "id": "CVE-2023-41890",
-        "impact": {},
-        "last-modified": "2023-09-22T15:06:00",
-        "references": [
-            "https://github.com/Sustainsys/Saml2/security/advisories/GHSA-fv2h-753j-9g39",
-            "https://github.com/Sustainsys/Saml2/issues/712",
-            "https://github.com/Sustainsys/Saml2/issues/713"
-        ],
-        "summary": "Sustainsys.Saml2 library adds SAML2P support to ASP.NET web sites, allowing the web site to act as a SAML2 Service Provider. \nPrior to versions 1.0.3 and 2.9.2, when a response is processed, the issuer of the Identity Provider is not sufficiently validated. This could allow a malicious identity provider to craft a Saml2 response that is processed as if issued by another identity provider. It is also possible for a malicious end user to cause stored state intended for one identity provider to be used when processing the response from another provider. An application is impacted if they rely on any of these features in their authentication/authorization logic: the issuer of the generated identity and claims; or items in the stored request state (AuthenticationProperties). This issue is patched in versions 2.9.2 and 1.0.3. The `AcsCommandResultCreated` notification can be used to add the validation required if an upgrade to patched packages is not possible."
     }
 ]
