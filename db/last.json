@@ -1,5 +1,336 @@
 [
     {
+        "Modified": "2023-09-28T09:15:00",
+        "Published": "2023-09-27T15:19:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-863",
+        "id": "CVE-2023-44154",
+        "impact": {},
+        "last-modified": "2023-09-28T09:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-2436"
+        ],
+        "summary": "Sensitive information disclosure and manipulation due to improper authorization. The following products are affected: Acronis Cyber Protect 15 (Linux, Windows) before build 35979."
+    },
+    {
+        "Modified": "2023-09-28T09:15:00",
+        "Published": "2023-08-09T07:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-444",
+        "id": "CVE-2023-33934",
+        "impact": {},
+        "last-modified": "2023-09-28T09:15:00",
+        "references": [
+            "https://lists.apache.org/thread/jsl6dfdgs1mjjo1mbtyflyjr7xftswhc",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/BOTOM2MFKOLK46Q3BQHO662HTPZFRQUC/"
+        ],
+        "summary": "Improper Input Validation vulnerability in Apache Software Foundation Apache Traffic Server.This issue affects Apache Traffic Server: through 9.2.1.\n\n"
+    },
+    {
+        "Modified": "2023-09-28T09:15:00",
+        "Published": "2022-05-23T11:16:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "security@apache.org",
+        "cvss": 7.5,
+        "cvss-time": "2023-09-28T09:15:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+        "cwe": "CWE-116",
+        "id": "CVE-2022-29599",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-09-28T09:15:00",
+        "references": [
+            "https://github.com/apache/maven-shared-utils/pull/40",
+            "https://issues.apache.org/jira/browse/MSHARED-297",
+            "http://www.openwall.com/lists/oss-security/2022/05/23/3",
+            "https://lists.debian.org/debian-lts-announce/2022/08/msg00018.html",
+            "https://www.debian.org/security/2022/dsa-5242"
+        ],
+        "summary": "In Apache Maven maven-shared-utils prior to version 3.3.3, the Commandline class can emit double-quoted strings without proper escaping, allowing shell injection attacks."
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-21T14:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2023-43631",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43631/"
+        ],
+        "summary": "\nOn boot, the Pillar eve container checks for the existence and content of\n\u201c/config/authorized_keys\u201d.\n\nIf the file is present, and contains a supported public key, the container will go on to open\nport 22 and enable sshd with the given keys as the authorized keys for root login.\n\nAn attacker could easily add their own keys and gain full control over the system without\ntriggering the \u201cmeasured boot\u201d mechanism implemented by EVE OS, and without marking\nthe device as \u201cUUD\u201d (\u201cUnknown Update Detected\u201d).\n\nThis is because the \u201c/config\u201d partition is not protected by \u201cmeasured boot\u201d, it is mutable, and\nit is not encrypted in any way.\n\n\n\n\nAn attacker can gain full control over the device without changing the PCR values, thus not\ntriggering the \u201cmeasured boot\u201d mechanism, and having full access to the vault.\n\n\n\nNote:\n\nThis issue was partially fixed in these commits (after disclosure to Zededa), where the config\npartition measurement was added to PCR13:\n\n\u2022 aa3501d6c57206ced222c33aea15a9169d629141\n\n\u2022 5fef4d92e75838cc78010edaed5247dfbdae1889.\n\nThis issue was made viable in version 9.0.0 when the calculation was moved to PCR14 but it was not included in the measured boot."
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-21T14:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-770",
+        "id": "CVE-2023-43632",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43632/"
+        ],
+        "summary": "\nAs noted in the \u201cVTPM.md\u201d file in the eve documentation, \u201cVTPM is a server listening on port\n8877 in EVE, exposing limited functionality of the TPM to the clients. \nVTPM allows clients to\nexecute tpm2-tools binaries from a list of hardcoded options\u201d\nThe communication with this server is done using protobuf, and the data is comprised of 2\nparts:\n\n1. Header\n\n2. Data\n\nWhen a connection is made, the server is waiting for 4 bytes of data, which will be the header,\nand these 4 bytes would be parsed as uint32 size of the actual data to come.\n\nThen, in the function \u201chandleRequest\u201d this size is then used in order to allocate a payload on\nthe stack for the incoming data.\n\nAs this payload is allocated on the stack, this will allow overflowing the stack size allocated for\nthe relevant process with freely controlled data.\n\n* An attacker can crash the system. \n* An attacker can gain control over the system, specifically on the \u201cvtpm_server\u201d process\nwhich has very high privileges.\n\n\n"
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-21T14:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2023-43633",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43633/"
+        ],
+        "summary": "\nOn boot, the Pillar eve container checks for the existence and content of\n\u201c/config/GlobalConfig/global.json\u201d.\n\nIf the file exists, it overrides the existing configuration on the device on boot.\n\nThis allows an attacker to change the system\u2019s configuration, which also includes some\ndebug functions.\n\nThis could be used to unlock the ssh with custom \u201cauthorized_keys\u201d via the\n\u201cdebug.enable.ssh\u201d key, similar to the \u201cauthorized_keys\u201d finding that was noted before.\n\nOther usages include unlocking the usb to enable the keyboard via the \u201cdebug.enable.usb\u201d\nkey, allowing VNC access via the \u201capp.allow.vnc\u201d key, and more.\n\nAn attacker could easily enable these debug functionalities without triggering the \u201cmeasured\nboot\u201d mechanism implemented by EVE OS, and without marking the device as \u201cUUD\u201d\n(\u201cUnknown Update Detected\u201d).\nThis is because the \u201c/config\u201d partition is not protected by \u201cmeasured boot\u201d, it is mutable and it\nis not encrypted in any way.\n\n\n\n\n\nAn attacker can gain full control over the device without changing the PCR values, thereby not\ntriggering the \u201cmeasured boot\u201d mechanism, and having full access to the vault.\n\n\n\n\nNote:\n\nThis issue was partially fixed in these commits (after disclosure to Zededa), where the config\npartition measurement was added to PCR13:\n\n\u2022 aa3501d6c57206ced222c33aea15a9169d629141\n\n\u2022 5fef4d92e75838cc78010edaed5247dfbdae1889.\n\nThis issue was made viable in version 9.0.0 when the calculation was moved to PCR14 but it was not included in the measured boot."
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-21T14:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2023-43634",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43634/"
+        ],
+        "summary": "\nWhen sealing/unsealing the \u201cvault\u201d key, a list of PCRs is used, which defines which PCRs\nare used.\n\nIn a previous project, CYMOTIVE found that the configuration is not protected by the secure\nboot, and in response Zededa implemented measurements on the config partition that was\nmapped to PCR 13.\n\nIn that process, PCR 13 was added to the list of PCRs that seal/unseal the key.\n\nIn commit \u201c56e589749c6ff58ded862d39535d43253b249acf\u201d, the config partition\nmeasurement moved from PCR 13 to PCR 14, but PCR 14 was not added to the list of\nPCRs that seal/unseal the key.\n\nThis change makes the measurement of PCR 14 effectively redundant as it would not affect\nthe sealing/unsealing of the key.\n\n\n\nAn attacker could modify the config partition without triggering the measured boot, this could\nresult in the attacker gaining full control over the device with full access to the contents of the\nencrypted \u201cvault\u201d\n\n\n\n\n"
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-21T14:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2023-43637",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43637/"
+        ],
+        "summary": "\nDue to the implementation of \"deriveVaultKey\", prior to version 7.10, the generated vault key\nwould always have the last 16 bytes predetermined to be \"arfoobarfoobarfo\".\n\nThis issue happens because \"deriveVaultKey\" calls \"retrieveCloudKey\" (which will always\nreturn \"foobarfoobarfoobarfoobarfoobarfo\" as the key), and then merges the 32byte\nrandomly generated key with this key (by takeing 16bytes from each, see \"mergeKeys\").\n\nThis makes the key a lot weaker.\n\nThis issue does not persist in devices that were initialized on/after version 7.10, but devices\nthat were initialized before that and updated to a newer version still have this issue.\n\n\n\nRoll an update that enforces the full 32bytes key usage.\n\n\n\n\n\n\n"
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-20T15:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2023-43630",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43630/"
+        ],
+        "summary": "PCR14 is not in the list of PCRs that seal/unseal the \u201cvault\u201d key, but\ndue to the change that was implemented in commit\n\u201c7638364bc0acf8b5c481b5ce5fea11ad44ad7fd4\u201d, fixing this issue alone would not solve the\nproblem of the config partition not being measured correctly.\n\nAlso, the \u201cvault\u201d key is sealed/unsealed with SHA1 PCRs instead of\nSHA256. \nThis issue was somewhat mitigated due to all of the PCR extend functions\nupdating both the values of SHA256 and SHA1 for a given PCR ID.\n\nHowever, due to the change that was implemented in commit\n\u201c7638364bc0acf8b5c481b5ce5fea11ad44ad7fd4\u201d, this is no longer the case for PCR14, as\nthe code in \u201cmeasurefs.go\u201d explicitly updates only the SHA256 instance of PCR14, which\nmeans that even if PCR14 were to be added to the list of PCRs sealing/unsealing the \u201cvault\u201d\nkey, changes to the config partition would still not be measured.\n\n\n\nAn attacker could modify the config partition without triggering the measured boot, this could\nresult in the attacker gaining full control over the device with full access to the contents of the\nencrypted \u201cvault\u201d \n\n\n\n\n"
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-20T15:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-327",
+        "id": "CVE-2023-43635",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43635/"
+        ],
+        "summary": "\nVault Key Sealed With SHA1 PCRs\n\n\n\n\n\n\nThe measured boot solution implemented in EVE OS leans on a PCR locking mechanism.\n\nDifferent parts of the system update different PCR values in the TPM, resulting in a unique\nvalue for each PCR entry.\n\nThese PCRs are then used in order to seal/unseal a key from the TPM which is used to\nencrypt/decrypt the \u201cvault\u201d directory.\n\nThis \u201cvault\u201d directory is the most sensitive point in the system and as such, its content should\nbe protected.\n\nThis mechanism is noted in Zededa\u2019s documentation as the \u201cmeasured boot\u201d mechanism,\ndesigned to protect said \u201cvault\u201d.\n\nThe code that\u2019s responsible for generating and fetching the key from the TPM assumes that\nSHA256 PCRs are used in order to seal/unseal the key, and as such their presence is being\nchecked.\n\nThe issue here is that the key is not sealed using SHA256 PCRs, but using SHA1 PCRs.\nThis leads to several issues:\n\n\u2022 Machines that have their SHA256 PCRs enabled but SHA1 PCRs disabled, as well\nas not sealing their keys at all, meaning the \u201cvault\u201d is not protected from an attacker.\n\n\u2022 SHA1 is considered insecure and reduces the complexity level required to unseal the\nkey in machines which have their SHA1 PCRs enabled.\n\n\n\nAn attacker can very easily retrieve the contents of the \u201cvault\u201d, which will effectively render\nthe \u201cmeasured boot\u201d mechanism meaningless.\n\n\n\n\n\n"
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-09-20T15:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-345",
+        "id": "CVE-2023-43636",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-43636/"
+        ],
+        "summary": "\n\n\nIn EVE OS, the \u201cmeasured boot\u201d mechanism prevents a compromised device from accessing\nthe encrypted data located in the vault.\n\nAs per the \u201cmeasured boot\u201d design, the PCR values calculated at different stages of the boot\nprocess will change if any of their respective parts are changed.\n\nThis includes, among other things, the configuration of the bios, grub, the kernel cmdline,\ninitrd, and more.\n\nHowever, this mechanism does not validate the entire rootfs, so an attacker can edit the\nfilesystem and gain control over the system.\n\nAs the default filesystem used by EVE OS is squashfs, this is somewhat harder than an ext4,\nwhich is easily changeable.\n\nThis will not stop an attacker, as an attacker can repackage the squashfs with their changes\nin it and replace the partition altogether.\n\nThis can also be done directly on the device, as the \u201c003-storage-init\u201d container contains the\n\u201cmksquashfs\u201d and \u201cunsquashfs\u201d binaries (with the corresponding libs).\n\n\n\n\n\n\n\nAn attacker can gain full control over the device without changing the PCR values, thus not\ntriggering the \u201cmeasured boot\u201d mechanism, and having full access to the vault.\n\n\n\nNote:\n\nThis issue was partially fixed in these commits (after disclosure to Zededa), where the config\npartition measurement was added to PCR13:\n\n\u2022 aa3501d6c57206ced222c33aea15a9169d629141\n\n\u2022 5fef4d92e75838cc78010edaed5247dfbdae1889.\n\nThis issue was made viable in version 9.0.0 when the calculation was moved to PCR14 but it was not included in the measured boot."
+    },
+    {
+        "Modified": "2023-09-28T06:15:00",
+        "Published": "2023-06-01T06:15:00",
+        "access": {},
+        "assigner": "cve@asrg.io",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-3028",
+        "impact": {},
+        "last-modified": "2023-09-28T06:15:00",
+        "references": [
+            "https://asrg.io/security-advisories/cve-2023-3028/"
+        ],
+        "summary": "Insufficient authentication in the MQTT backend (broker) allows an attacker to access and even manipulate the telemetry data of the entire fleet of vehicles using the HopeChart HQT-401 telematics unit. Other models are possibly affected too.\n\n\n\n\n\n\n\n\nMultiple vulnerabilities were identified:\n\n\n\n- The MQTT backend does not require authentication, allowing unauthorized connections from an attacker.\n\n\n\n- The vehicles publish their telemetry data (e.g. GPS Location, speed, odometer, fuel, etc) as messages in public topics. The backend also sends commands to the vehicles as MQTT posts in public topics. As a result, an attacker can access the confidential data of the entire fleet that is managed by the backend.\n\n\n\n- The MQTT messages sent by the vehicles or the backend are not encrypted or authenticated. An attacker can create and post messages to impersonate a vehicle or the backend. The attacker could then, for example, send incorrect information to the backend about the vehicle's location.\n\n\n\n- The backend can inject data into a vehicle\u00b4s CAN bus by sending a specific MQTT message on a public topic. Because these messages are not authenticated or encrypted, an attacker could impersonate the backend, create a fake message and inject CAN data in any vehicle managed by the backend.\n\n\nThe confirmed version is\u00a0201808021036, however further versions have been also identified as potentially impacted.\n\n\n\n"
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "report@snyk.io",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-26145",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://github.com/dgilland/pydash/commit/6ff0831ad285fff937cafd2a853f20cc9ae92021",
+            "https://gist.github.com/CalumHutton/45d33e9ea55bf4953b3b31c84703dfca",
+            "https://security.snyk.io/vuln/SNYK-PYTHON-PYDASH-5916518"
+        ],
+        "summary": "This affects versions of the package pydash before 6.0.0. A number of pydash methods such as pydash.objects.invoke() and pydash.collections.invoke_map() accept dotted paths (Deep Path Strings) to target a nested Python object, relative to the original source object. These paths can be used to target internal class attributes and dict items, to retrieve, modify or invoke nested Python objects.\r\r**Note:**\r\rThe pydash.objects.invoke() method is vulnerable to Command Injection when the following prerequisites are satisfied:\r\r1) The source object (argument 1) is not a built-in object such as list/dict (otherwise, the __init__.__globals__ path is not accessible)\r\r2) The attacker has control over argument 2 (the path string) and argument 3 (the argument to pass to the invoked method)\r\r\rThe pydash.collections.invoke_map() method is also vulnerable, but is harder to exploit as the attacker does not have direct control over the argument to be passed to the invoked function."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "report@snyk.io",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-26149",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://security.snyk.io/vuln/SNYK-JS-QUILLMENTION-5921549",
+            "https://codepen.io/ALiangLiang/pen/mdQMJXK",
+            "https://github.com/quill-mention/quill-mention/blob/0aa9847719257496b14ac5401872c4e2ffcbc3d1/src/quill.mention.js%23L391",
+            "https://github.com/quill-mention/quill-mention/pull/341",
+            "https://github.com/quill-mention/quill-mention/commit/e85262ddced0a7f0b6fc8350d236a68bd1e28385",
+            "https://github.com/quill-mention/quill-mention/issues/255"
+        ],
+        "summary": "Versions of the package quill-mention before 4.0.0 are vulnerable to Cross-site Scripting (XSS) due to improper user-input sanitization, via the renderList function. \r\r**Note:**\r\rIf the mentions list is sourced from unsafe (user-sourced) data, this might allow an injection attack when a Quill user hits @."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-44275",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://www.x41-dsec.de/lab/advisories/x41-2023-001-opnsense",
+            "https://github.com/opnsense/core/commit/484753b2abe3fd0fcdb73d8bf00c3fc3709eb8b7",
+            "https://github.com/opnsense/core/compare/23.7.4...23.7.5"
+        ],
+        "summary": "OPNsense before 23.7.5 allows XSS via the index.php column_count parameter to the Lobby Dashboard."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-44276",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://www.x41-dsec.de/lab/advisories/x41-2023-001-opnsense",
+            "https://github.com/opnsense/core/commit/484753b2abe3fd0fcdb73d8bf00c3fc3709eb8b7",
+            "https://github.com/opnsense/core/compare/23.7.4...23.7.5"
+        ],
+        "summary": "OPNsense before 23.7.5 allows XSS via the index.php sequence parameter to the Lobby Dashboard."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "security@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-5230",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://plugins.trac.wordpress.org/browser/tm-woocommerce-compare-wishlist/tags/1.1.7/includes/wishlist/wishlist.php#L339",
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/771ecb8c-feb1-40ea-b47b-a2ae033b3c87?source=cve"
+        ],
+        "summary": "The TM WooCommerce Compare & Wishlist plugin for WordPress is vulnerable to Stored Cross-Site Scripting via 'tm_woo_wishlist_table' shortcode in versions up to, and including, 1.1.7 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers with contributor-level and above permissions to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "security@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-5232",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/15947764-a070-4715-bd44-cb79b62ed59d?source=cve",
+            "https://plugins.trac.wordpress.org/browser/font-awesome-more-icons/tags/3.5/plugin.php#L82"
+        ],
+        "summary": "The Font Awesome More Icons plugin for WordPress is vulnerable to Stored Cross-Site Scripting via 'icon' shortcode in versions up to, and including, 3.5 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers with contributor-level and above permissions to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-09-28T05:15:00",
+        "access": {},
+        "assigner": "security@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-5233",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/a2791f48-895f-4099-87ec-41aaac2494a2?source=cve",
+            "https://plugins.trac.wordpress.org/browser/font-awesome-integration/tags/5.0/font-awesome-integration.php#L48"
+        ],
+        "summary": "The Font Awesome Integration plugin for WordPress is vulnerable to Stored Cross-Site Scripting via 'fawesome' shortcode in versions up to, and including, 5.0 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers with contributor-level and above permissions to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2023-09-28T05:15:00",
+        "Published": "2023-08-09T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-39007",
+        "impact": {},
+        "last-modified": "2023-09-28T05:15:00",
+        "references": [
+            "https://logicaltrust.net/blog/2023/08/opnsense.html",
+            "https://github.com/opnsense/core/commit/5edff49db1cd8b5078611e2f542d91c02af2b25c",
+            "https://github.com/opnsense/core/compare/23.1.11...23.7"
+        ],
+        "summary": "/ui/cron/item/open in the Cron component of OPNsense before 23.7 allows XSS via openAction in app/controllers/OPNsense/Cron/ItemController.php."
+    },
+    {
         "Modified": "2023-09-28T04:15:00",
         "Published": "2023-09-28T04:15:00",
         "access": {},
@@ -454,21 +785,6 @@
             "https://security-advisory.acronis.com/advisories/SEC-3471"
         ],
         "summary": "Sensitive information leak through log files. The following products are affected: Acronis Cyber Protect 15 (Linux, Windows) before build 35979."
-    },
-    {
-        "Modified": "2023-09-28T01:27:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "security@acronis.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2023-44154",
-        "impact": {},
-        "last-modified": "2023-09-28T01:27:00",
-        "references": [
-            "https://security-advisory.acronis.com/advisories/SEC-2436"
-        ],
-        "summary": "Sensitive information disclosure and manipulation due to improper authorization. The following products are affected: Acronis Cyber Protect 15 (Linux, Windows) before build 35979."
     },
     {
         "Modified": "2023-09-28T01:23:00",
@@ -1376,304 +1692,5 @@
             "https://crbug.com/1350111"
         ],
         "summary": "Insufficient data validation in Extensions in Google Chrome prior to 107.0.5304.62 allowed a remote attacker who had compromised the renderer process to leak cross-origin data via a crafted Chrome extension. (Chromium security severity: Low)"
-    },
-    {
-        "Modified": "2023-09-27T19:10:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-37448",
-        "impact": {},
-        "last-modified": "2023-09-27T19:10:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213940"
-        ],
-        "summary": "A lock screen issue was addressed with improved state management. This issue is fixed in macOS Sonoma 14. A user may be able to view restricted content from the lock screen."
-    },
-    {
-        "Modified": "2023-09-27T19:09:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-35984",
-        "impact": {},
-        "last-modified": "2023-09-27T19:09:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213937",
-            "https://support.apple.com/en-us/HT213938",
-            "https://support.apple.com/en-us/HT213936",
-            "https://support.apple.com/en-us/HT213940"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in tvOS 17, iOS 17 and iPadOS 17, watchOS 10, macOS Sonoma 14. An attacker in physical proximity can cause a limited out of bounds write."
-    },
-    {
-        "Modified": "2023-09-27T19:05:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-35074",
-        "impact": {},
-        "last-modified": "2023-09-27T19:05:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213937",
-            "https://support.apple.com/en-us/HT213938",
-            "https://support.apple.com/en-us/HT213936",
-            "https://support.apple.com/en-us/HT213940",
-            "https://support.apple.com/en-us/HT213941"
-        ],
-        "summary": "The issue was addressed with improved memory handling. This issue is fixed in tvOS 17, Safari 17, watchOS 10, iOS 17 and iPadOS 17, macOS Sonoma 14. Processing web content may lead to arbitrary code execution."
-    },
-    {
-        "Modified": "2023-09-27T19:01:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-32421",
-        "impact": {},
-        "last-modified": "2023-09-27T19:01:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213940"
-        ],
-        "summary": "A privacy issue was addressed with improved handling of temporary files. This issue is fixed in macOS Sonoma 14. An app may be able to observe unprotected user data."
-    },
-    {
-        "Modified": "2023-09-27T18:58:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-32396",
-        "impact": {},
-        "last-modified": "2023-09-27T18:58:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213939",
-            "https://support.apple.com/en-us/HT213937",
-            "https://support.apple.com/en-us/HT213938",
-            "https://support.apple.com/en-us/HT213936",
-            "https://support.apple.com/en-us/HT213940"
-        ],
-        "summary": "This issue was addressed with improved checks. This issue is fixed in Xcode 15, tvOS 17, watchOS 10, iOS 17 and iPadOS 17, macOS Sonoma 14. An app may be able to gain elevated privileges."
-    },
-    {
-        "Modified": "2023-09-27T18:54:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-32377",
-        "impact": {},
-        "last-modified": "2023-09-27T18:54:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213940"
-        ],
-        "summary": "A buffer overflow issue was addressed with improved memory handling. This issue is fixed in macOS Sonoma 14. An app may be able to execute arbitrary code with kernel privileges."
-    },
-    {
-        "Modified": "2023-09-27T18:48:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-32361",
-        "impact": {},
-        "last-modified": "2023-09-27T18:48:00",
-        "references": [
-            "https://support.apple.com/en-us/HT213937",
-            "https://support.apple.com/en-us/HT213938",
-            "https://support.apple.com/en-us/HT213936",
-            "https://support.apple.com/en-us/HT213940"
-        ],
-        "summary": "The issue was addressed with improved handling of caches. This issue is fixed in tvOS 17, iOS 17 and iPadOS 17, watchOS 10, macOS Sonoma 14. An app may be able to access user-sensitive data."
-    },
-    {
-        "Modified": "2023-09-27T18:47:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-40330",
-        "impact": {},
-        "last-modified": "2023-09-27T18:47:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/gd-security-headers/wordpress-gd-security-headers-plugin-1-6-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in Milan Petrovic GD Security Headers plugin <=\u00a01.6.1 versions."
-    },
-    {
-        "Modified": "2023-09-27T18:47:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-40333",
-        "impact": {},
-        "last-modified": "2023-09-27T18:47:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/bridge-core/wordpress-bridge-core-plugin-3-0-9-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in Qode Interactive Bridge Core plugin <=\u00a03.0.9 versions."
-    },
-    {
-        "Modified": "2023-09-27T18:46:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44022",
-        "impact": {},
-        "last-modified": "2023-09-27T18:46:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/3/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the speed_dir parameter in the formSetSpeedWan function."
-    },
-    {
-        "Modified": "2023-09-27T18:46:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44023",
-        "impact": {},
-        "last-modified": "2023-09-27T18:46:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/4/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the ssid parameter in the form_fast_setting_wifi_set function."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:18:00",
-        "access": {},
-        "assigner": "cve-coordination@palantir.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-30959",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://palantir.safebase.us/?tcuUid=4c257f07-58af-4532-892a-bdbe8ab3ec63"
-        ],
-        "summary": "In Apollo  change requests, comments added by users could contain a javascript URI link that when rendered will result in an XSS that require user interaction."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44014",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/1/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain multiple stack overflows in the formSetMacFilterCfg function via the macFilterType and deviceList parameters."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44019",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/5/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the mac parameter in the GetParentControlInfo function."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44017",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/6/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the timeZone parameter in the fromSetSysTime function."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44015",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/8/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the schedEndTime parameter in the setSchedWifi function."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44013",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/0/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the list parameter in the fromSetIpMacBind function."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44018",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/10/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the domain parameter in the add_white_node function."
-    },
-    {
-        "Modified": "2023-09-27T18:45:00",
-        "Published": "2023-09-27T15:19:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-44016",
-        "impact": {},
-        "last-modified": "2023-09-27T18:45:00",
-        "references": [
-            "https://github.com/aixiao0621/Tenda/blob/main/AC10U/7/0.md"
-        ],
-        "summary": "Tenda AC10U v1.0 US_AC10UV1.0RTL_V15.03.06.49_multi_TDE01 was discovered to contain a stack overflow via the deviceId parameter in the addWifiMacFilter function."
     }
 ]
