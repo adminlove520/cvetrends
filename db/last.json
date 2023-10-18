@@ -1,5 +1,896 @@
 [
     {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-10-18T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43802",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://github.com/arduino/arduino-create-agent/security/advisories/GHSA-75j7-w798-cwwx"
+        ],
+        "summary": "Arduino Create Agent is a package to help manage Arduino development. This vulnerability affects the endpoint `/upload` which handles request with the `filename` parameter. A user who has the ability to perform HTTP requests to the localhost interface, or is able to bypass the CORS configuration, can escalate their privileges to those of the user running the Arduino Create Agent service via a crafted HTTP POST request. This issue has been addressed in version `1.3.3`. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-10-18T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43803",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://github.com/arduino/arduino-create-agent/security/advisories/GHSA-m5jc-r4gf-c6p8"
+        ],
+        "summary": "Arduino Create Agent is a package to help manage Arduino development. This vulnerability affects the endpoint `/v2/pkgs/tools/installed` and the way it handles plugin names supplied as user input. A user who has the ability to perform HTTP requests to the localhost interface, or is able to bypass the CORS configuration, can delete arbitrary files or folders belonging to the user that runs the Arduino Create Agent via a crafted HTTP POST request. This issue has been addressed in version `1.3.3`. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-10-18T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45145",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://github.com/redis/redis/commit/03345ddc7faf7af079485f2cbe5d17a1611cbce1",
+            "https://github.com/redis/redis/security/advisories/GHSA-ghmp-889m-7cvx"
+        ],
+        "summary": "Redis is an in-memory database that persists on disk. On startup, Redis begins listening on a Unix socket before adjusting its permissions to the user-provided configuration. If a permissive umask(2) is used, this creates a race condition that enables, during a short period of time, another process to establish an otherwise unauthorized connection. This problem has existed since Redis 2.6.0-RC1. This issue has been addressed in Redis versions 7.2.2, 7.0.14 and 6.2.14. Users are advised to upgrade. For users unable to upgrade, it is possible to work around the problem by disabling Unix sockets, starting Redis with a restrictive umask, or storing the Unix socket file in a protected directory."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-10-18T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45813",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://github.com/DedSecInside/TorBot/security/advisories/GHSA-72qw-p7hh-m3ff",
+            "https://github.com/DedSecInside/TorBot/commit/ef6e06bc7785355b1701d5524eb4550441086ac4"
+        ],
+        "summary": "Torbot is an open source tor network intelligence tool. In affected versions the `torbot.modules.validators.validate_link function` uses the python-validators URL validation regex. This particular regular expression has an exponential complexity which allows an attacker to cause an application crash using a well-crafted argument. An attacker can use a well-crafted URL argument to exploit the vulnerability in the regular expression and cause a Denial of Service on the system. The validators file has been removed in version 4.0.0. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-10-10T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-36478",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://github.com/eclipse/jetty.project/pull/9634",
+            "https://github.com/eclipse/jetty.project/releases/tag/jetty-11.0.16",
+            "https://github.com/eclipse/jetty.project/security/advisories/GHSA-wgh7-54f2-x98r",
+            "https://github.com/eclipse/jetty.project/releases/tag/jetty-9.4.53.v20231009",
+            "https://github.com/eclipse/jetty.project/releases/tag/jetty-10.0.16",
+            "http://www.openwall.com/lists/oss-security/2023/10/18/4"
+        ],
+        "summary": "Eclipse Jetty provides a web server and servlet container. In versions 11.0.0 through 11.0.15, 10.0.0 through 10.0.15, and 9.0.0 through 9.4.52, an integer overflow in `MetaDataBuilder.checkSize` allows for HTTP/2 HPACK header values to\nexceed their size limit. `MetaDataBuilder.java` determines if a header name or value exceeds the size limit, and throws an exception if the limit is exceeded. However, when length is very large and huffman is true, the multiplication by 4 in line 295\nwill overflow, and length will become negative. `(_size+length)` will now be negative, and the check on line 296 will not be triggered. Furthermore, `MetaDataBuilder.checkSize` allows for user-entered HPACK header value sizes to be negative, potentially leading to a very large buffer allocation later on when the user-entered size is multiplied by 2. This means that if a user provides a negative length value (or, more precisely, a length value which, when multiplied by the 4/3 fudge factor, is negative), and this length value is a very large positive number when multiplied by 2, then the user can cause a very large buffer to be allocated on the server. Users of HTTP/2 can be impacted by a remote denial of service attack. The issue has been fixed in versions 11.0.16, 10.0.16, and 9.4.53. There are no known workarounds."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-10-10T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-400",
+        "id": "CVE-2023-44487",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://aws.amazon.com/security/security-bulletins/AWS-2023-011/",
+            "https://news.ycombinator.com/item?id=37831062",
+            "https://www.phoronix.com/news/HTTP2-Rapid-Reset-Attack",
+            "https://blog.cloudflare.com/zero-day-rapid-reset-http2-record-breaking-ddos-attack/",
+            "https://cloud.google.com/blog/products/identity-security/how-it-works-the-novel-http2-rapid-reset-ddos-attack",
+            "https://cloud.google.com/blog/products/identity-security/google-cloud-mitigated-largest-ddos-attack-peaking-above-398-million-rps/",
+            "https://www.nginx.com/blog/http-2-rapid-reset-attack-impacting-f5-nginx-products/",
+            "https://blog.cloudflare.com/technical-breakdown-http2-rapid-reset-ddos-attack/",
+            "https://github.com/bcdannyboy/CVE-2023-44487",
+            "https://www.bleepingcomputer.com/news/security/new-http-2-rapid-reset-zero-day-attack-breaks-ddos-records/",
+            "https://github.com/eclipse/jetty.project/issues/10679",
+            "https://github.com/alibaba/tengine/issues/1872",
+            "https://forums.swift.org/t/swift-nio-http2-security-update-cve-2023-44487-http-2-dos/67764",
+            "https://github.com/netty/netty/commit/58f75f665aa81a8cbcf6ffa74820042a285c5e61",
+            "https://github.com/nghttp2/nghttp2/pull/1961",
+            "https://news.ycombinator.com/item?id=37830987",
+            "https://news.ycombinator.com/item?id=37830998",
+            "https://github.com/envoyproxy/envoy/pull/30055",
+            "https://github.com/apache/tomcat/tree/main/java/org/apache/coyote/http2",
+            "https://github.com/caddyserver/caddy/issues/5877",
+            "https://github.com/haproxy/haproxy/issues/2312",
+            "https://github.com/grpc/grpc-go/pull/6703",
+            "https://github.com/icing/mod_h2/blob/0a864782af0a942aa2ad4ed960a6b32cd35bcf0a/mod_http2/README.md?plain=1#L239-L244",
+            "https://github.com/nghttp2/nghttp2/releases/tag/v1.57.0",
+            "https://mailman.nginx.org/pipermail/nginx-devel/2023-October/S36Q5HBXR7CAIMPLLPRSSSYR4PCMWILK.html",
+            "https://my.f5.com/manage/s/article/K000137106",
+            "https://bugzilla.proxmox.com/show_bug.cgi?id=4988",
+            "https://msrc.microsoft.com/blog/2023/10/microsoft-response-to-distributed-denial-of-service-ddos-attacks-against-http/2/",
+            "https://cgit.freebsd.org/ports/commit/?id=c64c329c2c1752f46b73e3e6ce9f4329be6629f9",
+            "https://gist.github.com/adulau/7c2bfb8e9cdbe4b35a5e131c66a0c088",
+            "https://edg.io/lp/blog/resets-leaks-ddos-and-the-tale-of-a-hidden-cve",
+            "https://github.com/micrictor/http2-rst-stream",
+            "https://github.com/h2o/h2o/security/advisories/GHSA-2m7v-gc89-fjqf",
+            "https://github.com/dotnet/announcements/issues/277",
+            "https://github.com/apache/trafficserver/pull/10564",
+            "https://github.com/facebook/proxygen/pull/466",
+            "https://github.com/microsoft/CBL-Mariner/pull/6381",
+            "https://groups.google.com/g/golang-announce/c/iNNxDTCjZvo",
+            "https://github.com/nodejs/node/pull/50121",
+            "https://github.com/h2o/h2o/pull/3291",
+            "https://github.com/advisories/GHSA-vx74-f528-fxqg",
+            "https://openssf.org/blog/2023/10/10/http-2-rapid-reset-vulnerability-highlights-need-for-rapid-response/",
+            "https://github.com/golang/go/issues/63417",
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-44487",
+            "https://lists.apache.org/thread/5py8h42mxfsn8l1wy6o41xwhsjlsd87q",
+            "https://www.openwall.com/lists/oss-security/2023/10/10/6",
+            "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.14",
+            "https://seanmonstar.com/post/730794151136935936/hyper-http2-rapid-reset-unaffected",
+            "https://github.com/dotnet/core/blob/e4613450ea0da7fd2fc6b61dfb2c1c1dec1ce9ec/release-notes/6.0/6.0.23/6.0.23.md?plain=1#L73",
+            "https://github.com/kubernetes/kubernetes/pull/121120",
+            "https://github.com/oqtane/oqtane.framework/discussions/3367",
+            "https://github.com/opensearch-project/data-prepper/issues/3474",
+            "https://github.com/advisories/GHSA-xpw8-rcwv-8f8p",
+            "https://www.haproxy.com/blog/haproxy-is-not-affected-by-the-http-2-rapid-reset-attack-cve-2023-44487",
+            "https://netty.io/news/2023/10/10/4-1-100-Final.html",
+            "https://blog.qualys.com/vulnerabilities-threat-research/2023/10/10/cve-2023-44487-http-2-rapid-reset-attack",
+            "https://www.theregister.com/2023/10/10/http2_rapid_reset_zeroday/",
+            "https://news.ycombinator.com/item?id=37837043",
+            "https://www.cisa.gov/news-events/alerts/2023/10/10/http2-rapid-reset-vulnerability-cve-2023-44487",
+            "https://github.com/apache/httpd/blob/afcdbeebbff4b0c50ea26cdd16e178c0d1f24152/modules/http2/h2_mplx.c#L1101-L1113",
+            "https://github.com/kazu-yamamoto/http2/issues/93",
+            "https://martinthomson.github.io/h2-stream-limits/draft-thomson-httpbis-h2-stream-limits.html",
+            "https://github.com/kazu-yamamoto/http2/commit/f61d41a502bd0f60eb24e1ce14edc7b6df6722a1",
+            "https://www.debian.org/security/2023/dsa-5522",
+            "https://www.debian.org/security/2023/dsa-5521",
+            "https://blog.vespa.ai/cve-2023-44487/",
+            "https://github.com/tempesta-tech/tempesta/issues/1986",
+            "https://ubuntu.com/security/CVE-2023-44487",
+            "https://access.redhat.com/security/cve/cve-2023-44487",
+            "https://github.com/junkurihara/rust-rpxy/issues/97",
+            "https://istio.io/latest/news/security/istio-security-2023-004/",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2242803",
+            "https://github.com/etcd-io/etcd/issues/16740",
+            "https://community.traefik.io/t/is-traefik-vulnerable-to-cve-2023-44487/20125",
+            "https://www.darkreading.com/cloud/internet-wide-zero-day-bug-fuels-largest-ever-ddos-event",
+            "https://github.com/advisories/GHSA-qppj-fm5r-hxr3",
+            "https://bugzilla.suse.com/show_bug.cgi?id=1216123",
+            "https://github.com/ninenines/cowboy/issues/1615",
+            "https://github.com/varnishcache/varnish-cache/issues/3996",
+            "https://github.com/apache/httpd-site/pull/10",
+            "https://github.com/line/armeria/pull/5232",
+            "https://github.com/projectcontour/contour/pull/5826",
+            "https://github.com/linkerd/website/pull/1695/commits/4b9c6836471bc8270ab48aae6fd2181bc73fd632",
+            "https://blog.litespeedtech.com/2023/10/11/rapid-reset-http-2-vulnerablilty/",
+            "https://github.com/akka/akka-http/issues/4323",
+            "https://github.com/apache/apisix/issues/10320",
+            "https://github.com/openresty/openresty/issues/930",
+            "https://github.com/Azure/AKS/issues/3947",
+            "https://github.com/arkrwn/PoC/tree/main/CVE-2023-44487",
+            "https://security.paloaltonetworks.com/CVE-2023-44487",
+            "https://www.netlify.com/blog/netlify-successfully-mitigates-cve-2023-44487/",
+            "https://github.com/Kong/kong/discussions/11741",
+            "https://github.com/caddyserver/caddy/releases/tag/v2.7.5",
+            "https://lists.debian.org/debian-lts-announce/2023/10/msg00020.html",
+            "http://www.openwall.com/lists/oss-security/2023/10/13/4",
+            "http://www.openwall.com/lists/oss-security/2023/10/13/9",
+            "https://lists.w3.org/Archives/Public/ietf-http-wg/2023OctDec/0025.html",
+            "https://arstechnica.com/security/2023/10/how-ddosers-used-the-http-2-protocol-to-deliver-attacks-of-unprecedented-size/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/JMEXY22BFG5Q64HQCM5CK2Q7KDKVV4TY/",
+            "https://linkerd.io/2023/10/12/linkerd-cve-2023-44487/",
+            "https://lists.debian.org/debian-lts-announce/2023/10/msg00023.html",
+            "https://security.netapp.com/advisory/ntap-20231016-0001/",
+            "https://lists.debian.org/debian-lts-announce/2023/10/msg00024.html",
+            "http://www.openwall.com/lists/oss-security/2023/10/18/4"
+        ],
+        "summary": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-08-30T17:15:00",
+        "access": {},
+        "assigner": "prodsec@splunk.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2023-40597",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://advisory.splunk.com/advisories/SVD-2023-0806",
+            "https://research.splunk.com/application/356bd3fe-f59b-4f64-baa1-51495411b7ad/"
+        ],
+        "summary": "In Splunk Enterprise versions lower than 8.2.12, 9.0.6, and 9.1.1, an attacker can exploit an absolute path traversal to execute arbitrary code that is located on a separate disk."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-08-30T17:15:00",
+        "access": {},
+        "assigner": "prodsec@splunk.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-40593",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://advisory.splunk.com/advisories/SVD-2023-0802",
+            "https://research.splunk.com/application/8e8a86d5-f323-4567-95be-8e817e2baee6/"
+        ],
+        "summary": "In Splunk Enterprise versions lower than 9.0.6 and 8.2.12, a malicious actor can send a malformed security assertion markup language (SAML) request to the `/saml/acs` REST endpoint which can cause a denial of service through a crash or hang of the Splunk daemon."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-08-30T17:15:00",
+        "access": {},
+        "assigner": "prodsec@splunk.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-40592",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://advisory.splunk.com/advisories/SVD-2023-0801",
+            "https://research.splunk.com/application/182f9080-4137-4629-94ac-cb1083ac981a/"
+        ],
+        "summary": "In Splunk Enterprise versions below 9.1.1, 9.0.6, and 8.2.12, an attacker can craft a special web request that can result in reflected cross-site scripting (XSS) on the \u201c/app/search/table\u201d web endpoint. Exploitation of this vulnerability can lead to the execution of arbitrary commands on the Splunk platform instance."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-08-30T17:15:00",
+        "access": {},
+        "assigner": "prodsec@splunk.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-40594",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://advisory.splunk.com/advisories/SVD-2023-0803",
+            "https://research.splunk.com/application/78b48d08-075c-4eac-bd07-e364c3780867/"
+        ],
+        "summary": "In Splunk Enterprise versions lower than 8.2.12, 9.0.6, and 9.1.1, an attacker can use the `printf` SPL function to perform a denial of service (DoS) against the Splunk Enterprise instance."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-08-30T17:15:00",
+        "access": {},
+        "assigner": "prodsec@splunk.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-40595",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://advisory.splunk.com/advisories/SVD-2023-0804",
+            "https://research.splunk.com/application/d1d8fda6-874a-400f-82cf-dcbb59d8e4db/"
+        ],
+        "summary": "In Splunk Enterprise versions lower than 8.2.12, 9.0.6, and 9.1.1, an attacker can execute a specially crafted query that they can then use to serialize untrusted data. The attacker can use the query to execute arbitrary code."
+    },
+    {
+        "Modified": "2023-10-18T21:15:00",
+        "Published": "2023-08-30T17:15:00",
+        "access": {},
+        "assigner": "prodsec@splunk.com",
+        "cvss": null,
+        "cwe": "CWE-306",
+        "id": "CVE-2023-40598",
+        "impact": {},
+        "last-modified": "2023-10-18T21:15:00",
+        "references": [
+            "https://advisory.splunk.com/advisories/SVD-2023-0807",
+            "https://research.splunk.com/application/ee69374a-d27e-4136-adac-956a96ff60fd/"
+        ],
+        "summary": "In Splunk Enterprise versions below 8.2.12, 9.0.6, and 9.1.1, an attacker can create an external lookup that calls a legacy internal function. The attacker can use this internal function to insert code into the Splunk platform installation directory. From there, a user can execute arbitrary code on the Splunk platform Instance."
+    },
+    {
+        "Modified": "2023-10-18T21:04:00",
+        "Published": "2023-10-14T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-35024",
+        "impact": {},
+        "last-modified": "2023-10-18T21:04:00",
+        "references": [
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/258349",
+            "https://www.ibm.com/support/pages/node/7047198"
+        ],
+        "summary": "IBM Cloud Pak for Business Automation 18.0.0, 18.0.1, 18.0.2, 19.0.1, 19.0.2, 19.0.3, 20.0.1, 20.0.2, 20.0.3, 21.0.1, 21.0.2, 21.0.3, 22.0.1, and 22.0.2 is vulnerable to cross-site scripting. This vulnerability allows users to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.  IBM X-Force ID:  258349."
+    },
+    {
+        "Modified": "2023-10-18T21:02:00",
+        "Published": "2023-10-14T02:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2023-45852",
+        "impact": {},
+        "last-modified": "2023-10-18T21:02:00",
+        "references": [
+            "https://connectivity.viessmann.com/gb/mp-fp/vitogate/vitogate-300-bn-mb.html",
+            "https://github.com/Push3AX/vul/blob/main/viessmann/Vitogate300_RCE.md"
+        ],
+        "summary": "In Vitogate 300 2.1.3.0, /cgi-bin/vitogate.cgi allows an unauthenticated attacker to bypass authentication and execute arbitrary commands via shell metacharacters in the ipaddr params JSON data for the put method."
+    },
+    {
+        "Modified": "2023-10-18T20:55:00",
+        "Published": "2023-10-14T00:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-45674",
+        "impact": {},
+        "last-modified": "2023-10-18T20:55:00",
+        "references": [
+            "https://github.com/FarmBot/Farmbot-Web-App/security/advisories/GHSA-pgq5-ff74-g7xq"
+        ],
+        "summary": "Farmbot-Web-App is a web control interface for the Farmbot farm automation platform. An SQL injection vulnerability was found in FarmBot's web app that allows authenticated attackers to extract arbitrary data from its database (including the user table). This issue may lead to Information Disclosure. This issue has been patched in version 15.8.4. Users are advised to upgrade. There are no known workarounds for this issue."
+    },
+    {
+        "Modified": "2023-10-18T20:54:00",
+        "Published": "2005-05-02T04:00:00",
+        "access": {
+            "authentication": "SINGLE",
+            "complexity": "LOW",
+            "vector": "LOCAL"
+        },
+        "assigner": "security@debian.org",
+        "cvss": 4.3,
+        "cvss-time": "2023-10-18T20:54:00",
+        "cvss-vector": "AV:L/AC:L/Au:S/C:P/I:P/A:P",
+        "cwe": "CWE-94",
+        "id": "CVE-2005-0227",
+        "impact": {
+            "availability": "PARTIAL",
+            "confidentiality": "PARTIAL",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2023-10-18T20:54:00",
+        "references": [
+            "http://archives.postgresql.org/pgsql-bugs/2005-01/msg00269.php",
+            "http://archives.postgresql.org/pgsql-announce/2005-02/msg00000.php",
+            "http://www.debian.org/security/2005/dsa-668",
+            "http://security.gentoo.org/glsa/glsa-200502-08.xml",
+            "http://www.redhat.com/support/errata/RHSA-2005-138.html",
+            "http://www.redhat.com/support/errata/RHSA-2005-150.html",
+            "http://www.trustix.org/errata/2005/0003/",
+            "http://secunia.com/advisories/12948",
+            "http://www.novell.com/linux/security/advisories/2005_36_sudo.html",
+            "http://www.securityfocus.com/bid/12411",
+            "http://www.mandriva.com/security/advisories?name=MDKSA-2005:040",
+            "http://marc.info/?l=bugtraq&m=110726899107148&w=2",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A10234"
+        ],
+        "summary": "PostgreSQL (pgsql) 7.4.x, 7.2.x, and other versions allows local users to load arbitrary shared libraries and execute code via the LOAD extension."
+    },
+    {
+        "Modified": "2023-10-18T20:53:00",
+        "Published": "2023-10-16T09:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-45650",
+        "impact": {},
+        "last-modified": "2023-10-18T20:53:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/html5-maps/wordpress-html5-maps-plugin-1-7-1-4-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Fla-shop.Com HTML5 Maps plugin <=\u00a01.7.1.4 versions."
+    },
+    {
+        "Modified": "2023-10-18T20:52:00",
+        "Published": "2023-10-16T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-45647",
+        "impact": {},
+        "last-modified": "2023-10-18T20:52:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/constant-contact-forms-by-mailmunch/wordpress-constant-contact-forms-by-mailmunch-plugin-2-0-10-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in MailMunch Constant Contact Forms by MailMunch plugin <=\u00a02.0.10 versions."
+    },
+    {
+        "Modified": "2023-10-18T20:51:00",
+        "Published": "2023-10-16T11:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-44229",
+        "impact": {},
+        "last-modified": "2023-10-18T20:51:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/tiny-carousel-horizontal-slider/wordpress-tiny-carousel-horizontal-slider-plugin-8-1-cross-site-scripting-xss?_s_id=cve"
+        ],
+        "summary": "Auth. (admin+) Stored Cross-Site Scripting (XSS) vulnerability in Gopi Ramasamy Tiny Carousel Horizontal Slider plugin <=\u00a08.1 versions."
+    },
+    {
+        "Modified": "2023-10-18T20:51:00",
+        "Published": "2023-10-13T22:15:00",
+        "access": {},
+        "assigner": "vulnerabilities@zephyrproject.org",
+        "cvss": null,
+        "cwe": "CWE-131",
+        "id": "CVE-2023-4257",
+        "impact": {},
+        "last-modified": "2023-10-18T20:51:00",
+        "references": [
+            "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-853q-q69w-gf5j"
+        ],
+        "summary": "Unchecked user input length in /subsys/net/l2/wifi/wifi_shell.c can cause buffer overflows."
+    },
+    {
+        "Modified": "2023-10-18T20:50:00",
+        "Published": "2023-10-14T17:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-40367",
+        "impact": {},
+        "last-modified": "2023-10-18T20:50:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7049133",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/263376"
+        ],
+        "summary": "IBM QRadar SIEM 7.5.0 is vulnerable to cross-site scripting. This vulnerability allows users to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.  IBM X-Force ID:  263376."
+    },
+    {
+        "Modified": "2023-10-18T20:50:00",
+        "Published": "2023-10-13T21:15:00",
+        "access": {},
+        "assigner": "vulnerabilities@zephyrproject.org",
+        "cvss": null,
+        "cwe": "CWE-120",
+        "id": "CVE-2023-4263",
+        "impact": {},
+        "last-modified": "2023-10-18T20:50:00",
+        "references": [
+            "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-rf6q-rhhp-pqhf"
+        ],
+        "summary": "Potential buffer overflow vulnerability in the Zephyr IEEE 802.15.4 nRF 15.4 driver"
+    },
+    {
+        "Modified": "2023-10-18T20:48:00",
+        "Published": "2023-10-14T17:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-327",
+        "id": "CVE-2023-30994",
+        "impact": {},
+        "last-modified": "2023-10-18T20:48:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7049133",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/254138"
+        ],
+        "summary": "IBM QRadar SIEM 7.5.0 uses weaker than expected cryptographic algorithms that could allow an attacker to decrypt highly sensitive information.  IBM X-Force ID:  254138"
+    },
+    {
+        "Modified": "2023-10-18T20:45:00",
+        "Published": "2023-10-13T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-532",
+        "id": "CVE-2023-40682",
+        "impact": {},
+        "last-modified": "2023-10-18T20:45:00",
+        "references": [
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/263833",
+            "https://www.ibm.com/support/pages/node/7051204"
+        ],
+        "summary": "IBM App Connect Enterprise 12.0.1.0 through 12.0.8.0 contains an unspecified vulnerability that could allow a local privileged user to obtain sensitive information from API logs.  IBM X-Force ID:  263833."
+    },
+    {
+        "Modified": "2023-10-18T20:42:00",
+        "Published": "2023-10-14T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2022-43868",
+        "impact": {},
+        "last-modified": "2023-10-18T20:42:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7028513",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/239445"
+        ],
+        "summary": "IBM Security Verify Access OIDC Provider could disclose directory information that could aid attackers in further attacks against the system.  IBM X-Force ID:  239445."
+    },
+    {
+        "Modified": "2023-10-18T20:38:00",
+        "Published": "2023-10-14T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-400",
+        "id": "CVE-2022-43740",
+        "impact": {},
+        "last-modified": "2023-10-18T20:38:00",
+        "references": [
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/238921",
+            "https://www.ibm.com/support/pages/node/7028513"
+        ],
+        "summary": "IBM Security Verify Access OIDC Provider could allow a remote user to cause a denial of service due to uncontrolled resource consumption.  IBM X-Force ID:  238921."
+    },
+    {
+        "Modified": "2023-10-18T20:34:00",
+        "Published": "2023-10-14T15:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2022-33165",
+        "impact": {},
+        "last-modified": "2023-10-18T20:34:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7047428",
+            "https://www.ibm.com/support/pages/node/7047116",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/228582"
+        ],
+        "summary": "IBM Security Directory Server 6.4.0 could allow a remote attacker to traverse directories on the system. An attacker could send a specially-crafted URL request containing \"dot dot\" sequences (/../) to view arbitrary files on the system.  IBM X-Force ID:  228582."
+    },
+    {
+        "Modified": "2023-10-18T20:32:00",
+        "Published": "2023-10-14T15:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-311",
+        "id": "CVE-2022-33161",
+        "impact": {},
+        "last-modified": "2023-10-18T20:32:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7047428",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/228569",
+            "https://www.ibm.com/support/pages/node/7047116"
+        ],
+        "summary": "IBM Security Directory Server 6.4.0 could allow a remote attacker to obtain sensitive information, caused by the failure to properly enable HTTP Strict Transport Security. An attacker could exploit this vulnerability to obtain sensitive information using man in the middle techniques.  X-Force ID:  228569."
+    },
+    {
+        "Modified": "2023-10-18T20:30:00",
+        "Published": "2023-10-10T23:15:00",
+        "access": {},
+        "assigner": "security@tibco.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-26220",
+        "impact": {},
+        "last-modified": "2023-10-18T20:30:00",
+        "references": [
+            "https://www.tibco.com/services/support/advisories"
+        ],
+        "summary": "The Spotfire Library component of TIBCO Software Inc.'s Spotfire Analyst and Spotfire Server contains an easily exploitable vulnerability that allows a low privileged attacker with network access to execute a Stored Cross Site Scripting (XSS) on the affected system. A successful attack using this vulnerability requires human interaction from a person other than the attacker. Affected releases are TIBCO Software Inc.'s Spotfire Analyst: versions 11.4.7 and below, versions 11.5.0, 11.6.0, 11.7.0, 11.8.0, 12.0.0, 12.0.1, 12.0.2, 12.0.3, and 12.0.4, versions 12.1.0 and 12.1.1 and Spotfire Server: versions 11.4.11 and below, versions 11.5.0, 11.6.0, 11.6.1, 11.6.2, 11.6.3, 11.7.0, 11.8.0, 11.8.1, 12.0.0, 12.0.1, 12.0.2, 12.0.3, 12.0.4, and 12.0.5, versions 12.1.0 and 12.1.1.\n\n"
+    },
+    {
+        "Modified": "2023-10-18T20:27:00",
+        "Published": "2023-10-10T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-31096",
+        "impact": {},
+        "last-modified": "2023-10-18T20:27:00",
+        "references": [
+            "https://cschwarz1.github.io/posts/0x04/",
+            "https://www.broadcom.com"
+        ],
+        "summary": "An issue was discovered in Broadcom) LSI PCI-SV92EX Soft Modem Kernel Driver through 2.2.100.1 (aka AGRSM64.sys). There is Local Privilege Escalation to SYSTEM via a Stack Overflow in RTLCopyMemory (IOCTL 0x1b2150). An attacker can exploit this to elevate privileges from a medium-integrity process to SYSTEM. This can also be used to bypass kernel-level protections such as AV or PPL, because exploit code runs with high-integrity privileges and can be used in coordinated BYOVD (bring your own vulnerable driver) ransomware campaigns."
+    },
+    {
+        "Modified": "2023-10-18T20:23:00",
+        "Published": "2023-10-14T12:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2023-5580",
+        "impact": {},
+        "last-modified": "2023-10-18T20:23:00",
+        "references": [
+            "https://github.com/GodRone/CVE/blob/main/SerBermz_SQL%20injection.md",
+            "https://vuldb.com/?ctiid.242145",
+            "https://vuldb.com/?id.242145"
+        ],
+        "summary": "A vulnerability classified as critical has been found in SourceCodester Library System 1.0. This affects an unknown part of the file index.php. The manipulation of the argument category leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-242145 was assigned to this vulnerability."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-18T20:15:00",
+        "access": {},
+        "assigner": "security@android.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-35656",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://source.android.com/security/bulletin/pixel/2023-10-01"
+        ],
+        "summary": " In multiple functions of protocolembmsadapter.cpp, there is a possible out\n    of bounds read due to a missing bounds check. This could lead to remote\n    information disclosure with no additional execution privileges needed. User\n    interaction is not needed for exploitation."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-18T20:15:00",
+        "access": {},
+        "assigner": "security@android.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-35663",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://source.android.com/security/bulletin/pixel/2023-10-01"
+        ],
+        "summary": "  In Init of protocolnetadapter.cpp, there is a possible out of bounds read\n    due to a missing bounds check. This could lead to remote information\n    disclosure with no additional execution privileges needed. User interaction\n    is not needed for exploitation."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-18T20:15:00",
+        "access": {},
+        "assigner": "security@ni.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-4601",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://www.ni.com/en/support/documentation/supplemental/23/stack-based-buffer-overflow-in-ni-system-configuration.html"
+        ],
+        "summary": "A stack-based buffer overflow vulnerability exists in NI System Configuration that could result in information disclosure and/or arbitrary code execution. Successful exploitation requires that an attacker can provide a specially crafted response. This affects NI System Configuration 2023 Q3 and all previous versions.\n"
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-16T06:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45572",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://github.com/Archerber/bug_submit/blob/main/D-Link/DI-7xxxx/bug1.md"
+        ],
+        "summary": "Buffer Overflow vulnerability in D-Link device DI-7003GV2.D1 v.23.08.25D1 and before, DI-7100G+V2.D1 v.23.08.23D1 and before, DI-7100GV2.D1 v.23.08.23D1, DI-7200G+V2.D1 v.23.08.23D1 and before, DI-7200GV2.E1 v.23.08.23E1 and before, DI-7300G+V2.D1 v.23.08.23D1, and DI-7400G+V2.D1 v.23.08.23D1 and before allows a remote attacker to execute arbitrary code via the fn parameter of the tgfile.htm function."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-16T06:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45574",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://www.dlink.com/en/security-bulletin/",
+            "https://github.com/Archerber/bug_submit/blob/main/D-Link/DI-7xxxx/bug2.md"
+        ],
+        "summary": "Buffer Overflow vulnerability in D-Link device DI-7003GV2.D1 v.23.08.25D1 and before, DI-7100G+V2.D1 v.23.08.23D1 and before, DI-7100GV2.D1 v.23.08.23D1, DI-7200G+V2.D1 v.23.08.23D1 and before, DI-7200GV2.E1 v.23.08.23E1 and before, DI-7300G+V2.D1 v.23.08.23D1, and DI-7400G+V2.D1 v.23.08.23D1 and before allows a remote attacker to execute arbitrary code via the fn parameter of the file.data function."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-16T07:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45576",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://github.com/Archerber/bug_submit/blob/main/D-Link/DI-7xxxx/bug3.md"
+        ],
+        "summary": "Buffer Overflow vulnerability in D-Link device DI-7003GV2.D1 v.23.08.25D1 and before, DI-7100G+V2.D1 v.23.08.23D1 and before, DI-7100GV2.D1 v.23.08.23D1, DI-7200G+V2.D1 v.23.08.23D1 and before, DI-7200GV2.E1 v.23.08.23E1 and before, DI-7300G+V2.D1 v.23.08.23D1, and DI-7400G+V2.D1 v.23.08.23D1 and before allows a remote attacker to execute arbitrary code via the remove_ext_proto/remove_ext_port parameter of the upnp_ctrl.asp function."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-16T07:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45578",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://github.com/Archerber/bug_submit/blob/main/D-Link/DI-7xxxx/bug4.md"
+        ],
+        "summary": "Buffer Overflow vulnerability in D-Link device DI-7003GV2.D1 v.23.08.25D1 and before, DI-7100G+V2.D1 v.23.08.23D1 and before, DI-7100GV2.D1 v.23.08.23D1, DI-7200G+V2.D1 v.23.08.23D1 and before, DI-7200GV2.E1 v.23.08.23E1 and before, DI-7300G+V2.D1 v.23.08.23D1, and DI-7400G+V2.D1 v.23.08.23D1 and before allows a remote attacker to execute arbitrary code via the pap_en/chap_en parameter of the pppoe_base.asp function."
+    },
+    {
+        "Modified": "2023-10-18T20:15:00",
+        "Published": "2023-10-16T07:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45579",
+        "impact": {},
+        "last-modified": "2023-10-18T20:15:00",
+        "references": [
+            "https://github.com/Archerber/bug_submit/blob/main/D-Link/DI-7xxxx/bug8.md"
+        ],
+        "summary": "Buffer Overflow vulnerability in D-Link device DI-7003GV2.D1 v.23.08.25D1 and before, DI-7100G+V2.D1 v.23.08.23D1 and before, DI-7100GV2.D1 v.23.08.23D1, DI-7200G+V2.D1 v.23.08.23D1 and before, DI-7200GV2.E1 v.23.08.23E1 and before, DI-7300G+V2.D1 v.23.08.23D1, and DI-7400G+V2.D1 v.23.08.23D1 and before allows a remote attacker to execute arbitrary code via the ip/type parameter of the jingx.asp function."
+    },
+    {
+        "Modified": "2023-10-18T20:13:00",
+        "Published": "2023-10-14T15:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-611",
+        "id": "CVE-2022-32755",
+        "impact": {},
+        "last-modified": "2023-10-18T20:13:00",
+        "references": [
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/228505",
+            "https://www.ibm.com/support/pages/node/7047428"
+        ],
+        "summary": "IBM Security Directory Server 6.4.0 is vulnerable to an XML External Entity Injection (XXE) attack when processing XML data. A remote attacker could exploit this vulnerability to expose sensitive information or consume memory resources.  IBM X-Force ID:  228505."
+    },
+    {
+        "Modified": "2023-10-18T20:10:00",
+        "Published": "2023-10-13T16:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-45269",
+        "impact": {},
+        "last-modified": "2023-10-18T20:10:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/cds-simple-seo/wordpress-simple-seo-plugin-2-0-23-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in David Cole Simple SEO plugin <=\u00a02.0.23 versions."
+    },
+    {
+        "Modified": "2023-10-18T20:09:00",
+        "Published": "2023-10-13T15:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2023-45268",
+        "impact": {},
+        "last-modified": "2023-10-18T20:09:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/hitsteps-visitor-manager/wordpress-hitsteps-web-analytics-plugin-5-85-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Hitsteps Hitsteps Web Analytics plugin <=\u00a05.86 versions."
+    },
+    {
+        "Modified": "2023-10-18T20:07:00",
+        "Published": "2023-10-14T13:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-5581",
+        "impact": {},
+        "last-modified": "2023-10-18T20:07:00",
+        "references": [
+            "https://vuldb.com/?ctiid.242146",
+            "https://github.com/GodRone/MedicineTrackerSystem/blob/main/Medicine%20Tracker%20System_XSS.md",
+            "https://vuldb.com/?id.242146"
+        ],
+        "summary": "A vulnerability classified as problematic was found in SourceCodester Medicine Tracker System 1.0. This vulnerability affects unknown code of the file index.php. The manipulation of the argument page leads to cross site scripting. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-242146 is the identifier assigned to this vulnerability."
+    },
+    {
+        "Modified": "2023-10-18T20:01:00",
+        "Published": "2023-10-13T21:15:00",
+        "access": {},
+        "assigner": "secure@microsoft.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-36559",
+        "impact": {},
+        "last-modified": "2023-10-18T20:01:00",
+        "references": [
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-36559"
+        ],
+        "summary": "Microsoft Edge (Chromium-based) Spoofing Vulnerability"
+    },
+    {
+        "Modified": "2023-10-18T20:00:00",
+        "Published": "2023-10-18T18:15:00",
+        "access": {},
+        "assigner": "security-alert@hpe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-30911",
+        "impact": {},
+        "last-modified": "2023-10-18T20:00:00",
+        "references": [
+            "https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&docId=hpesbhf04544en_us"
+        ],
+        "summary": "HPE Integrated Lights-Out 5, and Integrated Lights-Out 6 using iLOrest may cause denial of service."
+    },
+    {
+        "Modified": "2023-10-18T20:00:00",
+        "Published": "2023-10-18T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45911",
+        "impact": {},
+        "last-modified": "2023-10-18T20:00:00",
+        "references": [
+            "https://github.com/PostalBlab/Vulnerabilities/blob/main/ComScale/auth_bypass.txt"
+        ],
+        "summary": "An issue in WIPOTEC GmbH ComScale v4.3.29.21344 and v4.4.12.723 allows unauthenticated attackers to login as any user without a password."
+    },
+    {
+        "Modified": "2023-10-18T20:00:00",
+        "Published": "2023-10-18T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45912",
+        "impact": {},
+        "last-modified": "2023-10-18T20:00:00",
+        "references": [
+            "https://github.com/PostalBlab/Vulnerabilities/blob/main/ComScale/file_access.txt"
+        ],
+        "summary": "WIPOTEC GmbH ComScale v4.3.29.21344 and v4.4.12.723 fails to validate user sessions, allowing unauthenticated attackers to read files from the underlying operating system and obtain directory listings."
+    },
+    {
+        "Modified": "2023-10-18T20:00:00",
+        "Published": "2023-10-18T19:15:00",
+        "access": {},
+        "assigner": "hp-security-alert@hp.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-26300",
+        "impact": {},
+        "last-modified": "2023-10-18T20:00:00",
+        "references": [
+            "https://support.hp.com/us-en/document/ish_9461800-9461828-16"
+        ],
+        "summary": "A potential security vulnerability has been identified in the system BIOS for certain HP PC products which might allow escalation of privilege. HP is releasing firmware updates to mitigate the potential vulnerability."
+    },
+    {
+        "Modified": "2023-10-18T20:00:00",
+        "Published": "2023-10-11T07:15:00",
+        "access": {},
+        "assigner": "psirt@hcl.com",
+        "cvss": null,
+        "cwe": "CWE-190",
+        "id": "CVE-2023-37536",
+        "impact": {},
+        "last-modified": "2023-10-18T20:00:00",
+        "references": [
+            "https://support.hcltechsw.com/csm?id=kb_article&sysparm_article=KB0107791"
+        ],
+        "summary": "An integer overflow in xerces-c++ 3.2.3 in BigFix Platform allows remote attackers to cause out-of-bound access via HTTP request."
+    },
+    {
         "Modified": "2023-10-18T19:58:00",
         "Published": "2023-10-16T09:15:00",
         "access": {},
@@ -265,21 +1156,6 @@
             "https://www.compass-security.com/fileadmin/Research/Advisories/2023_03_CSNC-2022-018_PRA_Privilege_Escalation.txt"
         ],
         "summary": "BeyondTrust Privileged Remote Access (PRA) versions 22.2.x to 22.4.x are vulnerable to a local authentication bypass. Attackers can exploit a flawed secret verification process in the BYOT shell jump sessions, allowing unauthorized access to jump items by guessing only the first character of the secret."
-    },
-    {
-        "Modified": "2023-10-18T19:15:00",
-        "Published": "2023-10-18T19:15:00",
-        "access": {},
-        "assigner": "hp-security-alert@hp.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-26300",
-        "impact": {},
-        "last-modified": "2023-10-18T19:15:00",
-        "references": [
-            "https://support.hp.com/us-en/document/ish_9461800-9461828-16"
-        ],
-        "summary": "A potential security vulnerability has been identified in the system BIOS for certain HP PC products which might allow escalation of privilege. HP is releasing firmware updates to mitigate the potential vulnerability."
     },
     {
         "Modified": "2023-10-18T19:15:00",
@@ -760,51 +1636,6 @@
     },
     {
         "Modified": "2023-10-18T18:15:00",
-        "Published": "2023-10-18T18:15:00",
-        "access": {},
-        "assigner": "security-alert@hpe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-30911",
-        "impact": {},
-        "last-modified": "2023-10-18T18:15:00",
-        "references": [
-            "https://support.hpe.com/hpesc/public/docDisplay?docLocale=en_US&docId=hpesbhf04544en_us"
-        ],
-        "summary": "HPE Integrated Lights-Out 5, and Integrated Lights-Out 6 using iLOrest may cause denial of service."
-    },
-    {
-        "Modified": "2023-10-18T18:15:00",
-        "Published": "2023-10-18T18:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-45911",
-        "impact": {},
-        "last-modified": "2023-10-18T18:15:00",
-        "references": [
-            "https://github.com/PostalBlab/Vulnerabilities/blob/main/ComScale/auth_bypass.txt"
-        ],
-        "summary": "An issue in WIPOTEC GmbH ComScale v4.3.29.21344 and v4.4.12.723 allows unauthenticated attackers to login as any user without a password."
-    },
-    {
-        "Modified": "2023-10-18T18:15:00",
-        "Published": "2023-10-18T18:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-45912",
-        "impact": {},
-        "last-modified": "2023-10-18T18:15:00",
-        "references": [
-            "https://github.com/PostalBlab/Vulnerabilities/blob/main/ComScale/file_access.txt"
-        ],
-        "summary": "WIPOTEC GmbH ComScale v4.3.29.21344 and v4.4.12.723 fails to validate user sessions, allowing unauthenticated attackers to read files from the underlying operating system and obtain directory listings."
-    },
-    {
-        "Modified": "2023-10-18T18:15:00",
         "Published": "2022-12-13T17:15:00",
         "access": {},
         "assigner": "secure@citrix.com",
@@ -926,699 +1757,5 @@
             "https://vuldb.com/?id.242147"
         ],
         "summary": "A vulnerability, which was classified as problematic, has been found in ZZZCMS 2.2.0. This issue affects some unknown processing of the component Personal Profile Page. The manipulation leads to basic cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-242147."
-    },
-    {
-        "Modified": "2023-10-18T18:04:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-43889",
-        "impact": {},
-        "last-modified": "2023-10-18T18:04:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7047202",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/240452"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could disclose sensitive information through an HTTP request that could aid an attacker in further attacks against the system.  IBM X-Force ID:  240452.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T18:04:00",
-        "Published": "2023-09-20T10:15:00",
-        "access": {},
-        "assigner": "security@vmware.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-34047",
-        "impact": {},
-        "last-modified": "2023-10-18T18:04:00",
-        "references": [
-            "https://spring.io/security/cve-2023-34047"
-        ],
-        "summary": "A batch loader function in Spring for GraphQL versions 1.1.0 - 1.1.5 and 1.2.0 - 1.2.2 may be exposed to GraphQL context with values, including security context values, from a different session. An application is vulnerable if it provides a DataLoaderOptions\u00a0instance when registering batch loader functions through DefaultBatchLoaderRegistry.\n"
-    },
-    {
-        "Modified": "2023-10-18T18:03:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-400",
-        "id": "CVE-2022-43893",
-        "impact": {},
-        "last-modified": "2023-10-18T18:03:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/240534",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow a privileged user to cause by using a malicious payload.  IBM X-Force ID:  240634.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T18:02:00",
-        "Published": "2023-10-17T03:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-209",
-        "id": "CVE-2022-43891",
-        "impact": {},
-        "last-modified": "2023-10-18T18:02:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/240454",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow a remote attacker to obtain sensitive information when a detailed technical error message is returned in the browser.  This information could be used in further attacks against the system.  IBM X-Force ID:  240454.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T18:00:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-295",
-        "id": "CVE-2022-22380",
-        "impact": {},
-        "last-modified": "2023-10-18T18:00:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7047202",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/221957"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow an attacker to spoof a trusted entity due to improperly validating certificates.  IBM X-Force ID:  221957.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T18:00:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-319",
-        "id": "CVE-2022-22385",
-        "impact": {},
-        "last-modified": "2023-10-18T18:00:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/221962",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could disclose sensitive information to an attacked due to the transmission of data in clear text.  IBM X-Force ID:  221962.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T18:00:00",
-        "Published": "2023-10-12T19:15:00",
-        "access": {},
-        "assigner": "security-alert@netapp.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-27314",
-        "impact": {},
-        "last-modified": "2023-10-18T18:00:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20231009-0001/"
-        ],
-        "summary": "ONTAP 9 versions prior to 9.8P19, 9.9.1P16, 9.10.1P12, 9.11.1P8, \n9.12.1P2 and 9.13.1 are susceptible to a vulnerability which could allow\n a remote unauthenticated attacker to cause a crash of the HTTP service."
-    },
-    {
-        "Modified": "2023-10-18T17:59:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-20",
-        "id": "CVE-2021-29913",
-        "impact": {},
-        "last-modified": "2023-10-18T17:59:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7047202",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/207898"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premise 11.5 could allow an authenticated user to obtain sensitive information or perform unauthorized actions due to improper input validation.  IBM X-Force ID:  207898.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T17:59:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2021-38859",
-        "impact": {},
-        "last-modified": "2023-10-18T17:59:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/207899",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow a user to obtain version number information using a specially crafted HTTP request that could be used in further attacks against the system.  IBM X-Force ID:  207899.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T17:59:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2022-22375",
-        "impact": {},
-        "last-modified": "2023-10-18T17:59:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/221681",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow a remote authenticated attacker to execute arbitrary commands on the system by sending a specially crafted request.  IBM X-Force ID:  221681.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T17:58:00",
-        "Published": "2023-10-17T01:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-20",
-        "id": "CVE-2022-22384",
-        "impact": {},
-        "last-modified": "2023-10-18T17:58:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/221961",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow an attacker to modify messages returned from the server due to hazardous input validation. IBM X-Force ID: 221961.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T17:58:00",
-        "Published": "2023-10-17T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-613",
-        "id": "CVE-2021-20581",
-        "impact": {},
-        "last-modified": "2023-10-18T17:58:00",
-        "references": [
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/199324",
-            "https://www.ibm.com/support/pages/node/7047202"
-        ],
-        "summary": "\nIBM Security Verify Privilege On-Premises 11.5 could allow a user to obtain sensitive information due to insufficient session expiration.  IBM X-Force ID:  199324.\n\n"
-    },
-    {
-        "Modified": "2023-10-18T17:58:00",
-        "Published": "2023-10-12T16:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-27395",
-        "impact": {},
-        "last-modified": "2023-10-18T17:58:00",
-        "references": [
-            "https://www.softether.org/9-about/News/904-SEVPN202301",
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2023-1735"
-        ],
-        "summary": "A heap-based buffer overflow vulnerability exists in the vpnserver WpcParsePacket() functionality of SoftEther VPN 4.41-9782-beta, 5.01.9674 and 5.02. A specially crafted network packet can lead to arbitrary code execution. An attacker can perform a man-in-the-middle attack to trigger this vulnerability."
-    },
-    {
-        "Modified": "2023-10-18T17:57:00",
-        "Published": "2023-10-17T01:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-311",
-        "id": "CVE-2022-22377",
-        "impact": {},
-        "last-modified": "2023-10-18T17:57:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7047202",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/221827"
-        ],
-        "summary": "IBM Security Verify Privilege On-Premises 11.5 could allow a remote attacker to obtain sensitive information, caused by the failure to properly enable HTTP Strict Transport Security. An attacker could exploit this vulnerability to obtain sensitive information using man in the middle techniques.  IBM X-Force ID:  221827."
-    },
-    {
-        "Modified": "2023-10-18T17:57:00",
-        "Published": "2023-10-16T20:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2023-3707",
-        "impact": {},
-        "last-modified": "2023-10-18T17:57:00",
-        "references": [
-            "https://wpscan.com/vulnerability/541bbe4c-3295-4073-901d-763556269f48"
-        ],
-        "summary": "The ActivityPub WordPress plugin before 1.0.0 does not ensure that post contents to be displayed are public and belong to the plugin, allowing any authenticated user, such as subscriber to retrieve the content of arbitrary post (such as draft and private) via an IDOR vector. Password protected posts are not affected by this issue."
-    },
-    {
-        "Modified": "2023-10-18T17:57:00",
-        "Published": "2023-10-16T20:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-3746",
-        "impact": {},
-        "last-modified": "2023-10-18T17:57:00",
-        "references": [
-            "https://wpscan.com/vulnerability/c15a6032-6495-47a8-828c-37e55ed9665a"
-        ],
-        "summary": "The ActivityPub WordPress plugin before 1.0.0 does not sanitize and escape some data from post content, which could allow contributor and above role to perform Stored Cross-Site Scripting attacks"
-    },
-    {
-        "Modified": "2023-10-18T17:56:00",
-        "Published": "2023-10-17T22:15:00",
-        "access": {},
-        "assigner": "secalert_us@oracle.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-22068",
-        "impact": {},
-        "last-modified": "2023-10-18T17:56:00",
-        "references": [
-            "https://www.oracle.com/security-alerts/cpuoct2023.html"
-        ],
-        "summary": "Vulnerability in the MySQL Server product of Oracle MySQL (component: InnoDB).  Supported versions that are affected are 8.0.34 and prior and  8.1.0. Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server.  Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server. CVSS 3.1 Base Score 4.9 (Availability impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H)."
-    },
-    {
-        "Modified": "2023-10-18T17:56:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45905",
-        "impact": {},
-        "last-modified": "2023-10-18T17:56:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20vulnerability%20in%20variable%20management%20with%20added%20functionality.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/variable/add."
-    },
-    {
-        "Modified": "2023-10-18T17:56:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45906",
-        "impact": {},
-        "last-modified": "2023-10-18T17:56:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20in%20the%20user%20added%20function.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/user/add."
-    },
-    {
-        "Modified": "2023-10-18T17:56:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45907",
-        "impact": {},
-        "last-modified": "2023-10-18T17:56:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20vulnerability%20in%20the%20variable%20management%20deletion%20function.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/variable/delete."
-    },
-    {
-        "Modified": "2023-10-18T17:56:00",
-        "Published": "2023-10-16T20:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2023-3706",
-        "impact": {},
-        "last-modified": "2023-10-18T17:56:00",
-        "references": [
-            "https://wpscan.com/vulnerability/daa4d93a-f8b1-4809-a18e-8ab63a05de5a"
-        ],
-        "summary": "The ActivityPub WordPress plugin before 1.0.0 does not ensure that post titles to be displayed are public and belong to the plugin, allowing any authenticated user, such as subscriber to retrieve the title of arbitrary post (such as draft and private) via an IDOR vector"
-    },
-    {
-        "Modified": "2023-10-18T17:56:00",
-        "Published": "2023-08-24T13:15:00",
-        "access": {},
-        "assigner": "security@vmware.com",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2023-34040",
-        "impact": {},
-        "last-modified": "2023-10-18T17:56:00",
-        "references": [
-            "https://spring.io/security/cve-2023-34040"
-        ],
-        "summary": "In Spring for Apache Kafka 3.0.9 and earlier and versions 2.9.10 and earlier, a possible deserialization attack vector existed, but only if unusual configuration was applied. An attacker would have to construct a malicious serialized object in one of the deserialization exception record headers.\n\nSpecifically, an application is vulnerable when all of the following are true:\n\n  *  The user does not\u00a0configure an ErrorHandlingDeserializer for the key and/or value of the record\n  *  The user explicitly sets container properties checkDeserExWhenKeyNull and/or checkDeserExWhenValueNull container properties to true.\n  *  The user allows untrusted sources to publish to a Kafka topic\n\n\nBy default, these properties are false, and the container only attempts to deserialize the headers if an ErrorHandlingDeserializer is configured. The ErrorHandlingDeserializer prevents the vulnerability by removing any such malicious headers before processing the record.\n\n\n"
-    },
-    {
-        "Modified": "2023-10-18T17:55:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45901",
-        "impact": {},
-        "last-modified": "2023-10-18T17:55:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20in%20the%20newly%20added%20column%20of%20column%20management.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin\\/category\\/add."
-    },
-    {
-        "Modified": "2023-10-18T17:55:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45902",
-        "impact": {},
-        "last-modified": "2023-10-18T17:55:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20in%20the%20attachment%20management%20deletion%20function.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/attachment/delete."
-    },
-    {
-        "Modified": "2023-10-18T17:55:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45903",
-        "impact": {},
-        "last-modified": "2023-10-18T17:55:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20vulnerability%20in%20the%20label%20management%20deletion%20function.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/label/delete."
-    },
-    {
-        "Modified": "2023-10-18T17:55:00",
-        "Published": "2023-10-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-45904",
-        "impact": {},
-        "last-modified": "2023-10-18T17:55:00",
-        "references": [
-            "https://github.com/moonsabc123/dreamer_cms/blob/main/There%20is%20a%20csrf%20vulnerability%20in%20the%20variable%20management%20modification%20function.md"
-        ],
-        "summary": "Dreamer CMS v4.1.3 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /variable/update."
-    },
-    {
-        "Modified": "2023-10-18T17:53:00",
-        "Published": "2023-10-12T16:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-25774",
-        "impact": {},
-        "last-modified": "2023-10-18T17:53:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2023-1743"
-        ],
-        "summary": "A denial-of-service vulnerability exists in the vpnserver ConnectionAccept() functionality of SoftEther VPN 5.02. A set of specially crafted network connections can lead to denial of service. An attacker can send a sequence of malicious packets to trigger this vulnerability."
-    },
-    {
-        "Modified": "2023-10-18T17:45:00",
-        "Published": "2023-01-26T22:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2022-41015",
-        "impact": {},
-        "last-modified": "2023-10-18T17:45:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1613"
-        ],
-        "summary": "Several stack-based buffer overflow vulnerabilities exist in the DetranCLI command parsing functionality of Siretta QUARTZ-GOLD G5.0.1.5-210720-141020. A specially-crafted network packet can lead to arbitrary command execution. An attacker can send a sequence of requests to trigger these vulnerabilities.This buffer overflow is in the function that manages the 'vpn basic protocol (l2tp|pptp) name WORD server WORD username WORD passsword WORD firmwall (on|off) defroute (on|off)' command template."
-    },
-    {
-        "Modified": "2023-10-18T17:44:00",
-        "Published": "2023-01-26T22:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2022-41016",
-        "impact": {},
-        "last-modified": "2023-10-18T17:44:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1613"
-        ],
-        "summary": "Several stack-based buffer overflow vulnerabilities exist in the DetranCLI command parsing functionality of Siretta QUARTZ-GOLD G5.0.1.5-210720-141020. A specially-crafted network packet can lead to arbitrary command execution. An attacker can send a sequence of requests to trigger these vulnerabilities.This buffer overflow is in the function that manages the 'no vpn basic protocol (l2tp|pptp) name WORD server WORD username WORD passsword WORD firmwall (on|off) defroute (on|off)' command template."
-    },
-    {
-        "Modified": "2023-10-18T17:43:00",
-        "Published": "2023-01-26T22:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2022-41017",
-        "impact": {},
-        "last-modified": "2023-10-18T17:43:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1613"
-        ],
-        "summary": "Several stack-based buffer overflow vulnerabilities exist in the DetranCLI command parsing functionality of Siretta QUARTZ-GOLD G5.0.1.5-210720-141020. A specially-crafted network packet can lead to arbitrary command execution. An attacker can send a sequence of requests to trigger these vulnerabilities.This buffer overflow is in the function that manages the 'vpn basic protocol (l2tp|pptp) name WORD server WORD username WORD passsword WORD firmwall (on|off) defroute (on|off) localip A.B.C.D' command template."
-    },
-    {
-        "Modified": "2023-10-18T17:43:00",
-        "Published": "2023-01-26T22:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2022-41018",
-        "impact": {},
-        "last-modified": "2023-10-18T17:43:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1613"
-        ],
-        "summary": "Several stack-based buffer overflow vulnerabilities exist in the DetranCLI command parsing functionality of Siretta QUARTZ-GOLD G5.0.1.5-210720-141020. A specially-crafted network packet can lead to arbitrary command execution. An attacker can send a sequence of requests to trigger these vulnerabilities.This buffer overflow is in the function that manages the 'no vpn basic protocol (l2tp|pptp) name WORD server WORD username WORD passsword WORD firmwall (on|off) defroute (on|off) localip A.B.C.D' command template."
-    },
-    {
-        "Modified": "2023-10-18T17:43:00",
-        "Published": "2023-01-26T22:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2022-41019",
-        "impact": {},
-        "last-modified": "2023-10-18T17:43:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2022-1613"
-        ],
-        "summary": "Several stack-based buffer overflow vulnerabilities exist in the DetranCLI command parsing functionality of Siretta QUARTZ-GOLD G5.0.1.5-210720-141020. A specially-crafted network packet can lead to arbitrary command execution. An attacker can send a sequence of requests to trigger these vulnerabilities.This buffer overflow is in the function that manages the 'vpn l2tp advanced name WORD dns (yes|no) mtu <128-16384> mru <128-16384> auth (on|off) password (WORD|null)' command template."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-43250",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://www.xnview.com/en/nconvert/",
-            "https://github.com/mrtouch93/exploits/tree/main/NConvert7.136/User%20Mode%20Write%20AV",
-            "http://seclists.org/fulldisclosure/2023/Oct/15",
-            "http://packetstormsecurity.com/files/175145/XNSoft-Nconvert-7.136-Buffer-Overflow-Denial-Of-Service.html"
-        ],
-        "summary": "XNSoft Nconvert 7.136 is vulnerable to Buffer Overflow. There is a User Mode Write AV via a crafted image file. Attackers could exploit this issue for a Denial of Service (DoS) or possibly to achieve code execution."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-45383",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://common-services.com/fr/home-fr/",
-            "https://security.friendsofpresta.org/modules/2023/10/17/sonice_etiquetage.html"
-        ],
-        "summary": "In the module \"SoNice etiquetage\" (sonice_etiquetage) up to version 2.5.9 from Common-Services for PrestaShop, a guest can download personal information without restriction by performing a path traversal attack. Due to a lack of permissions control and a lack of control in the path name construction, a guest can perform a path traversal to view all files on the information system."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-46009",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://github.com/kohler/gifsicle/issues/196"
-        ],
-        "summary": "gifsicle-1.94 was found to have a floating point exception (FPE) vulnerability via resize_stream at src/xform.c."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T16:15:00",
-        "access": {},
-        "assigner": "vulnreport@tenable.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-5642",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://tenable.com/security/research/tra-2023-33"
-        ],
-        "summary": "Advantech R-SeeNet v2.4.23 allows an unauthenticated remote attacker to read from and write to the snmpmon.ini file, which contains sensitive information."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T17:15:00",
-        "access": {},
-        "assigner": "psirt@cisco.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-20261",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-sdwan-lfi-OWLbKUGe"
-        ],
-        "summary": "A vulnerability in the web UI of Cisco Catalyst SD-WAN Manager could allow an authenticated, remote attacker to retrieve arbitrary files from an affected system.\r\n\r This vulnerability is due to improper validation of parameters that are sent to the web UI. An attacker could exploit this vulnerability by logging in to Cisco Catalyst SD-WAN Manager and issuing crafted requests using the web UI. A successful exploit could allow the attacker to obtain arbitrary files from the underlying Linux file system of an affected system. To exploit this vulnerability, the attacker must be an authenticated user."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-30781",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/tweeple/wordpress-tweeple-plugin-0-9-5-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in Theme Blvd Tweeple plugin <=\u00a00.9.5 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-45602",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ebook-store/wordpress-ebook-store-plugin-5-784-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in Shopfiles Ltd Ebook Store plugin <=\u00a05.785 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-45604",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/get-custom-field-values/wordpress-get-custom-field-values-plugin-4-0-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Auth. (admin+) Stored Cross-Site Scripting (XSS) vulnerability in Scott Reilly Get Custom Field Values plugin <=\u00a04.0.1 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-45607",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wordpress-popular-posts/wordpress-popular-posts-plugin-6-3-2-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability in Hector Cabrera WordPress Popular Posts plugin <=\u00a06.3.2 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-45628",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/qr-twitter-widget/wordpress-qr-twitter-widget-plugin-0-2-3-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability in QROkes QR Twitter Widget plugin <=\u00a00.2.3 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-45630",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/gallery-album/wordpress-gallery-image-and-video-gallery-with-thumbnails-plugin-2-0-3-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Stored Cross-Site Scripting (XSS) vulnerability in wpdevart Gallery \u2013 Image and Video Gallery with Thumbnails plugin <=\u00a02.0.3 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T14:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-45632",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/player/wordpress-spidervplayer-plugin-1-5-22-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unauth. Reflected Cross-Site Scripting (XSS) vulnerability in WebDorado SpiderVPlayer plugin <=\u00a01.5.22 versions."
-    },
-    {
-        "Modified": "2023-10-18T17:41:00",
-        "Published": "2023-10-18T15:15:00",
-        "access": {},
-        "assigner": "security@eset.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-5631",
-        "impact": {},
-        "last-modified": "2023-10-18T17:41:00",
-        "references": [
-            "https://github.com/roundcube/roundcubemail/commit/6ee6e7ae301e165e2b2cb703edf75552e5376613",
-            "https://github.com/roundcube/roundcubemail/releases/tag/1.4.15",
-            "https://github.com/roundcube/roundcubemail/releases/tag/1.6.4",
-            "https://github.com/roundcube/roundcubemail/releases/tag/1.5.5"
-        ],
-        "summary": "\nRoundcube before 1.4.15, 1.5.x before 1.5.5, and 1.6.x before 1.6.4 allows stored XSS via an HTML e-mail message with a crafted SVG document because of program/lib/Roundcube/rcube_washtml.php behavior. This could allow a remote attacker\n\nto load arbitrary JavaScript code.\n\n\n\n\n\n\n\n"
     }
 ]
