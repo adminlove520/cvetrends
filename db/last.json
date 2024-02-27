@@ -1,5 +1,406 @@
 [
     {
+        "Modified": "2024-02-27T18:34:00",
+        "Published": "2024-02-07T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-918",
+        "id": "CVE-2024-24806",
+        "impact": {},
+        "last-modified": "2024-02-27T18:34:00",
+        "references": [
+            "https://github.com/libuv/libuv/security/advisories/GHSA-f74f-cvh7-c6q6",
+            "https://github.com/libuv/libuv/commit/0f2d7e784a256b54b2385043438848047bc2a629",
+            "https://github.com/libuv/libuv/commit/3530bcc30350d4a6ccf35d2f7b33e23292b9de70",
+            "https://github.com/libuv/libuv/commit/c858a147643de38a09dd4164758ae5b685f2b488",
+            "https://github.com/libuv/libuv/commit/e0327e1d508b8207c9150b6e582f0adf26213c39",
+            "http://www.openwall.com/lists/oss-security/2024/02/08/2",
+            "http://www.openwall.com/lists/oss-security/2024/02/11/1"
+        ],
+        "summary": "libuv is a multi-platform support library with a focus on asynchronous I/O. The `uv_getaddrinfo` function in `src/unix/getaddrinfo.c` (and its windows counterpart `src/win/getaddrinfo.c`), truncates hostnames to 256 characters before calling `getaddrinfo`. This behavior can be exploited to create addresses like `0x00007f000001`, which are considered valid by `getaddrinfo` and could allow an attacker to craft payloads that resolve to unintended IP addresses, bypassing developer checks. The vulnerability arises due to how the `hostname_ascii` variable (with a length of 256 bytes) is handled in `uv_getaddrinfo` and subsequently in `uv__idna_toascii`. When the hostname exceeds 256 characters, it gets truncated without a terminating null byte. As a result attackers may be able to access internal APIs or for websites (similar to MySpace) that allows users to have `username.example.com` pages. Internal services that crawl or cache these user pages can be exposed to SSRF attacks if a malicious user chooses a long vulnerable username. This issue has been addressed in release version 1.48.0. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-02-27T18:04:00",
+        "Published": "2024-02-13T18:15:00",
+        "access": {},
+        "assigner": "secure@microsoft.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-21304",
+        "impact": {},
+        "last-modified": "2024-02-27T18:04:00",
+        "references": [
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-21304"
+        ],
+        "summary": "Trusted Compute Base Elevation of Privilege Vulnerability"
+    },
+    {
+        "Modified": "2024-02-27T17:26:00",
+        "Published": "2024-01-31T14:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-6779",
+        "impact": {},
+        "last-modified": "2024-02-27T17:26:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-6779",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2254395",
+            "https://www.openwall.com/lists/oss-security/2024/01/30/6",
+            "http://packetstormsecurity.com/files/176932/glibc-syslog-Heap-Based-Buffer-Overflow.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/D2FIH77VHY3KCRROCXOT6L27WMZXSJ2G/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/MWQ6BZJ6CV5UAW4VZSKJ6TO4KIW2KWAQ/",
+            "https://security.gentoo.org/glsa/202402-01",
+            "http://seclists.org/fulldisclosure/2024/Feb/3",
+            "https://www.qualys.com/2024/01/30/cve-2023-6246/syslog.txt",
+            "https://security.netapp.com/advisory/ntap-20240223-0006/"
+        ],
+        "summary": "An off-by-one heap-based buffer overflow was found in the __vsyslog_internal function of the glibc library. This function is called by the syslog and vsyslog functions. This issue occurs when these functions are called with a message bigger than INT_MAX bytes, leading to an incorrect calculation of the buffer size to store the message, resulting in an application crash. This issue affects glibc 2.37 and newer."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-48679",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-3469"
+        ],
+        "summary": "Stored cross-site scripting (XSS) vulnerability due to missing origin validation in postMessage. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2023-48680",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5392"
+        ],
+        "summary": "Sensitive information disclosure due to excessive collection of system information. The following products are affected: Acronis Cyber Protect 16 (macOS, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-48682",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5901"
+        ],
+        "summary": "Stored cross-site scripting (XSS) vulnerability in unit name. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-611",
+        "id": "CVE-2023-50380",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://lists.apache.org/thread/qrt7mq7v7zyrh1qsh1gkg1m7clysvy32"
+        ],
+        "summary": "XML External Entity injection in apache ambari versions <= 2.7.7,\u00a0Users are recommended to upgrade to version 2.7.8, which fixes this issue.\n\nMore Details:\n\nOozie Workflow Scheduler had a vulnerability that allowed for root-level file reading and privilege escalation from low-privilege users. The vulnerability was caused through lack of proper user input validation.\n\nThis vulnerability is known as an XML External Entity (XXE) injection attack. Attackers can exploit XXE vulnerabilities to read arbitrary files on the server, including sensitive system files. In theory, it might be possible to use this to escalate privileges.\n\n"
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-1924",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://vuldb.com/?id.254859",
+            "https://vuldb.com/?ctiid.254859",
+            "https://github.com/1testnew/CVE_Hunter/blob/main/SQLi-1.md"
+        ],
+        "summary": "A vulnerability was found in CodeAstro Membership Management System 1.0. It has been classified as critical. This affects an unknown part of the file /get_membership_amount.php. The manipulation of the argument membershipTypeId leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-254859."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-1925",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://vuldb.com/?id.254860",
+            "https://vuldb.com/?ctiid.254860",
+            "https://docs.qq.com/doc/DQkVmRXBlbGNPZmlL"
+        ],
+        "summary": "A vulnerability was found in Ctcms 2.1.2. It has been declared as critical. This vulnerability affects unknown code of the file ctcms/apps/controllers/admin/Upsys.php. The manipulation leads to unrestricted upload. The attack can be initiated remotely. The complexity of an attack is rather high. The exploitation appears to be difficult. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-254860."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-1926",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://vuldb.com/?id.254861",
+            "https://vuldb.com/?ctiid.254861",
+            "https://github.com/xiahao90/CVEproject/blob/main/xiahao.webray.com.cn/Free%20and%20Open%20Source%20inventory%20management%20system-SQLi.md"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Free and Open Source Inventory Management System 1.0. It has been rated as critical. This issue affects some unknown processing of the file /app/ajax/search_sales_report.php. The manipulation of the argument customer leads to sql injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-254861 was assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-20",
+        "id": "CVE-2024-21742",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://lists.apache.org/thread/nrqzg93219wdj056pqfszsd33dc54kfy"
+        ],
+        "summary": "Improper input validation allows for header injection in MIME4J library when using MIME4J DOM for composing message.\nThis can be exploited by an attacker to add unintended headers to MIME messages.\n"
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24323",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://github.com/lousix/exp/blob/main/CVE-2024-24323/CVE-2024-24323.md"
+        ],
+        "summary": "SQL injection vulnerability in linlinjava litemall v.1.8.0 allows a remote attacker to obtain sensitive information via the nickname, consignee, orderSN, orderStatusArray parameters of the AdminOrdercontroller.java component."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25840",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://addons.prestashop.com/en/third-party-data-integrations-crm-erp/90816-account-manager-sales-representative-dealers-crm.html",
+            "https://security.friendsofpresta.org/modules/2024/02/27/prestasalesmanager.html"
+        ],
+        "summary": "In the module \"Account Manager | Sales Representative & Dealers | CRM\" (prestasalesmanager) up to 9.0 from Presta World for PrestaShop, a guest can download personal information without restriction by performing a path traversal attack."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25841",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://addons.prestashop.com/fr/transporteurs/2704-colissimo-domicile-et-points-de-retrait.html",
+            "https://security.friendsofpresta.org/modules/2024/02/27/soflexibilite.html"
+        ],
+        "summary": "In the module \"So Flexibilite\" (soflexibilite) from Common-Services for PrestaShop < 4.1.26, a guest (authenticated customer) can perform Cross Site Scripting (XSS) injection."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25843",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://addons.prestashop.com/en/data-import-export/20579-import-update-bulk-product-from-any-csv-excel-file-pro.html",
+            "https://security.friendsofpresta.org/modules/2024/02/27/ba_importer.html"
+        ],
+        "summary": "In the module \"Import/Update Bulk Product from any Csv/Excel File Pro\" (ba_importer) up to version 1.1.28 from Buy Addons for PrestaShop, a guest can perform SQL injection in affected versions."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25846",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://addons.prestashop.com/fr/import-export-de-donnees/19091-catalogue-de-produits-csv-excel-dimportation.html",
+            "https://security.friendsofpresta.org/modules/2024/02/27/simpleimportproduct.html"
+        ],
+        "summary": "In the module \"Product Catalog (CSV, Excel) Import\" (simpleimportproduct) <= 6.7.0 from MyPrestaModules for PrestaShop, a guest can upload files with extensions .php."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-276",
+        "id": "CVE-2023-48678",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-2319"
+        ],
+        "summary": "Sensitive information disclosure due to insecure folder permissions. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2024-02-27T17:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-48681",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5900"
+        ],
+        "summary": "Self cross-site scripting (XSS) vulnerability in storage nodes search field. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2023-10-09T12:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-427",
+        "id": "CVE-2023-45248",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-6052"
+        ],
+        "summary": "Local privilege escalation due to DLL hijacking vulnerability. The following products are affected: Acronis Cyber Protect Cloud Agent (Windows) before build 36497, Acronis Cyber Protect 16 (Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2023-10-06T10:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2023-45244",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5907"
+        ],
+        "summary": "Sensitive information disclosure and manipulation due to missing authorization. The following products are affected: Acronis Cyber Protect Cloud Agent (Linux, macOS, Windows) before build 35895, Acronis Cyber Protect 16 (Linux, macOS, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2023-10-05T22:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2023-44211",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-4061"
+        ],
+        "summary": "Sensitive information disclosure and manipulation due to missing authorization. The following products are affected: Acronis Cyber Protect Cloud Agent (Linux, macOS, Windows) before build 31637, Acronis Cyber Protect 16 (Linux, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2023-10-05T22:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-44213",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5286"
+        ],
+        "summary": "Sensitive information disclosure due to excessive collection of system information. The following products are affected: Acronis Cyber Protect Cloud Agent (Windows) before build 35739, Acronis Cyber Protect 16 (Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:15:00",
+        "Published": "2023-10-05T22:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-532",
+        "id": "CVE-2023-45241",
+        "impact": {},
+        "last-modified": "2024-02-27T17:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5999"
+        ],
+        "summary": "Sensitive information leak through log files. The following products are affected: Acronis Cyber Protect Cloud Agent (Linux, macOS, Windows) before build 35739, Acronis Cyber Protect 16 (Linux, macOS, Windows) before build 37391."
+    },
+    {
+        "Modified": "2024-02-27T17:14:00",
+        "Published": "2024-02-13T16:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-22923",
+        "impact": {},
+        "last-modified": "2024-02-27T17:14:00",
+        "references": [
+            "http://advradius.com/demo/",
+            "https://gist.github.com/whiteman007/"
+        ],
+        "summary": "SQL injection vulnerability in adv radius v.2.2.5 allows a local attacker to execute arbitrary code via a crafted script."
+    },
+    {
+        "Modified": "2024-02-27T17:10:00",
+        "Published": "2024-02-13T08:16:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "CWE-640",
+        "id": "CVE-2024-22454",
+        "impact": {},
+        "last-modified": "2024-02-27T17:10:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000222025/dsa-2024-061-dell-power-protect-data-manager-update-for-multiple-security-vulnerabilities"
+        ],
+        "summary": "\nDell PowerProtect Data Manager, version 19.15 and prior versions, contain a weak password recovery mechanism for forgotten passwords. A remote unauthenticated attacker could potentially exploit this vulnerability, leading to unauthorized access to the application with privileges of the compromised account. The attacker could retrieve the reset password token without authorization and then perform the password change\n\n"
+    },
+    {
         "Modified": "2024-02-27T16:55:00",
         "Published": "2024-02-12T21:15:00",
         "access": {},
@@ -1272,391 +1673,5 @@
             "https://plugins.trac.wordpress.org/changeset/3040304/themeisle-companion/tags/2.10.32/vendor/codeinwp/elementor-extra-widgets/class-elementor-extra-widgets.php"
         ],
         "summary": "The Orbit Fox by ThemeIsle plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's Post Type Grid Widget Title in all versions up to, and including, 2.10.30 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers with contributor-level and above permissions to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22543",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://mat4mee.notion.site/Leaked-SessionID-can-lead-to-authentication-bypass-on-the-Linksys-Router-E1700-f56f9c4b15e7443fa237bd1b101a18d2"
-        ],
-        "summary": "An issue was discovered in Linksys Router E1700 1.0.04 (build 3), allows authenticated attackers to escalate privileges via a crafted GET request to the /goform/* URI or via the ExportSettings function."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22544",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://mat4mee.notion.site/Remote-Code-Execution-RCE-on-the-Linksys-Router-E1700-765c9bbf6a7f4171b670bc778bf9b005"
-        ],
-        "summary": "An issue was discovered in Linksys Router E1700 version 1.0.04 (build 3), allows authenticated attackers to execute arbitrary code via the setDateTime function."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24720",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://excellium-services.com/cert-xlm-advisory/CVE-2024-24720"
-        ],
-        "summary": "An issue was discovered on Innovaphone PBX before 14r1 devices. It provides different responses to incoming requests in a way that reveals information to an attacker."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25166",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/xiaocheng-keji/71cms/issues/1"
-        ],
-        "summary": "Cross Site Scripting vulnerability in 71CMS v.1.0.0 allows a remote attacker to execute arbitrary code via the uploadfile action parameter in the controller.php file."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27356",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://gl-inet.com",
-            "https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Download_file_vulnerability.md"
-        ],
-        "summary": "An issue was discovered on certain GL-iNet devices. Attackers can download files such as logs via commands, potentially obtaining critical user information. This affects MT6000 4.5.5, XE3000 4.4.4, X3000 4.4.5, MT3000 4.5.0, MT2500 4.5.0, AXT1800 4.5.0, AX1800 4.5.0, A1300 4.5.0, S200 4.1.4-0300, X750 4.3.7, SFT1200 4.3.7, XE300 4.3.7, MT1300 4.3.10, AR750 4.3.10, AR750S 4.3.10, AR300M 4.3.10, AR300M16 4.3.10, B1300 4.3.10, MT300N-v2 4.3.10, X300B 3.217, S1300 3.216, SF1200 3.216, MV1000 3.216, N300 3.216, B2200 3.216, and X1200 3.203."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-41506",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/ASR511-OO7/CVE-2023-41506/blob/main/CVE-23"
-        ],
-        "summary": "An arbitrary file upload vulnerability in the Update/Edit Student's Profile Picture function of Student Enrollment In PHP v1.0 allows attackers to execute arbitrary code via uploading a crafted PHP file."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22917",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/ASR511-OO7/CVE-2024-22917/blob/main/CVE-22"
-        ],
-        "summary": "SQL injection vulnerability in Dynamic Lab Management System Project in PHP v.1.0 allows a remote attacker to execute arbitrary code via a crafted script."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24095",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/ASR511-OO7/CVE-2024-24095/blob/main/CVE-21"
-        ],
-        "summary": "Code-projects Simple Stock System 1.0 is vulnerable to SQL Injection."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24096",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/ASR511-OO7/CVE-2024-24096/blob/main/CVE-20"
-        ],
-        "summary": "Code-projects Computer Book Store 1.0 is vulnerable to SQL Injection via BookSBIN."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T04:15:00",
-        "access": {},
-        "assigner": "Mitsubishielectric.Psirt@yd.MitsubishiElectric.co.jp",
-        "cvss": null,
-        "cwe": "CWE-410",
-        "id": "CVE-2023-7033",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://www.mitsubishielectric.com/en/psirt/vulnerability/pdf/2023-023_en.pdf",
-            "https://jvn.jp/vu/JVNVU96145466/index.html"
-        ],
-        "summary": "Insufficient Resource Pool vulnerability in Ethernet function of Mitsubishi Electric Corporation MELSEC iQ-F Series CPU modules allows a remote attacker to cause a temporary Denial of Service condition for a certain period of time in Ethernet communication of the products by performing TCP SYN Flood attack."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-26T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25247",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://harryha.substack.com/p/phuong-phap-phan-tich-ma-nguon-tim-lo-hong"
-        ],
-        "summary": "SQL Injection vulnerability in /app/api/controller/Store.php in Niushop B2B2C V5 allows attackers to run arbitrary SQL commands via latitude and longitude parameters."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-27T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24721",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://excellium-services.com/cert-xlm-advisory/CVE-2024-24721"
-        ],
-        "summary": "An issue was discovered on Innovaphone PBX before 14r1 devices. The password form, used to authenticate, allows a Brute Force Attack through which an attacker may be able to access the administration panel"
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-26T22:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25248",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://harryha.substack.com/p/phuong-phap-phan-tich-ma-nguon-tim-lo-hong"
-        ],
-        "summary": "SQL Injection vulnerability in the orderGoodsDelivery() function in Niushop B2B2C V5 allows attackers to run arbitrary SQL commands via the order_id parameter."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-26T22:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25751",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/TimeSeg/IOT_CVE/blob/main/tenda/AC9V3/0218/fromSetSysTime.md"
-        ],
-        "summary": "A Stack Based Buffer Overflow vulnerability in Tenda AC9 v.3.0 with firmware version v.15.03.06.42_multi allows a remote attacker to execute arbitrary code via the fromSetSysTime function."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-26T22:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27093",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/stacklok/minder/security/advisories/GHSA-q6h8-4j2v-pjg4",
-            "https://github.com/stacklok/minder/commit/53868a878e93f29c43437f96dbc990b548e48d1d"
-        ],
-        "summary": "Minder is a Software Supply Chain Security Platform. In version 0.0.31 and earlier, it is possible for an attacker to register a repository with a invalid or differing upstream ID, which causes Minder to report the repository as registered, but not remediate any future changes which conflict with policy (because the webhooks for the repo do not match any known repository in the database).  When attempting to register a repo with a different repo ID, the registered provider must have admin on the named repo, or a 404 error will result.  Similarly, if the stored provider token does not have repo access, then the remediations will not apply successfully.  Lastly, it appears that reconciliation actions do not execute against repos with this type of mismatch. This appears to primarily be a potential denial-of-service vulnerability.  This vulnerability is patched in version 0.20240226.1425+ref.53868a8."
-    },
-    {
-        "Modified": "2024-02-27T14:20:00",
-        "Published": "2024-02-26T22:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-36237",
-        "impact": {},
-        "last-modified": "2024-02-27T14:20:00",
-        "references": [
-            "https://github.com/Ek-Saini/security/blob/main/CSRF-Bagisto"
-        ],
-        "summary": "Cross Site Request Forgery vulnerability in Bagisto before v.1.5.1 allows an attacker to execute arbitrary code via a crafted HTML script."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T13:15:00",
-        "access": {},
-        "assigner": "psirt@thalesgroup.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-0197",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://supportportal.thalesgroup.com"
-        ],
-        "summary": "A flaw in the installer for Thales SafeNet Sentinel HASP LDK prior to 9.16 on Windows allows an attacker to escalate their privilege level via local access.\n\n"
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T13:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-1918",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://vuldb.com/?id.254839",
-            "https://vuldb.com/?ctiid.254839",
-            "https://github.com/Echosssy/CVE/blob/main/%E5%85%B3%E4%BA%8ESmart%20S42%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%AD%98%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E7%9A%84%E6%83%85%E5%86%B5%E9%80%9A%E6%8A%A5-userattestation.php.docx"
-        ],
-        "summary": "A vulnerability has been found in Beijing Baichuo Smart S42 Management Platform up to 20240219 and classified as critical. Affected by this vulnerability is an unknown functionality of the file /useratte/userattestation.php. The manipulation of the argument hidwel leads to unrestricted upload. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-254839. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T14:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-284",
-        "id": "CVE-2024-0551",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://huntr.com/bounties/f114c787-ab5f-4f83-afa5-c000435efb78",
-            "https://github.com/mintplex-labs/anything-llm/commit/7aaa4b38e7112a6cd879c1238310c56b1844c6d8"
-        ],
-        "summary": "Enable exports of the database and associated exported information of the system via the default user role. The attacked would have to have been granted access to the system prior to the attack.\n\nIt is worth noting that the deterministic nature of the export name is lower risk as the UI for exporting would start the download at the same time, which once downloaded - deletes the export from the system.\n\nThe endpoint for exporting should simply be patched to a higher privilege level."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T14:15:00",
-        "access": {},
-        "assigner": "psirt@teamviewer.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-0819",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://www.teamviewer.com/en/trust-center/security-bulletins/tv-2024-1001/"
-        ],
-        "summary": "\nImproper initialization of default settings in TeamViewer Remote Client prior version 15.51.5 for Windows, Linux and macOS, allow a low privileged user to elevate privileges by changing the personal password setting and establishing a remote connection to a logged-in admin account.\n\n"
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-1919",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://vuldb.com/?id.254854",
-            "https://vuldb.com/?ctiid.254854",
-            "https://prnt.sc/1W0g0F8vv2mw"
-        ],
-        "summary": "A vulnerability classified as problematic was found in SourceCodester Online Job Portal 1.0. This vulnerability affects unknown code of the file /Employer/ManageWalkin.php of the component Manage Walkin Page. The manipulation of the argument Job Title leads to cross site scripting. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-254854 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-321",
-        "id": "CVE-2024-1920",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://vuldb.com/?id.254855",
-            "https://vuldb.com/?ctiid.254855",
-            "https://note.zhaoj.in/share/gKyCbSSdJ5fY"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in osuuu LightPicture up to 1.2.2. This issue affects the function handle of the file /app/middleware/TokenVerify.php. The manipulation leads to use of hard-coded cryptographic key\r . The attack may be initiated remotely. The complexity of an attack is rather high. The exploitation is known to be difficult. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-254855."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T11:15:00",
-        "access": {},
-        "assigner": "psirt@thalesgroup.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-5993",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://supportportal.thalesgroup.com"
-        ],
-        "summary": "A flaw in the Windows Installer in Thales SafeNet Authentication Client prior to 10.8 R10 on Windows allows an attacker to escalate their privilege level via local access."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T11:15:00",
-        "access": {},
-        "assigner": "psirt@thalesgroup.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-7016",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://supportportal.thalesgroup.com"
-        ],
-        "summary": "A flaw in Thales SafeNet Authentication Client prior to 10.8 R10 on Windows allows an attacker to execute code at a SYSTEM level via local access."
-    },
-    {
-        "Modified": "2024-02-27T14:19:00",
-        "Published": "2024-02-27T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1649",
-        "impact": {},
-        "last-modified": "2024-02-27T14:19:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/c63ddc62-a4f1-4da4-a65e-4573369d6c30?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3034410/categorify"
-        ],
-        "summary": "The Categorify plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the categorifyAjaxDeleteCategory function in all versions up to, and including, 1.0.7.4. This makes it possible for authenticated attackers, with subscriber-level access and above, to delete categories."
     }
 ]
