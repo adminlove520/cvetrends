@@ -1,5 +1,134 @@
 [
     {
+        "Modified": "2024-02-29T12:15:00",
+        "Published": "2024-02-29T12:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26607",
+        "impact": {},
+        "last-modified": "2024-02-29T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e0f83c234ea7a3dec1f84e5d02caa1c51664a076",
+            "https://git.kernel.org/stable/c/56f96cf6eb11a1c2d594367c3becbfb06a855ec1",
+            "https://git.kernel.org/stable/c/2a4c6af7934a7b4c304542c38fee35e09cc1770c",
+            "https://git.kernel.org/stable/c/08ac6f132dd77e40f786d8af51140c96c6d739c9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/bridge: sii902x: Fix probing race issue\n\nA null pointer dereference crash has been observed rarely on TI\nplatforms using sii9022 bridge:\n\n[   53.271356]  sii902x_get_edid+0x34/0x70 [sii902x]\n[   53.276066]  sii902x_bridge_get_edid+0x14/0x20 [sii902x]\n[   53.281381]  drm_bridge_get_edid+0x20/0x34 [drm]\n[   53.286305]  drm_bridge_connector_get_modes+0x8c/0xcc [drm_kms_helper]\n[   53.292955]  drm_helper_probe_single_connector_modes+0x190/0x538 [drm_kms_helper]\n[   53.300510]  drm_client_modeset_probe+0x1f0/0xbd4 [drm]\n[   53.305958]  __drm_fb_helper_initial_config_and_unlock+0x50/0x510 [drm_kms_helper]\n[   53.313611]  drm_fb_helper_initial_config+0x48/0x58 [drm_kms_helper]\n[   53.320039]  drm_fbdev_dma_client_hotplug+0x84/0xd4 [drm_dma_helper]\n[   53.326401]  drm_client_register+0x5c/0xa0 [drm]\n[   53.331216]  drm_fbdev_dma_setup+0xc8/0x13c [drm_dma_helper]\n[   53.336881]  tidss_probe+0x128/0x264 [tidss]\n[   53.341174]  platform_probe+0x68/0xc4\n[   53.344841]  really_probe+0x188/0x3c4\n[   53.348501]  __driver_probe_device+0x7c/0x16c\n[   53.352854]  driver_probe_device+0x3c/0x10c\n[   53.357033]  __device_attach_driver+0xbc/0x158\n[   53.361472]  bus_for_each_drv+0x88/0xe8\n[   53.365303]  __device_attach+0xa0/0x1b4\n[   53.369135]  device_initial_probe+0x14/0x20\n[   53.373314]  bus_probe_device+0xb0/0xb4\n[   53.377145]  deferred_probe_work_func+0xcc/0x124\n[   53.381757]  process_one_work+0x1f0/0x518\n[   53.385770]  worker_thread+0x1e8/0x3dc\n[   53.389519]  kthread+0x11c/0x120\n[   53.392750]  ret_from_fork+0x10/0x20\n\nThe issue here is as follows:\n\n- tidss probes, but is deferred as sii902x is still missing.\n- sii902x starts probing and enters sii902x_init().\n- sii902x calls drm_bridge_add(). Now the sii902x bridge is ready from\n  DRM's perspective.\n- sii902x calls sii902x_audio_codec_init() and\n  platform_device_register_data()\n- The registration of the audio platform device causes probing of the\n  deferred devices.\n- tidss probes, which eventually causes sii902x_bridge_get_edid() to be\n  called.\n- sii902x_bridge_get_edid() tries to use the i2c to read the edid.\n  However, the sii902x driver has not set up the i2c part yet, leading\n  to the crash.\n\nFix this by moving the drm_bridge_add() to the end of the\nsii902x_init(), which is also at the very end of sii902x_probe()."
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-02-29T11:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1942",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost versions 8.1.x before 8.1.9, 9.2.x before 9.2.5, and 9.3.0 fail to sanitize the metadata on posts containing permalinks under specific conditions, which allows an authenticated attacker to access the contents of individual posts in channels they are not a member of.\n\n"
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-02-29T11:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1949",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "A race condition in Mattermost versions 8.1.x before 8.1.9, and 9.4.x before 9.4.2 allows an authenticated attacker to gain unauthorized access to individual posts' contents via carefully timed post creation while another user deletes posts.\n\n"
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-02-29T11:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1952",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost version 8.1.x before 8.1.9 fails to sanitize data associated with permalinks when a plugin updates an ephemeral post, allowing an authenticated attacker who can control the ephemeral post update to access individual posts' contents in channels they are not a member of.\n\n"
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-02-29T11:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1953",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost versions 8.1.x before 8.1.9, 9.2.x before 9.2.5, 9.3.0, and 9.4.x before 9.4.2 fail to limit the number of role names requested from the API, allowing an authenticated attacker to cause the server to run out of memory and crash by issuing an unusually large HTTP request.\n\n"
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-02-29T11:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-668",
+        "id": "CVE-2024-27906",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://github.com/apache/airflow/pull/37290",
+            "https://github.com/apache/airflow/pull/37468",
+            "https://lists.apache.org/thread/on4f7t5sqr3vfgp1pvkck79wv7mq9st5"
+        ],
+        "summary": "Apache Airflow, versions before 2.8.2, has a vulnerability that allows authenticated users to view DAG code and import errors of DAGs they do not have permission to view through the API and the UI.\n\nUsers of Apache Airflow are recommended to upgrade to version 2.8.2 or newer to mitigate the risk associated with this vulnerability\n"
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-01-24T18:15:00",
+        "access": {},
+        "assigner": "jenkinsci-cert@googlegroups.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-23897",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3314",
+            "http://packetstormsecurity.com/files/176839/Jenkins-2.441-LTS-2.426.3-CVE-2024-23897-Scanner.html",
+            "http://packetstormsecurity.com/files/176840/Jenkins-2.441-LTS-2.426.3-Arbitrary-File-Read.html",
+            "http://www.openwall.com/lists/oss-security/2024/01/24/6"
+        ],
+        "summary": "Jenkins 2.441 and earlier, LTS 2.426.2 and earlier does not disable a feature of its CLI command parser that replaces an '@' character followed by a file path in an argument with the file's contents, allowing unauthenticated attackers to read arbitrary files on the Jenkins controller file system."
+    },
+    {
+        "Modified": "2024-02-29T11:15:00",
+        "Published": "2024-01-24T18:15:00",
+        "access": {},
+        "assigner": "jenkinsci-cert@googlegroups.com",
+        "cvss": null,
+        "cwe": "CWE-346",
+        "id": "CVE-2024-23898",
+        "impact": {},
+        "last-modified": "2024-02-29T11:15:00",
+        "references": [
+            "https://www.jenkins.io/security/advisory/2024-01-24/#SECURITY-3315",
+            "http://www.openwall.com/lists/oss-security/2024/01/24/6"
+        ],
+        "summary": "Jenkins 2.217 through 2.441 (both inclusive), LTS 2.222.1 through 2.426.2 (both inclusive) does not perform origin validation of requests made through the CLI WebSocket endpoint, resulting in a cross-site WebSocket hijacking (CSWSH) vulnerability, allowing attackers to execute CLI commands on the Jenkins controller."
+    },
+    {
         "Modified": "2024-02-29T10:15:00",
         "Published": "2024-02-29T10:15:00",
         "access": {},
@@ -1542,134 +1671,5 @@
             "https://neroteam.com/blog/f-logic-datacube3-vulnerability-report"
         ],
         "summary": "F-logic DataCube3 v1.0 is vulnerable to Incorrect Access Control due to an improper directory access restriction. An unauthenticated, remote attacker can exploit this, by sending a URI that contains the path of the configuration file. A successful exploit could allow the attacker to extract the root and admin password."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "security@joomla.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-21723",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://developer.joomla.org/security-centre/926-20240202-core-open-redirect-in-installation-application.html"
-        ],
-        "summary": "Inadequate parsing of URLs could result into an open redirect."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25831",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://neroteam.com/blog/f-logic-datacube3-vulnerability-report"
-        ],
-        "summary": "F-logic DataCube3 Version 1.0 is affected by a reflected cross-site scripting (XSS) vulnerability due to improper input sanitization. An authenticated, remote attacker can execute arbitrary JavaScript code in the web management interface."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-25931",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/heureka/wordpress-heureka-plugin-1-0-8-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
-        ],
-        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Heureka Group Heureka.This issue affects Heureka: from n/a through 1.0.8.\n\n"
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26461",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://github.com/LuMingYinDetect/krb5_defects/blob/main/krb5_detect_2.md"
-        ],
-        "summary": "Kerberos 5 (aka krb5) 1.21.2 contains a memory leak vulnerability in /krb5/src/lib/gssapi/krb5/k5sealv3.c."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22936",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://github.com/SnoopJesus420/CVEs/blob/main/CVE-2023-",
-            "https://github.com/SnoopJesus420/CVEs/blob/main/CVEs-2024/CVE-2024-22936.md"
-        ],
-        "summary": "Cross-site scripting (XSS) vulnerability in Parents & Student Portal in Genesis School Management Systems in Genesis AIMS Student Information Systems v.3053 allows remote attackers to inject arbitrary web script or HTML via the message parameter."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26472",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://github.com/msaad1999/KLiK-SocialMediaWebsite/",
-            "https://github.com/dub-flow/vulnerability-research/tree/main/CVE-2024-26472"
-        ],
-        "summary": "A reflected cross-site scripting (XSS) vulnerability in SocialMediaWebsite v1.0.1 allows attackers to inject malicious JavaScript into the web browser of a victim via the selector or validator parameters in offer.php."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27092",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://github.com/hoppscotch/hoppscotch/security/advisories/GHSA-8r6h-8r68-q3pp",
-            "https://github.com/hoppscotch/hoppscotch/commit/6827e97ec583b2534cdc1c2f33fa44973a0c2bf5",
-            "https://github.com/hoppscotch/hoppscotch/blob/main/packages/hoppscotch-backend/src/team-invitation/team-invitation.service.ts#L153"
-        ],
-        "summary": "Hoppscotch is an API development ecosystem.  Due to lack of validation for fields like Label (Edit Team) - TeamName, bad actors can send emails with Spoofed Content as Hoppscotch. Part of payload (external link) is presented in clickable form - easier to achieve own goals by malicious actors.  This issue is fixed in 2023.12.6."
-    },
-    {
-        "Modified": "2024-02-29T01:44:00",
-        "Published": "2024-02-29T01:44:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-23946",
-        "impact": {},
-        "last-modified": "2024-02-29T01:44:00",
-        "references": [
-            "https://ofbiz.apache.org/download.html",
-            "https://ofbiz.apache.org/security.html",
-            "https://ofbiz.apache.org/release-notes-18.12.12.html",
-            "https://issues.apache.org/jira/browse/OFBIZ-12884",
-            "https://lists.apache.org/thread/w4lp5ncpzttf41hn5bsc04mzq4o6lw3g",
-            "http://www.openwall.com/lists/oss-security/2024/02/28/9"
-        ],
-        "summary": "Possible path traversal in Apache OFBiz allowing file inclusion.\nUsers are recommended to upgrade to version 18.12.12, that fixes the issue."
     }
 ]
