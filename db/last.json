@@ -1,5 +1,443 @@
 [
     {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47096",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b398fcbe4de1e1100867fdb6f447c6fbc8fe7085",
+            "https://git.kernel.org/stable/c/39a8fc4971a00d22536aeb7d446ee4a97810611b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nALSA: rawmidi - fix the uninitalized user_pversion\n\nThe user_pversion was uninitialized for the user space file structure\nin the open function, because the file private structure use\nkmalloc for the allocation.\n\nThe kernel ALSA sequencer code clears the file structure, so no additional\nfixes are required.\n\nBugLink: https://github.com/alsa-project/alsa-lib/issues/178"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47098",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d105f30bea9104c590a9e5b495cb8a49bdfe405f",
+            "https://git.kernel.org/stable/c/55840b9eae5367b5d5b29619dc2fb7e4596dba46"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nhwmon: (lm90) Prevent integer overflow/underflow in hysteresis calculations\n\nCommit b50aa49638c7 (\"hwmon: (lm90) Prevent integer underflows of\ntemperature calculations\") addressed a number of underflow situations\nwhen writing temperature limits. However, it missed one situation, seen\nwhen an attempt is made to set the hysteresis value to MAX_LONG and the\ncritical temperature limit is negative.\n\nUse clamp_val() when setting the hysteresis temperature to ensure that\nthe provided value can never overflow or underflow."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47090",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1f207076740101fed87074a6bc924dbe806f08a5",
+            "https://git.kernel.org/stable/c/c691e7575eff76e563b0199c23ec46bd454f43e3",
+            "https://git.kernel.org/stable/c/2a57d83c78f889bf3f54eede908d0643c40d5418"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/hwpoison: clear MF_COUNT_INCREASED before retrying get_any_page()\n\nHulk Robot reported a panic in put_page_testzero() when testing\nmadvise() with MADV_SOFT_OFFLINE.  The BUG() is triggered when retrying\nget_any_page().  This is because we keep MF_COUNT_INCREASED flag in\nsecond try but the refcnt is not increased.\n\n    page dumped because: VM_BUG_ON_PAGE(page_ref_count(page) == 0)\n    ------------[ cut here ]------------\n    kernel BUG at include/linux/mm.h:737!\n    invalid opcode: 0000 [#1] PREEMPT SMP\n    CPU: 5 PID: 2135 Comm: sshd Tainted: G    B             5.16.0-rc6-dirty #373\n    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014\n    RIP: release_pages+0x53f/0x840\n    Call Trace:\n      free_pages_and_swap_cache+0x64/0x80\n      tlb_flush_mmu+0x6f/0x220\n      unmap_page_range+0xe6c/0x12c0\n      unmap_single_vma+0x90/0x170\n      unmap_vmas+0xc4/0x180\n      exit_mmap+0xde/0x3a0\n      mmput+0xa3/0x250\n      do_exit+0x564/0x1470\n      do_group_exit+0x3b/0x100\n      __do_sys_exit_group+0x13/0x20\n      __x64_sys_exit_group+0x16/0x20\n      do_syscall_64+0x34/0x80\n      entry_SYSCALL_64_after_hwframe+0x44/0xae\n    Modules linked in:\n    ---[ end trace e99579b570fe0649 ]---\n    RIP: 0010:release_pages+0x53f/0x840"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47095",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8efd6a3391f7b0b19fb0c38e50add06ca30c94af",
+            "https://git.kernel.org/stable/c/1f6ab847461ce7dd89ae9db2dd4658c993355d7c",
+            "https://git.kernel.org/stable/c/77a7311ca167aa5b7055c549a940a56e73ee5f29",
+            "https://git.kernel.org/stable/c/34f35f8f14bc406efc06ee4ff73202c6fd245d15"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipmi: ssif: initialize ssif_info->client early\n\nDuring probe ssif_info->client is dereferenced in error path. However,\nit is set when some of the error checking has already been done. This\ncauses following kernel crash if an error path is taken:\n\n[   30.645593][  T674] ipmi_ssif 0-000e: ipmi_ssif: Not probing, Interface already present\n[   30.657616][  T674] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088\n...\n[   30.657723][  T674] pc : __dev_printk+0x28/0xa0\n[   30.657732][  T674] lr : _dev_err+0x7c/0xa0\n...\n[   30.657772][  T674] Call trace:\n[   30.657775][  T674]  __dev_printk+0x28/0xa0\n[   30.657778][  T674]  _dev_err+0x7c/0xa0\n[   30.657781][  T674]  ssif_probe+0x548/0x900 [ipmi_ssif 62ce4b08badc1458fd896206d9ef69a3c31f3d3e]\n[   30.657791][  T674]  i2c_device_probe+0x37c/0x3c0\n...\n\nInitialize ssif_info->client before any error path can be taken. Clear\ni2c_client data in the error path to prevent the dangling pointer from\nleaking."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47099",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d2269ae48598e05b59ec9ea9e6e44fd33941130d",
+            "https://git.kernel.org/stable/c/9695b7de5b4760ed22132aca919570c0190cb0ce"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nveth: ensure skb entering GRO are not cloned.\n\nAfter commit d3256efd8e8b (\"veth: allow enabling NAPI even without XDP\"),\nif GRO is enabled on a veth device and TSO is disabled on the peer\ndevice, TCP skbs will go through the NAPI callback. If there is no XDP\nprogram attached, the veth code does not perform any share check, and\nshared/cloned skbs could enter the GRO engine.\n\nIgnat reported a BUG triggered later-on due to the above condition:\n\n[   53.970529][    C1] kernel BUG at net/core/skbuff.c:3574!\n[   53.981755][    C1] invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI\n[   53.982634][    C1] CPU: 1 PID: 19 Comm: ksoftirqd/1 Not tainted 5.16.0-rc5+ #25\n[   53.982634][    C1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015\n[   53.982634][    C1] RIP: 0010:skb_shift+0x13ef/0x23b0\n[   53.982634][    C1] Code: ea 03 0f b6 04 02 48 89 fa 83 e2 07 38 d0\n7f 08 84 c0 0f 85 41 0c 00 00 41 80 7f 02 00 4d 8d b5 d0 00 00 00 0f\n85 74 f5 ff ff <0f> 0b 4d 8d 77 20 be 04 00 00 00 4c 89 44 24 78 4c 89\nf7 4c 89 8c\n[   53.982634][    C1] RSP: 0018:ffff8881008f7008 EFLAGS: 00010246\n[   53.982634][    C1] RAX: 0000000000000000 RBX: ffff8881180b4c80 RCX: 0000000000000000\n[   53.982634][    C1] RDX: 0000000000000002 RSI: ffff8881180b4d3c RDI: ffff88810bc9cac2\n[   53.982634][    C1] RBP: ffff8881008f70b8 R08: ffff8881180b4cf4 R09: ffff8881180b4cf0\n[   53.982634][    C1] R10: ffffed1022999e5c R11: 0000000000000002 R12: 0000000000000590\n[   53.982634][    C1] R13: ffff88810f940c80 R14: ffff88810f940d50 R15: ffff88810bc9cac0\n[   53.982634][    C1] FS:  0000000000000000(0000) GS:ffff888235880000(0000) knlGS:0000000000000000\n[   53.982634][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[   53.982634][    C1] CR2: 00007ff5f9b86680 CR3: 0000000108ce8004 CR4: 0000000000170ee0\n[   53.982634][    C1] Call Trace:\n[   53.982634][    C1]  <TASK>\n[   53.982634][    C1]  tcp_sacktag_walk+0xaba/0x18e0\n[   53.982634][    C1]  tcp_sacktag_write_queue+0xe7b/0x3460\n[   53.982634][    C1]  tcp_ack+0x2666/0x54b0\n[   53.982634][    C1]  tcp_rcv_established+0x4d9/0x20f0\n[   53.982634][    C1]  tcp_v4_do_rcv+0x551/0x810\n[   53.982634][    C1]  tcp_v4_rcv+0x22ed/0x2ed0\n[   53.982634][    C1]  ip_protocol_deliver_rcu+0x96/0xaf0\n[   53.982634][    C1]  ip_local_deliver_finish+0x1e0/0x2f0\n[   53.982634][    C1]  ip_sublist_rcv_finish+0x211/0x440\n[   53.982634][    C1]  ip_list_rcv_finish.constprop.0+0x424/0x660\n[   53.982634][    C1]  ip_list_rcv+0x2c8/0x410\n[   53.982634][    C1]  __netif_receive_skb_list_core+0x65c/0x910\n[   53.982634][    C1]  netif_receive_skb_list_internal+0x5f9/0xcb0\n[   53.982634][    C1]  napi_complete_done+0x188/0x6e0\n[   53.982634][    C1]  gro_cell_poll+0x10c/0x1d0\n[   53.982634][    C1]  __napi_poll+0xa1/0x530\n[   53.982634][    C1]  net_rx_action+0x567/0x1270\n[   53.982634][    C1]  __do_softirq+0x28a/0x9ba\n[   53.982634][    C1]  run_ksoftirqd+0x32/0x60\n[   53.982634][    C1]  smpboot_thread_fn+0x559/0x8c0\n[   53.982634][    C1]  kthread+0x3b9/0x490\n[   53.982634][    C1]  ret_from_fork+0x22/0x30\n[   53.982634][    C1]  </TASK>\n\nAddress the issue by skipping the GRO stage for shared or cloned skbs.\nTo reduce the chance of OoO, try to unclone the skbs before giving up.\n\nv1 -> v2:\n - use avoid skb_copy and fallback to netif_receive_skb  - Eric"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47082",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8eb43d635950e27c29f1e9e49a23b31637f37757",
+            "https://git.kernel.org/stable/c/0c0e566f0387490d16f166808c72e9c772027681",
+            "https://git.kernel.org/stable/c/a01a4e9f5dc93335c716fa4023b1901956e8c904",
+            "https://git.kernel.org/stable/c/3cb5ae77799e8ed6ec3fec0b6b4cd07f01650cc5",
+            "https://git.kernel.org/stable/c/158b515f703e75e7d68289bf4d98c664e1d632df"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntun: avoid double free in tun_free_netdev\n\nAvoid double free in tun_free_netdev() by moving the\ndev->tstats and tun->security allocs to a new ndo_init routine\n(tun_net_init()) that will be called by register_netdevice().\nndo_init is paired with the desctructor (tun_free_netdev()),\nso if there's an error in register_netdevice() the destructor\nwill handle the frees.\n\nBUG: KASAN: double-free or invalid-free in selinux_tun_dev_free_security+0x1a/0x20 security/selinux/hooks.c:5605\n\nCPU: 0 PID: 25750 Comm: syz-executor416 Not tainted 5.16.0-rc2-syzk #1\nHardware name: Red Hat KVM, BIOS\nCall Trace:\n<TASK>\n__dump_stack lib/dump_stack.c:88 [inline]\ndump_stack_lvl+0x89/0xb5 lib/dump_stack.c:106\nprint_address_description.constprop.9+0x28/0x160 mm/kasan/report.c:247\nkasan_report_invalid_free+0x55/0x80 mm/kasan/report.c:372\n____kasan_slab_free mm/kasan/common.c:346 [inline]\n__kasan_slab_free+0x107/0x120 mm/kasan/common.c:374\nkasan_slab_free include/linux/kasan.h:235 [inline]\nslab_free_hook mm/slub.c:1723 [inline]\nslab_free_freelist_hook mm/slub.c:1749 [inline]\nslab_free mm/slub.c:3513 [inline]\nkfree+0xac/0x2d0 mm/slub.c:4561\nselinux_tun_dev_free_security+0x1a/0x20 security/selinux/hooks.c:5605\nsecurity_tun_dev_free_security+0x4f/0x90 security/security.c:2342\ntun_free_netdev+0xe6/0x150 drivers/net/tun.c:2215\nnetdev_run_todo+0x4df/0x840 net/core/dev.c:10627\nrtnl_unlock+0x13/0x20 net/core/rtnetlink.c:112\n__tun_chr_ioctl+0x80c/0x2870 drivers/net/tun.c:3302\ntun_chr_ioctl+0x2f/0x40 drivers/net/tun.c:3311\nvfs_ioctl fs/ioctl.c:51 [inline]\n__do_sys_ioctl fs/ioctl.c:874 [inline]\n__se_sys_ioctl fs/ioctl.c:860 [inline]\n__x64_sys_ioctl+0x19d/0x220 fs/ioctl.c:860\ndo_syscall_x64 arch/x86/entry/common.c:50 [inline]\ndo_syscall_64+0x3a/0x80 arch/x86/entry/common.c:80\nentry_SYSCALL_64_after_hwframe+0x44/0xae"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47101",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d259f621c85949f30cc578cac813b82bb5169f56",
+            "https://git.kernel.org/stable/c/8035b1a2a37a29d8c717ef84fca8fe7278bc9f03"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nasix: fix uninit-value in asix_mdio_read()\n\nasix_read_cmd() may read less than sizeof(smsr) bytes and in this case\nsmsr will be uninitialized.\n\nFail log:\nBUG: KMSAN: uninit-value in asix_check_host_enable drivers/net/usb/asix_common.c:82 [inline]\nBUG: KMSAN: uninit-value in asix_check_host_enable drivers/net/usb/asix_common.c:82 [inline] drivers/net/usb/asix_common.c:497\nBUG: KMSAN: uninit-value in asix_mdio_read+0x3c1/0xb00 drivers/net/usb/asix_common.c:497 drivers/net/usb/asix_common.c:497\n asix_check_host_enable drivers/net/usb/asix_common.c:82 [inline]\n asix_check_host_enable drivers/net/usb/asix_common.c:82 [inline] drivers/net/usb/asix_common.c:497\n asix_mdio_read+0x3c1/0xb00 drivers/net/usb/asix_common.c:497 drivers/net/usb/asix_common.c:497"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47100",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/925229d552724e1bba1abf01d3a0b1318539b012",
+            "https://git.kernel.org/stable/c/992649b8b16843d27eb39ceea5f9cf85ffb50a18",
+            "https://git.kernel.org/stable/c/6809da5185141e61401da5b01896b79a4deed1ad",
+            "https://git.kernel.org/stable/c/6b3f7e4b10f343f05b5fb513b07a9168fbf1172e",
+            "https://git.kernel.org/stable/c/ffb76a86f8096a8206be03b14adda6092e18e275"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipmi: Fix UAF when uninstall ipmi_si and ipmi_msghandler module\n\nHi,\n\nWhen testing install and uninstall of ipmi_si.ko and ipmi_msghandler.ko,\nthe system crashed.\n\nThe log as follows:\n[  141.087026] BUG: unable to handle kernel paging request at ffffffffc09b3a5a\n[  141.087241] PGD 8fe4c0d067 P4D 8fe4c0d067 PUD 8fe4c0f067 PMD 103ad89067 PTE 0\n[  141.087464] Oops: 0010 [#1] SMP NOPTI\n[  141.087580] CPU: 67 PID: 668 Comm: kworker/67:1 Kdump: loaded Not tainted 4.18.0.x86_64 #47\n[  141.088009] Workqueue: events 0xffffffffc09b3a40\n[  141.088009] RIP: 0010:0xffffffffc09b3a5a\n[  141.088009] Code: Bad RIP value.\n[  141.088009] RSP: 0018:ffffb9094e2c3e88 EFLAGS: 00010246\n[  141.088009] RAX: 0000000000000000 RBX: ffff9abfdb1f04a0 RCX: 0000000000000000\n[  141.088009] RDX: 0000000000000000 RSI: 0000000000000246 RDI: 0000000000000246\n[  141.088009] RBP: 0000000000000000 R08: ffff9abfffee3cb8 R09: 00000000000002e1\n[  141.088009] R10: ffffb9094cb73d90 R11: 00000000000f4240 R12: ffff9abfffee8700\n[  141.088009] R13: 0000000000000000 R14: ffff9abfdb1f04a0 R15: ffff9abfdb1f04a8\n[  141.088009] FS:  0000000000000000(0000) GS:ffff9abfffec0000(0000) knlGS:0000000000000000\n[  141.088009] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  141.088009] CR2: ffffffffc09b3a30 CR3: 0000008fe4c0a001 CR4: 00000000007606e0\n[  141.088009] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  141.088009] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  141.088009] PKRU: 55555554\n[  141.088009] Call Trace:\n[  141.088009]  ? process_one_work+0x195/0x390\n[  141.088009]  ? worker_thread+0x30/0x390\n[  141.088009]  ? process_one_work+0x390/0x390\n[  141.088009]  ? kthread+0x10d/0x130\n[  141.088009]  ? kthread_flush_work_fn+0x10/0x10\n[  141.088009]  ? ret_from_fork+0x35/0x40] BUG: unable to handle kernel paging request at ffffffffc0b28a5a\n[  200.223240] PGD 97fe00d067 P4D 97fe00d067 PUD 97fe00f067 PMD a580cbf067 PTE 0\n[  200.223464] Oops: 0010 [#1] SMP NOPTI\n[  200.223579] CPU: 63 PID: 664 Comm: kworker/63:1 Kdump: loaded Not tainted 4.18.0.x86_64 #46\n[  200.224008] Workqueue: events 0xffffffffc0b28a40\n[  200.224008] RIP: 0010:0xffffffffc0b28a5a\n[  200.224008] Code: Bad RIP value.\n[  200.224008] RSP: 0018:ffffbf3c8e2a3e88 EFLAGS: 00010246\n[  200.224008] RAX: 0000000000000000 RBX: ffffa0799ad6bca0 RCX: 0000000000000000\n[  200.224008] RDX: 0000000000000000 RSI: 0000000000000246 RDI: 0000000000000246\n[  200.224008] RBP: 0000000000000000 R08: ffff9fe43fde3cb8 R09: 00000000000000d5\n[  200.224008] R10: ffffbf3c8cb53d90 R11: 00000000000f4240 R12: ffff9fe43fde8700\n[  200.224008] R13: 0000000000000000 R14: ffffa0799ad6bca0 R15: ffffa0799ad6bca8\n[  200.224008] FS:  0000000000000000(0000) GS:ffff9fe43fdc0000(0000) knlGS:0000000000000000\n[  200.224008] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  200.224008] CR2: ffffffffc0b28a30 CR3: 00000097fe00a002 CR4: 00000000007606e0\n[  200.224008] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  200.224008] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  200.224008] PKRU: 55555554\n[  200.224008] Call Trace:\n[  200.224008]  ? process_one_work+0x195/0x390\n[  200.224008]  ? worker_thread+0x30/0x390\n[  200.224008]  ? process_one_work+0x390/0x390\n[  200.224008]  ? kthread+0x10d/0x130\n[  200.224008]  ? kthread_flush_work_fn+0x10/0x10\n[  200.224008]  ? ret_from_fork+0x35/0x40\n[  200.224008] kernel fault(0x1) notification starting on CPU 63\n[  200.224008] kernel fault(0x1) notification finished on CPU 63\n[  200.224008] CR2: ffffffffc0b28a5a\n[  200.224008] ---[ end trace c82a412d93f57412 ]---\n\nThe reason is as follows:\nT1: rmmod ipmi_si.\n    ->ipmi_unregister_smi()\n        -> ipmi_bmc_unregister()\n            -> __ipmi_bmc_unregister()\n                -> kref_put(&bmc->usecount, cleanup_bmc_device);\n                    -> schedule_work(&bmc->remove_work);\n\nT2: rmmod ipmi_msghandl\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47102",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5c553a0cd1263e4da5f220d80fa713fc3959c1d0",
+            "https://git.kernel.org/stable/c/2efc2256febf214e7b2bdaa21fe6c3c3146acdcb"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: marvell: prestera: fix incorrect structure access\n\nIn line:\n\tupper = info->upper_dev;\nWe access upper_dev field, which is related only for particular events\n(e.g. event == NETDEV_CHANGEUPPER). So, this line cause invalid memory\naccess for another events,\nwhen ptr is not netdev_notifier_changeupper_info.\n\nThe KASAN logs are as follows:\n\n[   30.123165] BUG: KASAN: stack-out-of-bounds in prestera_netdev_port_event.constprop.0+0x68/0x538 [prestera]\n[   30.133336] Read of size 8 at addr ffff80000cf772b0 by task udevd/778\n[   30.139866]\n[   30.141398] CPU: 0 PID: 778 Comm: udevd Not tainted 5.16.0-rc3 #6\n[   30.147588] Hardware name: DNI AmazonGo1 A7040 board (DT)\n[   30.153056] Call trace:\n[   30.155547]  dump_backtrace+0x0/0x2c0\n[   30.159320]  show_stack+0x18/0x30\n[   30.162729]  dump_stack_lvl+0x68/0x84\n[   30.166491]  print_address_description.constprop.0+0x74/0x2b8\n[   30.172346]  kasan_report+0x1e8/0x250\n[   30.176102]  __asan_load8+0x98/0xe0\n[   30.179682]  prestera_netdev_port_event.constprop.0+0x68/0x538 [prestera]\n[   30.186847]  prestera_netdev_event_handler+0x1b4/0x1c0 [prestera]\n[   30.193313]  raw_notifier_call_chain+0x74/0xa0\n[   30.197860]  call_netdevice_notifiers_info+0x68/0xc0\n[   30.202924]  register_netdevice+0x3cc/0x760\n[   30.207190]  register_netdev+0x24/0x50\n[   30.211015]  prestera_device_register+0x8a0/0xba0 [prestera]"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47083",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f373298e1bf0c6ea097c0bcc558dc43ad53e421f",
+            "https://git.kernel.org/stable/c/441d3873664d170982922c5d2fc01fa89d9439ed",
+            "https://git.kernel.org/stable/c/fb563baa3eb8e7a15f2cff3c2695e2cca0493e69",
+            "https://git.kernel.org/stable/c/2d5446da5acecf9c67db1c9d55ae2c3e5de01f8d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npinctrl: mediatek: fix global-out-of-bounds issue\n\nWhen eint virtual eint number is greater than gpio number,\nit maybe produce 'desc[eint_n]' size globle-out-of-bounds issue."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47085",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/371a874ea06f147d6ca30be43dad33683965eba6",
+            "https://git.kernel.org/stable/c/83ba6ec97c74fb1a60f7779a26b6a94b28741d8a",
+            "https://git.kernel.org/stable/c/a7b0ae2cc486fcb601f9f9d87d98138cc7b7f7f9",
+            "https://git.kernel.org/stable/c/b68f41c6320b2b7fbb54a95f07a69f3dc7e56c59",
+            "https://git.kernel.org/stable/c/a5c6a13e9056d87805ba3042c208fbd4164ad22b",
+            "https://git.kernel.org/stable/c/7dd52af1eb5798f590d9d9e1c56ed8f5744ee0ca",
+            "https://git.kernel.org/stable/c/03d00f7f1815ec00dab5035851b3de83afd054a8",
+            "https://git.kernel.org/stable/c/b2f37aead1b82a770c48b5d583f35ec22aabb61e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nhamradio: improve the incomplete fix to avoid NPD\n\nThe previous commit 3e0588c291d6 (\"hamradio: defer ax25 kfree after\nunregister_netdev\") reorder the kfree operations and unregister_netdev\noperation to prevent UAF.\n\nThis commit improves the previous one by also deferring the nullify of\nthe ax->tty pointer. Otherwise, a NULL pointer dereference bug occurs.\nPartial of the stack trace is shown below.\n\nBUG: kernel NULL pointer dereference, address: 0000000000000538\nRIP: 0010:ax_xmit+0x1f9/0x400\n...\nCall Trace:\n dev_hard_start_xmit+0xec/0x320\n sch_direct_xmit+0xea/0x240\n __qdisc_run+0x166/0x5c0\n __dev_queue_xmit+0x2c7/0xaf0\n ax25_std_establish_data_link+0x59/0x60\n ax25_connect+0x3a0/0x500\n ? security_socket_connect+0x2b/0x40\n __sys_connect+0x96/0xc0\n ? __hrtimer_init+0xc0/0xc0\n ? common_nsleep+0x2e/0x50\n ? switch_fpu_return+0x139/0x1a0\n __x64_sys_connect+0x11/0x20\n do_syscall_64+0x33/0x40\n entry_SYSCALL_64_after_hwframe+0x44/0xa9\n\nThe crash point is shown as below\n\nstatic void ax_encaps(...) {\n  ...\n  set_bit(TTY_DO_WRITE_WAKEUP, &ax->tty->flags); // ax->tty = NULL!\n  ...\n}\n\nBy placing the nullify action after the unregister_netdev, the ax->tty\npointer won't be assigned as NULL net_device framework layer is well\nsynchronized."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47087",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/806142c805cacd098e61bdc0f72c778a2389fe4a",
+            "https://git.kernel.org/stable/c/ad338d825e3f7b96ee542bf313728af2d19fe9ad",
+            "https://git.kernel.org/stable/c/91e94e42f6fc49635f1a16d8ae3f79552bcfda29",
+            "https://git.kernel.org/stable/c/18549bf4b21c739a9def39f27dcac53e27286ab5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntee: optee: Fix incorrect page free bug\n\nPointer to the allocated pages (struct page *page) has already\nprogressed towards the end of allocation. It is incorrect to perform\n__free_pages(page, order) using this pointer as we would free any\narbitrary pages. Fix this by stop modifying the page pointer."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47086",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0bbdd62ce9d44f3a22059b3d20a0df977d9f6d59",
+            "https://git.kernel.org/stable/c/b10c7d745615a092a50c2e03ce70446d2bec2aca",
+            "https://git.kernel.org/stable/c/311601f114859d586d5ef8833d60d3aa23282161",
+            "https://git.kernel.org/stable/c/982b6ba1ce626ef87e5c29f26f2401897554f235",
+            "https://git.kernel.org/stable/c/48c76fc53582e7f13c1e0b11c916e503256c4d0b",
+            "https://git.kernel.org/stable/c/52ad5da8e316fa11e3a50b3f089aa63e4089bf52",
+            "https://git.kernel.org/stable/c/53ccdc73eedaf0e922c45b569b797d2796fbaafa",
+            "https://git.kernel.org/stable/c/75a2f31520095600f650597c0ac41f48b5ba0068"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nphonet/pep: refuse to enable an unbound pipe\n\nThis ioctl() implicitly assumed that the socket was already bound to\na valid local socket name, i.e. Phonet object. If the socket was not\nbound, two separate problems would occur:\n\n1) We'd send an pipe enablement request with an invalid source object.\n2) Later socket calls could BUG on the socket unexpectedly being\n   connected yet not bound to a valid object."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47103",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/68c34ce11ef23328692aa35fa6aaafdd75913100",
+            "https://git.kernel.org/stable/c/92e6e36ecd16808866ac6172b9491b5097cde449",
+            "https://git.kernel.org/stable/c/75a578000ae5e511e5d0e8433c94a14d9c99c412",
+            "https://git.kernel.org/stable/c/c3bb4a7e8cbc984e1cdac0fe6af60e880214ed6e",
+            "https://git.kernel.org/stable/c/f039b43cbaea5e0700980c2f0052da05a70782e0",
+            "https://git.kernel.org/stable/c/0249a4b8a554f2eb6a27b62516fa50168584faa4",
+            "https://git.kernel.org/stable/c/8f905c0e7354ef261360fb7535ea079b1082c105"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ninet: fully convert sk->sk_rx_dst to RCU rules\n\nsyzbot reported various issues around early demux,\none being included in this changelog [1]\n\nsk->sk_rx_dst is using RCU protection without clearly\ndocumenting it.\n\nAnd following sequences in tcp_v4_do_rcv()/tcp_v6_do_rcv()\nare not following standard RCU rules.\n\n[a]    dst_release(dst);\n[b]    sk->sk_rx_dst = NULL;\n\nThey look wrong because a delete operation of RCU protected\npointer is supposed to clear the pointer before\nthe call_rcu()/synchronize_rcu() guarding actual memory freeing.\n\nIn some cases indeed, dst could be freed before [b] is done.\n\nWe could cheat by clearing sk_rx_dst before calling\ndst_release(), but this seems the right time to stick\nto standard RCU annotations and debugging facilities.\n\n[1]\nBUG: KASAN: use-after-free in dst_check include/net/dst.h:470 [inline]\nBUG: KASAN: use-after-free in tcp_v4_early_demux+0x95b/0x960 net/ipv4/tcp_ipv4.c:1792\nRead of size 2 at addr ffff88807f1cb73a by task syz-executor.5/9204\n\nCPU: 0 PID: 9204 Comm: syz-executor.5 Not tainted 5.16.0-rc5-syzkaller #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0xcd/0x134 lib/dump_stack.c:106\n print_address_description.constprop.0.cold+0x8d/0x320 mm/kasan/report.c:247\n __kasan_report mm/kasan/report.c:433 [inline]\n kasan_report.cold+0x83/0xdf mm/kasan/report.c:450\n dst_check include/net/dst.h:470 [inline]\n tcp_v4_early_demux+0x95b/0x960 net/ipv4/tcp_ipv4.c:1792\n ip_rcv_finish_core.constprop.0+0x15de/0x1e80 net/ipv4/ip_input.c:340\n ip_list_rcv_finish.constprop.0+0x1b2/0x6e0 net/ipv4/ip_input.c:583\n ip_sublist_rcv net/ipv4/ip_input.c:609 [inline]\n ip_list_rcv+0x34e/0x490 net/ipv4/ip_input.c:644\n __netif_receive_skb_list_ptype net/core/dev.c:5508 [inline]\n __netif_receive_skb_list_core+0x549/0x8e0 net/core/dev.c:5556\n __netif_receive_skb_list net/core/dev.c:5608 [inline]\n netif_receive_skb_list_internal+0x75e/0xd80 net/core/dev.c:5699\n gro_normal_list net/core/dev.c:5853 [inline]\n gro_normal_list net/core/dev.c:5849 [inline]\n napi_complete_done+0x1f1/0x880 net/core/dev.c:6590\n virtqueue_napi_complete drivers/net/virtio_net.c:339 [inline]\n virtnet_poll+0xca2/0x11b0 drivers/net/virtio_net.c:1557\n __napi_poll+0xaf/0x440 net/core/dev.c:7023\n napi_poll net/core/dev.c:7090 [inline]\n net_rx_action+0x801/0xb40 net/core/dev.c:7177\n __do_softirq+0x29b/0x9c2 kernel/softirq.c:558\n invoke_softirq kernel/softirq.c:432 [inline]\n __irq_exit_rcu+0x123/0x180 kernel/softirq.c:637\n irq_exit_rcu+0x5/0x20 kernel/softirq.c:649\n common_interrupt+0x52/0xc0 arch/x86/kernel/irq.c:240\n asm_common_interrupt+0x1e/0x40 arch/x86/include/asm/idtentry.h:629\nRIP: 0033:0x7f5e972bfd57\nCode: 39 d1 73 14 0f 1f 80 00 00 00 00 48 8b 50 f8 48 83 e8 08 48 39 ca 77 f3 48 39 c3 73 3e 48 89 13 48 8b 50 f8 48 89 38 49 8b 0e <48> 8b 3e 48 83 c3 08 48 83 c6 08 eb bc 48 39 d1 72 9e 48 39 d0 73\nRSP: 002b:00007fff8a413210 EFLAGS: 00000283\nRAX: 00007f5e97108990 RBX: 00007f5e97108338 RCX: ffffffff81d3aa45\nRDX: ffffffff81d3aa45 RSI: 00007f5e97108340 RDI: ffffffff81d3aa45\nRBP: 00007f5e97107eb8 R08: 00007f5e97108d88 R09: 0000000093c2e8d9\nR10: 0000000000000000 R11: 0000000000000000 R12: 00007f5e97107eb0\nR13: 00007f5e97108338 R14: 00007f5e97107ea8 R15: 0000000000000019\n </TASK>\n\nAllocated by task 13:\n kasan_save_stack+0x1e/0x50 mm/kasan/common.c:38\n kasan_set_track mm/kasan/common.c:46 [inline]\n set_alloc_info mm/kasan/common.c:434 [inline]\n __kasan_slab_alloc+0x90/0xc0 mm/kasan/common.c:467\n kasan_slab_alloc include/linux/kasan.h:259 [inline]\n slab_post_alloc_hook mm/slab.h:519 [inline]\n slab_alloc_node mm/slub.c:3234 [inline]\n slab_alloc mm/slub.c:3242 [inline]\n kmem_cache_alloc+0x202/0x3a0 mm/slub.c:3247\n dst_alloc+0x146/0x1f0 net/core/dst.c:92\n rt_dst_alloc+0x73/0x430 net/ipv4/route.c:1613\n ip_route_input_slow+0x1817/0x3a20 net/ipv4/route.c:234\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47091",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ac61b9c6c0549aaeb98194cf429d93c41bfe5f79",
+            "https://git.kernel.org/stable/c/c1d1ec4db5f7264cfc21993e59e8f2dcecf4b44f",
+            "https://git.kernel.org/stable/c/87a270625a89fc841f1a7e21aae6176543d8385c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmac80211: fix locking in ieee80211_start_ap error path\n\nWe need to hold the local->mtx to release the channel context,\nas even encoded by the lockdep_assert_held() there. Fix it."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-38360",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7066435",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/260769"
+        ],
+        "summary": "IBM CICS TX Advanced 10.1 is vulnerable to cross-site scripting. This vulnerability allows users to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.  IBM X-Force ID:  260769."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "security@jetbrains.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27198",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://www.jetbrains.com/privacy-security/issues-fixed/"
+        ],
+        "summary": "In JetBrains TeamCity before 2023.11.4 authentication bypass allowing to perform admin actions was possible"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "security@jetbrains.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27199",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://www.jetbrains.com/privacy-security/issues-fixed/"
+        ],
+        "summary": "In JetBrains TeamCity before 2023.11.4 path traversal allowing to perform limited admin actions  was possible"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47089",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2f06c8293d27f6337f907042c602c9c953988c48",
+            "https://git.kernel.org/stable/c/0129ab1f268b6cf88825eae819b9b84aa0a85634"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nkfence: fix memory leak when cat kfence objects\n\nHulk robot reported a kmemleak problem:\n\n    unreferenced object 0xffff93d1d8cc02e8 (size 248):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        00 40 85 19 d4 93 ff ff 00 10 00 00 00 00 00 00  .@..............\n        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n      backtrace:\n         seq_open+0x2a/0x80\n         full_proxy_open+0x167/0x1e0\n         do_dentry_open+0x1e1/0x3a0\n         path_openat+0x961/0xa20\n         do_filp_open+0xae/0x120\n         do_sys_openat2+0x216/0x2f0\n         do_sys_open+0x57/0x80\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n    unreferenced object 0xffff93d419854000 (size 4096):\n      comm \"cat\", pid 23327, jiffies 4624670141 (age 495992.217s)\n      hex dump (first 32 bytes):\n        6b 66 65 6e 63 65 2d 23 32 35 30 3a 20 30 78 30  kfence-#250: 0x0\n        30 30 30 30 30 30 30 37 35 34 62 64 61 31 32 2d  0000000754bda12-\n      backtrace:\n         seq_read_iter+0x313/0x440\n         seq_read+0x14b/0x1a0\n         full_proxy_read+0x56/0x80\n         vfs_read+0xa5/0x1b0\n         ksys_read+0xa0/0xf0\n         do_syscall_64+0x33/0x40\n         entry_SYSCALL_64_after_hwframe+0x44/0xa9\n\nI find that we can easily reproduce this problem with the following\ncommands:\n\n\tcat /sys/kernel/debug/kfence/objects\n\techo scan > /sys/kernel/debug/kmemleak\n\tcat /sys/kernel/debug/kmemleak\n\nThe leaked memory is allocated in the stack below:\n\n    do_syscall_64\n      do_sys_open\n        do_dentry_open\n          full_proxy_open\n            seq_open            ---> alloc seq_file\n      vfs_read\n        full_proxy_read\n          seq_read\n            seq_read_iter\n              traverse          ---> alloc seq_buf\n\nAnd it should have been released in the following process:\n\n    do_syscall_64\n      syscall_exit_to_user_mode\n        exit_to_user_mode_prepare\n          task_work_run\n            ____fput\n              __fput\n                full_proxy_release  ---> free here\n\nHowever, the release function corresponding to file_operations is not\nimplemented in kfence.  As a result, a memory leak occurs.  Therefore,\nthe solution to this problem is to implement the corresponding release\nfunction."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47084",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b5b193d0c67180fefdc664650138e3b7959df615",
+            "https://git.kernel.org/stable/c/8a1a314965a17c62084a056b4f2cb7a770854c90",
+            "https://git.kernel.org/stable/c/eaa816a86e629cbcc0a94f38391fee09231628c7",
+            "https://git.kernel.org/stable/c/896193a02a2981e60c40d4614fd095ce92135ccd",
+            "https://git.kernel.org/stable/c/ef5f7bfa19e3fc366f4c6d1a841ceaddf7a9f5d4",
+            "https://git.kernel.org/stable/c/450121075a6a6f1d50f97225d3396315309d61a1",
+            "https://git.kernel.org/stable/c/cb6c99aedd2c843056a598a8907a6128cb07603b",
+            "https://git.kernel.org/stable/c/3e0588c291d6ce225f2b891753ca41d45ba42469"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nhamradio: defer ax25 kfree after unregister_netdev\n\nThere is a possible race condition (use-after-free) like below\n\n (USE)                       |  (FREE)\nax25_sendmsg                 |\n ax25_queue_xmit             |\n  dev_queue_xmit             |\n   __dev_queue_xmit          |\n    __dev_xmit_skb           |\n     sch_direct_xmit         | ...\n      xmit_one               |\n       netdev_start_xmit     | tty_ldisc_kill\n        __netdev_start_xmit  |  mkiss_close\n         ax_xmit             |   kfree\n          ax_encaps          |\n                             |\n\nEven though there are two synchronization primitives before the kfree:\n1. wait_for_completion(&ax->dead). This can prevent the race with\nroutines from mkiss_ioctl. However, it cannot stop the routine coming\nfrom upper layer, i.e., the ax25_sendmsg.\n\n2. netif_stop_queue(ax->dev). It seems that this line of code aims to\nhalt the transmit queue but it fails to stop the routine that already\nbeing xmit.\n\nThis patch reorder the kfree after the unregister_netdev to avoid the\npossible UAF as the unregister_netdev() is well synchronized and won't\nreturn if there is a running routine."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47094",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d884eefd75cc54887bc2e9e724207443525dfb2c",
+            "https://git.kernel.org/stable/c/3a0f64de479cae75effb630a2e0a237ca0d0623c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: x86/mmu: Don't advance iterator after restart due to yielding\n\nAfter dropping mmu_lock in the TDP MMU, restart the iterator during\ntdp_iter_next() and do not advance the iterator.  Advancing the iterator\nresults in skipping the top-level SPTE and all its children, which is\nfatal if any of the skipped SPTEs were not visited before yielding.\n\nWhen zapping all SPTEs, i.e. when min_level == root_level, restarting the\niter and then invoking tdp_iter_next() is always fatal if the current gfn\nhas as a valid SPTE, as advancing the iterator results in try_step_side()\nskipping the current gfn, which wasn't visited before yielding.\n\nSprinkle WARNs on iter->yielded being true in various helpers that are\noften used in conjunction with yielding, and tag the helper with\n__must_check to reduce the probabily of improper usage.\n\nFailing to zap a top-level SPTE manifests in one of two ways.  If a valid\nSPTE is skipped by both kvm_tdp_mmu_zap_all() and kvm_tdp_mmu_put_root(),\nthe shadow page will be leaked and KVM will WARN accordingly.\n\n  WARNING: CPU: 1 PID: 3509 at arch/x86/kvm/mmu/tdp_mmu.c:46 [kvm]\n  RIP: 0010:kvm_mmu_uninit_tdp_mmu+0x3e/0x50 [kvm]\n  Call Trace:\n   <TASK>\n   kvm_arch_destroy_vm+0x130/0x1b0 [kvm]\n   kvm_destroy_vm+0x162/0x2a0 [kvm]\n   kvm_vcpu_release+0x34/0x60 [kvm]\n   __fput+0x82/0x240\n   task_work_run+0x5c/0x90\n   do_exit+0x364/0xa10\n   ? futex_unqueue+0x38/0x60\n   do_group_exit+0x33/0xa0\n   get_signal+0x155/0x850\n   arch_do_signal_or_restart+0xed/0x750\n   exit_to_user_mode_prepare+0xc5/0x120\n   syscall_exit_to_user_mode+0x1d/0x40\n   do_syscall_64+0x48/0xc0\n   entry_SYSCALL_64_after_hwframe+0x44/0xae\n\nIf kvm_tdp_mmu_zap_all() skips a gfn/SPTE but that SPTE is then zapped by\nkvm_tdp_mmu_put_root(), KVM triggers a use-after-free in the form of\nmarking a struct page as dirty/accessed after it has been put back on the\nfree list.  This directly triggers a WARN due to encountering a page with\npage_count() == 0, but it can also lead to data corruption and additional\nerrors in the kernel.\n\n  WARNING: CPU: 7 PID: 1995658 at arch/x86/kvm/../../../virt/kvm/kvm_main.c:171\n  RIP: 0010:kvm_is_zone_device_pfn.part.0+0x9e/0xd0 [kvm]\n  Call Trace:\n   <TASK>\n   kvm_set_pfn_dirty+0x120/0x1d0 [kvm]\n   __handle_changed_spte+0x92e/0xca0 [kvm]\n   __handle_changed_spte+0x63c/0xca0 [kvm]\n   __handle_changed_spte+0x63c/0xca0 [kvm]\n   __handle_changed_spte+0x63c/0xca0 [kvm]\n   zap_gfn_range+0x549/0x620 [kvm]\n   kvm_tdp_mmu_put_root+0x1b6/0x270 [kvm]\n   mmu_free_root_page+0x219/0x2c0 [kvm]\n   kvm_mmu_free_roots+0x1b4/0x4e0 [kvm]\n   kvm_mmu_unload+0x1c/0xa0 [kvm]\n   kvm_arch_destroy_vm+0x1f2/0x5c0 [kvm]\n   kvm_put_kvm+0x3b1/0x8b0 [kvm]\n   kvm_vcpu_release+0x4e/0x70 [kvm]\n   __fput+0x1f7/0x8c0\n   task_work_run+0xf8/0x1a0\n   do_exit+0x97b/0x2230\n   do_group_exit+0xda/0x2a0\n   get_signal+0x3be/0x1e50\n   arch_do_signal_or_restart+0x244/0x17f0\n   exit_to_user_mode_prepare+0xcb/0x120\n   syscall_exit_to_user_mode+0x1d/0x40\n   do_syscall_64+0x4d/0x90\n   entry_SYSCALL_64_after_hwframe+0x44/0xae\n\nNote, the underlying bug existed even before commit 1af4a96025b3 (\"KVM:\nx86/mmu: Yield in TDU MMU iter even if no SPTES changed\") moved calls to\ntdp_mmu_iter_cond_resched() to the beginning of loops, as KVM could still\nincorrectly advance past a top-level entry when yielding on a lower-level\nentry.  But with respect to leaking shadow pages, the bug was introduced\nby yielding before processing the current gfn.\n\nAlternatively, tdp_mmu_iter_cond_resched() could simply fall through, or\ncallers could jump to their \"retry\" label.  The downside of that approach\nis that tdp_mmu_iter_cond_resched() _must_ be called before anything else\nin the loop, and there's no easy way to enfornce that requirement.\n\nIdeally, KVM would handling the cond_resched() fully within the iterator\nmacro (the code is actually quite clean) and avoid this entire class of\nbugs, but that is extremely difficult do wh\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47088",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/330c6117a82c16a9a365a51cec5c9ab30b13245c",
+            "https://git.kernel.org/stable/c/34796417964b8d0aef45a99cf6c2d20cebe33733"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/damon/dbgfs: protect targets destructions with kdamond_lock\n\nDAMON debugfs interface iterates current monitoring targets in\n'dbgfs_target_ids_read()' while holding the corresponding\n'kdamond_lock'.  However, it also destructs the monitoring targets in\n'dbgfs_before_terminate()' without holding the lock.  This can result in\na use_after_free bug.  This commit avoids the race by protecting the\ndestruction with the corresponding 'kdamond_lock'."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47093",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7a37f2e370699e2feca3dca6c8178c71ceee7e8a",
+            "https://git.kernel.org/stable/c/9ca1324755f1f8629a370af5cc315b175331f5d1",
+            "https://git.kernel.org/stable/c/26a8b09437804fabfb1db080d676b96c0de68e7c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nplatform/x86: intel_pmc_core: fix memleak on registration failure\n\nIn case device registration fails during module initialisation, the\nplatform device structure needs to be freed using platform_device_put()\nto properly free all resources (e.g. the device name)."
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47092",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e4e4e7cb229821cd215031abc47efdab5486a67c",
+            "https://git.kernel.org/stable/c/a80dfc025924024d2c61a4c1b8ef62b2fce76a04"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: VMX: Always clear vmx->fail on emulation_required\n\nRevert a relatively recent change that set vmx->fail if the vCPU is in L2\nand emulation_required is true, as that behavior is completely bogus.\nSetting vmx->fail and synthesizing a VM-Exit is contradictory and wrong:\n\n  (a) it's impossible to have both a VM-Fail and VM-Exit\n  (b) vmcs.EXIT_REASON is not modified on VM-Fail\n  (c) emulation_required refers to guest state and guest state checks are\n      always VM-Exits, not VM-Fails.\n\nFor KVM specifically, emulation_required is handled before nested exits\nin __vmx_handle_exit(), thus setting vmx->fail has no immediate effect,\ni.e. KVM calls into handle_invalid_guest_state() and vmx->fail is ignored.\nSetting vmx->fail can ultimately result in a WARN in nested_vmx_vmexit()\nfiring when tearing down the VM as KVM never expects vmx->fail to be set\nwhen L2 is active, KVM always reflects those errors into L1.\n\n  ------------[ cut here ]------------\n  WARNING: CPU: 0 PID: 21158 at arch/x86/kvm/vmx/nested.c:4548\n                                nested_vmx_vmexit+0x16bd/0x17e0\n                                arch/x86/kvm/vmx/nested.c:4547\n  Modules linked in:\n  CPU: 0 PID: 21158 Comm: syz-executor.1 Not tainted 5.16.0-rc3-syzkaller #0\n  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011\n  RIP: 0010:nested_vmx_vmexit+0x16bd/0x17e0 arch/x86/kvm/vmx/nested.c:4547\n  Code: <0f> 0b e9 2e f8 ff ff e8 57 b3 5d 00 0f 0b e9 00 f1 ff ff 89 e9 80\n  Call Trace:\n   vmx_leave_nested arch/x86/kvm/vmx/nested.c:6220 [inline]\n   nested_vmx_free_vcpu+0x83/0xc0 arch/x86/kvm/vmx/nested.c:330\n   vmx_free_vcpu+0x11f/0x2a0 arch/x86/kvm/vmx/vmx.c:6799\n   kvm_arch_vcpu_destroy+0x6b/0x240 arch/x86/kvm/x86.c:10989\n   kvm_vcpu_destroy+0x29/0x90 arch/x86/kvm/../../../virt/kvm/kvm_main.c:441\n   kvm_free_vcpus arch/x86/kvm/x86.c:11426 [inline]\n   kvm_arch_destroy_vm+0x3ef/0x6b0 arch/x86/kvm/x86.c:11545\n   kvm_destroy_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:1189 [inline]\n   kvm_put_kvm+0x751/0xe40 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1220\n   kvm_vcpu_release+0x53/0x60 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3489\n   __fput+0x3fc/0x870 fs/file_table.c:280\n   task_work_run+0x146/0x1c0 kernel/task_work.c:164\n   exit_task_work include/linux/task_work.h:32 [inline]\n   do_exit+0x705/0x24f0 kernel/exit.c:832\n   do_group_exit+0x168/0x2d0 kernel/exit.c:929\n   get_signal+0x1740/0x2120 kernel/signal.c:2852\n   arch_do_signal_or_restart+0x9c/0x730 arch/x86/kernel/signal.c:868\n   handle_signal_work kernel/entry/common.c:148 [inline]\n   exit_to_user_mode_loop kernel/entry/common.c:172 [inline]\n   exit_to_user_mode_prepare+0x191/0x220 kernel/entry/common.c:207\n   __syscall_exit_to_user_mode_work kernel/entry/common.c:289 [inline]\n   syscall_exit_to_user_mode+0x2e/0x70 kernel/entry/common.c:300\n   do_syscall_64+0x53/0xd0 arch/x86/entry/common.c:86\n   entry_SYSCALL_64_after_hwframe+0x44/0xae"
+    },
+    {
+        "Modified": "2024-03-04T18:15:00",
+        "Published": "2024-03-04T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47097",
+        "impact": {},
+        "last-modified": "2024-03-04T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a7f95328c6f0afffdc4555f16e3bbab8bbf0d9be",
+            "https://git.kernel.org/stable/c/676c572439e58b7ee6b7ca3f1e5595382921045c",
+            "https://git.kernel.org/stable/c/dfd5b60b5342b6b505a104e48f08ad9b9bdbbd7b",
+            "https://git.kernel.org/stable/c/1d72d9f960ccf1052a0630a68c3d358791dbdaaa"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nInput: elantech - fix stack out of bound access in elantech_change_report_id()\n\nThe array param[] in elantech_change_report_id() must be at least 3\nbytes, because elantech_read_reg_params() is calling ps2_command() with\nPSMOUSE_CMD_GETINFO, that is going to access 3 bytes from param[], but\nit's defined in the stack as an array of 2 bytes, therefore we have a\npotential stack out-of-bounds access here, also confirmed by KASAN:\n\n[    6.512374] BUG: KASAN: stack-out-of-bounds in __ps2_command+0x372/0x7e0\n[    6.512397] Read of size 1 at addr ffff8881024d77c2 by task kworker/2:1/118\n\n[    6.512416] CPU: 2 PID: 118 Comm: kworker/2:1 Not tainted 5.13.0-22-generic #22+arighi20211110\n[    6.512428] Hardware name: LENOVO 20T8000QGE/20T8000QGE, BIOS R1AET32W (1.08 ) 08/14/2020\n[    6.512436] Workqueue: events_long serio_handle_event\n[    6.512453] Call Trace:\n[    6.512462]  show_stack+0x52/0x58\n[    6.512474]  dump_stack+0xa1/0xd3\n[    6.512487]  print_address_description.constprop.0+0x1d/0x140\n[    6.512502]  ? __ps2_command+0x372/0x7e0\n[    6.512516]  __kasan_report.cold+0x7d/0x112\n[    6.512527]  ? _raw_write_lock_irq+0x20/0xd0\n[    6.512539]  ? __ps2_command+0x372/0x7e0\n[    6.512552]  kasan_report+0x3c/0x50\n[    6.512564]  __asan_load1+0x6a/0x70\n[    6.512575]  __ps2_command+0x372/0x7e0\n[    6.512589]  ? ps2_drain+0x240/0x240\n[    6.512601]  ? dev_printk_emit+0xa2/0xd3\n[    6.512612]  ? dev_vprintk_emit+0xc5/0xc5\n[    6.512621]  ? __kasan_check_write+0x14/0x20\n[    6.512634]  ? mutex_lock+0x8f/0xe0\n[    6.512643]  ? __mutex_lock_slowpath+0x20/0x20\n[    6.512655]  ps2_command+0x52/0x90\n[    6.512670]  elantech_ps2_command+0x4f/0xc0 [psmouse]\n[    6.512734]  elantech_change_report_id+0x1e6/0x256 [psmouse]\n[    6.512799]  ? elantech_report_trackpoint.constprop.0.cold+0xd/0xd [psmouse]\n[    6.512863]  ? ps2_command+0x7f/0x90\n[    6.512877]  elantech_query_info.cold+0x6bd/0x9ed [psmouse]\n[    6.512943]  ? elantech_setup_ps2+0x460/0x460 [psmouse]\n[    6.513005]  ? psmouse_reset+0x69/0xb0 [psmouse]\n[    6.513064]  ? psmouse_attr_set_helper+0x2a0/0x2a0 [psmouse]\n[    6.513122]  ? phys_pmd_init+0x30e/0x521\n[    6.513137]  elantech_init+0x8a/0x200 [psmouse]\n[    6.513200]  ? elantech_init_ps2+0xf0/0xf0 [psmouse]\n[    6.513249]  ? elantech_query_info+0x440/0x440 [psmouse]\n[    6.513296]  ? synaptics_send_cmd+0x60/0x60 [psmouse]\n[    6.513342]  ? elantech_query_info+0x440/0x440 [psmouse]\n[    6.513388]  ? psmouse_try_protocol+0x11e/0x170 [psmouse]\n[    6.513432]  psmouse_extensions+0x65d/0x6e0 [psmouse]\n[    6.513476]  ? psmouse_try_protocol+0x170/0x170 [psmouse]\n[    6.513519]  ? mutex_unlock+0x22/0x40\n[    6.513526]  ? ps2_command+0x7f/0x90\n[    6.513536]  ? psmouse_probe+0xa3/0xf0 [psmouse]\n[    6.513580]  psmouse_switch_protocol+0x27d/0x2e0 [psmouse]\n[    6.513624]  psmouse_connect+0x272/0x530 [psmouse]\n[    6.513669]  serio_driver_probe+0x55/0x70\n[    6.513679]  really_probe+0x190/0x720\n[    6.513689]  driver_probe_device+0x160/0x1f0\n[    6.513697]  device_driver_attach+0x119/0x130\n[    6.513705]  ? device_driver_attach+0x130/0x130\n[    6.513713]  __driver_attach+0xe7/0x1a0\n[    6.513720]  ? device_driver_attach+0x130/0x130\n[    6.513728]  bus_for_each_dev+0xfb/0x150\n[    6.513738]  ? subsys_dev_iter_exit+0x10/0x10\n[    6.513748]  ? _raw_write_unlock_bh+0x30/0x30\n[    6.513757]  driver_attach+0x2d/0x40\n[    6.513764]  serio_handle_event+0x199/0x3d0\n[    6.513775]  process_one_work+0x471/0x740\n[    6.513785]  worker_thread+0x2d2/0x790\n[    6.513794]  ? process_one_work+0x740/0x740\n[    6.513802]  kthread+0x1b4/0x1e0\n[    6.513809]  ? set_kthread_struct+0x80/0x80\n[    6.513816]  ret_from_fork+0x22/0x30\n\n[    6.513832] The buggy address belongs to the page:\n[    6.513838] page:00000000bc35e189 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1024d7\n[    6.513847] flags: 0x17ffffc0000000(node=0|zone=2|lastcpupid=0x1fffff)\n[    6.513860] raw: 0\n---truncated---"
+    },
+    {
         "Modified": "2024-03-04T16:15:00",
         "Published": "2024-03-04T16:15:00",
         "access": {},
@@ -1136,404 +1574,5 @@
             "https://www.cncf.io/projects/helm/"
         ],
         "summary": "An issue was discovered in Cloud Native Computing Foundation (CNCF) Helm through 3.13.3. It displays values of secrets when the --dry-run flag is used. This is a security concern in some use cases, such as a --dry-run call by a CI/CD tool. NOTE: the vendor's position is that this behavior was introduced intentionally, and cannot be removed without breaking backwards compatibility (some users may be relying on these values)."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28084",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://git.kernel.org/pub/scm/network/wireless/iwd.git/commit/?id=52a47c9fd428904de611a90cbf8b223af879684d",
-            "https://git.kernel.org/pub/scm/network/wireless/iwd.git/commit/?id=d34b4e16e045142590ed7cb653e01ed0ae5362eb"
-        ],
-        "summary": "p2putil.c in iNet wireless daemon (IWD) through 2.15 allows attackers to cause a denial of service (daemon crash) or possibly have unspecified other impact because of initialization issues in situations where parsing of advertised service information fails."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T17:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2147",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255500",
-            "https://vuldb.com/?ctiid.255500",
-            "https://github.com/vanitashtml/CVE-Dumps/blob/main/Sql%20Injection%20Authentication%20Bypass%20in%20Mobile%20Management%20Store.md"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Online Mobile Management Store 1.0. It has been rated as critical. Affected by this issue is some unknown functionality of the file /admin/login.php. The manipulation of the argument username leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-255500."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T17:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-2148",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255501",
-            "https://vuldb.com/?ctiid.255501",
-            "https://github.com/vanitashtml/CVE-Dumps/blob/main/RCE%20via%20Arbitrary%20File%20Upload%20in%20Mobile%20Management%20Store.md"
-        ],
-        "summary": "A vulnerability classified as critical has been found in SourceCodester Online Mobile Management Store 1.0. This affects an unknown part of the file /classes/Users.php. The manipulation of the argument img leads to unrestricted upload. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-255501 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T18:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2149",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255502",
-            "https://vuldb.com/?ctiid.255502",
-            "https://github.com/JiaDongGao1/CVE_Hunter/blob/main/SQLi-2.md"
-        ],
-        "summary": "A vulnerability classified as critical was found in CodeAstro Membership Management System 1.0. This vulnerability affects unknown code of the file settings.php. The manipulation of the argument currency leads to sql injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-255502 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T18:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-73",
-        "id": "CVE-2024-2150",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255503",
-            "https://vuldb.com/?ctiid.255503",
-            "https://github.com/wkeyi0x1/vul-report/blob/main/Insurance%20Management%20System%20PHP%20and%20MySQL/Insurance%20Management%20System%20PHP%20and%20MySQL%20v1.0%20-%20File%20Inclusion.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in SourceCodester Insurance Management System 1.0. This issue affects some unknown processing. The manipulation of the argument page leads to file inclusion. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-255503."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T15:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-200",
-        "id": "CVE-2024-0765",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://huntr.com/bounties/8978ab27-710c-44ce-bfd8-a2ea416dc786",
-            "https://github.com/mintplex-labs/anything-llm/commit/08d33cfd8fc47c5052b6ea29597c964a9da641e2"
-        ],
-        "summary": "As a default user on a multi-user instance of AnythingLLM, you could execute a call to the `/export-data` endpoint of the system and then unzip and read that export that would enable you do exfiltrate data of the system at that save state.\n\nThis would require the attacked to be granted explicit access to the system, but they can do this at any role. Additionally, post-download, the data is deleted so no evidence would exist that the exfiltration occured."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T15:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2146",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255499",
-            "https://vuldb.com/?ctiid.255499",
-            "https://github.com/vanitashtml/CVE-Dumps/blob/main/Reflected%20XSS%20in%20Mobile%20Management%20Store.md"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Online Mobile Management Store 1.0. It has been declared as problematic. Affected by this vulnerability is an unknown functionality of the file /?p=products. The manipulation of the argument search leads to cross site scripting. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-255499."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T16:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-400",
-        "id": "CVE-2022-43880",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/6980843",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/240151"
-        ],
-        "summary": "IBM QRadar WinCollect Agent 10.0 through 10.1.2 could allow a privileged user to cause a denial of service.  IBM X-Force ID:  240151."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T16:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-311",
-        "id": "CVE-2023-27291",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/6965458",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/248740"
-        ],
-        "summary": "IBM Watson CP4D Data Stores 4.6.0, 4.6.1, 4.6.2, and 4.6.3 does not encrypt sensitive or critical information before storage or transmission which could allow an attacker to obtain sensitive information.  IBM X-Force ID:  248740."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T16:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-472",
-        "id": "CVE-2023-28512",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/6965456",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/250396"
-        ],
-        "summary": "IBM Watson CP4D Data Stores 4.6.0, 4.6.1, and 4.6.2 could allow an attacker with specific knowledge about the system to manipulate data due to improper input validation.  IBM X-Force ID:  250396."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T13:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-43054",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7122399",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/267459"
-        ],
-        "summary": "IBM Engineering Test Management 7.0.2 and 7.0.3 is vulnerable to stored cross-site scripting. This vulnerability allows users to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.  IBM X-Force ID:  267459."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T13:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-300",
-        "id": "CVE-2023-47742",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7129328",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/272533"
-        ],
-        "summary": "IBM QRadar Suite Products 1.10.12.0 through 1.10.18.0 and IBM Cloud Pak for Security 1.10.0.0 through 1.10.11.0 could disclose sensitive information using man in the middle techniques due to not correctly enforcing all aspects of certificate validation in some circumstances.  IBM X-Force ID:  272533."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T13:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22355",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7129328",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/280781"
-        ],
-        "summary": "IBM QRadar Suite Products 1.10.12.0 through 1.10.18.0 and IBM Cloud Pak for Security 1.10.0.0 through 1.10.11.0 does not require that users should have strong passwords by default, which makes it easier for attackers to compromise user accounts.  IBM X-Force ID:  280781."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2145",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255498",
-            "https://vuldb.com/?ctiid.255498",
-            "https://github.com/vanitashtml/CVE-Dumps/blob/main/Stored%20XSS%20Mobile%20Management%20Store.md"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Online Mobile Management Store 1.0. It has been classified as problematic. Affected is an unknown function of the file /endpoint/update-tracker.php. The manipulation of the argument firstname leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-255498 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T12:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-319",
-        "id": "CVE-2023-47745",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7126571",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/272638"
-        ],
-        "summary": "IBM MQ Operator 2.0.0 LTS, 2.0.18 LTS, 3.0.0 CD, 3.0.1 CD, 2.4.0 through 2.4.7, 2.3.0 through 2.3.3, 2.2.0 through 2.2.2, and 2.3.0 through 2.3.3 stores or transmits user credentials in plain clear text which can be read by a local user using a trace command.  IBM X-Force ID:  272638."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T12:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-327",
-        "id": "CVE-2024-27255",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7126571",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/283905"
-        ],
-        "summary": "IBM MQ Operator 2.0.0 LTS, 2.0.18 LTS, 3.0.0 CD, 3.0.1 CD, 2.4.0 through 2.4.7, 2.3.0 through 2.3.3, 2.2.0 through 2.2.2, and 2.3.0 through 2.3.3 uses weaker than expected cryptographic algorithms that could allow an attacker to decrypt highly sensitive information.  IBM X-Force ID:  283905."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T08:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25844",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-soflexibilite.md"
-        ],
-        "summary": "An issue was discovered in Common-Services \"So Flexibilite\" (soflexibilite) module for PrestaShop before version 4.1.26, allows remote attackers to escalate privileges and obtain sensitive information via debug file."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T09:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24302",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-productdesigner-502.md"
-        ],
-        "summary": "An issue was discovered in Tunis Soft \"Product Designer\" (productdesigner) module for PrestaShop before version 1.178.36, allows remote attackers to execute arbitrary code, escalate privileges, and obtain sensitive information via the postProcess() method."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T09:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25839",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-supernewsletter.md"
-        ],
-        "summary": "An issue was discovered in Webbax \"Super Newsletter\" (supernewsletter) module for PrestaShop versions 1.4.21 and before, allows local attackers to escalate privileges and obtain sensitive information."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T09:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25842",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-prestasalesmanager.md"
-        ],
-        "summary": "An issue was discovered in Presta World \"Account Manager - Sales Representative & Dealers - CRM\" (prestasalesmanager) module for PrestaShop before version 9.0, allows remote attackers to escalate privilege and obtain sensitive information via the uploadLogo() and postProcess methods."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T09:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25847",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-simpleimportproduct.md"
-        ],
-        "summary": "SQL Injection vulnerability in MyPrestaModules \"Product Catalog (CSV, Excel) Import\" (simpleimportproduct) modules for PrestaShop versions 6.5.0 and before, allows attackers to escalate privileges and obtain sensitive information via Send::__construct() and importProducts::_addDataToDb methods."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T10:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26469",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-productdesigner-918.md"
-        ],
-        "summary": "Server-Side Request Forgery (SSRF) vulnerability in Tunis Soft \"Product Designer\" (productdesigner) module for PrestaShop before version 1.178.36, allows remote attackers to cause a denial of service (DoS) and escalate privileges via the url parameter in the postProcess() method."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T08:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-25551",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://medium.com/%40jose.inaciot/my-first-cve-cve-2024-25551-f91787c05ae9"
-        ],
-        "summary": "Cross Site Scripting (XSS) vulnerability in sourcecodester Simple Student Attendance System v1.0 allows attackers to execute arbitrary code via crafted GET request to web application URL."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T08:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24307",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-productdesigner-22.md"
-        ],
-        "summary": "Path Traversal vulnerability in Tunis Soft \"Product Designer\" (productdesigner) module for PrestaShop before version 1.178.36, allows a remote attacker to escalate privileges and obtain sensitive information via the ajaxProcessCropImage() method."
-    },
-    {
-        "Modified": "2024-03-04T13:58:00",
-        "Published": "2024-03-03T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-2134",
-        "impact": {},
-        "last-modified": "2024-03-04T13:58:00",
-        "references": [
-            "https://vuldb.com/?id.255496",
-            "https://vuldb.com/?ctiid.255496",
-            "https://drive.google.com/file/d/1JZ9HXuXetQCpbM8O3LJ498lAo9FpoSrD/view?usp=drivesdk"
-        ],
-        "summary": "A vulnerability has been found in Bdtask Hospita AutoManager up to 20240223 and classified as problematic. This vulnerability affects unknown code of the file /investigation/delete/ of the component Investigation Report Handler. The manipulation leads to cross-site request forgery. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-255496. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
     }
 ]
