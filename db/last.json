@@ -1,5 +1,346 @@
 [
     {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-48629",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a8e32bbb96c25b7ab29b1894dcd45e0b3b08fd9d",
+            "https://git.kernel.org/stable/c/184f7bd08ce56f003530fc19f160d54e75bf5c9d",
+            "https://git.kernel.org/stable/c/0f9b7b8df17525e464294c916acc8194ce38446b",
+            "https://git.kernel.org/stable/c/ab9337c7cb6f875b6286440b1adfbeeef2b2b2bd",
+            "https://git.kernel.org/stable/c/485995cbc98a4f77cfd4f8ed4dd7ff8ab262964d",
+            "https://git.kernel.org/stable/c/a680b1832ced3b5fa7c93484248fd221ea0d614b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: qcom-rng - ensure buffer for generate is completely filled\n\nThe generate function in struct rng_alg expects that the destination\nbuffer is completely filled if the function returns 0. qcom_rng_read()\ncan run into a situation where the buffer is partially filled with\nrandomness and the remaining part of the buffer is zeroed since\nqcom_rng_generate() doesn't check the return value. This issue can\nbe reproduced by running the following from libkcapi:\n\n    kcapi-rng -b 9000000 > OUTFILE\n\nThe generated OUTFILE will have three huge sections that contain all\nzeros, and this is caused by the code where the test\n'val & PRNG_STATUS_DATA_AVAIL' fails.\n\nLet's fix this issue by ensuring that qcom_rng_read() always returns\nwith a full buffer if the function returns success. Let's also have\nqcom_rng_generate() return the correct value.\n\nHere's some statistics from the ent project\n(https://www.fourmilab.ch/random/) that shows information about the\nquality of the generated numbers:\n\n    $ ent -c qcom-random-before\n    Value Char Occurrences Fraction\n      0           606748   0.067416\n      1            33104   0.003678\n      2            33001   0.003667\n    ...\n    253   ?        32883   0.003654\n    254   ?        33035   0.003671\n    255   ?        33239   0.003693\n\n    Total:       9000000   1.000000\n\n    Entropy = 7.811590 bits per byte.\n\n    Optimum compression would reduce the size\n    of this 9000000 byte file by 2 percent.\n\n    Chi square distribution for 9000000 samples is 9329962.81, and\n    randomly would exceed this value less than 0.01 percent of the\n    times.\n\n    Arithmetic mean value of data bytes is 119.3731 (127.5 = random).\n    Monte Carlo value for Pi is 3.197293333 (error 1.77 percent).\n    Serial correlation coefficient is 0.159130 (totally uncorrelated =\n    0.0).\n\nWithout this patch, the results of the chi-square test is 0.01%, and\nthe numbers are certainly not random according to ent's project page.\nThe results improve with this patch:\n\n    $ ent -c qcom-random-after\n    Value Char Occurrences Fraction\n      0            35432   0.003937\n      1            35127   0.003903\n      2            35424   0.003936\n    ...\n    253   ?        35201   0.003911\n    254   ?        34835   0.003871\n    255   ?        35368   0.003930\n\n    Total:       9000000   1.000000\n\n    Entropy = 7.999979 bits per byte.\n\n    Optimum compression would reduce the size\n    of this 9000000 byte file by 0 percent.\n\n    Chi square distribution for 9000000 samples is 258.77, and randomly\n    would exceed this value 42.24 percent of the times.\n\n    Arithmetic mean value of data bytes is 127.5006 (127.5 = random).\n    Monte Carlo value for Pi is 3.141277333 (error 0.01 percent).\n    Serial correlation coefficient is 0.000468 (totally uncorrelated =\n    0.0).\n\nThis change was tested on a Nexus 5 phone (msm8974 SoC)."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-48629",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a8e32bbb96c25b7ab29b1894dcd45e0b3b08fd9d",
+            "https://git.kernel.org/stable/c/184f7bd08ce56f003530fc19f160d54e75bf5c9d",
+            "https://git.kernel.org/stable/c/0f9b7b8df17525e464294c916acc8194ce38446b",
+            "https://git.kernel.org/stable/c/ab9337c7cb6f875b6286440b1adfbeeef2b2b2bd",
+            "https://git.kernel.org/stable/c/485995cbc98a4f77cfd4f8ed4dd7ff8ab262964d",
+            "https://git.kernel.org/stable/c/a680b1832ced3b5fa7c93484248fd221ea0d614b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: qcom-rng - ensure buffer for generate is completely filled\n\nThe generate function in struct rng_alg expects that the destination\nbuffer is completely filled if the function returns 0. qcom_rng_read()\ncan run into a situation where the buffer is partially filled with\nrandomness and the remaining part of the buffer is zeroed since\nqcom_rng_generate() doesn't check the return value. This issue can\nbe reproduced by running the following from libkcapi:\n\n    kcapi-rng -b 9000000 > OUTFILE\n\nThe generated OUTFILE will have three huge sections that contain all\nzeros, and this is caused by the code where the test\n'val & PRNG_STATUS_DATA_AVAIL' fails.\n\nLet's fix this issue by ensuring that qcom_rng_read() always returns\nwith a full buffer if the function returns success. Let's also have\nqcom_rng_generate() return the correct value.\n\nHere's some statistics from the ent project\n(https://www.fourmilab.ch/random/) that shows information about the\nquality of the generated numbers:\n\n    $ ent -c qcom-random-before\n    Value Char Occurrences Fraction\n      0           606748   0.067416\n      1            33104   0.003678\n      2            33001   0.003667\n    ...\n    253   ?        32883   0.003654\n    254   ?        33035   0.003671\n    255   ?        33239   0.003693\n\n    Total:       9000000   1.000000\n\n    Entropy = 7.811590 bits per byte.\n\n    Optimum compression would reduce the size\n    of this 9000000 byte file by 2 percent.\n\n    Chi square distribution for 9000000 samples is 9329962.81, and\n    randomly would exceed this value less than 0.01 percent of the\n    times.\n\n    Arithmetic mean value of data bytes is 119.3731 (127.5 = random).\n    Monte Carlo value for Pi is 3.197293333 (error 1.77 percent).\n    Serial correlation coefficient is 0.159130 (totally uncorrelated =\n    0.0).\n\nWithout this patch, the results of the chi-square test is 0.01%, and\nthe numbers are certainly not random according to ent's project page.\nThe results improve with this patch:\n\n    $ ent -c qcom-random-after\n    Value Char Occurrences Fraction\n      0            35432   0.003937\n      1            35127   0.003903\n      2            35424   0.003936\n    ...\n    253   ?        35201   0.003911\n    254   ?        34835   0.003871\n    255   ?        35368   0.003930\n\n    Total:       9000000   1.000000\n\n    Entropy = 7.999979 bits per byte.\n\n    Optimum compression would reduce the size\n    of this 9000000 byte file by 0 percent.\n\n    Chi square distribution for 9000000 samples is 258.77, and randomly\n    would exceed this value 42.24 percent of the times.\n\n    Arithmetic mean value of data bytes is 127.5006 (127.5 = random).\n    Monte Carlo value for Pi is 3.141277333 (error 0.01 percent).\n    Serial correlation coefficient is 0.000468 (totally uncorrelated =\n    0.0).\n\nThis change was tested on a Nexus 5 phone (msm8974 SoC)."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-48630",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/71a89789552b7faf3ef27969b9bc783fa0df3550",
+            "https://git.kernel.org/stable/c/8be06f62b426801dba43ddf8893952a0e62ab6ae",
+            "https://git.kernel.org/stable/c/233a3cc60e7a8fe0be8cf9934ae7b67ba25a866c",
+            "https://git.kernel.org/stable/c/8a06f25f5941c145773204f2f7abef95b4ffb8ce",
+            "https://git.kernel.org/stable/c/05d4d17475d8d094c519bb51658bc47899c175e3",
+            "https://git.kernel.org/stable/c/16287397ec5c08aa58db6acf7dbc55470d78087d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: qcom-rng - fix infinite loop on requests not multiple of WORD_SZ\n\nThe commit referenced in the Fixes tag removed the 'break' from the else\nbranch in qcom_rng_read(), causing an infinite loop whenever 'max' is\nnot a multiple of WORD_SZ. This can be reproduced e.g. by running:\n\n    kcapi-rng -b 67 >/dev/null\n\nThere are many ways to fix this without adding back the 'break', but\nthey all seem more awkward than simply adding it back, so do just that.\n\nTested on a machine with Qualcomm Amberwing processor."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-48630",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/71a89789552b7faf3ef27969b9bc783fa0df3550",
+            "https://git.kernel.org/stable/c/8be06f62b426801dba43ddf8893952a0e62ab6ae",
+            "https://git.kernel.org/stable/c/233a3cc60e7a8fe0be8cf9934ae7b67ba25a866c",
+            "https://git.kernel.org/stable/c/8a06f25f5941c145773204f2f7abef95b4ffb8ce",
+            "https://git.kernel.org/stable/c/05d4d17475d8d094c519bb51658bc47899c175e3",
+            "https://git.kernel.org/stable/c/16287397ec5c08aa58db6acf7dbc55470d78087d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: qcom-rng - fix infinite loop on requests not multiple of WORD_SZ\n\nThe commit referenced in the Fixes tag removed the 'break' from the else\nbranch in qcom_rng_read(), causing an infinite loop whenever 'max' is\nnot a multiple of WORD_SZ. This can be reproduced e.g. by running:\n\n    kcapi-rng -b 67 >/dev/null\n\nThere are many ways to fix this without adding back the 'break', but\nthey all seem more awkward than simply adding it back, so do just that.\n\nTested on a machine with Qualcomm Amberwing processor."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45592",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45592"
+        ],
+        "summary": "A CWE-250 \u201cExecution with Unnecessary Privileges\u201d vulnerability in the embedded Chromium browser (due to the binary being executed with the \u201c--no-sandbox\u201d option and with root privileges) exacerbates the impacts of successful attacks executed against the browser. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45591",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45591"
+        ],
+        "summary": "A CWE-122 \u201cHeap-based Buffer Overflow\u201d vulnerability in the \u201clogger_generic\u201d function of the \u201cAx_rtu\u201d binary allows a remote authenticated attacker to trigger a memory corruption in the context of the binary. This may result in a Denial-of-Service (DoS) condition, possibly in the execution of arbitrary code with the same privileges of the process (root), or have other unspecified impacts on the device. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45594",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45594"
+        ],
+        "summary": "A CWE-552 \u201cFiles or Directories Accessible to External Parties\u201d vulnerability in the embedded Chromium browser allows a physical attacker to arbitrarily download/upload files to/from the file system, with unspecified impacts to the confidentiality, integrity, and availability of the device. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45593",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45593"
+        ],
+        "summary": "A CWE-693 \u201cProtection Mechanism Failure\u201d vulnerability in the embedded Chromium browser (concerning the handling of alternative URLs, other than \u201c http://localhost\u201d http://localhost\u201d ) allows a physical attacker to read arbitrary files on the file system, alter the configuration of the embedded browser, and have other unspecified impacts to the confidentiality, integrity, and availability of the device. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45595",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45595"
+        ],
+        "summary": "A CWE-434 \u201cUnrestricted Upload of File with Dangerous Type\u201d vulnerability in the \u201cfile_configuration\u201d functionality of the web application allows a remote authenticated attacker to upload any arbitrary type of file into the device. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45596",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45596"
+        ],
+        "summary": "A CWE-862 \u201cMissing Authorization\u201d vulnerability in the \u201cfile_configuration\u201d functionality of the web application allows a remote unauthenticated attacker to access confidential configuration files. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45596",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45596"
+        ],
+        "summary": "A CWE-862 \u201cMissing Authorization\u201d vulnerability in the \u201cfile_configuration\u201d functionality of the web application allows a remote unauthenticated attacker to access confidential configuration files. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45597",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45597"
+        ],
+        "summary": "A CWE-1236 \u201cImproper Neutralization of Formula Elements in a CSV File\u201d vulnerability in the \u201cfile_configuration\u201d functionality of the web application (concerning the function \u201cexport_file\u201d) allows a remote authenticated attacker to inject arbitrary formulas inside generated CSV files. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45598",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45598"
+        ],
+        "summary": "A CWE-862 \u201cMissing Authorization\u201d vulnerability in the \u201cmeasure\u201d functionality of the web application allows a remote unauthenticated attacker to access confidential measure information. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45599",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45599"
+        ],
+        "summary": "A CWE-646 \u201cReliance on File Name or Extension of Externally-Supplied File\u201d vulnerability in the \u201ciec61850\u201d functionality of the web application allows a remote authenticated attacker to upload any arbitrary type of file into the device. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45600",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-45600"
+        ],
+        "summary": "A CWE-613 \u201cInsufficient Session Expiration\u201d vulnerability in the web application, due to the session cookie \u201csessionid\u201d lasting two weeks, facilitates session hijacking attacks against victims. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T12:15:00",
+        "Published": "2024-03-05T12:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-5457",
+        "impact": {},
+        "last-modified": "2024-03-05T12:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-5457"
+        ],
+        "summary": "A CWE-1269 \u201cProduct Released in Non-Release Configuration\u201d vulnerability in the Django web framework used by the web application (due to the \u201cdebug\u201d configuration parameter set to \u201cTrue\u201d) allows a remote unauthenticated attacker to access critical information and have other unspecified impacts to the confidentiality, integrity, and availability of the application. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T11:15:00",
+        "Published": "2024-03-05T11:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-5456",
+        "impact": {},
+        "last-modified": "2024-03-05T11:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-5456"
+        ],
+        "summary": "A CWE-798 \u201cUse of Hard-coded Credentials\u201d vulnerability in the MariaDB database of the web application allows a remote unauthenticated attacker to access the database service and all included data with the same privileges of the web application. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T11:15:00",
+        "Published": "2024-03-05T11:15:00",
+        "access": {},
+        "assigner": "prodsec@nozominetworks.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-5456",
+        "impact": {},
+        "last-modified": "2024-03-05T11:15:00",
+        "references": [
+            "https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-5456"
+        ],
+        "summary": "A CWE-798 \u201cUse of Hard-coded Credentials\u201d vulnerability in the MariaDB database of the web application allows a remote unauthenticated attacker to access the database service and all included data with the same privileges of the web application. This issue affects: AiLux imx6 bundle below version imx6_1.0.7-2."
+    },
+    {
+        "Modified": "2024-03-05T11:15:00",
+        "Published": "2024-01-16T14:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-347",
+        "id": "CVE-2024-0567",
+        "impact": {},
+        "last-modified": "2024-03-05T11:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-0567",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2258544",
+            "https://gitlab.com/gnutls/gnutls/-/issues/1521",
+            "https://lists.gnupg.org/pipermail/gnutls-help/2024-January/004841.html",
+            "http://www.openwall.com/lists/oss-security/2024/01/19/3",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GNXKVR5YNUEBNHAHM5GSYKBZX4W2HMN2/",
+            "https://access.redhat.com/errata/RHSA-2024:0533",
+            "https://security.netapp.com/advisory/ntap-20240202-0011/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/7ZEIOLORQ7N6WRPFXZSYDL2MC4LP7VFV/",
+            "https://access.redhat.com/errata/RHSA-2024:1082"
+        ],
+        "summary": "A vulnerability was found in GnuTLS, where a cockpit (which uses gnuTLS) rejects a certificate chain with distributed trust. This issue occurs when validating a certificate chain with cockpit-certificate-ensure. This flaw allows an unauthenticated, remote client or attacker to initiate a denial of service attack."
+    },
+    {
+        "Modified": "2024-03-05T11:15:00",
+        "Published": "2024-01-16T12:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-203",
+        "id": "CVE-2024-0553",
+        "impact": {},
+        "last-modified": "2024-03-05T11:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-0553",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2258412",
+            "https://gitlab.com/gnutls/gnutls/-/issues/1522",
+            "https://lists.gnupg.org/pipermail/gnutls-help/2024-January/004841.html",
+            "http://www.openwall.com/lists/oss-security/2024/01/19/3",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GNXKVR5YNUEBNHAHM5GSYKBZX4W2HMN2/",
+            "https://access.redhat.com/errata/RHSA-2024:0533",
+            "https://access.redhat.com/errata/RHSA-2024:0627",
+            "https://security.netapp.com/advisory/ntap-20240202-0011/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/7ZEIOLORQ7N6WRPFXZSYDL2MC4LP7VFV/",
+            "https://access.redhat.com/errata/RHSA-2024:0796",
+            "https://lists.debian.org/debian-lts-announce/2024/02/msg00010.html",
+            "https://access.redhat.com/errata/RHSA-2024:1082"
+        ],
+        "summary": "A vulnerability was found in GnuTLS. The response times to malformed ciphertexts in RSA-PSK ClientKeyExchange differ from the response times of ciphertexts with correct PKCS#1 v1.5 padding. This issue may allow a remote attacker to perform a timing side-channel attack in the RSA-PSK key exchange, potentially leading to the leakage of sensitive data. CVE-2024-0553 is designated as an incomplete resolution for CVE-2023-5981."
+    },
+    {
         "Modified": "2024-03-05T09:15:00",
         "Published": "2024-03-05T09:15:00",
         "access": {},
@@ -1447,316 +1788,5 @@
             "https://en-us.support.motorola.com/app/answers/detail/a_id/178273"
         ],
         "summary": "An improper export vulnerability was reported in the Motorola OTA update application, that could allow a malicious, local application to inject an HTML-based message on screen UI."
-    },
-    {
-        "Modified": "2024-03-04T22:15:00",
-        "Published": "2024-03-04T22:15:00",
-        "access": {},
-        "assigner": "psirt@lenovo.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-41829",
-        "impact": {},
-        "last-modified": "2024-03-04T22:15:00",
-        "references": [
-            "https://en-us.support.motorola.com/app/answers/detail/a_id/178272"
-        ],
-        "summary": "An improper export vulnerability was reported in the Motorola Carrier Services application that could allow a malicious, local application to read files without authorization."
-    },
-    {
-        "Modified": "2024-03-04T22:15:00",
-        "Published": "2024-03-04T22:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1936",
-        "impact": {},
-        "last-modified": "2024-03-04T22:15:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1860977",
-            "https://www.mozilla.org/security/advisories/mfsa2024-11/"
-        ],
-        "summary": "The encrypted subject of an email message could be incorrectly and permanently assigned to an arbitrary other email message in Thunderbird's local cache. Consequently, when replying to the contaminated email message, the user might accidentally leak the confidential subject to a third party. While this update fixes the bug and avoids future message contamination, it does not automatically repair existing contaminations. Users are advised to use the repair folder functionality, which is available from the context menu of email folders, which will erase incorrect subject assignments. This vulnerability affects Thunderbird < 115.8.1."
-    },
-    {
-        "Modified": "2024-03-04T21:15:00",
-        "Published": "2024-03-04T21:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1316",
-        "impact": {},
-        "last-modified": "2024-03-04T21:15:00",
-        "references": [
-            "https://wpscan.com/vulnerability/d80dfe2f-207d-4cdf-8c71-27936c6318e5/"
-        ],
-        "summary": "The Event Tickets and Registration WordPress plugin before 5.8.1, Events Tickets Plus WordPress plugin before 5.9.1 does not prevent users with at least the contributor role from leaking the existence of certain events they shouldn't have access to. (e.g. draft, private, pending review, pw-protected, and trashed events)."
-    },
-    {
-        "Modified": "2024-03-04T21:15:00",
-        "Published": "2024-03-04T21:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1319",
-        "impact": {},
-        "last-modified": "2024-03-04T21:15:00",
-        "references": [
-            "https://wpscan.com/vulnerability/5904dc7e-1058-4c40-bca3-66ba57b1414b/"
-        ],
-        "summary": "The Events Tickets Plus WordPress plugin before 5.9.1 does not prevent users with at least the contributor role from leaking the attendees list on any post type regardless of status. (e.g. draft, private, pending review, password-protected, and trashed posts)."
-    },
-    {
-        "Modified": "2024-03-04T21:15:00",
-        "Published": "2024-03-04T21:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2168",
-        "impact": {},
-        "last-modified": "2024-03-04T21:15:00",
-        "references": [
-            "https://vuldb.com/?id.255678",
-            "https://vuldb.com/?ctiid.255678",
-            "https://www.yuque.com/mailemonyeyongjuan/nekc0f/uoobn101h48xv6ih"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Online Tours & Travels Management System 1.0. It has been classified as critical. Affected is an unknown function of the file /admin/operations/expense_category.php of the component HTTP POST Request Handler. The manipulation of the argument status leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-255678 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-04T21:00:00",
-        "Published": "2024-02-07T22:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "CWE-400",
-        "id": "CVE-2024-1066",
-        "impact": {},
-        "last-modified": "2024-03-04T21:00:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/420341"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions from 13.3.0 prior to 16.6.7, 16.7 prior to 16.7.5, and 16.8 prior to 16.8.2 which allows an attacker to do a resource exhaustion using GraphQL `vulnerabilitiesCountByDay`"
-    },
-    {
-        "Modified": "2024-03-04T20:59:00",
-        "Published": "2024-02-21T23:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2023-3509",
-        "impact": {},
-        "last-modified": "2024-03-04T20:59:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/416945",
-            "https://hackerone.com/reports/2037814"
-        ],
-        "summary": "An issue has been discovered in GitLab affecting all versions before 16.7.6, all versions starting from 16.8 before 16.8.3, all versions starting from 16.9 before 16.9.1. It was possible for group members with sub-maintainer role to change the title of privately accessible deploy keys associated with projects in the group."
-    },
-    {
-        "Modified": "2024-03-04T20:57:00",
-        "Published": "2024-02-12T21:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-1250",
-        "impact": {},
-        "last-modified": "2024-03-04T20:57:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/439175"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions starting from 16.8 before 16.8.2. When a user is assigned a custom role with manage_group_access_tokens permission, they may be able to create group access tokens with Owner privileges, which may lead to privilege escalation."
-    },
-    {
-        "Modified": "2024-03-04T20:56:00",
-        "Published": "2024-02-08T12:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2023-6564",
-        "impact": {},
-        "last-modified": "2024-03-04T20:56:00",
-        "references": [
-            "https://gitlab.com/gitlab-com/gl-infra/production/-/issues/17213"
-        ],
-        "summary": "An issue has been discovered in GitLab EE Premium and Ultimate affecting versions 16.4.3, 16.5.3, and 16.6.1. In projects using subgroups to define who can push and/or merge to protected branches, there may have been instances in which subgroup members with the Developer role were able to push or merge to protected branches."
-    },
-    {
-        "Modified": "2024-03-04T20:52:00",
-        "Published": "2024-02-07T22:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2023-6840",
-        "impact": {},
-        "last-modified": "2024-03-04T20:52:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/435500",
-            "https://hackerone.com/reports/2280292"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions from 16.4 prior to 16.6.7, 16.7 prior to 16.7.5, and 16.8 prior to 16.8.2 which allows a maintainer to change the name of a protected branch that bypasses the security policy added to block MR."
-    },
-    {
-        "Modified": "2024-03-04T20:33:00",
-        "Published": "2024-02-07T22:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "CWE-400",
-        "id": "CVE-2023-6736",
-        "impact": {},
-        "last-modified": "2024-03-04T20:33:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/435036",
-            "https://hackerone.com/reports/2269023"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions starting from 11.3 before 16.7.6, all versions starting from 16.8 before 16.8.3, all versions starting from 16.9 before 16.9.1. It was possible for an attacker to cause a client-side denial of service using malicious crafted content in the CODEOWNERS file."
-    },
-    {
-        "Modified": "2024-03-04T20:26:00",
-        "Published": "2024-02-22T00:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2024-0861",
-        "impact": {},
-        "last-modified": "2024-03-04T20:26:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/439240",
-            "https://hackerone.com/reports/2316435"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions starting from 16.4 before 16.7.6, all versions starting from 16.8 before 16.8.3, all versions starting from 16.9 before 16.9.1. Users with the `Guest` role can change `Custom dashboard projects` settings contrary to permissions."
-    },
-    {
-        "Modified": "2024-03-04T20:25:00",
-        "Published": "2024-02-22T00:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-6477",
-        "impact": {},
-        "last-modified": "2024-03-04T20:25:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/433463",
-            "https://hackerone.com/reports/2270898"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions starting from 16.5 before 16.7.6, all versions starting from 16.8 before 16.8.3, all versions starting from 16.9 before 16.9.1. When a user is assigned a custom role with admin_group_member permission, they may be able to make a group, other members or themselves Owners of that group, which may lead to privilege escalation."
-    },
-    {
-        "Modified": "2024-03-04T20:25:00",
-        "Published": "2024-02-22T00:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2024-0410",
-        "impact": {},
-        "last-modified": "2024-03-04T20:25:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/437988",
-            "https://hackerone.com/reports/2296778"
-        ],
-        "summary": "An authorization bypass vulnerability was discovered in GitLab affecting versions 15.1 prior to 16.7.6, 16.8 prior to 16.8.3, and 16.9 prior to 16.9.1. A developer could bypass CODEOWNERS approvals by creating a merge conflict."
-    },
-    {
-        "Modified": "2024-03-04T20:15:00",
-        "Published": "2024-03-04T20:15:00",
-        "access": {},
-        "assigner": "psirt@arista.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-6068",
-        "impact": {},
-        "last-modified": "2024-03-04T20:15:00",
-        "references": [
-            "https://www.arista.com/en/support/advisories-notices/security-advisory/19023-security-advisory-0091"
-        ],
-        "summary": "On affected 7130 Series FPGA platforms running MOS and recent versions of the MultiAccess FPGA, application of ACL\u2019s may result in incorrect operation of the configured ACL for a port resulting in some packets that should be denied being permitted and some"
-    },
-    {
-        "Modified": "2024-03-04T20:15:00",
-        "Published": "2024-03-04T20:15:00",
-        "access": {},
-        "assigner": "psirt@arista.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27889",
-        "impact": {},
-        "last-modified": "2024-03-04T20:15:00",
-        "references": [
-            "https://https://www.arista.com/en/support/advisories-notices/security-advisory/19038-security-advisory-0093"
-        ],
-        "summary": "Multiple SQL Injection vulnerabilities exist in the reporting application of the Arista Edge Threat Management - Arista NG Firewall (NGFW). A user with advanced report application access rights can exploit the SQL injection, allowing them to execute commands on the underlying operating system with elevated privileges.\n"
-    },
-    {
-        "Modified": "2024-03-04T20:15:00",
-        "Published": "2024-03-04T20:15:00",
-        "access": {},
-        "assigner": "security@hashicorp.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2048",
-        "impact": {},
-        "last-modified": "2024-03-04T20:15:00",
-        "references": [
-            "https://discuss.hashicorp.com/t/hcsec-2024-05-vault-cert-auth-method-did-not-correctly-validate-non-ca-certificates/63382"
-        ],
-        "summary": "Vault and Vault Enterprise (\u201cVault\u201d) TLS certificate auth method did not correctly validate client certificates when configured with a non-CA certificate as trusted certificate. In this configuration, an attacker may be able to craft a malicious certificate that could be used to bypass authentication. Fixed in Vault 1.15.5 and 1.14.10."
-    },
-    {
-        "Modified": "2024-03-04T20:15:00",
-        "Published": "2024-02-22T01:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2023-4895",
-        "impact": {},
-        "last-modified": "2024-03-04T20:15:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/424766",
-            "https://hackerone.com/reports/2134787"
-        ],
-        "summary": "An issue has been discovered in GitLab EE affecting all versions starting from 12.0 to 16.7.6, all versions starting from 16.8 before 16.8.3, all versions starting from 16.9 before 16.9.1. This vulnerability allows for bypassing the 'group ip restriction' settings to access environment details of projects"
-    },
-    {
-        "Modified": "2024-03-04T20:14:00",
-        "Published": "2024-02-22T00:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2024-1525",
-        "impact": {},
-        "last-modified": "2024-03-04T20:14:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/438144"
-        ],
-        "summary": "An issue has been discovered in GitLab CE/EE affecting all versions starting from 16.1 before 16.7.6, all versions starting from 16.8 before 16.8.3, all versions starting from 16.9 before 16.9.1. Under some specialized conditions, an LDAP user may be able to reset their password using their verified secondary email address and sign-in using direct authentication with the reset password, bypassing LDAP."
-    },
-    {
-        "Modified": "2024-03-04T20:12:00",
-        "Published": "2024-02-22T00:15:00",
-        "access": {},
-        "assigner": "cve@gitlab.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-1451",
-        "impact": {},
-        "last-modified": "2024-03-04T20:12:00",
-        "references": [
-            "https://gitlab.com/gitlab-org/gitlab/-/issues/441457",
-            "https://hackerone.com/reports/2371126"
-        ],
-        "summary": "An issue has been discovered in GitLab CE/EE affecting all versions starting from 16.9 before 16.9.1. A crafted payload  added to the user profile page could lead to a stored XSS on the client side, allowing attackers to perform arbitrary actions on behalf of victims.\""
     }
 ]
