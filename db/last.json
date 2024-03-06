@@ -1,5 +1,273 @@
 [
     {
+        "Modified": "2024-03-06T20:15:00",
+        "Published": "2024-03-06T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-48703",
+        "impact": {},
+        "last-modified": "2024-03-06T20:15:00",
+        "references": [
+            "https://securitylab.github.com/advisories/GHSL-2023-121_go-saml__archived_/"
+        ],
+        "summary": "RobotsAndPencils go-saml, a SAML client library written in Go, contains an authentication bypass vulnerability in all known versions. This is due to how the `xmlsec1` command line tool is called internally to verify the signature of SAML assertions. When `xmlsec1` is used without defining the enabled key data, the origin of the public key for the signature verification is, unfortunately, not restricted. That means an attacker can sign the SAML assertions themselves and provide the required public key (e.g. an RSA key) directly embedded in the SAML token. Projects still using RobotsAndPencils/go-saml should move to another SAML library or alternatively remove support for SAML from their projects. The vulnerability can likely temporarily be fixed by forking the go-saml project and adding the command line argument `--enabled-key-data` and specifying a value such as `x509` or `raw-x509-cert` when calling the `xmlsec1` binary in the verify function. Please note that this workaround must be carefully tested before it can be used."
+    },
+    {
+        "Modified": "2024-03-06T20:15:00",
+        "Published": "2024-03-06T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27308",
+        "impact": {},
+        "last-modified": "2024-03-06T20:15:00",
+        "references": [
+            "https://github.com/tokio-rs/mio/security/advisories/GHSA-r8w9-5wcg-vfj7",
+            "https://github.com/tokio-rs/tokio/issues/6369",
+            "https://github.com/tokio-rs/mio/pull/1760",
+            "https://github.com/tokio-rs/mio/commit/90d4fe00df870acd3d38f3dc4face9aacab8fbb9"
+        ],
+        "summary": "Mio is a Metal I/O library for Rust. When using named pipes on Windows, mio will under some circumstances return invalid tokens that correspond to named pipes that have already been deregistered from the mio registry. The impact of this vulnerability depends on how mio is used. For some applications, invalid tokens may be ignored or cause a warning or a crash. On the other hand, for applications that store pointers in the tokens, this vulnerability may result in a use-after-free. For users of Tokio, this vulnerability is serious and can result in a use-after-free in Tokio. The vulnerability is Windows-specific, and can only happen if you are using named pipes. Other IO resources are not affected. This vulnerability has been fixed in mio v0.8.11. All versions of mio between v0.7.2 and v0.8.10 are vulnerable. Tokio is vulnerable when you are using a vulnerable version of mio AND you are using at least Tokio v1.30.0. Versions of Tokio prior to v1.30.0 will ignore invalid tokens, so they are not vulnerable. Vulnerable libraries that use mio can work around this issue by detecting and ignoring invalid tokens."
+    },
+    {
+        "Modified": "2024-03-06T20:15:00",
+        "Published": "2024-03-06T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27915",
+        "impact": {},
+        "last-modified": "2024-03-06T20:15:00",
+        "references": [
+            "https://github.com/sulu/sulu/security/advisories/GHSA-jr83-m233-gg6p",
+            "https://github.com/sulu/sulu/commit/ec9c3f99e15336dc4f6877f512300f231c17c6da"
+        ],
+        "summary": "Sulu is a PHP content management system. Starting in verson 2.2.0 and prior to version 2.4.17 and 2.5.13, access to pages is granted regardless of role permissions for webspaces which have a security system configured and permission check enabled. Webspaces without do not have this issue. The problem is patched in versions 2.4.17 and 2.5.13. Some workarounds are available. One may apply the patch to `vendor/symfony/security-http/HttpUtils.php` manually or avoid installing `symfony/security-http` versions greater equal than `v5.4.30` or `v6.3.6`."
+    },
+    {
+        "Modified": "2024-03-06T20:15:00",
+        "Published": "2024-03-06T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27307",
+        "impact": {},
+        "last-modified": "2024-03-06T20:15:00",
+        "references": [
+            "https://github.com/jsonata-js/jsonata/security/advisories/GHSA-fqg8-vfv7-8fj8",
+            "https://github.com/jsonata-js/jsonata/commit/1d579dbe99c19fbe509f5ba2c6db7959b0d456d1",
+            "https://github.com/jsonata-js/jsonata/commit/335d38f6278e96c908b24183f1c9c90afc8ae00c",
+            "https://github.com/jsonata-js/jsonata/commit/c907b5e517bb718015fcbd993d742ba6202f2be2",
+            "https://github.com/jsonata-js/jsonata/releases/tag/v2.0.4"
+        ],
+        "summary": "JSONata is a JSON query and transformation language. Starting in version 1.4.0 and prior to version 1.8.7 and 2.0.4, a malicious expression can use the transform operator to override properties on the `Object` constructor and prototype. This may lead to denial of service, remote code execution or other unexpected behavior in applications that evaluate user-provided JSONata expressions. This issue has been fixed in JSONata versions 1.8.7 and 2.0.4. Applications that evaluate user-provided expressions should update ASAP to prevent exploitation. As a workaround, one may apply the patch manually."
+    },
+    {
+        "Modified": "2024-03-06T20:15:00",
+        "Published": "2024-03-06T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27917",
+        "impact": {},
+        "last-modified": "2024-03-06T20:15:00",
+        "references": [
+            "https://github.com/shopware/shopware/security/advisories/GHSA-c2f9-4jmm-v45m",
+            "https://github.com/shopware/shopware/commit/7d9cb03225efca5f97e69b800d8747598dd15ce3",
+            "https://github.com/shopware/storefront/commit/3477e4a425d3c54b4bfae82d703fe3838dc21d3e",
+            "https://github.com/shopware/shopware/releases/tag/v6.5.8.7"
+        ],
+        "summary": "Shopware is an open commerce platform based on Symfony Framework and Vue. The Symfony Session Handler pops the Session Cookie and assigns it to the Response. Since Shopware 6.5.8.0, the 404 pages are cached to improve the performance of 404 pages. So the cached Response which contains a Session Cookie when the Browser accessing the 404 page, has no cookies yet. The Symfony Session Handler is in use, when no explicit Session configuration has been done. When Redis is in use for Sessions using the PHP Redis extension, this exploiting code is not used. Shopware version 6.5.8.7 contains a patch for this issue. As a workaround, use Redis for Sessions, as this does not trigger the exploit code."
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27288",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/1Panel-dev/1Panel/security/advisories/GHSA-26w3-q4j8-4xjp",
+            "https://github.com/1Panel-dev/1Panel/releases/tag/v1.10.1-lts"
+        ],
+        "summary": "1Panel is an open source Linux server operation and maintenance management panel. Prior to version 1.10.1-lts, users can use Burp to obtain unauthorized access to the console page. The vulnerability has been fixed in v1.10.1-lts. There are no known workarounds."
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27303",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/electron-userland/electron-builder/security/advisories/GHSA-r4pf-3v7r-hh55",
+            "https://github.com/electron-userland/electron-builder/pull/8059",
+            "https://github.com/electron-userland/electron-builder/commit/8f4acff3c2d45c1cb07779bb3fe79644408ee387"
+        ],
+        "summary": "electron-builder is a solution to package and build a ready for distribution Electron, Proton Native app for macOS, Windows and Linux. A vulnerability that only affects eletron-builder prior to 24.13.2 in Windows, the NSIS installer makes a system call to open cmd.exe via NSExec in the `.nsh` installer script. NSExec by default searches the current directory of where the installer is located before searching `PATH`. This means that if an attacker can place a malicious executable file named cmd.exe in the same folder as the installer, the installer will run the malicious file. Version 24.13.2 fixes this issue. No known workaround exists. The code executes at the installer-level before the app is present on the system, so there's no way to check if it exists in a current installer."
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24766",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/IceWhaleTech/CasaOS-UserService/security/advisories/GHSA-c967-2652-gfjm",
+            "https://github.com/IceWhaleTech/CasaOS-UserService/commit/c75063d7ca5800948e9c09c0a6efe9809b5d39f7",
+            "https://github.com/IceWhaleTech/CasaOS-UserService/releases/tag/v0.4.7"
+        ],
+        "summary": "CasaOS-UserService provides user management functionalities to CasaOS. Starting in version 0.4.4.3 and prior to version 0.4.7, the Casa OS Login page disclosed the username enumeration vulnerability in the login page. An attacker can enumerate the CasaOS username using the application response. If the username is incorrect application gives the error `**User does not exist**`.  If the password is incorrect application gives the error `**Invalid password**`.  Version 0.4.7 fixes this issue."
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25111",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/squid-cache/squid/security/advisories/GHSA-72c2-c3wm-8qxc",
+            "http://www.squid-cache.org/Versions/v6/SQUID-2024_1.patch"
+        ],
+        "summary": "Squid is a web proxy cache. Starting in version 3.5.27 and prior to version 6.8, Squid may be vulnerable to a Denial of Service attack against HTTP Chunked decoder due to an uncontrolled recursion bug. This problem allows a remote attacker to cause Denial of Service when sending a crafted, chunked, encoded HTTP Message. This bug is fixed in Squid version 6.8. In addition, patches addressing this problem for the stable releases can be found in Squid's patch archives. There is no workaround for this issue."
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27302",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/zeromicro/go-zero/security/advisories/GHSA-fgxv-gw55-r5fq",
+            "https://github.com/zeromicro/go-zero/commit/d9d79e930dff6218a873f4f02115df61c38b15db"
+        ],
+        "summary": "go-zero is a web and rpc framework. Go-zero allows user to specify a CORS Filter with a configurable allows param - which is an array of domains allowed in CORS policy. However, the `isOriginAllowed` uses `strings.HasSuffix` to check the origin, which leads to bypass via a malicious domain. This vulnerability is capable of breaking CORS policy and thus allowing any page to make requests and/or retrieve data on behalf of other users. Version 1.4.4 fixes this issue.\n"
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27304",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/jackc/pgx/security/advisories/GHSA-mrww-27vc-gghv",
+            "https://github.com/jackc/pgproto3/security/advisories/GHSA-7jwh-3vrq-q3m8",
+            "https://github.com/jackc/pgproto3/commit/945c2126f6db8f3bea7eeebe307c01fe92bca007",
+            "https://github.com/jackc/pgx/commit/adbb38f298c76e283ffc7c7a3f571036fea47fd4",
+            "https://github.com/jackc/pgx/commit/c543134753a0c5d22881c12404025724cb05ffd8",
+            "https://github.com/jackc/pgx/commit/f94eb0e2f96782042c96801b5ac448f44f0a81df"
+        ],
+        "summary": "pgx is a PostgreSQL driver and toolkit for Go. SQL injection can occur if an attacker can cause a single query or bind message to exceed 4 GB in size. An integer overflow in the calculated message size can cause the one large message to be sent as multiple messages under the attacker's control. The problem is resolved in v4.18.2 and v5.5.4. As a workaround, reject user input large enough to cause a single query or bind message to exceed 4 GB in size."
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2173",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/03/stable-channel-update-for-desktop.html",
+            "https://issues.chromium.org/issues/325893559"
+        ],
+        "summary": "Out of bounds memory access in V8 in Google Chrome prior to 122.0.6261.111 allowed a remote attacker to perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2174",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/03/stable-channel-update-for-desktop.html",
+            "https://issues.chromium.org/issues/325866363"
+        ],
+        "summary": "Inappropriate implementation in V8 in Google Chrome prior to 122.0.6261.111 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2176",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/03/stable-channel-update-for-desktop.html",
+            "https://issues.chromium.org/issues/325936438"
+        ],
+        "summary": "Use after free in FedCM in Google Chrome prior to 122.0.6261.111 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27287",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/esphome/esphome/security/advisories/GHSA-9p43-hj5j-96h5",
+            "https://github.com/esphome/esphome/commit/37d2b3c7977a4ccbec59726ca7549cb776661455"
+        ],
+        "summary": "ESPHome is a system to control your ESP8266/ESP32 for Home Automation systems. Starting in version 2023.12.9 and prior to version 2024.2.2, editing the configuration file API in dashboard component of ESPHome version 2023.12.9 (command line installation and Home Assistant add-on) serves unsanitized data with `Content-Type: text/html; charset=UTF-8`, allowing a remote authenticated user to inject arbitrary web script and exfiltrate session cookies via Cross-Site scripting. It is possible for a malicious authenticated user to inject arbitrary Javascript in configuration files using a POST request to the /edit endpoint, the configuration parameter allows to specify the file to write. To trigger the XSS vulnerability, the victim must visit the page` /edit?configuration=[xss file]`. Abusing this vulnerability a malicious actor could perform operations on the dashboard on the behalf of a logged user, access sensitive information, create, edit and delete configuration files and flash firmware on managed boards.\nIn addition to this, cookies are not correctly secured, allowing the exfiltration of session cookie values. Version 2024.2.2 contains a patch for this issue.\n"
+    },
+    {
+        "Modified": "2024-03-06T19:15:00",
+        "Published": "2024-03-06T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27289",
+        "impact": {},
+        "last-modified": "2024-03-06T19:15:00",
+        "references": [
+            "https://github.com/jackc/pgx/security/advisories/GHSA-m7wr-2xf7-cm9p",
+            "https://github.com/jackc/pgx/commit/f94eb0e2f96782042c96801b5ac448f44f0a81df"
+        ],
+        "summary": "pgx is a PostgreSQL driver and toolkit for Go. Prior to version 4.18.2, SQL injection can occur when all of the following conditions are met: the non-default simple protocol is used; a placeholder for a numeric value must be immediately preceded by a minus; there must be a second placeholder for a string value after the first placeholder; both must be on the same line; and both parameter values must be user-controlled. The problem is resolved in v4.18.2. As a workaround, do not use the simple protocol or do not place a minus directly before a placeholder.\n"
+    },
+    {
         "Modified": "2024-03-06T18:15:00",
         "Published": "2024-03-06T18:15:00",
         "access": {},
@@ -1457,258 +1725,5 @@
             "https://github.com/geraldoalcantara/CVE-2023-49974"
         ],
         "summary": "A cross-site scripting (XSS) vulnerability in Customer Support System v1 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the contact parameter at /customer_support/index.php?page=customer_list."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-49976",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://www.sourcecodester.com/php/14587/customer-support-system-using-phpmysqli-source-code.html",
-            "https://github.com/geraldoalcantara/CVE-2023-49976"
-        ],
-        "summary": "A cross-site scripting (XSS) vulnerability in Customer Support System v1 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the subject parameter at /customer_support/index.php?page=new_ticket."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-49977",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://www.sourcecodester.com/php/14587/customer-support-system-using-phpmysqli-source-code.html",
-            "https://github.com/geraldoalcantara/CVE-2023-49977"
-        ],
-        "summary": "A cross-site scripting (XSS) vulnerability in Customer Support System v1 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the address parameter at /customer_support/index.php?page=new_customer."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T02:15:00",
-        "access": {},
-        "assigner": "psirt@moxa.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1220",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://www.moxa.com/en/support/product-support/security-advisory/mpsa-238975-nport-w2150a-w2250a-series-web-server-stack-based-buffer-overflow-vulnerability"
-        ],
-        "summary": "A stack-based buffer overflow in the built-in web server in Moxa NPort W2150A/W2250A Series firmware version 2.3 and prior allows a remote attacker to exploit the vulnerability by sending crafted payload to the web service. Successful exploitation of the vulnerability could result in denial of service.\n\n"
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-48644",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://excellium-services.com/cert-xlm-advisory/CVE-2023-48644"
-        ],
-        "summary": "An issue was discovered in the Archibus app 4.0.3 for iOS. There is an XSS vulnerability in the create work request feature of the maintenance module, via the description field. This allows an attacker to perform an action on behalf of the user, exfiltrate data, and so on."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24276",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://research.hisolutions.com/2020/08/web-vulnerabilities-are-coming-to-the-desktop-again-rces-and-other-vulnerabilities-in-teamwire/"
-        ],
-        "summary": "Cross Site Scripting (XSS) vulnerability in Teamwire Windows desktop client v.2.0.1 through v.2.4.0 allows a remote attacker to obtain sensitive information via a crafted payload to the chat name, message preview, username and group name components."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24278",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://research.hisolutions.com/2020/08/web-vulnerabilities-are-coming-to-the-desktop-again-rces-and-other-vulnerabilities-in-teamwire/"
-        ],
-        "summary": "An issue in Teamwire Windows desktop client v.2.0.1 through v.2.4.0 allows a remote attacker to obtain sensitive information via a crafted payload to the message function."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "security@golang.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24783",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://go.dev/issue/65390",
-            "https://go.dev/cl/569339",
-            "https://groups.google.com/g/golang-announce/c/5pwGVUPoMbg",
-            "https://pkg.go.dev/vuln/GO-2024-2598"
-        ],
-        "summary": "Verifying a certificate chain which contains a certificate with an unknown public key algorithm will cause Certificate.Verify to panic. This affects all crypto/tls clients, and servers that set Config.ClientAuth to VerifyClientCertIfGiven or RequireAndVerifyClientCert. The default behavior is for TLS servers to not verify client certificates."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "security@golang.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24784",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://go.dev/issue/65083",
-            "https://go.dev/cl/555596",
-            "https://groups.google.com/g/golang-announce/c/5pwGVUPoMbg",
-            "https://pkg.go.dev/vuln/GO-2024-2609"
-        ],
-        "summary": "The ParseAddressList function incorrectly handles comments (text within parentheses) within display names. Since this is a misalignment with conforming address parsers, it can result in different trust decisions being made by programs using different parsers."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "security@golang.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24785",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://go.dev/issue/65697",
-            "https://go.dev/cl/564196",
-            "https://groups.google.com/g/golang-announce/c/5pwGVUPoMbg",
-            "https://pkg.go.dev/vuln/GO-2024-2610"
-        ],
-        "summary": "If errors returned from MarshalJSON methods contain user controlled data, they may be used to break the contextual auto-escaping behavior of the html/template package, allowing for subsequent actions to inject unexpected content into templates."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "security@golang.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24786",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://go.dev/cl/569356",
-            "https://pkg.go.dev/vuln/GO-2024-2611"
-        ],
-        "summary": "The protojson.Unmarshal function can enter an infinite loop when unmarshaling certain forms of invalid JSON. This condition can occur when unmarshaling into a message which contains a google.protobuf.Any value, or when the UnmarshalOptions.DiscardUnknown option is set."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27764",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://gitee.com/erzhongxmu/JEEWMS/issues/I8YN90"
-        ],
-        "summary": "An issue in Jeewms v.3.7 and before allows a remote attacker to escalate privileges via the AuthInterceptor component."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-05T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27765",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://gitee.com/erzhongxmu/JEEWMS/issues/I8YN90"
-        ],
-        "summary": "Directory Traversal vulnerability in Jeewms v.3.7 and before allows a remote attacker to obtain sensitive information via the cgformTemplateController component."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-38944",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://seclists.org/fulldisclosure/2024/Mar/0"
-        ],
-        "summary": "An issue in Multilaser RE160V firmware v12.03.01.09_pt and Multilaser RE163V firmware v12.03.01.10_pt allows attackers to bypass the access control and gain complete access to the application via modifying a HTTP header."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-38945",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "http://seclists.org/fulldisclosure/2024/Mar/1"
-        ],
-        "summary": "Multilaser RE160 v5.07.51_pt_MTL01 and v5.07.52_pt_MTL01, Multilaser RE160V v12.03.01.08_pt and V12.03.01.09_pt, and Multilaser RE163V v12.03.01.08_pt allows attackers to bypass the access control and gain complete access to the application via supplying a crafted URL."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-38946",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "http://seclists.org/fulldisclosure/2024/Mar/2"
-        ],
-        "summary": "An issue in Multilaser RE160 firmware v5.07.51_pt_MTL01 and v5.07.52_pt_MTL01 allows attackers to bypass the access control and gain complete access to the application via supplying a crafted cookie."
-    },
-    {
-        "Modified": "2024-03-06T15:18:00",
-        "Published": "2024-03-06T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-43318",
-        "impact": {},
-        "last-modified": "2024-03-06T15:18:00",
-        "references": [
-            "https://github.com/str2ver/CVE-2023-43318/tree/main",
-            "https://seclists.org/fulldisclosure/2024/Mar/9"
-        ],
-        "summary": "TP-Link JetStream Smart Switch TL-SG2210P 5.0 Build 20211201 allows attackers to escalate privileges via modification of the 'tid' and 'usrlvl' values in GET requests."
     }
 ]
