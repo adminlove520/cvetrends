@@ -1,5 +1,145 @@
 [
     {
+        "Modified": "2024-03-12T19:15:00",
+        "Published": "2024-03-12T19:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-306",
+        "id": "CVE-2022-34321",
+        "impact": {},
+        "last-modified": "2024-03-12T19:15:00",
+        "references": [
+            "https://lists.apache.org/thread/ods5tq2hpl390hvjnvxv0bcg4rfpgjj8",
+            "https://pulsar.apache.org/security/CVE-2022-34321/"
+        ],
+        "summary": "Improper Authentication vulnerability in Apache Pulsar Proxy allows an attacker to connect to the /proxy-stats endpoint without authentication. The vulnerable endpoint exposes detailed statistics about live connections, along with the capability to modify the logging level of proxied connections without requiring proper authentication credentials.\n\nThis issue affects Apache Pulsar versions from 2.6.0 to 2.10.5, from 2.11.0 to 2.11.2, from 3.0.0 to 3.0.1, and 3.1.0.\n\nThe known risks include exposing sensitive information such as connected client IP and unauthorized logging level manipulation which could lead to a denial-of-service condition by significantly increasing the proxy's logging overhead. When deployed via the Apache Pulsar Helm chart within Kubernetes environments, the actual client IP might not be revealed through the load balancer's default behavior, which typically obscures the original source IP addresses when externalTrafficPolicy is being configured to \"Cluster\" by default. The /proxy-stats endpoint contains topic level statistics, however, in the default configuration, the topic level statistics aren't known to be exposed.\n\n2.10 Pulsar Proxy users should upgrade to at least 2.10.6.\n2.11 Pulsar Proxy users should upgrade to at least 2.11.3.\n3.0 Pulsar Proxy users should upgrade to at least 3.0.2.\n3.1 Pulsar Proxy users should upgrade to at least 3.1.1.\n\nUsers operating versions prior to those listed above should upgrade to the aforementioned patched versions or newer versions. Additionally, it's imperative to recognize that the Apache Pulsar Proxy is not intended for direct exposure to the internet. The architectural design of Pulsar Proxy assumes that it will operate within a secured network environment, safeguarded by appropriate perimeter defenses."
+    },
+    {
+        "Modified": "2024-03-12T19:15:00",
+        "Published": "2024-03-12T19:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-913",
+        "id": "CVE-2024-27135",
+        "impact": {},
+        "last-modified": "2024-03-12T19:15:00",
+        "references": [
+            "https://lists.apache.org/thread/dh8nj2vmb2br6thjltq74lk9jxkz62wn",
+            "https://pulsar.apache.org/security/CVE-2024-27135/"
+        ],
+        "summary": "Improper input validation in the Pulsar Function Worker allows a malicious authenticated user to execute arbitrary Java code on the Pulsar Function worker, outside of the sandboxes designated for running user-provided functions. This vulnerability also applies to the Pulsar Broker when it is configured with \"functionsWorkerEnabled=true\".\n\nThis issue affects Apache Pulsar versions from 2.4.0 to 2.10.5, from 2.11.0 to 2.11.3, from 3.0.0 to 3.0.2, from 3.1.0 to 3.1.2, and 3.2.0. \n\n2.10 Pulsar Function Worker users should upgrade to at least 2.10.6.\n2.11 Pulsar Function Worker users should upgrade to at least 2.11.4.\n3.0 Pulsar Function Worker users should upgrade to at least 3.0.3.\n3.1 Pulsar Function Worker users should upgrade to at least 3.1.3.\n3.2 Pulsar Function Worker users should upgrade to at least 3.2.1.\n\nUsers operating versions prior to those listed above should upgrade to the aforementioned patched versions or newer versions.\n"
+    },
+    {
+        "Modified": "2024-03-12T19:15:00",
+        "Published": "2024-03-12T19:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-27317",
+        "impact": {},
+        "last-modified": "2024-03-12T19:15:00",
+        "references": [
+            "https://lists.apache.org/thread/ct9xmvlf7lompc1pxvlsb60qstfsm9po",
+            "https://pulsar.apache.org/security/CVE-2024-27317/"
+        ],
+        "summary": "In Pulsar Functions Worker, authenticated users can upload functions in jar or nar files. These files, essentially zip files, are extracted by the Functions Worker. However, if a malicious file is uploaded, it could exploit a directory traversal vulnerability. This occurs when the filenames in the zip files, which aren't properly validated, contain special elements like \"..\", altering the directory path. This could allow an attacker to create or modify files outside of the designated extraction directory, potentially influencing system behavior. This vulnerability also applies to the Pulsar Broker when it is configured with \"functionsWorkerEnabled=true\".\n\nThis issue affects Apache Pulsar versions from 2.4.0 to 2.10.5, from 2.11.0 to 2.11.3, from 3.0.0 to 3.0.2, from 3.1.0 to 3.1.2, and 3.2.0. \n\n2.10 Pulsar Function Worker users should upgrade to at least 2.10.6.\n2.11 Pulsar Function Worker users should upgrade to at least 2.11.4.\n3.0 Pulsar Function Worker users should upgrade to at least 3.0.3.\n3.1 Pulsar Function Worker users should upgrade to at least 3.1.3.\n3.2 Pulsar Function Worker users should upgrade to at least 3.2.1.\n\nUsers operating versions prior to those listed above should upgrade to the aforementioned patched versions or newer versions."
+    },
+    {
+        "Modified": "2024-03-12T19:15:00",
+        "Published": "2024-03-12T19:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27894",
+        "impact": {},
+        "last-modified": "2024-03-12T19:15:00",
+        "references": [
+            "https://lists.apache.org/thread/45cqhgqg8d19ongjw18ypcss8vwh206p",
+            "https://pulsar.apache.org/security/CVE-2024-27894/"
+        ],
+        "summary": "The Pulsar Functions Worker includes a capability that permits authenticated users to create functions where the function's implementation is referenced by a URL. The supported URL schemes include \"file\", \"http\", and \"https\". When a function is created using this method, the Functions Worker will retrieve the implementation from the URL provided by the user. However, this feature introduces a vulnerability that can be exploited by an attacker to gain unauthorized access to any file that the Pulsar Functions Worker process has permissions to read. This includes reading the process environment which potentially includes sensitive information, such as secrets. Furthermore, an attacker could leverage this vulnerability to use the Pulsar Functions Worker as a proxy to access the content of remote HTTP and HTTPS endpoint URLs. This could also be used to carry out denial of service attacks.\nThis vulnerability also applies to the Pulsar Broker when it is configured with \"functionsWorkerEnabled=true\".\n\nThis issue affects Apache Pulsar versions from 2.4.0 to 2.10.5, from 2.11.0 to 2.11.3, from 3.0.0 to 3.0.2, from 3.1.0 to 3.1.2, and 3.2.0. \n\n2.10 Pulsar Function Worker users should upgrade to at least 2.10.6.\n2.11 Pulsar Function Worker users should upgrade to at least 2.11.4.\n3.0 Pulsar Function Worker users should upgrade to at least 3.0.3.\n3.1 Pulsar Function Worker users should upgrade to at least 3.1.3.\n3.2 Pulsar Function Worker users should upgrade to at least 3.2.1.\n\nUsers operating versions prior to those listed above should upgrade to the aforementioned patched versions or newer versions.\n\nThe updated versions of Pulsar Functions Worker will, by default, impose restrictions on the creation of functions using URLs. For users who rely on this functionality, the Function Worker configuration provides two configuration keys: \"additionalEnabledConnectorUrlPatterns\" and \"additionalEnabledFunctionsUrlPatterns\". These keys allow users to specify a set of URL patterns that are permitted, enabling the creation of functions using URLs that match the defined patterns. This approach ensures that the feature remains available to those who require it, while limiting the potential for unauthorized access and exploitation."
+    },
+    {
+        "Modified": "2024-03-12T19:15:00",
+        "Published": "2024-03-12T19:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-863",
+        "id": "CVE-2024-28098",
+        "impact": {},
+        "last-modified": "2024-03-12T19:15:00",
+        "references": [
+            "https://lists.apache.org/thread/3m6923y3wxpdcs9346sjvt8ql9swqc2z",
+            "https://pulsar.apache.org/security/CVE-2024-28098/"
+        ],
+        "summary": "The vulnerability allows authenticated users with only produce or consume permissions to modify topic-level policies, such as retention, TTL, and offloading settings. These management operations should be restricted to users with the tenant admin role or super user role.\n\nThis issue affects Apache Pulsar versions from 2.7.1 to 2.10.5, from 2.11.0 to 2.11.3, from 3.0.0 to 3.0.2, from 3.1.0 to 3.1.2, and 3.2.0. \n\n2.10 Apache Pulsar users should upgrade to at least 2.10.6.\n2.11 Apache Pulsar users should upgrade to at least 2.11.4.\n3.0 Apache Pulsar users should upgrade to at least 3.0.3.\n3.1 Apache Pulsar users should upgrade to at least 3.1.3.\n3.2 Apache Pulsar users should upgrade to at least 3.2.1.\n\nUsers operating versions prior to those listed above should upgrade to the aforementioned patched versions or newer versions.\n"
+    },
+    {
+        "Modified": "2024-03-12T18:15:00",
+        "Published": "2024-03-12T18:15:00",
+        "access": {},
+        "assigner": "cna@cloudflare.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1765",
+        "impact": {},
+        "last-modified": "2024-03-12T18:15:00",
+        "references": [
+            "https://github.com/cloudflare/quiche/security/advisories/GHSA-78wx-jg4j-5j6g"
+        ],
+        "summary": "Cloudflare Quiche (through version 0.19.1/0.20.0) was affected by an unlimited resource allocation vulnerability causing rapid increase of memory usage of the system running quiche server or client.\nA remote attacker could take advantage of this vulnerability by repeatedly sending an unlimited number of 1-RTT CRYPTO frames after previously completing the QUIC handshake.\nExploitation was possible for the duration of the connection which could be extended by the attacker.\u00a0\nquiche 0.19.2 and 0.20.1 are the earliest versions containing the fix for this issue.\n\n"
+    },
+    {
+        "Modified": "2024-03-12T18:15:00",
+        "Published": "2024-03-12T18:15:00",
+        "access": {},
+        "assigner": "cna@cloudflare.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1410",
+        "impact": {},
+        "last-modified": "2024-03-12T18:15:00",
+        "references": [
+            "https://github.com/cloudflare/quiche/security/advisories/GHSA-xhg9-xwch-vr7x"
+        ],
+        "summary": "Cloudflare quiche was discovered to be vulnerable to unbounded storage of information related to connection ID retirement, which could lead to excessive resource consumption. Each QUIC connection possesses a set of connection Identifiers (IDs); see  RFC 9000 Section 5.1 https://datatracker.ietf.org/doc/html/rfc9000#section-5.1 . Endpoints declare the number of active connection IDs they are willing to support using the active_connection_id_limit transport parameter. The peer can create new IDs using a NEW_CONNECTION_ID frame but must stay within the active ID limit. This is done by retirement of old IDs, the endpoint sends NEW_CONNECTION_ID includes a value in the retire_prior_to field, which elicits a RETIRE_CONNECTION_ID frame as confirmation. An unauthenticated remote attacker can exploit the vulnerability by sending NEW_CONNECTION_ID frames and manipulating the connection (e.g. by restricting the peer's congestion window size) so that RETIRE_CONNECTION_ID frames can only be sent at a slower rate than they are received, leading to storage of information related to connection IDs in an unbounded queue. Quiche versions 0.19.2 and 0.20.1 are the earliest to address this problem. There is no workaround for affected versions.\n"
+    },
+    {
+        "Modified": "2024-03-12T18:15:00",
+        "Published": "2024-03-12T18:15:00",
+        "access": {},
+        "assigner": "security@tibco.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1137",
+        "impact": {},
+        "last-modified": "2024-03-12T18:15:00",
+        "references": [
+            "https://community.tibco.com/advisories/tibco-security-advisory-march-12-2024-tibco-activespaces-cve-2024-1137-r208/"
+        ],
+        "summary": "The Proxy and Client components of TIBCO Software Inc.'s TIBCO ActiveSpaces - Enterprise Edition contain a vulnerability that theoretically allows an Active Spaces client to passively observe data traffic to other clients. Affected releases are TIBCO Software Inc.'s TIBCO ActiveSpaces - Enterprise Edition: versions 4.4.0 through 4.9.0.\n\n"
+    },
+    {
+        "Modified": "2024-03-12T18:15:00",
+        "Published": "2024-03-12T18:15:00",
+        "access": {},
+        "assigner": "security@tibco.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1138",
+        "impact": {},
+        "last-modified": "2024-03-12T18:15:00",
+        "references": [
+            "https://community.tibco.com/advisories/tibco-security-advisory-march-12-2024-tibco-ftl-cve-2024-1138-r207/"
+        ],
+        "summary": "The FTL Server component of TIBCO Software Inc.'s TIBCO FTL - Enterprise Edition contains a vulnerability that allows a low privileged attacker with network access to execute a privilege escalation on the affected ftlserver. Affected releases are TIBCO Software Inc.'s TIBCO FTL - Enterprise Edition: versions 6.10.1 and below.\n\n"
+    },
+    {
         "Modified": "2024-03-12T17:46:00",
         "Published": "2024-03-12T17:15:00",
         "access": {},
@@ -1437,154 +1577,5 @@
             "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-36910"
         ],
         "summary": "Microsoft Message Queuing (MSMQ) Remote Code Execution Vulnerability"
-    },
-    {
-        "Modified": "2024-03-12T17:15:00",
-        "Published": "2023-08-08T18:15:00",
-        "access": {},
-        "assigner": "secure@microsoft.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-36911",
-        "impact": {},
-        "last-modified": "2024-03-12T17:15:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-36911"
-        ],
-        "summary": "Microsoft Message Queuing (MSMQ) Remote Code Execution Vulnerability"
-    },
-    {
-        "Modified": "2024-03-12T16:03:00",
-        "Published": "2021-12-10T00:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "security-advisories@github.com",
-        "cvss": 4.3,
-        "cvss-time": "2024-03-12T16:03:00",
-        "cvss-vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2021-43803",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-12T16:03:00",
-        "references": [
-            "https://github.com/vercel/next.js/releases/v12.0.5",
-            "https://github.com/vercel/next.js/pull/32080",
-            "https://github.com/vercel/next.js/releases/tag/v11.1.3",
-            "https://github.com/vercel/next.js/commit/6d98b4fb4315dec1badecf0e9bdc212a4272b264",
-            "https://github.com/vercel/next.js/security/advisories/GHSA-25mp-g6fv-mqxx"
-        ],
-        "summary": "Next.js is a React framework. In versions of Next.js prior to 12.0.5 or 11.1.3, invalid or malformed URLs could lead to a server crash. In order to be affected by this issue, the deployment must use Next.js versions above 11.1.0 and below 12.0.5, Node.js above 15.0.0, and next start or a custom server. Deployments on Vercel are not affected, along with similar environments where invalid requests are filtered before reaching Next.js. Versions 12.0.5 and 11.1.3 contain patches for this issue."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "CWE-134",
-        "id": "CVE-2023-41842",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-304"
-        ],
-        "summary": "A use of externally-controlled format string vulnerability [CWE-134] in Fortinet FortiManager version 7.4.0 through 7.4.1, version 7.2.0 through 7.2.3 and before 7.0.10, Fortinet FortiAnalyzer version 7.4.0 through 7.4.1, version 7.2.0 through 7.2.3 and before 7.0.10, Fortinet FortiAnalyzer-BigData before 7.2.5 and  Fortinet FortiPortal version 6.0 all versions and version 5.3 all versions allows a privileged attacker to execute unauthorized code or commands via specially crafted command arguments."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2023-42790",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-327"
-        ],
-        "summary": "A stack-based buffer overflow in Fortinet FortiOS 7.4.0 through 7.4.1, 7.2.0 through 7.2.5, 7.0.0 through 7.0.12, 6.4.0 through 6.4.14, 6.2.0 through 6.2.15, FortiProxy 7.4.0, 7.2.0 through 7.2.6, 7.0.0 through 7.0.12, 2.0.0 through 2.0.13 allows attacker to execute unauthorized code or commands via specially crafted HTTP requests."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2023-46717",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-424"
-        ],
-        "summary": "An improper authentication vulnerability [CWE-287] in FortiOS versions 7.4.1 and below, versions 7.2.6 and below, and versions 7.0.12 and below when configured with FortiAuthenticator in HA may allow a readonly user to gain read-write access via successive login attempts."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-48788",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-430"
-        ],
-        "summary": "A improper neutralization of special elements used in an sql command ('sql injection') in Fortinet FortiClientEMS version 7.2.0 through 7.2.2, FortiClientEMS 7.0.1 through 7.0.10 allows attacker to execute unauthorized code or commands via specially crafted packets."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-42789",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-328"
-        ],
-        "summary": "A out-of-bounds write in Fortinet FortiOS 7.4.0 through 7.4.1, 7.2.0 through 7.2.5, 7.0.0 through 7.0.12, 6.4.0 through 6.4.14, 6.2.0 through 6.2.15, FortiProxy 7.4.0, 7.2.0 through 7.2.6, 7.0.0 through 7.0.12, 2.0.0 through 2.0.13 allows attacker to execute unauthorized code or commands via specially crafted HTTP requests."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "CWE-284",
-        "id": "CVE-2023-36554",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-103"
-        ],
-        "summary": "A improper access control in Fortinet FortiManager version 7.4.0, version 7.2.0 through 7.2.3, version 7.0.0 through 7.0.10, version 6.4.0 through 6.4.13, 6.2 all versions allows attacker to execute unauthorized code or commands via specially crafted HTTP requests."
-    },
-    {
-        "Modified": "2024-03-12T16:02:00",
-        "Published": "2024-03-12T15:15:00",
-        "access": {},
-        "assigner": "psirt@fortinet.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-47534",
-        "impact": {},
-        "last-modified": "2024-03-12T16:02:00",
-        "references": [
-            "https://fortiguard.com/psirt/FG-IR-23-390"
-        ],
-        "summary": "A improper neutralization of formula elements in a csv file in Fortinet FortiClientEMS version 7.2.0 through 7.2.2, 7.0.0 through 7.0.10, 6.4.0 through 6.4.9, 6.2.0 through 6.2.9, 6.0.0 through 6.0.8 allows attacker to execute unauthorized code or commands via specially crafted packets."
     }
 ]
