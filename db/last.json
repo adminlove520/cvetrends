@@ -1,5 +1,58 @@
 [
     {
+        "Modified": "2024-03-17T12:15:00",
+        "Published": "2024-03-17T12:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-2562",
+        "impact": {},
+        "last-modified": "2024-03-17T12:15:00",
+        "references": [
+            "https://vuldb.com/?id.257061",
+            "https://vuldb.com/?ctiid.257061",
+            "https://github.com/PandaXGO/PandaX/issues/4"
+        ],
+        "summary": "A vulnerability, which was classified as critical, was found in PandaXGO PandaX up to 20240310. This affects the function InsertRole of the file /apps/system/services/role_menu.go. The manipulation of the argument roleKey leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-257061 was assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-03-17T12:15:00",
+        "Published": "2024-03-17T12:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-24",
+        "id": "CVE-2024-2563",
+        "impact": {},
+        "last-modified": "2024-03-17T12:15:00",
+        "references": [
+            "https://vuldb.com/?id.257062",
+            "https://vuldb.com/?ctiid.257062",
+            "https://github.com/PandaXGO/PandaX/pull/3"
+        ],
+        "summary": "A vulnerability has been found in PandaXGO PandaX up to 20240310 and classified as critical. This vulnerability affects the function DeleteImage of the file /apps/system/router/upload.go. The manipulation of the argument fileName with the input ../../../../../../../../../tmp/1.txt leads to path traversal: '../filedir'. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-257062 is the identifier assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-03-17T12:15:00",
+        "Published": "2023-03-30T20:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2023-27534",
+        "impact": {},
+        "last-modified": "2024-03-17T12:15:00",
+        "references": [
+            "https://hackerone.com/reports/1892351",
+            "https://security.netapp.com/advisory/ntap-20230420-0012/",
+            "https://security.gentoo.org/glsa/202310-12",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/36NBD5YLJXXEDZLDGNFCERWRYJQ6LAQW/",
+            "https://lists.debian.org/debian-lts-announce/2024/03/msg00016.html"
+        ],
+        "summary": "A path traversal vulnerability exists in curl <8.0.0 SFTP implementation causes the tilde (~) character to be wrongly replaced when used as a prefix in the first path element, in addition to its intended use as the first element to indicate a path relative to the user's home directory. Attackers can exploit this flaw to bypass filtering or execute arbitrary code by crafting a path like /~2/foo while accessing a server with a specific user."
+    },
+    {
         "Modified": "2024-03-17T11:15:00",
         "Published": "2024-03-17T11:15:00",
         "access": {},
@@ -1661,57 +1714,5 @@
             "https://git.kernel.org/stable/c/ff40e51043af63715ab413995ff46996ecf9583f"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf, lockdown, audit: Fix buggy SELinux lockdown permission checks\n\nCommit 59438b46471a (\"security,lockdown,selinux: implement SELinux lockdown\")\nadded an implementation of the locked_down LSM hook to SELinux, with the aim\nto restrict which domains are allowed to perform operations that would breach\nlockdown. This is indirectly also getting audit subsystem involved to report\nevents. The latter is problematic, as reported by Ondrej and Serhei, since it\ncan bring down the whole system via audit:\n\n  1) The audit events that are triggered due to calls to security_locked_down()\n     can OOM kill a machine, see below details [0].\n\n  2) It also seems to be causing a deadlock via avc_has_perm()/slow_avc_audit()\n     when trying to wake up kauditd, for example, when using trace_sched_switch()\n     tracepoint, see details in [1]. Triggering this was not via some hypothetical\n     corner case, but with existing tools like runqlat & runqslower from bcc, for\n     example, which make use of this tracepoint. Rough call sequence goes like:\n\n     rq_lock(rq) -> -------------------------+\n       trace_sched_switch() ->               |\n         bpf_prog_xyz() ->                   +-> deadlock\n           selinux_lockdown() ->             |\n             audit_log_end() ->              |\n               wake_up_interruptible() ->    |\n                 try_to_wake_up() ->         |\n                   rq_lock(rq) --------------+\n\nWhat's worse is that the intention of 59438b46471a to further restrict lockdown\nsettings for specific applications in respect to the global lockdown policy is\ncompletely broken for BPF. The SELinux policy rule for the current lockdown check\nlooks something like this:\n\n  allow <who> <who> : lockdown { <reason> };\n\nHowever, this doesn't match with the 'current' task where the security_locked_down()\nis executed, example: httpd does a syscall. There is a tracing program attached\nto the syscall which triggers a BPF program to run, which ends up doing a\nbpf_probe_read_kernel{,_str}() helper call. The selinux_lockdown() hook does\nthe permission check against 'current', that is, httpd in this example. httpd\nhas literally zero relation to this tracing program, and it would be nonsensical\nhaving to write an SELinux policy rule against httpd to let the tracing helper\npass. The policy in this case needs to be against the entity that is installing\nthe BPF program. For example, if bpftrace would generate a histogram of syscall\ncounts by user space application:\n\n  bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @[comm] = count(); }'\n\nbpftrace would then go and generate a BPF program from this internally. One way\nof doing it [for the sake of the example] could be to call bpf_get_current_task()\nhelper and then access current->comm via one of bpf_probe_read_kernel{,_str}()\nhelpers. So the program itself has nothing to do with httpd or any other random\napp doing a syscall here. The BPF program _explicitly initiated_ the lockdown\ncheck. The allow/deny policy belongs in the context of bpftrace: meaning, you\nwant to grant bpftrace access to use these helpers, but other tracers on the\nsystem like my_random_tracer _not_.\n\nTherefore fix all three issues at the same time by taking a completely different\napproach for the security_locked_down() hook, that is, move the check into the\nprogram verification phase where we actually retrieve the BPF func proto. This\nalso reliably gets the task (current) that is trying to install the BPF tracing\nprogram, e.g. bpftrace/bcc/perf/systemtap/etc, and it also fixes the OOM since\nwe're moving this out of the BPF helper's fast-path which can be called several\nmillions of times per second.\n\nThe check is then also in line with other security_locked_down() hooks in the\nsystem where the enforcement is performed at open/load time, for example,\nopen_kcore() for /proc/kcore access or module_sig_check() for module signatures\njust to pick f\n---truncated---"
-    },
-    {
-        "Modified": "2024-03-15T21:15:00",
-        "Published": "2024-03-15T21:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47129",
-        "impact": {},
-        "last-modified": "2024-03-15T21:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/da8d31e80ff425f5a65dab7060d5c4aba749e562",
-            "https://git.kernel.org/stable/c/5f3429c05e4028a0e241afdad856dd15dec2ffb9",
-            "https://git.kernel.org/stable/c/2c0e6b35b88a961127066a1028bce9c727cbc3e5",
-            "https://git.kernel.org/stable/c/1710eb913bdcda3917f44d383c32de6bdabfc836"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_ct: skip expectations for confirmed conntrack\n\nnft_ct_expect_obj_eval() calls nf_ct_ext_add() for a confirmed\nconntrack entry. However, nf_ct_ext_add() can only be called for\n!nf_ct_is_confirmed().\n\n[ 1825.349056] WARNING: CPU: 0 PID: 1279 at net/netfilter/nf_conntrack_extend.c:48 nf_ct_xt_add+0x18e/0x1a0 [nf_conntrack]\n[ 1825.351391] RIP: 0010:nf_ct_ext_add+0x18e/0x1a0 [nf_conntrack]\n[ 1825.351493] Code: 41 5c 41 5d 41 5e 41 5f c3 41 bc 0a 00 00 00 e9 15 ff ff ff ba 09 00 00 00 31 f6 4c 89 ff e8 69 6c 3d e9 eb 96 45 31 ed eb cd <0f> 0b e9 b1 fe ff ff e8 86 79 14 e9 eb bf 0f 1f 40 00 0f 1f 44 00\n[ 1825.351721] RSP: 0018:ffffc90002e1f1e8 EFLAGS: 00010202\n[ 1825.351790] RAX: 000000000000000e RBX: ffff88814f5783c0 RCX: ffffffffc0e4f887\n[ 1825.351881] RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88814f578440\n[ 1825.351971] RBP: 0000000000000000 R08: 0000000000000000 R09: ffff88814f578447\n[ 1825.352060] R10: ffffed1029eaf088 R11: 0000000000000001 R12: ffff88814f578440\n[ 1825.352150] R13: ffff8882053f3a00 R14: 0000000000000000 R15: 0000000000000a20\n[ 1825.352240] FS:  00007f992261c900(0000) GS:ffff889faec00000(0000) knlGS:0000000000000000\n[ 1825.352343] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[ 1825.352417] CR2: 000056070a4d1158 CR3: 000000015efe0000 CR4: 0000000000350ee0\n[ 1825.352508] Call Trace:\n[ 1825.352544]  nf_ct_helper_ext_add+0x10/0x60 [nf_conntrack]\n[ 1825.352641]  nft_ct_expect_obj_eval+0x1b8/0x1e0 [nft_ct]\n[ 1825.352716]  nft_do_chain+0x232/0x850 [nf_tables]\n\nAdd the ct helper extension only for unconfirmed conntrack. Skip rule\nevaluation if the ct helper extension does not exist. Thus, you can\nonly create expectations from the first packet.\n\nIt should be possible to remove this limitation by adding a new action\nto attach a generic ct helper to the first packet. Then, use this ct\nhelper extension from follow up packets to create the ct expectation.\n\nWhile at it, add a missing check to skip the template conntrack too\nand remove check for IPCT_UNTRACK which is implicit to !ct."
-    },
-    {
-        "Modified": "2024-03-15T21:15:00",
-        "Published": "2024-03-15T21:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47130",
-        "impact": {},
-        "last-modified": "2024-03-15T21:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c440cd080761b18a52cac20f2a42e5da1e3995af",
-            "https://git.kernel.org/stable/c/8a452d62e7cea3c8a2676a3b89a9118755a1a271",
-            "https://git.kernel.org/stable/c/bcd9a0797d73eeff659582f23277e7ab6e5f18f3"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnvmet: fix freeing unallocated p2pmem\n\nIn case p2p device was found but the p2p pool is empty, the nvme target\nis still trying to free the sgl from the p2p pool instead of the\nregular sgl pool and causing a crash (BUG() is called). Instead, assign\nthe p2p_dev for the request only if it was allocated from p2p pool.\n\nThis is the crash that was caused:\n\n[Sun May 30 19:13:53 2021] ------------[ cut here ]------------\n[Sun May 30 19:13:53 2021] kernel BUG at lib/genalloc.c:518!\n[Sun May 30 19:13:53 2021] invalid opcode: 0000 [#1] SMP PTI\n...\n[Sun May 30 19:13:53 2021] kernel BUG at lib/genalloc.c:518!\n...\n[Sun May 30 19:13:53 2021] RIP: 0010:gen_pool_free_owner+0xa8/0xb0\n...\n[Sun May 30 19:13:53 2021] Call Trace:\n[Sun May 30 19:13:53 2021] ------------[ cut here ]------------\n[Sun May 30 19:13:53 2021]  pci_free_p2pmem+0x2b/0x70\n[Sun May 30 19:13:53 2021]  pci_p2pmem_free_sgl+0x4f/0x80\n[Sun May 30 19:13:53 2021]  nvmet_req_free_sgls+0x1e/0x80 [nvmet]\n[Sun May 30 19:13:53 2021] kernel BUG at lib/genalloc.c:518!\n[Sun May 30 19:13:53 2021]  nvmet_rdma_release_rsp+0x4e/0x1f0 [nvmet_rdma]\n[Sun May 30 19:13:53 2021]  nvmet_rdma_send_done+0x1c/0x60 [nvmet_rdma]"
-    },
-    {
-        "Modified": "2024-03-15T21:15:00",
-        "Published": "2024-03-15T21:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47131",
-        "impact": {},
-        "last-modified": "2024-03-15T21:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/f1d4184f128dede82a59a841658ed40d4e6d3aa2",
-            "https://git.kernel.org/stable/c/0f1e6fe66977a864fe850522316f713d7b926fd9",
-            "https://git.kernel.org/stable/c/c55dcdd435aa6c6ad6ccac0a4c636d010ee367a4"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/tls: Fix use-after-free after the TLS device goes down and up\n\nWhen a netdev with active TLS offload goes down, tls_device_down is\ncalled to stop the offload and tear down the TLS context. However, the\nsocket stays alive, and it still points to the TLS context, which is now\ndeallocated. If a netdev goes up, while the connection is still active,\nand the data flow resumes after a number of TCP retransmissions, it will\nlead to a use-after-free of the TLS context.\n\nThis commit addresses this bug by keeping the context alive until its\nnormal destruction, and implements the necessary fallbacks, so that the\nconnection can resume in software (non-offloaded) kTLS mode.\n\nOn the TX side tls_sw_fallback is used to encrypt all packets. The RX\nside already has all the necessary fallbacks, because receiving\nnon-decrypted packets is supported. The thing needed on the RX side is\nto block resync requests, which are normally produced after receiving\nnon-decrypted packets.\n\nThe necessary synchronization is implemented for a graceful teardown:\nfirst the fallbacks are deployed, then the driver resources are released\n(it used to be possible to have a tls_dev_resync after tls_dev_del).\n\nA new flag called TLS_RX_DEV_DEGRADED is added to indicate the fallback\nmode. It's used to skip the RX resync logic completely, as it becomes\nuseless, and some objects may be released (for example, resync_async,\nwhich is allocated and freed by the driver)."
     }
 ]
