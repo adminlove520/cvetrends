@@ -1,6 +1,149 @@
 [
     {
-        "Modified": "2024-03-18T15:15:00",
+        "Modified": "2024-03-18T17:56:00",
+        "Published": "2024-02-22T17:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-119",
+        "id": "CVE-2024-26589",
+        "impact": {},
+        "last-modified": "2024-03-18T17:56:00",
+        "references": [
+            "https://git.kernel.org/stable/c/29ffa63f21bcdcef3e36b03cccf9d0cd031f6ab0",
+            "https://git.kernel.org/stable/c/4108b86e324da42f7ed425bd71632fd844300dc8",
+            "https://git.kernel.org/stable/c/e8d3872b617c21100c5ee4f64e513997a68c2e3d",
+            "https://git.kernel.org/stable/c/1b500d5d6cecf98dd6ca88bc9e7ae1783c83e6d3",
+            "https://git.kernel.org/stable/c/22c7fa171a02d310e3a3f6ed46a698ca8a0060ed"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Reject variable offset alu on PTR_TO_FLOW_KEYS\n\nFor PTR_TO_FLOW_KEYS, check_flow_keys_access() only uses fixed off\nfor validation. However, variable offset ptr alu is not prohibited\nfor this ptr kind. So the variable offset is not checked.\n\nThe following prog is accepted:\n\n  func#0 @0\n  0: R1=ctx() R10=fp0\n  0: (bf) r6 = r1                       ; R1=ctx() R6_w=ctx()\n  1: (79) r7 = *(u64 *)(r6 +144)        ; R6_w=ctx() R7_w=flow_keys()\n  2: (b7) r8 = 1024                     ; R8_w=1024\n  3: (37) r8 /= 1                       ; R8_w=scalar()\n  4: (57) r8 &= 1024                    ; R8_w=scalar(smin=smin32=0,\n  smax=umax=smax32=umax32=1024,var_off=(0x0; 0x400))\n  5: (0f) r7 += r8\n  mark_precise: frame0: last_idx 5 first_idx 0 subseq_idx -1\n  mark_precise: frame0: regs=r8 stack= before 4: (57) r8 &= 1024\n  mark_precise: frame0: regs=r8 stack= before 3: (37) r8 /= 1\n  mark_precise: frame0: regs=r8 stack= before 2: (b7) r8 = 1024\n  6: R7_w=flow_keys(smin=smin32=0,smax=umax=smax32=umax32=1024,var_off\n  =(0x0; 0x400)) R8_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=1024,\n  var_off=(0x0; 0x400))\n  6: (79) r0 = *(u64 *)(r7 +0)          ; R0_w=scalar()\n  7: (95) exit\n\nThis prog loads flow_keys to r7, and adds the variable offset r8\nto r7, and finally causes out-of-bounds access:\n\n  BUG: unable to handle page fault for address: ffffc90014c80038\n  [...]\n  Call Trace:\n   <TASK>\n   bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]\n   __bpf_prog_run include/linux/filter.h:651 [inline]\n   bpf_prog_run include/linux/filter.h:658 [inline]\n   bpf_prog_run_pin_on_cpu include/linux/filter.h:675 [inline]\n   bpf_flow_dissect+0x15f/0x350 net/core/flow_dissector.c:991\n   bpf_prog_test_run_flow_dissector+0x39d/0x620 net/bpf/test_run.c:1359\n   bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]\n   __sys_bpf+0xf8f/0x4560 kernel/bpf/syscall.c:5475\n   __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]\n   __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]\n   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:5559\n   do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n   do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83\n   entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nFix this by rejecting ptr alu with variable offset on flow_keys.\nApplying the patch rejects the program with \"R7 pointer arithmetic\non flow_keys prohibited\"."
+    },
+    {
+        "Modified": "2024-03-18T17:54:00",
+        "Published": "2024-02-22T17:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-26590",
+        "impact": {},
+        "last-modified": "2024-03-18T17:54:00",
+        "references": [
+            "https://git.kernel.org/stable/c/823ba1d2106019ddf195287ba53057aee33cf724",
+            "https://git.kernel.org/stable/c/eed24b816e50c6cd18cbee0ff0d7218c8fced199",
+            "https://git.kernel.org/stable/c/118a8cf504d7dfa519562d000f423ee3ca75d2c4",
+            "https://git.kernel.org/stable/c/47467e04816cb297905c0f09bc2d11ef865942d9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nerofs: fix inconsistent per-file compression format\n\nEROFS can select compression algorithms on a per-file basis, and each\nper-file compression algorithm needs to be marked in the on-disk\nsuperblock for initialization.\n\nHowever, syzkaller can generate inconsistent crafted images that use\nan unsupported algorithmtype for specific inodes, e.g. use MicroLZMA\nalgorithmtype even it's not set in `sbi->available_compr_algs`.  This\ncan lead to an unexpected \"BUG: kernel NULL pointer dereference\" if\nthe corresponding decompressor isn't built-in.\n\nFix this by checking against `sbi->available_compr_algs` for each\nm_algorithmformat request.  Incorrect !erofs_sb_has_compr_cfgs preset\nbitmap is now fixed together since it was harmless previously."
+    },
+    {
+        "Modified": "2024-03-18T17:54:00",
+        "Published": "2024-02-22T17:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-26591",
+        "impact": {},
+        "last-modified": "2024-03-18T17:54:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a7b98aa10f895e2569403896f2d19b73b6c95653",
+            "https://git.kernel.org/stable/c/6cc9c0af0aa06f781fa515a1734b1a4239dfd2c0",
+            "https://git.kernel.org/stable/c/8c8bcd45e9b10eef12321f08d2e5be33d615509c",
+            "https://git.kernel.org/stable/c/50ae82f080cf87e84828f066c31723b781d68f5b",
+            "https://git.kernel.org/stable/c/715d82ba636cb3629a6e18a33bb9dbe53f9936ee"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Fix re-attachment branch in bpf_tracing_prog_attach\n\nThe following case can cause a crash due to missing attach_btf:\n\n1) load rawtp program\n2) load fentry program with rawtp as target_fd\n3) create tracing link for fentry program with target_fd = 0\n4) repeat 3\n\nIn the end we have:\n\n- prog->aux->dst_trampoline == NULL\n- tgt_prog == NULL (because we did not provide target_fd to link_create)\n- prog->aux->attach_btf == NULL (the program was loaded with attach_prog_fd=X)\n- the program was loaded for tgt_prog but we have no way to find out which one\n\n    BUG: kernel NULL pointer dereference, address: 0000000000000058\n    Call Trace:\n     <TASK>\n     ? __die+0x20/0x70\n     ? page_fault_oops+0x15b/0x430\n     ? fixup_exception+0x22/0x330\n     ? exc_page_fault+0x6f/0x170\n     ? asm_exc_page_fault+0x22/0x30\n     ? bpf_tracing_prog_attach+0x279/0x560\n     ? btf_obj_id+0x5/0x10\n     bpf_tracing_prog_attach+0x439/0x560\n     __sys_bpf+0x1cf4/0x2de0\n     __x64_sys_bpf+0x1c/0x30\n     do_syscall_64+0x41/0xf0\n     entry_SYSCALL_64_after_hwframe+0x6e/0x76\n\nReturn -EINVAL in this situation."
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
+        "Published": "2024-03-18T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27096",
+        "impact": {},
+        "last-modified": "2024-03-18T17:15:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-2x8m-vrcm-2jqv",
+            "https://github.com/glpi-project/glpi/commit/61a0c2302b4f633f5065358adc36058e1abc37f9",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can exploit a SQL injection vulnerability in the search engine to extract data from the database. This issue has been patched in version 10.0.13."
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
+        "Published": "2024-03-18T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27098",
+        "impact": {},
+        "last-modified": "2024-03-18T17:15:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-92x4-q9w5-837w",
+            "https://github.com/glpi-project/glpi/commit/3b6bc1b4aa1f3693b20ada3425d2de5108522484",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can execute a SSRF based attack using Arbitrary Object Instantiation. This issue has been patched in version 10.0.13."
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
+        "Published": "2024-03-18T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27104",
+        "impact": {},
+        "last-modified": "2024-03-18T17:15:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-prc3-cx5m-h5mj",
+            "https://github.com/glpi-project/glpi/commit/b409ca437864607b03c2014b9e3293b7f141af65",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. A user with rights to create and share dashboards can build a dashboard containing javascript code. Any user that will open this dashboard will be subject to an XSS attack. This issue has been patched in version 10.0.13.\n"
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
+        "Published": "2024-03-18T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27914",
+        "impact": {},
+        "last-modified": "2024-03-18T17:15:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-rcxj-fqr4-q34r",
+            "https://github.com/glpi-project/glpi/commit/69e0dee8de0c0df139b42dbfa1a8997888c2af95",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An unauthenticated user can provide a malicious link to a GLPI administrator in order to exploit a reflected XSS  vulnerability. The XSS will only trigger if the administrator navigates through the debug bar. This issue has been patched in version 10.0.13.\n"
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
+        "Published": "2024-03-18T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-28054",
+        "impact": {},
+        "last-modified": "2024-03-18T17:15:00",
+        "references": [
+            "https://www.amavis.org/release-notes.txt",
+            "https://metacpan.org/pod/MIME::Tools",
+            "https://gitlab.com/amavis/amavis/-/issues/112",
+            "https://gitlab.com/amavis/amavis/-/raw/v2.13.1/README_FILES/README.CVE-2024-28054",
+            "https://lists.amavis.org/pipermail/amavis-users/2024-March/006811.html"
+        ],
+        "summary": "Amavis before 2.12.3 and 2.13.x before 2.13.1, in part because of its use of MIME-tools, has an Interpretation Conflict (relative to some mail user agents) when there are multiple boundary parameters in a MIME email message. Consequently, there can be an incorrect check for banned files or malware."
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
         "Published": "2024-03-18T15:15:00",
         "access": {},
         "assigner": "secalert@redhat.com",
@@ -8,14 +151,244 @@
         "cwe": "CWE-269",
         "id": "CVE-2024-1753",
         "impact": {},
-        "last-modified": "2024-03-18T15:15:00",
+        "last-modified": "2024-03-18T17:15:00",
         "references": [
             "https://access.redhat.com/security/cve/CVE-2024-1753",
             "https://bugzilla.redhat.com/show_bug.cgi?id=2265513",
             "https://github.com/containers/buildah/security/advisories/GHSA-pmf3-c36m-g5cf",
             "https://github.com/containers/podman/security/advisories/GHSA-874v-pj72-92f3"
         ],
-        "summary": "A flaw was found in Podman Build and Buildah which allows containers to mount arbitrary locations on the host filesystem into build containers. A malicious Containerfile can use a dummy image with a symbolic link to the root filesystem as a mount source and cause the mount operation to mount the host root filesystem inside the RUN step. The commands inside the RUN step will then have read-write access to the host filesystem, allowing for full container escape at build time."
+        "summary": "A flaw was found in Buildah (and subsequently Podman Build) which allows containers to mount arbitrary locations on the host filesystem into build containers. A malicious Containerfile can use a dummy image with a symbolic link to the root filesystem as a mount source and cause the mount operation to mount the host root filesystem inside the RUN step. The commands inside the RUN step will then have read-write access to the host filesystem, allowing for full container escape at build time."
+    },
+    {
+        "Modified": "2024-03-18T17:15:00",
+        "Published": "2024-02-08T13:15:00",
+        "access": {},
+        "assigner": "cna@postgresql.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-0985",
+        "impact": {},
+        "last-modified": "2024-03-18T17:15:00",
+        "references": [
+            "https://www.postgresql.org/support/security/CVE-2024-0985/",
+            "https://lists.debian.org/debian-lts-announce/2024/03/msg00017.html"
+        ],
+        "summary": "Late privilege drop in REFRESH MATERIALIZED VIEW CONCURRENTLY in PostgreSQL allows an object creator to execute arbitrary SQL functions as the command issuer. The command intends to run SQL functions as the owner of the materialized view, enabling safe refresh of untrusted materialized views. The victim is a superuser or member of one of the attacker's roles. The attack requires luring the victim into running REFRESH MATERIALIZED VIEW CONCURRENTLY on the attacker's materialized view. As part of exploiting this vulnerability, the attacker creates functions that use CREATE RULE to convert the internally-built temporary table to a view. Versions before PostgreSQL 15.6, 14.11, 13.14, and 12.18 are affected. The only known exploit does not work in PostgreSQL 16 and later. For defense in depth, PostgreSQL 16.2 adds the protections that older branches are using to fix their vulnerability."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1333",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/30546402-03b8-4e18-ad7e-04a6b556ffd7/"
+        ],
+        "summary": "The Responsive Pricing Table WordPress plugin before 5.1.11 does not validate and escape some of its Pricing Table options before outputting them back in a page/post where the related shortcode is embed, which could allow users with the author role and above to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1331",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/b2bac900-3d8f-406c-b03d-c8db156acc59/"
+        ],
+        "summary": "The Team Members WordPress plugin before 5.3.2 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the author role and above to perform Stored Cross-Site Scripting attacks."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1658",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/9489925e-5a47-4608-90a2-0139c5e1c43c/"
+        ],
+        "summary": "The Grid Shortcodes WordPress plugin before 1.1.1 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-20752",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by a Use After Free vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-122",
+        "id": "CVE-2024-20755",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-20756",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-20757",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27930",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-82vv-j9pr-qmwq",
+            "https://github.com/glpi-project/glpi/commit/1942b70b2422fff51822f6eb3af500c94760871e",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can access sensitive fields data from items on which he has read access. This issue has been patched in version 10.0.13."
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27937",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-98qw-hpg3-2hpj",
+            "https://github.com/glpi-project/glpi/commit/d02c537d23cbb729fe18b87f71b3c6e84e9892da",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can obtain the email address of all GLPI users. This issue has been patched in version 10.0.13.\n"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-2050",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
+        ],
+        "summary": "\nCWE-79: Improper Neutralization of Input During Web Page Generation (\u2018Cross-site Scripting\u2019)\nvulnerability exists when an attacker injects then executes arbitrary malicious JavaScript code\nwithin the context of the product.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "CWE-307",
+        "id": "CVE-2024-2051",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
+        ],
+        "summary": "\nCWE-307: Improper Restriction of Excessive Authentication Attempts vulnerability exists that\ncould cause account takeover and unauthorized access to the system when an attacker\nconducts brute-force attacks against the login form.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2052",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
+        ],
+        "summary": "\nCWE-552: Files or Directories Accessible to External Parties vulnerability exists that could allow\nunauthenticated files and logs exfiltration and download of files when an attacker modifies the\nURL to download to a different location.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2024-2229",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-02&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-02.pdf"
+        ],
+        "summary": "\nCWE-502: Deserialization of Untrusted Data vulnerability exists that could cause remote code\nexecution when a malicious project file is loaded into the application by a valid user.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T16:15:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "vulnreport@tenable.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2390",
+        "impact": {},
+        "last-modified": "2024-03-18T16:15:00",
+        "references": [
+            "https://www.tenable.com/security/tns-2024-05"
+        ],
+        "summary": "\nAs a part of Tenable\u2019s vulnerability disclosure program, a vulnerability in a Nessus plugin was identified and reported. This vulnerability could allow a malicious actor with sufficient permissions on a scan target to place a binary in a specific filesystem location, and abuse the impacted plugin in order to escalate privileges.\n\n"
     },
     {
         "Modified": "2024-03-18T15:15:00",
@@ -1306,382 +1679,5 @@
             "https://jvn.jp/en/jp/JVN94521208/"
         ],
         "summary": "Cross-site scripting vulnerability exists in FitNesse releases prior to 20220319, which may allow a remote unauthenticated attacker to execute an arbitrary script on the web browser of the user who is using the product and accessing a link with a specially crafted certain parameter."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T09:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28039",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/unclebob/fitnesse",
-            "http://fitnesse.org/FitNesseDownload",
-            "https://github.com/unclebob/fitnesse/blob/master/SECURITY.md",
-            "https://jvn.jp/en/jp/JVN94521208/"
-        ],
-        "summary": "Improper restriction of XML external entity references vulnerability exists in FitNesse all releases, which allows a remote unauthenticated attacker to obtain sensitive information, alter data, or cause a denial-of-service (DoS) condition."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52159",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://codeberg.org/bizdelnick/gross/wiki/Known-vulnerabilities#cve-2023-52159"
-        ],
-        "summary": "A stack-based buffer overflow vulnerability in gross 0.9.3 through 1.x before 1.0.4 allows remote attackers to trigger a denial of service (grossd daemon crash) or potentially execute arbitrary code in grossd via crafted SMTP transaction parameters that cause an incorrect strncat for a log entry."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24230",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://blog.munz4u.de/posts/2023/11/cve-2023-xxxxx-rce-via-ssti-in-komm.one-cms-10.4.2.14/"
-        ],
-        "summary": "Komm.One CMS 10.4.2.14 has a Server-Side Template Injection (SSTI) vulnerability via the Velocity template engine. It allows remote attackers to execute arbitrary code via a URL that specifies java.lang.Runtime in conjunction with getRuntime().exec followed by an OS command."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T02:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-2574",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://vuldb.com/?id.257077",
-            "https://vuldb.com/?ctiid.257077",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/SOURCECODESTER%20Employee%20Task%20Management%20System/IDOR%20-%20edit-task.php.md"
-        ],
-        "summary": "A vulnerability classified as critical was found in SourceCodester Employee Task Management System 1.0. Affected by this vulnerability is an unknown functionality of the file /edit-task.php. The manipulation of the argument task_id leads to authorization bypass. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-257077 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T02:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-2575",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://vuldb.com/?id.257078",
-            "https://vuldb.com/?ctiid.257078",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/SOURCECODESTER%20Employee%20Task%20Management%20System/IDOR%20-%20task-details.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in SourceCodester Employee Task Management System 1.0. Affected by this issue is some unknown functionality of the file /task-details.php. The manipulation of the argument task_id leads to authorization bypass. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. VDB-257078 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T02:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-2576",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://vuldb.com/?id.257079",
-            "https://vuldb.com/?ctiid.257079",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/SOURCECODESTER%20Employee%20Task%20Management%20System/IDOR%20-%20update-admin.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in SourceCodester Employee Task Management System 1.0. This affects an unknown part of the file /update-admin.php. The manipulation of the argument admin_id leads to authorization bypass. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-257079."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T03:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-47036",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://semaja2.net/2023/06/11/siklu-tg-auth-bypass.html"
-        ],
-        "summary": "Siklu TG Terragraph devices before approximately 2.1.1 have a hardcoded root password that has been revealed via a brute force attack on an MD5 hash. It can be used for \"debug login\" by an admin. NOTE: the vulnerability is not fixed by the 2.1.1 firmware; instead, it is fixed in newer hardware, which would typically be used with firmware 2.1.1 or later."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T03:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-47037",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://semaja2.net/2023/06/11/siklu-tg-auth-bypass.html"
-        ],
-        "summary": "Siklu TG Terragraph devices before 2.1.1 allow attackers to discover valid, randomly generated credentials via GetCredentials."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T03:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-24539",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/fusionpbx/fusionpbx/commit/ee202cd61dc9a79fb2d634b1ad21ff2416d531cb",
-            "https://github.com/fusionpbx/fusionpbx/commit/2f8bed375c124c1d7e36138acc6903fcfcf15a8f"
-        ],
-        "summary": "FusionPBX before 5.2.0 does not validate a session."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T03:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-2577",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://vuldb.com/?id.257080",
-            "https://vuldb.com/?ctiid.257080",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/SOURCECODESTER%20Employee%20Task%20Management%20System/IDOR%20-%20update-employee.php.md"
-        ],
-        "summary": "A vulnerability has been found in SourceCodester Employee Task Management System 1.0 and classified as critical. This vulnerability affects unknown code of the file /update-employee.php. The manipulation of the argument admin_id leads to authorization bypass. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-257080."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T03:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-2581",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://vuldb.com/?id.257081",
-            "https://vuldb.com/?ctiid.257081",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC10/V16.03.10.13/fromSetRouteStatic.md"
-        ],
-        "summary": "A vulnerability was found in Tenda AC10 16.03.10.13 and classified as critical. This issue affects the function fromSetRouteStatic of the file /goform/SetStaticRouteCfg. The manipulation of the argument list leads to stack-based buffer overflow. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-257081 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27757",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/jubilianite/flusity-CMS/security/advisories/GHSA-5843-5m74-7fqh"
-        ],
-        "summary": "flusity CMS through 2.45 allows tools/addons_model.php Gallery Name XSS. The reporter indicates that this product \"ceased its development as of February 2024.\""
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T04:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28745",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://jvn.jp/en/jp/JVN70640802/"
-        ],
-        "summary": "Improper export of Android application components issue exists in 'ABEMA' App for Android prior to 10.65.0 allowing another app installed on the user's device to access an arbitrary URL on 'ABEMA' App for Android via Intent. If this vulnerability is exploited, an arbitrary website may be displayed on the app, and as a result, the user may become a victim of a phishing attack."
-    },
-    {
-        "Modified": "2024-03-18T11:15:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52609",
-        "impact": {},
-        "last-modified": "2024-03-18T11:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/95b1d336b0642198b56836b89908d07b9a0c9608",
-            "https://git.kernel.org/stable/c/252a2a5569eb9f8d16428872cc24dea1ac0bb097",
-            "https://git.kernel.org/stable/c/7e7a0d86542b0ea903006d3f42f33c4f7ead6918",
-            "https://git.kernel.org/stable/c/98fee5bee97ad47b527a997d5786410430d1f0e9",
-            "https://git.kernel.org/stable/c/6696f76c32ff67fec26823fc2df46498e70d9bf3",
-            "https://git.kernel.org/stable/c/67f16bf2cc1698fd50e01ee8a2becc5a8e6d3a3e",
-            "https://git.kernel.org/stable/c/77d210e8db4d61d43b2d16df66b1ec46fad2ee01",
-            "https://git.kernel.org/stable/c/9a9ab0d963621d9d12199df9817e66982582d5a5"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix race between mmput() and do_exit()\n\nTask A calls binder_update_page_range() to allocate and insert pages on\na remote address space from Task B. For this, Task A pins the remote mm\nvia mmget_not_zero() first. This can race with Task B do_exit() and the\nfinal mmput() refcount decrement will come from Task A.\n\n  Task A            | Task B\n  ------------------+------------------\n  mmget_not_zero()  |\n                    |  do_exit()\n                    |    exit_mm()\n                    |      mmput()\n  mmput()           |\n    exit_mmap()     |\n      remove_vma()  |\n        fput()      |\n\nIn this case, the work of ____fput() from Task B is queued up in Task A\nas TWA_RESUME. So in theory, Task A returns to userspace and the cleanup\nwork gets executed. However, Task A instead sleep, waiting for a reply\nfrom Task B that never comes (it's dead).\n\nThis means the binder_deferred_release() is blocked until an unrelated\nbinder event forces Task A to go back to userspace. All the associated\ndeath notifications will also be delayed until then.\n\nIn order to fix this use mmput_async() that will schedule the work in\nthe corresponding mm->async_put_work WQ instead of Task A."
-    },
-    {
-        "Modified": "2024-03-18T11:15:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52610",
-        "impact": {},
-        "last-modified": "2024-03-18T11:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/172ba7d46c202e679f3ccb10264c67416aaeb1c4",
-            "https://git.kernel.org/stable/c/0b5b831122fc3789fff75be433ba3e4dd7b779d4",
-            "https://git.kernel.org/stable/c/73f7da5fd124f2cda9161e2e46114915e6e82e97",
-            "https://git.kernel.org/stable/c/f5346df0591d10bc948761ca854b1fae6d2ef441",
-            "https://git.kernel.org/stable/c/3f14b377d01d8357eba032b4cabc8c1149b458b6"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_ct: fix skb leak and crash on ooo frags\n\nact_ct adds skb->users before defragmentation. If frags arrive in order,\nthe last frag's reference is reset in:\n\n  inet_frag_reasm_prepare\n    skb_morph\n\nwhich is not straightforward.\n\nHowever when frags arrive out of order, nobody unref the last frag, and\nall frags are leaked. The situation is even worse, as initiating packet\ncapture can lead to a crash[0] when skb has been cloned and shared at the\nsame time.\n\nFix the issue by removing skb_get() before defragmentation. act_ct\nreturns TC_ACT_CONSUMED when defrag failed or in progress.\n\n[0]:\n[  843.804823] ------------[ cut here ]------------\n[  843.809659] kernel BUG at net/core/skbuff.c:2091!\n[  843.814516] invalid opcode: 0000 [#1] PREEMPT SMP\n[  843.819296] CPU: 7 PID: 0 Comm: swapper/7 Kdump: loaded Tainted: G S 6.7.0-rc3 #2\n[  843.824107] Hardware name: XFUSION 1288H V6/BC13MBSBD, BIOS 1.29 11/25/2022\n[  843.828953] RIP: 0010:pskb_expand_head+0x2ac/0x300\n[  843.833805] Code: 8b 70 28 48 85 f6 74 82 48 83 c6 08 bf 01 00 00 00 e8 38 bd ff ff 8b 83 c0 00 00 00 48 03 83 c8 00 00 00 e9 62 ff ff ff 0f 0b <0f> 0b e8 8d d0 ff ff e9 b3 fd ff ff 81 7c 24 14 40 01 00 00 4c 89\n[  843.843698] RSP: 0018:ffffc9000cce07c0 EFLAGS: 00010202\n[  843.848524] RAX: 0000000000000002 RBX: ffff88811a211d00 RCX: 0000000000000820\n[  843.853299] RDX: 0000000000000640 RSI: 0000000000000000 RDI: ffff88811a211d00\n[  843.857974] RBP: ffff888127d39518 R08: 00000000bee97314 R09: 0000000000000000\n[  843.862584] R10: 0000000000000000 R11: ffff8881109f0000 R12: 0000000000000880\n[  843.867147] R13: ffff888127d39580 R14: 0000000000000640 R15: ffff888170f7b900\n[  843.871680] FS:  0000000000000000(0000) GS:ffff889ffffc0000(0000) knlGS:0000000000000000\n[  843.876242] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  843.880778] CR2: 00007fa42affcfb8 CR3: 000000011433a002 CR4: 0000000000770ef0\n[  843.885336] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  843.889809] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  843.894229] PKRU: 55555554\n[  843.898539] Call Trace:\n[  843.902772]  <IRQ>\n[  843.906922]  ? __die_body+0x1e/0x60\n[  843.911032]  ? die+0x3c/0x60\n[  843.915037]  ? do_trap+0xe2/0x110\n[  843.918911]  ? pskb_expand_head+0x2ac/0x300\n[  843.922687]  ? do_error_trap+0x65/0x80\n[  843.926342]  ? pskb_expand_head+0x2ac/0x300\n[  843.929905]  ? exc_invalid_op+0x50/0x60\n[  843.933398]  ? pskb_expand_head+0x2ac/0x300\n[  843.936835]  ? asm_exc_invalid_op+0x1a/0x20\n[  843.940226]  ? pskb_expand_head+0x2ac/0x300\n[  843.943580]  inet_frag_reasm_prepare+0xd1/0x240\n[  843.946904]  ip_defrag+0x5d4/0x870\n[  843.950132]  nf_ct_handle_fragments+0xec/0x130 [nf_conntrack]\n[  843.953334]  tcf_ct_act+0x252/0xd90 [act_ct]\n[  843.956473]  ? tcf_mirred_act+0x516/0x5a0 [act_mirred]\n[  843.959657]  tcf_action_exec+0xa1/0x160\n[  843.962823]  fl_classify+0x1db/0x1f0 [cls_flower]\n[  843.966010]  ? skb_clone+0x53/0xc0\n[  843.969173]  tcf_classify+0x24d/0x420\n[  843.972333]  tc_run+0x8f/0xf0\n[  843.975465]  __netif_receive_skb_core+0x67a/0x1080\n[  843.978634]  ? dev_gro_receive+0x249/0x730\n[  843.981759]  __netif_receive_skb_list_core+0x12d/0x260\n[  843.984869]  netif_receive_skb_list_internal+0x1cb/0x2f0\n[  843.987957]  ? mlx5e_handle_rx_cqe_mpwrq_rep+0xfa/0x1a0 [mlx5_core]\n[  843.991170]  napi_complete_done+0x72/0x1a0\n[  843.994305]  mlx5e_napi_poll+0x28c/0x6d0 [mlx5_core]\n[  843.997501]  __napi_poll+0x25/0x1b0\n[  844.000627]  net_rx_action+0x256/0x330\n[  844.003705]  __do_softirq+0xb3/0x29b\n[  844.006718]  irq_exit_rcu+0x9e/0xc0\n[  844.009672]  common_interrupt+0x86/0xa0\n[  844.012537]  </IRQ>\n[  844.015285]  <TASK>\n[  844.017937]  asm_common_interrupt+0x26/0x40\n[  844.020591] RIP: 0010:acpi_safe_halt+0x1b/0x20\n[  844.023247] Code: ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 65 48 8b 04 25 00 18 03 00 48 8b 00 a8 08 75 0c 66 90 0f 00 2d 81 d0 44 00 fb\n---truncated---"
-    },
-    {
-        "Modified": "2024-03-18T11:15:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52611",
-        "impact": {},
-        "last-modified": "2024-03-18T11:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/5b5ddf21b978ec315cab9d9e7e6ac7374791a8c7",
-            "https://git.kernel.org/stable/c/0e9ffff72a0674cd6656314dbd99cdd2123a3030",
-            "https://git.kernel.org/stable/c/00384f565a91c08c4bedae167f749b093d10e3fe"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: rtw88: sdio: Honor the host max_req_size in the RX path\n\nLukas reports skb_over_panic errors on his Banana Pi BPI-CM4 which comes\nwith an Amlogic A311D (G12B) SoC and a RTL8822CS SDIO wifi/Bluetooth\ncombo card. The error he observed is identical to what has been fixed\nin commit e967229ead0e (\"wifi: rtw88: sdio: Check the HISR RX_REQUEST\nbit in rtw_sdio_rx_isr()\") but that commit didn't fix Lukas' problem.\n\nLukas found that disabling or limiting RX aggregation works around the\nproblem for some time (but does not fully fix it). In the following\ndiscussion a few key topics have been discussed which have an impact on\nthis problem:\n- The Amlogic A311D (G12B) SoC has a hardware bug in the SDIO controller\n  which prevents DMA transfers. Instead all transfers need to go through\n  the controller SRAM which limits transfers to 1536 bytes\n- rtw88 chips don't split incoming (RX) packets, so if a big packet is\n  received this is forwarded to the host in it's original form\n- rtw88 chips can do RX aggregation, meaning more multiple incoming\n  packets can be pulled by the host from the card with one MMC/SDIO\n  transfer. This Depends on settings in the REG_RXDMA_AGG_PG_TH\n  register (BIT_RXDMA_AGG_PG_TH limits the number of packets that will\n  be aggregated, BIT_DMA_AGG_TO_V1 configures a timeout for aggregation\n  and BIT_EN_PRE_CALC makes the chip honor the limits more effectively)\n\nUse multiple consecutive reads in rtw_sdio_read_port() and limit the\nnumber of bytes which are copied by the host from the card in one\nMMC/SDIO transfer. This allows receiving a buffer that's larger than\nthe hosts max_req_size (number of bytes which can be transferred in\none MMC/SDIO transfer). As a result of this the skb_over_panic error\nis gone as the rtw88 driver is now able to receive more than 1536 bytes\nfrom the card (either because the incoming packet is larger than that\nor because multiple packets have been aggregated).\n\nIn case of an receive errors (-EILSEQ has been observed by Lukas) we\nneed to drain the remaining data from the card's buffer, otherwise the\ncard will return corrupt data for the next rtw_sdio_read_port() call."
-    },
-    {
-        "Modified": "2024-03-18T11:15:00",
-        "Published": "2024-03-15T21:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47115",
-        "impact": {},
-        "last-modified": "2024-03-18T11:15:00",
-        "references": [],
-        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
-    },
-    {
-        "Modified": "2024-03-18T10:15:00",
-        "Published": "2024-03-18T10:15:00",
-        "access": {},
-        "assigner": "cvd@cert.pl",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1604",
-        "impact": {},
-        "last-modified": "2024-03-18T10:15:00",
-        "references": [
-            "https://cert.pl/posts/2024/03/CVE-2024-1604",
-            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
-            "https://www.bmc.com/it-solutions/control-m.html"
-        ],
-        "summary": "Improper authorization in the report management and creation module of BMC Control-M branches\u00a09.0.20 and 9.0.21 allows logged-in users to read and make unauthorized changes to any reports available within the application, even without proper permissions. The attacker must know the unique identifier of the report they want to manipulate.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n"
-    },
-    {
-        "Modified": "2024-03-18T10:15:00",
-        "Published": "2024-03-18T10:15:00",
-        "access": {},
-        "assigner": "cvd@cert.pl",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1605",
-        "impact": {},
-        "last-modified": "2024-03-18T10:15:00",
-        "references": [
-            "https://cert.pl/posts/2024/03/CVE-2024-1604",
-            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
-            "https://www.bmc.com/it-solutions/control-m.html"
-        ],
-        "summary": "BMC Control-M  branches 9.0.20 and 9.0.21 upon user login load all Dynamic Link Libraries (DLL)  from a directory that grants Write and Read permissions to all users. Leveraging it leads to loading of a potentially malicious libraries, which will execute with the application's privileges. \n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n\n"
-    },
-    {
-        "Modified": "2024-03-18T10:15:00",
-        "Published": "2024-03-18T10:15:00",
-        "access": {},
-        "assigner": "cvd@cert.pl",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1606",
-        "impact": {},
-        "last-modified": "2024-03-18T10:15:00",
-        "references": [
-            "https://cert.pl/posts/2024/03/CVE-2024-1604",
-            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
-            "https://www.bmc.com/it-solutions/control-m.html"
-        ],
-        "summary": "Lack of input sanitization in BMC Control-M  branches 9.0.20 and 9.0.21 allows logged-in users for\u00a0manipulation of generated  web pages via injection of  HTML code. This might lead to a successful phishing attack for example by tricking users into using a hyperlink pointing to a website controlled by an attacker.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.200. \n\n"
-    },
-    {
-        "Modified": "2024-03-18T04:15:00",
-        "Published": "2023-12-26T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-369",
-        "id": "CVE-2023-51104",
-        "impact": {},
-        "last-modified": "2024-03-18T04:15:00",
-        "references": [
-            "https://github.com/dongyuma/sox-defects/blob/main/mupdf-defects.md"
-        ],
-        "summary": "A floating point exception (divide-by-zero) vulnerability was discovered in mupdf 1.23.4 in function pnm_binary_read_image() of load-pnm.c when span equals zero."
-    },
-    {
-        "Modified": "2024-03-18T04:15:00",
-        "Published": "2023-12-26T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-369",
-        "id": "CVE-2023-51106",
-        "impact": {},
-        "last-modified": "2024-03-18T04:15:00",
-        "references": [
-            "https://github.com/dongyuma/sox-defects/blob/main/mupdf-defects.md"
-        ],
-        "summary": "A floating point exception (divide-by-zero) vulnerability was discovered in mupdf 1.23.4 in function pnm_binary_read_image() of load-pnm.c when fz_colorspace_n returns zero."
-    },
-    {
-        "Modified": "2024-03-18T01:53:00",
-        "Published": "2024-03-18T01:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-39223",
-        "impact": {},
-        "last-modified": "2024-03-18T01:53:00",
-        "references": [
-            "https://akisoftware.com/Vulnerability202301.html",
-            "https://jvn.jp/en/jp/JVN92720882/"
-        ],
-        "summary": "Stored cross-site scripting vulnerability exists in CGIs included in A.K.I Software's PMailServer/PMailServer2 products. If this vulnerability is exploited, an arbitrary script may be executed on a logged-in user's web browser."
     }
 ]
