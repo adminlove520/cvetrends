@@ -1,5 +1,628 @@
 [
     {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52609",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/95b1d336b0642198b56836b89908d07b9a0c9608",
+            "https://git.kernel.org/stable/c/252a2a5569eb9f8d16428872cc24dea1ac0bb097",
+            "https://git.kernel.org/stable/c/7e7a0d86542b0ea903006d3f42f33c4f7ead6918",
+            "https://git.kernel.org/stable/c/98fee5bee97ad47b527a997d5786410430d1f0e9",
+            "https://git.kernel.org/stable/c/6696f76c32ff67fec26823fc2df46498e70d9bf3",
+            "https://git.kernel.org/stable/c/67f16bf2cc1698fd50e01ee8a2becc5a8e6d3a3e",
+            "https://git.kernel.org/stable/c/77d210e8db4d61d43b2d16df66b1ec46fad2ee01",
+            "https://git.kernel.org/stable/c/9a9ab0d963621d9d12199df9817e66982582d5a5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix race between mmput() and do_exit()\n\nTask A calls binder_update_page_range() to allocate and insert pages on\na remote address space from Task B. For this, Task A pins the remote mm\nvia mmget_not_zero() first. This can race with Task B do_exit() and the\nfinal mmput() refcount decrement will come from Task A.\n\n  Task A            | Task B\n  ------------------+------------------\n  mmget_not_zero()  |\n                    |  do_exit()\n                    |    exit_mm()\n                    |      mmput()\n  mmput()           |\n    exit_mmap()     |\n      remove_vma()  |\n        fput()      |\n\nIn this case, the work of ____fput() from Task B is queued up in Task A\nas TWA_RESUME. So in theory, Task A returns to userspace and the cleanup\nwork gets executed. However, Task A instead sleep, waiting for a reply\nfrom Task B that never comes (it's dead).\n\nThis means the binder_deferred_release() is blocked until an unrelated\nbinder event forces Task A to go back to userspace. All the associated\ndeath notifications will also be delayed until then.\n\nIn order to fix this use mmput_async() that will schedule the work in\nthe corresponding mm->async_put_work WQ instead of Task A."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52609",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/95b1d336b0642198b56836b89908d07b9a0c9608",
+            "https://git.kernel.org/stable/c/252a2a5569eb9f8d16428872cc24dea1ac0bb097",
+            "https://git.kernel.org/stable/c/7e7a0d86542b0ea903006d3f42f33c4f7ead6918",
+            "https://git.kernel.org/stable/c/98fee5bee97ad47b527a997d5786410430d1f0e9",
+            "https://git.kernel.org/stable/c/6696f76c32ff67fec26823fc2df46498e70d9bf3",
+            "https://git.kernel.org/stable/c/67f16bf2cc1698fd50e01ee8a2becc5a8e6d3a3e",
+            "https://git.kernel.org/stable/c/77d210e8db4d61d43b2d16df66b1ec46fad2ee01",
+            "https://git.kernel.org/stable/c/9a9ab0d963621d9d12199df9817e66982582d5a5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix race between mmput() and do_exit()\n\nTask A calls binder_update_page_range() to allocate and insert pages on\na remote address space from Task B. For this, Task A pins the remote mm\nvia mmget_not_zero() first. This can race with Task B do_exit() and the\nfinal mmput() refcount decrement will come from Task A.\n\n  Task A            | Task B\n  ------------------+------------------\n  mmget_not_zero()  |\n                    |  do_exit()\n                    |    exit_mm()\n                    |      mmput()\n  mmput()           |\n    exit_mmap()     |\n      remove_vma()  |\n        fput()      |\n\nIn this case, the work of ____fput() from Task B is queued up in Task A\nas TWA_RESUME. So in theory, Task A returns to userspace and the cleanup\nwork gets executed. However, Task A instead sleep, waiting for a reply\nfrom Task B that never comes (it's dead).\n\nThis means the binder_deferred_release() is blocked until an unrelated\nbinder event forces Task A to go back to userspace. All the associated\ndeath notifications will also be delayed until then.\n\nIn order to fix this use mmput_async() that will schedule the work in\nthe corresponding mm->async_put_work WQ instead of Task A."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52610",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/172ba7d46c202e679f3ccb10264c67416aaeb1c4",
+            "https://git.kernel.org/stable/c/0b5b831122fc3789fff75be433ba3e4dd7b779d4",
+            "https://git.kernel.org/stable/c/73f7da5fd124f2cda9161e2e46114915e6e82e97",
+            "https://git.kernel.org/stable/c/f5346df0591d10bc948761ca854b1fae6d2ef441",
+            "https://git.kernel.org/stable/c/3f14b377d01d8357eba032b4cabc8c1149b458b6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_ct: fix skb leak and crash on ooo frags\n\nact_ct adds skb->users before defragmentation. If frags arrive in order,\nthe last frag's reference is reset in:\n\n  inet_frag_reasm_prepare\n    skb_morph\n\nwhich is not straightforward.\n\nHowever when frags arrive out of order, nobody unref the last frag, and\nall frags are leaked. The situation is even worse, as initiating packet\ncapture can lead to a crash[0] when skb has been cloned and shared at the\nsame time.\n\nFix the issue by removing skb_get() before defragmentation. act_ct\nreturns TC_ACT_CONSUMED when defrag failed or in progress.\n\n[0]:\n[  843.804823] ------------[ cut here ]------------\n[  843.809659] kernel BUG at net/core/skbuff.c:2091!\n[  843.814516] invalid opcode: 0000 [#1] PREEMPT SMP\n[  843.819296] CPU: 7 PID: 0 Comm: swapper/7 Kdump: loaded Tainted: G S 6.7.0-rc3 #2\n[  843.824107] Hardware name: XFUSION 1288H V6/BC13MBSBD, BIOS 1.29 11/25/2022\n[  843.828953] RIP: 0010:pskb_expand_head+0x2ac/0x300\n[  843.833805] Code: 8b 70 28 48 85 f6 74 82 48 83 c6 08 bf 01 00 00 00 e8 38 bd ff ff 8b 83 c0 00 00 00 48 03 83 c8 00 00 00 e9 62 ff ff ff 0f 0b <0f> 0b e8 8d d0 ff ff e9 b3 fd ff ff 81 7c 24 14 40 01 00 00 4c 89\n[  843.843698] RSP: 0018:ffffc9000cce07c0 EFLAGS: 00010202\n[  843.848524] RAX: 0000000000000002 RBX: ffff88811a211d00 RCX: 0000000000000820\n[  843.853299] RDX: 0000000000000640 RSI: 0000000000000000 RDI: ffff88811a211d00\n[  843.857974] RBP: ffff888127d39518 R08: 00000000bee97314 R09: 0000000000000000\n[  843.862584] R10: 0000000000000000 R11: ffff8881109f0000 R12: 0000000000000880\n[  843.867147] R13: ffff888127d39580 R14: 0000000000000640 R15: ffff888170f7b900\n[  843.871680] FS:  0000000000000000(0000) GS:ffff889ffffc0000(0000) knlGS:0000000000000000\n[  843.876242] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  843.880778] CR2: 00007fa42affcfb8 CR3: 000000011433a002 CR4: 0000000000770ef0\n[  843.885336] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  843.889809] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  843.894229] PKRU: 55555554\n[  843.898539] Call Trace:\n[  843.902772]  <IRQ>\n[  843.906922]  ? __die_body+0x1e/0x60\n[  843.911032]  ? die+0x3c/0x60\n[  843.915037]  ? do_trap+0xe2/0x110\n[  843.918911]  ? pskb_expand_head+0x2ac/0x300\n[  843.922687]  ? do_error_trap+0x65/0x80\n[  843.926342]  ? pskb_expand_head+0x2ac/0x300\n[  843.929905]  ? exc_invalid_op+0x50/0x60\n[  843.933398]  ? pskb_expand_head+0x2ac/0x300\n[  843.936835]  ? asm_exc_invalid_op+0x1a/0x20\n[  843.940226]  ? pskb_expand_head+0x2ac/0x300\n[  843.943580]  inet_frag_reasm_prepare+0xd1/0x240\n[  843.946904]  ip_defrag+0x5d4/0x870\n[  843.950132]  nf_ct_handle_fragments+0xec/0x130 [nf_conntrack]\n[  843.953334]  tcf_ct_act+0x252/0xd90 [act_ct]\n[  843.956473]  ? tcf_mirred_act+0x516/0x5a0 [act_mirred]\n[  843.959657]  tcf_action_exec+0xa1/0x160\n[  843.962823]  fl_classify+0x1db/0x1f0 [cls_flower]\n[  843.966010]  ? skb_clone+0x53/0xc0\n[  843.969173]  tcf_classify+0x24d/0x420\n[  843.972333]  tc_run+0x8f/0xf0\n[  843.975465]  __netif_receive_skb_core+0x67a/0x1080\n[  843.978634]  ? dev_gro_receive+0x249/0x730\n[  843.981759]  __netif_receive_skb_list_core+0x12d/0x260\n[  843.984869]  netif_receive_skb_list_internal+0x1cb/0x2f0\n[  843.987957]  ? mlx5e_handle_rx_cqe_mpwrq_rep+0xfa/0x1a0 [mlx5_core]\n[  843.991170]  napi_complete_done+0x72/0x1a0\n[  843.994305]  mlx5e_napi_poll+0x28c/0x6d0 [mlx5_core]\n[  843.997501]  __napi_poll+0x25/0x1b0\n[  844.000627]  net_rx_action+0x256/0x330\n[  844.003705]  __do_softirq+0xb3/0x29b\n[  844.006718]  irq_exit_rcu+0x9e/0xc0\n[  844.009672]  common_interrupt+0x86/0xa0\n[  844.012537]  </IRQ>\n[  844.015285]  <TASK>\n[  844.017937]  asm_common_interrupt+0x26/0x40\n[  844.020591] RIP: 0010:acpi_safe_halt+0x1b/0x20\n[  844.023247] Code: ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 65 48 8b 04 25 00 18 03 00 48 8b 00 a8 08 75 0c 66 90 0f 00 2d 81 d0 44 00 fb\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52610",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/172ba7d46c202e679f3ccb10264c67416aaeb1c4",
+            "https://git.kernel.org/stable/c/0b5b831122fc3789fff75be433ba3e4dd7b779d4",
+            "https://git.kernel.org/stable/c/73f7da5fd124f2cda9161e2e46114915e6e82e97",
+            "https://git.kernel.org/stable/c/f5346df0591d10bc948761ca854b1fae6d2ef441",
+            "https://git.kernel.org/stable/c/3f14b377d01d8357eba032b4cabc8c1149b458b6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_ct: fix skb leak and crash on ooo frags\n\nact_ct adds skb->users before defragmentation. If frags arrive in order,\nthe last frag's reference is reset in:\n\n  inet_frag_reasm_prepare\n    skb_morph\n\nwhich is not straightforward.\n\nHowever when frags arrive out of order, nobody unref the last frag, and\nall frags are leaked. The situation is even worse, as initiating packet\ncapture can lead to a crash[0] when skb has been cloned and shared at the\nsame time.\n\nFix the issue by removing skb_get() before defragmentation. act_ct\nreturns TC_ACT_CONSUMED when defrag failed or in progress.\n\n[0]:\n[  843.804823] ------------[ cut here ]------------\n[  843.809659] kernel BUG at net/core/skbuff.c:2091!\n[  843.814516] invalid opcode: 0000 [#1] PREEMPT SMP\n[  843.819296] CPU: 7 PID: 0 Comm: swapper/7 Kdump: loaded Tainted: G S 6.7.0-rc3 #2\n[  843.824107] Hardware name: XFUSION 1288H V6/BC13MBSBD, BIOS 1.29 11/25/2022\n[  843.828953] RIP: 0010:pskb_expand_head+0x2ac/0x300\n[  843.833805] Code: 8b 70 28 48 85 f6 74 82 48 83 c6 08 bf 01 00 00 00 e8 38 bd ff ff 8b 83 c0 00 00 00 48 03 83 c8 00 00 00 e9 62 ff ff ff 0f 0b <0f> 0b e8 8d d0 ff ff e9 b3 fd ff ff 81 7c 24 14 40 01 00 00 4c 89\n[  843.843698] RSP: 0018:ffffc9000cce07c0 EFLAGS: 00010202\n[  843.848524] RAX: 0000000000000002 RBX: ffff88811a211d00 RCX: 0000000000000820\n[  843.853299] RDX: 0000000000000640 RSI: 0000000000000000 RDI: ffff88811a211d00\n[  843.857974] RBP: ffff888127d39518 R08: 00000000bee97314 R09: 0000000000000000\n[  843.862584] R10: 0000000000000000 R11: ffff8881109f0000 R12: 0000000000000880\n[  843.867147] R13: ffff888127d39580 R14: 0000000000000640 R15: ffff888170f7b900\n[  843.871680] FS:  0000000000000000(0000) GS:ffff889ffffc0000(0000) knlGS:0000000000000000\n[  843.876242] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  843.880778] CR2: 00007fa42affcfb8 CR3: 000000011433a002 CR4: 0000000000770ef0\n[  843.885336] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  843.889809] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  843.894229] PKRU: 55555554\n[  843.898539] Call Trace:\n[  843.902772]  <IRQ>\n[  843.906922]  ? __die_body+0x1e/0x60\n[  843.911032]  ? die+0x3c/0x60\n[  843.915037]  ? do_trap+0xe2/0x110\n[  843.918911]  ? pskb_expand_head+0x2ac/0x300\n[  843.922687]  ? do_error_trap+0x65/0x80\n[  843.926342]  ? pskb_expand_head+0x2ac/0x300\n[  843.929905]  ? exc_invalid_op+0x50/0x60\n[  843.933398]  ? pskb_expand_head+0x2ac/0x300\n[  843.936835]  ? asm_exc_invalid_op+0x1a/0x20\n[  843.940226]  ? pskb_expand_head+0x2ac/0x300\n[  843.943580]  inet_frag_reasm_prepare+0xd1/0x240\n[  843.946904]  ip_defrag+0x5d4/0x870\n[  843.950132]  nf_ct_handle_fragments+0xec/0x130 [nf_conntrack]\n[  843.953334]  tcf_ct_act+0x252/0xd90 [act_ct]\n[  843.956473]  ? tcf_mirred_act+0x516/0x5a0 [act_mirred]\n[  843.959657]  tcf_action_exec+0xa1/0x160\n[  843.962823]  fl_classify+0x1db/0x1f0 [cls_flower]\n[  843.966010]  ? skb_clone+0x53/0xc0\n[  843.969173]  tcf_classify+0x24d/0x420\n[  843.972333]  tc_run+0x8f/0xf0\n[  843.975465]  __netif_receive_skb_core+0x67a/0x1080\n[  843.978634]  ? dev_gro_receive+0x249/0x730\n[  843.981759]  __netif_receive_skb_list_core+0x12d/0x260\n[  843.984869]  netif_receive_skb_list_internal+0x1cb/0x2f0\n[  843.987957]  ? mlx5e_handle_rx_cqe_mpwrq_rep+0xfa/0x1a0 [mlx5_core]\n[  843.991170]  napi_complete_done+0x72/0x1a0\n[  843.994305]  mlx5e_napi_poll+0x28c/0x6d0 [mlx5_core]\n[  843.997501]  __napi_poll+0x25/0x1b0\n[  844.000627]  net_rx_action+0x256/0x330\n[  844.003705]  __do_softirq+0xb3/0x29b\n[  844.006718]  irq_exit_rcu+0x9e/0xc0\n[  844.009672]  common_interrupt+0x86/0xa0\n[  844.012537]  </IRQ>\n[  844.015285]  <TASK>\n[  844.017937]  asm_common_interrupt+0x26/0x40\n[  844.020591] RIP: 0010:acpi_safe_halt+0x1b/0x20\n[  844.023247] Code: ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 65 48 8b 04 25 00 18 03 00 48 8b 00 a8 08 75 0c 66 90 0f 00 2d 81 d0 44 00 fb\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52611",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5b5ddf21b978ec315cab9d9e7e6ac7374791a8c7",
+            "https://git.kernel.org/stable/c/0e9ffff72a0674cd6656314dbd99cdd2123a3030",
+            "https://git.kernel.org/stable/c/00384f565a91c08c4bedae167f749b093d10e3fe"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: rtw88: sdio: Honor the host max_req_size in the RX path\n\nLukas reports skb_over_panic errors on his Banana Pi BPI-CM4 which comes\nwith an Amlogic A311D (G12B) SoC and a RTL8822CS SDIO wifi/Bluetooth\ncombo card. The error he observed is identical to what has been fixed\nin commit e967229ead0e (\"wifi: rtw88: sdio: Check the HISR RX_REQUEST\nbit in rtw_sdio_rx_isr()\") but that commit didn't fix Lukas' problem.\n\nLukas found that disabling or limiting RX aggregation works around the\nproblem for some time (but does not fully fix it). In the following\ndiscussion a few key topics have been discussed which have an impact on\nthis problem:\n- The Amlogic A311D (G12B) SoC has a hardware bug in the SDIO controller\n  which prevents DMA transfers. Instead all transfers need to go through\n  the controller SRAM which limits transfers to 1536 bytes\n- rtw88 chips don't split incoming (RX) packets, so if a big packet is\n  received this is forwarded to the host in it's original form\n- rtw88 chips can do RX aggregation, meaning more multiple incoming\n  packets can be pulled by the host from the card with one MMC/SDIO\n  transfer. This Depends on settings in the REG_RXDMA_AGG_PG_TH\n  register (BIT_RXDMA_AGG_PG_TH limits the number of packets that will\n  be aggregated, BIT_DMA_AGG_TO_V1 configures a timeout for aggregation\n  and BIT_EN_PRE_CALC makes the chip honor the limits more effectively)\n\nUse multiple consecutive reads in rtw_sdio_read_port() and limit the\nnumber of bytes which are copied by the host from the card in one\nMMC/SDIO transfer. This allows receiving a buffer that's larger than\nthe hosts max_req_size (number of bytes which can be transferred in\none MMC/SDIO transfer). As a result of this the skb_over_panic error\nis gone as the rtw88 driver is now able to receive more than 1536 bytes\nfrom the card (either because the incoming packet is larger than that\nor because multiple packets have been aggregated).\n\nIn case of an receive errors (-EILSEQ has been observed by Lukas) we\nneed to drain the remaining data from the card's buffer, otherwise the\ncard will return corrupt data for the next rtw_sdio_read_port() call."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52611",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5b5ddf21b978ec315cab9d9e7e6ac7374791a8c7",
+            "https://git.kernel.org/stable/c/0e9ffff72a0674cd6656314dbd99cdd2123a3030",
+            "https://git.kernel.org/stable/c/00384f565a91c08c4bedae167f749b093d10e3fe"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: rtw88: sdio: Honor the host max_req_size in the RX path\n\nLukas reports skb_over_panic errors on his Banana Pi BPI-CM4 which comes\nwith an Amlogic A311D (G12B) SoC and a RTL8822CS SDIO wifi/Bluetooth\ncombo card. The error he observed is identical to what has been fixed\nin commit e967229ead0e (\"wifi: rtw88: sdio: Check the HISR RX_REQUEST\nbit in rtw_sdio_rx_isr()\") but that commit didn't fix Lukas' problem.\n\nLukas found that disabling or limiting RX aggregation works around the\nproblem for some time (but does not fully fix it). In the following\ndiscussion a few key topics have been discussed which have an impact on\nthis problem:\n- The Amlogic A311D (G12B) SoC has a hardware bug in the SDIO controller\n  which prevents DMA transfers. Instead all transfers need to go through\n  the controller SRAM which limits transfers to 1536 bytes\n- rtw88 chips don't split incoming (RX) packets, so if a big packet is\n  received this is forwarded to the host in it's original form\n- rtw88 chips can do RX aggregation, meaning more multiple incoming\n  packets can be pulled by the host from the card with one MMC/SDIO\n  transfer. This Depends on settings in the REG_RXDMA_AGG_PG_TH\n  register (BIT_RXDMA_AGG_PG_TH limits the number of packets that will\n  be aggregated, BIT_DMA_AGG_TO_V1 configures a timeout for aggregation\n  and BIT_EN_PRE_CALC makes the chip honor the limits more effectively)\n\nUse multiple consecutive reads in rtw_sdio_read_port() and limit the\nnumber of bytes which are copied by the host from the card in one\nMMC/SDIO transfer. This allows receiving a buffer that's larger than\nthe hosts max_req_size (number of bytes which can be transferred in\none MMC/SDIO transfer). As a result of this the skb_over_panic error\nis gone as the rtw88 driver is now able to receive more than 1536 bytes\nfrom the card (either because the incoming packet is larger than that\nor because multiple packets have been aggregated).\n\nIn case of an receive errors (-EILSEQ has been observed by Lukas) we\nneed to drain the remaining data from the card's buffer, otherwise the\ncard will return corrupt data for the next rtw_sdio_read_port() call."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52612",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1142d65c5b881590962ad763f94505b6dd67d2fe",
+            "https://git.kernel.org/stable/c/e0e3f4a18784182cfe34e20c00eca11e78d53e76",
+            "https://git.kernel.org/stable/c/4518dc468cdd796757190515a9be7408adc8911e",
+            "https://git.kernel.org/stable/c/a5f2f91b3fd7387e5102060809316a0f8f0bc625",
+            "https://git.kernel.org/stable/c/4df0c942d04a67df174195ad8082f6e30e7f71a5",
+            "https://git.kernel.org/stable/c/7d9e5bed036a7f9e2062a137e97e3c1e77fb8759",
+            "https://git.kernel.org/stable/c/71c6670f9f032ec67d8f4e3f8db4646bf5a62883",
+            "https://git.kernel.org/stable/c/744e1885922a9943458954cfea917b31064b4131"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: scomp - fix req->dst buffer overflow\n\nThe req->dst buffer size should be checked before copying from the\nscomp_scratch->dst to avoid req->dst buffer overflow problem."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52615",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/eafd83b92f6c044007a3591cbd476bcf90455990",
+            "https://git.kernel.org/stable/c/5030d4c798863ccb266563201b341a099e8cdd48",
+            "https://git.kernel.org/stable/c/c6a8111aacbfe7a8a70f46cc0de8eed00561693c",
+            "https://git.kernel.org/stable/c/26cc6d7006f922df6cc4389248032d955750b2a0",
+            "https://git.kernel.org/stable/c/aa8aa16ed9adf1df05bb339d588cf485a011839e",
+            "https://git.kernel.org/stable/c/ecabe8cd456d3bf81e92c53b074732f3140f170d",
+            "https://git.kernel.org/stable/c/6822a14271786150e178869f1495cc03e74c5029",
+            "https://git.kernel.org/stable/c/78aafb3884f6bc6636efcc1760c891c8500b9922"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nhwrng: core - Fix page fault dead lock on mmap-ed hwrng\n\nThere is a dead-lock in the hwrng device read path.  This triggers\nwhen the user reads from /dev/hwrng into memory also mmap-ed from\n/dev/hwrng.  The resulting page fault triggers a recursive read\nwhich then dead-locks.\n\nFix this by using a stack buffer when calling copy_to_user."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52613",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/70481755ed77400e783200e2d022e5fea16060ce",
+            "https://git.kernel.org/stable/c/6010a9fc14eb1feab5cafd84422001134fe8ec58",
+            "https://git.kernel.org/stable/c/15ef92e9c41124ee9d88b01208364f3fe1f45f84"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/thermal/loongson2_thermal: Fix incorrect PTR_ERR() judgment\n\nPTR_ERR() returns -ENODEV when thermal-zones are undefined, and we need\n-ENODEV as the right value for comparison.\n\nOtherwise, tz->type is NULL when thermal-zones is undefined, resulting\nin the following error:\n\n[   12.290030] CPU 1 Unable to handle kernel paging request at virtual address fffffffffffffff1, era == 900000000355f410, ra == 90000000031579b8\n[   12.302877] Oops[#1]:\n[   12.305190] CPU: 1 PID: 181 Comm: systemd-udevd Not tainted 6.6.0-rc7+ #5385\n[   12.312304] pc 900000000355f410 ra 90000000031579b8 tp 90000001069e8000 sp 90000001069eba10\n[   12.320739] a0 0000000000000000 a1 fffffffffffffff1 a2 0000000000000014 a3 0000000000000001\n[   12.329173] a4 90000001069eb990 a5 0000000000000001 a6 0000000000001001 a7 900000010003431c\n[   12.337606] t0 fffffffffffffff1 t1 54567fd5da9b4fd4 t2 900000010614ec40 t3 00000000000dc901\n[   12.346041] t4 0000000000000000 t5 0000000000000004 t6 900000010614ee20 t7 900000000d00b790\n[   12.354472] t8 00000000000dc901 u0 54567fd5da9b4fd4 s9 900000000402ae10 s0 900000010614ec40\n[   12.362916] s1 90000000039fced0 s2 ffffffffffffffed s3 ffffffffffffffed s4 9000000003acc000\n[   12.362931] s5 0000000000000004 s6 fffffffffffff000 s7 0000000000000490 s8 90000001028b2ec8\n[   12.362938]    ra: 90000000031579b8 thermal_add_hwmon_sysfs+0x258/0x300\n[   12.386411]   ERA: 900000000355f410 strscpy+0xf0/0x160\n[   12.391626]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)\n[   12.397898]  PRMD: 00000004 (PPLV0 +PIE -PWE)\n[   12.403678]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)\n[   12.409859]  ECFG: 00071c1c (LIE=2-4,10-12 VS=7)\n[   12.415882] ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)\n[   12.415907]  BADV: fffffffffffffff1\n[   12.415911]  PRID: 0014a000 (Loongson-64bit, Loongson-2K1000)\n[   12.415917] Modules linked in: loongson2_thermal(+) vfat fat uio_pdrv_genirq uio fuse zram zsmalloc\n[   12.415950] Process systemd-udevd (pid: 181, threadinfo=00000000358b9718, task=00000000ace72fe3)\n[   12.415961] Stack : 0000000000000dc0 54567fd5da9b4fd4 900000000402ae10 9000000002df9358\n[   12.415982]         ffffffffffffffed 0000000000000004 9000000107a10aa8 90000001002a3410\n[   12.415999]         ffffffffffffffed ffffffffffffffed 9000000107a11268 9000000003157ab0\n[   12.416016]         9000000107a10aa8 ffffff80020fc0c8 90000001002a3410 ffffffffffffffed\n[   12.416032]         0000000000000024 ffffff80020cc1e8 900000000402b2a0 9000000003acc000\n[   12.416048]         90000001002a3410 0000000000000000 ffffff80020f4030 90000001002a3410\n[   12.416065]         0000000000000000 9000000002df6808 90000001002a3410 0000000000000000\n[   12.416081]         ffffff80020f4030 0000000000000000 90000001002a3410 9000000002df2ba8\n[   12.416097]         00000000000000b4 90000001002a34f4 90000001002a3410 0000000000000002\n[   12.416114]         ffffff80020f4030 fffffffffffffff0 90000001002a3410 9000000002df2f30\n[   12.416131]         ...\n[   12.416138] Call Trace:\n[   12.416142] [<900000000355f410>] strscpy+0xf0/0x160\n[   12.416167] [<90000000031579b8>] thermal_add_hwmon_sysfs+0x258/0x300\n[   12.416183] [<9000000003157ab0>] devm_thermal_add_hwmon_sysfs+0x50/0xe0\n[   12.416200] [<ffffff80020cc1e8>] loongson2_thermal_probe+0x128/0x200 [loongson2_thermal]\n[   12.416232] [<9000000002df6808>] platform_probe+0x68/0x140\n[   12.416249] [<9000000002df2ba8>] really_probe+0xc8/0x3c0\n[   12.416269] [<9000000002df2f30>] __driver_probe_device+0x90/0x180\n[   12.416286] [<9000000002df3058>] driver_probe_device+0x38/0x160\n[   12.416302] [<9000000002df33a8>] __driver_attach+0xa8/0x200\n[   12.416314] [<9000000002deffec>] bus_for_each_dev+0x8c/0x120\n[   12.416330] [<9000000002df198c>] bus_add_driver+0x10c/0x2a0\n[   12.416346] [<9000000002df46b4>] driver_register+0x74/0x160\n[   12.416358] [<90000000022201a4>] do_one_initcall+0x84/0x220\n[   12.416372] [<90000000022f3ab8>] do_init_module+0x58/0x2c0\n[\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52614",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/796d3fad8c35ee9df9027899fb90ceaeb41b958f",
+            "https://git.kernel.org/stable/c/8a7729cda2dd276d7a3994638038fb89035b6f2c",
+            "https://git.kernel.org/stable/c/a979f56aa4b93579cf0e4265ae04d7e9300fd3e8",
+            "https://git.kernel.org/stable/c/eaef4650fa2050147ca25fd7ee43bc0082e03c87",
+            "https://git.kernel.org/stable/c/08e23d05fa6dc4fc13da0ccf09defdd4bbc92ff4"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPM / devfreq: Fix buffer overflow in trans_stat_show\n\nFix buffer overflow in trans_stat_show().\n\nConvert simple snprintf to the more secure scnprintf with size of\nPAGE_SIZE.\n\nAdd condition checking if we are exceeding PAGE_SIZE and exit early from\nloop. Also add at the end a warning that we exceeded PAGE_SIZE and that\nstats is disabled.\n\nReturn -EFBIG in the case where we don't have enough space to write the\nfull transition table.\n\nAlso document in the ABI that this function can return -EFBIG error."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52616",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0c3687822259a7628c85cd21a3445cbe3c367165",
+            "https://git.kernel.org/stable/c/2bb86817b33c9d704e127f92b838035a72c315b6",
+            "https://git.kernel.org/stable/c/bb44477d4506e52785693a39f03cdc6a2c5e8598",
+            "https://git.kernel.org/stable/c/7ebf812b7019fd2d4d5a7ca45ef4bf3a6f4bda0a",
+            "https://git.kernel.org/stable/c/7abdfd45a650c714d5ebab564bb1b988f14d9b49",
+            "https://git.kernel.org/stable/c/ba3c5574203034781ac4231acf117da917efcd2a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: lib/mpi - Fix unexpected pointer access in mpi_ec_init\n\nWhen the mpi_ec_ctx structure is initialized, some fields are not\ncleared, causing a crash when referencing the field when the\nstructure was released. Initially, this issue was ignored because\nmemory for mpi_ec_ctx is allocated with the __GFP_ZERO flag.\nFor example, this error will be triggered when calculating the\nZa value for SM2 separately."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52617",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d8c293549946ee5078ed0ab77793cec365559355",
+            "https://git.kernel.org/stable/c/4a5d0528cf19dbf060313dffbe047bc11c90c24c",
+            "https://git.kernel.org/stable/c/ff1c7e2fb9e9c3f53715fbe04d3ac47b80be7eb8",
+            "https://git.kernel.org/stable/c/1d83c85922647758c1f1e4806a4c5c3cf591a20a",
+            "https://git.kernel.org/stable/c/0233b836312e39a3c763fb53512b3fa455b473b3",
+            "https://git.kernel.org/stable/c/e129c7fa7070fbce57feb0bfc5eaa65eef44b693",
+            "https://git.kernel.org/stable/c/df25461119d987b8c81d232cfe4411e91dcabe66"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: switchtec: Fix stdev_release() crash after surprise hot remove\n\nA PCI device hot removal may occur while stdev->cdev is held open. The call\nto stdev_release() then happens during close or exit, at a point way past\nswitchtec_pci_remove(). Otherwise the last ref would vanish with the\ntrailing put_device(), just before return.\n\nAt that later point in time, the devm cleanup has already removed the\nstdev->mmio_mrpc mapping. Also, the stdev->pdev reference was not a counted\none. Therefore, in DMA mode, the iowrite32() in stdev_release() will cause\na fatal page fault, and the subsequent dma_free_coherent(), if reached,\nwould pass a stale &stdev->pdev->dev pointer.\n\nFix by moving MRPC DMA shutdown into switchtec_pci_remove(), after\nstdev_kill(). Counting the stdev->pdev ref is now optional, but may prevent\nfuture accidents.\n\nReproducible via the script at\nhttps://lore.kernel.org/r/20231113212150.96410-1-dns@arista.com"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52618",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/95bc866c11974d3e4a9d922275ea8127ff809cf7",
+            "https://git.kernel.org/stable/c/f6abd5e17da33eba15df2bddc93413e76c2b55f7",
+            "https://git.kernel.org/stable/c/af7bbdac89739e2e7380387fda598848d3b7010f",
+            "https://git.kernel.org/stable/c/5b9ea86e662035a886ccb5c76d56793cba618827",
+            "https://git.kernel.org/stable/c/a2c6206f18104fba7f887bf4dbbfe4c41adc4339",
+            "https://git.kernel.org/stable/c/9e4bf6a08d1e127bcc4bd72557f2dfafc6bc7f41"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblock/rnbd-srv: Check for unlikely string overflow\n\nSince \"dev_search_path\" can technically be as large as PATH_MAX,\nthere was a risk of truncation when copying it and a second string\ninto \"full_path\" since it was also PATH_MAX sized. The W=1 builds were\nreporting this warning:\n\ndrivers/block/rnbd/rnbd-srv.c: In function 'process_msg_open.isra':\ndrivers/block/rnbd/rnbd-srv.c:616:51: warning: '%s' directive output may be truncated writing up to 254 bytes into a region of size between 0 and 4095 [-Wformat-truncation=]\n  616 |                 snprintf(full_path, PATH_MAX, \"%s/%s\",\n      |                                                   ^~\nIn function 'rnbd_srv_get_full_path',\n    inlined from 'process_msg_open.isra' at drivers/block/rnbd/rnbd-srv.c:721:14: drivers/block/rnbd/rnbd-srv.c:616:17: note: 'snprintf' output between 2 and 4351 bytes into a destination of size 4096\n  616 |                 snprintf(full_path, PATH_MAX, \"%s/%s\",\n      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n  617 |                          dev_search_path, dev_name);\n      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~\n\nTo fix this, unconditionally check for truncation (as was already done\nfor the case where \"%SESSNAME%\" was present)."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52619",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8b69c30f4e8b69131d92096cb296dc1f217101e4",
+            "https://git.kernel.org/stable/c/e9f6ac50890104fdf8194f2865680689239d30fb",
+            "https://git.kernel.org/stable/c/a63e48cd835c34c38ef671d344cc029b1ea5bf10",
+            "https://git.kernel.org/stable/c/2a37905d47bffec61e95d99f0c1cc5dc6377956c",
+            "https://git.kernel.org/stable/c/75b0f71b26b3ad833c5c0670109c0af6e021e86a",
+            "https://git.kernel.org/stable/c/0593cfd321df9001142a9d2c58d4144917dff7ee",
+            "https://git.kernel.org/stable/c/cd40e43f870cf21726b22487a95ed223790b3542",
+            "https://git.kernel.org/stable/c/d49270a04623ce3c0afddbf3e984cb245aa48e9c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npstore/ram: Fix crash when setting number of cpus to an odd number\n\nWhen the number of cpu cores is adjusted to 7 or other odd numbers,\nthe zone size will become an odd number.\nThe address of the zone will become:\n    addr of zone0 = BASE\n    addr of zone1 = BASE + zone_size\n    addr of zone2 = BASE + zone_size*2\n    ...\nThe address of zone1/3/5/7 will be mapped to non-alignment va.\nEventually crashes will occur when accessing these va.\n\nSo, use ALIGN_DOWN() to make sure the zone size is even\nto avoid this bug."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-823",
+        "id": "CVE-2024-1013",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-1013",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2260823",
+            "https://github.com/lurcher/unixODBC/pull/157"
+        ],
+        "summary": "An out-of-bounds stack write flaw was found in unixODBC on 64-bit architectures where the caller has 4 bytes and callee writes 8 bytes. This issue may go unnoticed on little-endian architectures, while big-endian architectures can be broken."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26631",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/62b3387beef11738eb6ce667601a28fa089fa02c",
+            "https://git.kernel.org/stable/c/380540bb06bb1d1b12bdc947d1b8f56cda6b5663",
+            "https://git.kernel.org/stable/c/3cc283fd16fba72e2cefe3a6f48d7a36b0438900",
+            "https://git.kernel.org/stable/c/3bb5849675ae1d592929798a2b37ea450879c855",
+            "https://git.kernel.org/stable/c/2e7ef287f07c74985f1bf2858bedc62bd9ebf155"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: mcast: fix data-race in ipv6_mc_down / mld_ifc_work\n\nidev->mc_ifc_count can be written over without proper locking.\n\nOriginally found by syzbot [1], fix this issue by encapsulating calls\nto mld_ifc_stop_work() (and mld_gq_stop_work() for good measure) with\nmutex_lock() and mutex_unlock() accordingly as these functions\nshould only be called with mc_lock per their declarations.\n\n[1]\nBUG: KCSAN: data-race in ipv6_mc_down / mld_ifc_work\n\nwrite to 0xffff88813a80c832 of 1 bytes by task 3771 on cpu 0:\n mld_ifc_stop_work net/ipv6/mcast.c:1080 [inline]\n ipv6_mc_down+0x10a/0x280 net/ipv6/mcast.c:2725\n addrconf_ifdown+0xe32/0xf10 net/ipv6/addrconf.c:3949\n addrconf_notify+0x310/0x980\n notifier_call_chain kernel/notifier.c:93 [inline]\n raw_notifier_call_chain+0x6b/0x1c0 kernel/notifier.c:461\n __dev_notify_flags+0x205/0x3d0\n dev_change_flags+0xab/0xd0 net/core/dev.c:8685\n do_setlink+0x9f6/0x2430 net/core/rtnetlink.c:2916\n rtnl_group_changelink net/core/rtnetlink.c:3458 [inline]\n __rtnl_newlink net/core/rtnetlink.c:3717 [inline]\n rtnl_newlink+0xbb3/0x1670 net/core/rtnetlink.c:3754\n rtnetlink_rcv_msg+0x807/0x8c0 net/core/rtnetlink.c:6558\n netlink_rcv_skb+0x126/0x220 net/netlink/af_netlink.c:2545\n rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:6576\n netlink_unicast_kernel net/netlink/af_netlink.c:1342 [inline]\n netlink_unicast+0x589/0x650 net/netlink/af_netlink.c:1368\n netlink_sendmsg+0x66e/0x770 net/netlink/af_netlink.c:1910\n ...\n\nwrite to 0xffff88813a80c832 of 1 bytes by task 22 on cpu 1:\n mld_ifc_work+0x54c/0x7b0 net/ipv6/mcast.c:2653\n process_one_work kernel/workqueue.c:2627 [inline]\n process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2700\n worker_thread+0x525/0x730 kernel/workqueue.c:2781\n ..."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26632",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c6350b5cb78e9024c49eaee6fdb914ad2903a5fe",
+            "https://git.kernel.org/stable/c/a6bd8182137a12d22d3f2cee463271bdcb491659",
+            "https://git.kernel.org/stable/c/ca3ede3f5893e2d26d4dbdef1eec28a8487fafde",
+            "https://git.kernel.org/stable/c/7bed6f3d08b7af27b7015da8dc3acf2b9c1f21d7"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblock: Fix iterating over an empty bio with bio_for_each_folio_all\n\nIf the bio contains no data, bio_first_folio() calls page_folio() on a\nNULL pointer and oopses.  Move the test that we've reached the end of\nthe bio from bio_next_folio() to bio_first_folio().\n\n[axboe: add unlikely() to error case]"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26633",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/135414f300c5db995e2a2f3bf0f455de9d014aee",
+            "https://git.kernel.org/stable/c/3f15ba3dc14e6ee002ea01b4faddc3d49200377c",
+            "https://git.kernel.org/stable/c/da23bd709b46168f7dfc36055801011222b076cd",
+            "https://git.kernel.org/stable/c/4329426cf6b8e22b798db2331c7ef1dd2a9c748d",
+            "https://git.kernel.org/stable/c/62a1fedeb14c7ac0947ef33fadbabd35ed2400a2",
+            "https://git.kernel.org/stable/c/687c5d52fe53e602e76826dbd4d7af412747e183",
+            "https://git.kernel.org/stable/c/ba8d904c274268b18ef3dc11d3ca7b24a96cb087",
+            "https://git.kernel.org/stable/c/d375b98e0248980681e5e56b712026174d617198"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nip6_tunnel: fix NEXTHDR_FRAGMENT handling in ip6_tnl_parse_tlv_enc_lim()\n\nsyzbot pointed out [1] that NEXTHDR_FRAGMENT handling is broken.\n\nReading frag_off can only be done if we pulled enough bytes\nto skb->head. Currently we might access garbage.\n\n[1]\nBUG: KMSAN: uninit-value in ip6_tnl_parse_tlv_enc_lim+0x94f/0xbb0\nip6_tnl_parse_tlv_enc_lim+0x94f/0xbb0\nipxip6_tnl_xmit net/ipv6/ip6_tunnel.c:1326 [inline]\nip6_tnl_start_xmit+0xab2/0x1a70 net/ipv6/ip6_tunnel.c:1432\n__netdev_start_xmit include/linux/netdevice.h:4940 [inline]\nnetdev_start_xmit include/linux/netdevice.h:4954 [inline]\nxmit_one net/core/dev.c:3548 [inline]\ndev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564\n__dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349\ndev_queue_xmit include/linux/netdevice.h:3134 [inline]\nneigh_connected_output+0x569/0x660 net/core/neighbour.c:1592\nneigh_output include/net/neighbour.h:542 [inline]\nip6_finish_output2+0x23a9/0x2b30 net/ipv6/ip6_output.c:137\nip6_finish_output+0x855/0x12b0 net/ipv6/ip6_output.c:222\nNF_HOOK_COND include/linux/netfilter.h:303 [inline]\nip6_output+0x323/0x610 net/ipv6/ip6_output.c:243\ndst_output include/net/dst.h:451 [inline]\nip6_local_out+0xe9/0x140 net/ipv6/output_core.c:155\nip6_send_skb net/ipv6/ip6_output.c:1952 [inline]\nip6_push_pending_frames+0x1f9/0x560 net/ipv6/ip6_output.c:1972\nrawv6_push_pending_frames+0xbe8/0xdf0 net/ipv6/raw.c:582\nrawv6_sendmsg+0x2b66/0x2e70 net/ipv6/raw.c:920\ninet_sendmsg+0x105/0x190 net/ipv4/af_inet.c:847\nsock_sendmsg_nosec net/socket.c:730 [inline]\n__sock_sendmsg net/socket.c:745 [inline]\n____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584\n___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638\n__sys_sendmsg net/socket.c:2667 [inline]\n__do_sys_sendmsg net/socket.c:2676 [inline]\n__se_sys_sendmsg net/socket.c:2674 [inline]\n__x64_sys_sendmsg+0x307/0x490 net/socket.c:2674\ndo_syscall_x64 arch/x86/entry/common.c:52 [inline]\ndo_syscall_64+0x44/0x110 arch/x86/entry/common.c:83\nentry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was created at:\nslab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\nslab_alloc_node mm/slub.c:3478 [inline]\n__kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517\n__do_kmalloc_node mm/slab_common.c:1006 [inline]\n__kmalloc_node_track_caller+0x118/0x3c0 mm/slab_common.c:1027\nkmalloc_reserve+0x249/0x4a0 net/core/skbuff.c:582\npskb_expand_head+0x226/0x1a00 net/core/skbuff.c:2098\n__pskb_pull_tail+0x13b/0x2310 net/core/skbuff.c:2655\npskb_may_pull_reason include/linux/skbuff.h:2673 [inline]\npskb_may_pull include/linux/skbuff.h:2681 [inline]\nip6_tnl_parse_tlv_enc_lim+0x901/0xbb0 net/ipv6/ip6_tunnel.c:408\nipxip6_tnl_xmit net/ipv6/ip6_tunnel.c:1326 [inline]\nip6_tnl_start_xmit+0xab2/0x1a70 net/ipv6/ip6_tunnel.c:1432\n__netdev_start_xmit include/linux/netdevice.h:4940 [inline]\nnetdev_start_xmit include/linux/netdevice.h:4954 [inline]\nxmit_one net/core/dev.c:3548 [inline]\ndev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564\n__dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349\ndev_queue_xmit include/linux/netdevice.h:3134 [inline]\nneigh_connected_output+0x569/0x660 net/core/neighbour.c:1592\nneigh_output include/net/neighbour.h:542 [inline]\nip6_finish_output2+0x23a9/0x2b30 net/ipv6/ip6_output.c:137\nip6_finish_output+0x855/0x12b0 net/ipv6/ip6_output.c:222\nNF_HOOK_COND include/linux/netfilter.h:303 [inline]\nip6_output+0x323/0x610 net/ipv6/ip6_output.c:243\ndst_output include/net/dst.h:451 [inline]\nip6_local_out+0xe9/0x140 net/ipv6/output_core.c:155\nip6_send_skb net/ipv6/ip6_output.c:1952 [inline]\nip6_push_pending_frames+0x1f9/0x560 net/ipv6/ip6_output.c:1972\nrawv6_push_pending_frames+0xbe8/0xdf0 net/ipv6/raw.c:582\nrawv6_sendmsg+0x2b66/0x2e70 net/ipv6/raw.c:920\ninet_sendmsg+0x105/0x190 net/ipv4/af_inet.c:847\nsock_sendmsg_nosec net/socket.c:730 [inline]\n__sock_sendmsg net/socket.c:745 [inline]\n____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584\n___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638\n__sys_sendmsg net/socket.c:2667 [inline]\n__do_sys_sendms\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26634",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a2232f29bf52c24f827865b3c90829c44b6c695b",
+            "https://git.kernel.org/stable/c/e855dded4b70d1975ee7b9fed0c700391e3c8ea6",
+            "https://git.kernel.org/stable/c/8072699aa9e67d1727692cfb3c347263bb627fb9",
+            "https://git.kernel.org/stable/c/d09486a04f5da0a812c26217213b89a3b1acf836"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix removing a namespace with conflicting altnames\n\nMark reports a BUG() when a net namespace is removed.\n\n    kernel BUG at net/core/dev.c:11520!\n\nPhysical interfaces moved outside of init_net get \"refunded\"\nto init_net when that namespace disappears. The main interface\nname may get overwritten in the process if it would have\nconflicted. We need to also discard all conflicting altnames.\nRecent fixes addressed ensuring that altnames get moved\nwith the main interface, which surfaced this problem."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26635",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/165ad1e22779685c3ed3dd349c6c4c632309cc62",
+            "https://git.kernel.org/stable/c/b8e8838f82f332ae80c643dbb1ca4418d0628097",
+            "https://git.kernel.org/stable/c/9ccdef19cf9497c2803b005369668feb91cacdfd",
+            "https://git.kernel.org/stable/c/c0fe2fe7a5a291dfcf6dc64301732c8d3dc6a828",
+            "https://git.kernel.org/stable/c/660c3053d992b68fee893a0e9ec9159228cffdc6",
+            "https://git.kernel.org/stable/c/f1f34a515fb1e25e85dee94f781e7869ae351fb8",
+            "https://git.kernel.org/stable/c/df57fc2f2abf548aa889a36ab0bdcc94a75399dc",
+            "https://git.kernel.org/stable/c/e3f9bed9bee261e3347131764e42aeedf1ffea61"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nllc: Drop support for ETH_P_TR_802_2.\n\nsyzbot reported an uninit-value bug below. [0]\n\nllc supports ETH_P_802_2 (0x0004) and used to support ETH_P_TR_802_2\n(0x0011), and syzbot abused the latter to trigger the bug.\n\n  write$tun(r0, &(0x7f0000000040)={@val={0x0, 0x11}, @val, @mpls={[], @llc={@snap={0xaa, 0x1, ')', \"90e5dd\"}}}}, 0x16)\n\nllc_conn_handler() initialises local variables {saddr,daddr}.mac\nbased on skb in llc_pdu_decode_sa()/llc_pdu_decode_da() and passes\nthem to __llc_lookup().\n\nHowever, the initialisation is done only when skb->protocol is\nhtons(ETH_P_802_2), otherwise, __llc_lookup_established() and\n__llc_lookup_listener() will read garbage.\n\nThe missing initialisation existed prior to commit 211ed865108e\n(\"net: delete all instances of special processing for token ring\").\n\nIt removed the part to kick out the token ring stuff but forgot to\nclose the door allowing ETH_P_TR_802_2 packets to sneak into llc_rcv().\n\nLet's remove llc_tr_packet_type and complete the deprecation.\n\n[0]:\nBUG: KMSAN: uninit-value in __llc_lookup_established+0xe9d/0xf90\n __llc_lookup_established+0xe9d/0xf90\n __llc_lookup net/llc/llc_conn.c:611 [inline]\n llc_conn_handler+0x4bd/0x1360 net/llc/llc_conn.c:791\n llc_rcv+0xfbb/0x14a0 net/llc/llc_input.c:206\n __netif_receive_skb_one_core net/core/dev.c:5527 [inline]\n __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5641\n netif_receive_skb_internal net/core/dev.c:5727 [inline]\n netif_receive_skb+0x58/0x660 net/core/dev.c:5786\n tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1555\n tun_get_user+0x53af/0x66d0 drivers/net/tun.c:2002\n tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n call_write_iter include/linux/fs.h:2020 [inline]\n new_sync_write fs/read_write.c:491 [inline]\n vfs_write+0x8ef/0x1490 fs/read_write.c:584\n ksys_write+0x20f/0x4c0 fs/read_write.c:637\n __do_sys_write fs/read_write.c:649 [inline]\n __se_sys_write fs/read_write.c:646 [inline]\n __x64_sys_write+0x93/0xd0 fs/read_write.c:646\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x44/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nLocal variable daddr created at:\n llc_conn_handler+0x53/0x1360 net/llc/llc_conn.c:783\n llc_rcv+0xfbb/0x14a0 net/llc/llc_input.c:206\n\nCPU: 1 PID: 5004 Comm: syz-executor994 Not tainted 6.6.0-syzkaller-14500-g1c41041124bd #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/09/2023"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26636",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/84e9d10419f6f4f3f3cd8f9aaf44a48719aa4b1b",
+            "https://git.kernel.org/stable/c/b643d0defcbacd7fe548bc65c3e4e6f17dc5eb2d",
+            "https://git.kernel.org/stable/c/04f2a74b562f3a7498be0399309669f342793d8c",
+            "https://git.kernel.org/stable/c/c22044270da68881074fda81a7d34812726cb249",
+            "https://git.kernel.org/stable/c/6d53b813ff8b177f86f149c2f744442681f720e4",
+            "https://git.kernel.org/stable/c/cafd3ad3fe03ef4d6632747be9ee15dc0029db4b",
+            "https://git.kernel.org/stable/c/c451c008f563d56d5e676c9dcafae565fcad84bb",
+            "https://git.kernel.org/stable/c/dad555c816a50c6a6a8a86be1f9177673918c647"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nllc: make llc_ui_sendmsg() more robust against bonding changes\n\nsyzbot was able to trick llc_ui_sendmsg(), allocating an skb with no\nheadroom, but subsequently trying to push 14 bytes of Ethernet header [1]\n\nLike some others, llc_ui_sendmsg() releases the socket lock before\ncalling sock_alloc_send_skb().\nThen it acquires it again, but does not redo all the sanity checks\nthat were performed.\n\nThis fix:\n\n- Uses LL_RESERVED_SPACE() to reserve space.\n- Check all conditions again after socket lock is held again.\n- Do not account Ethernet header for mtu limitation.\n\n[1]\n\nskbuff: skb_under_panic: text:ffff800088baa334 len:1514 put:14 head:ffff0000c9c37000 data:ffff0000c9c36ff2 tail:0x5dc end:0x6c0 dev:bond0\n\n kernel BUG at net/core/skbuff.c:193 !\nInternal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP\nModules linked in:\nCPU: 0 PID: 6875 Comm: syz-executor.0 Not tainted 6.7.0-rc8-syzkaller-00101-g0802e17d9aca-dirty #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023\npstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)\n pc : skb_panic net/core/skbuff.c:189 [inline]\n pc : skb_under_panic+0x13c/0x140 net/core/skbuff.c:203\n lr : skb_panic net/core/skbuff.c:189 [inline]\n lr : skb_under_panic+0x13c/0x140 net/core/skbuff.c:203\nsp : ffff800096f97000\nx29: ffff800096f97010 x28: ffff80008cc8d668 x27: dfff800000000000\nx26: ffff0000cb970c90 x25: 00000000000005dc x24: ffff0000c9c36ff2\nx23: ffff0000c9c37000 x22: 00000000000005ea x21: 00000000000006c0\nx20: 000000000000000e x19: ffff800088baa334 x18: 1fffe000368261ce\nx17: ffff80008e4ed000 x16: ffff80008a8310f8 x15: 0000000000000001\nx14: 1ffff00012df2d58 x13: 0000000000000000 x12: 0000000000000000\nx11: 0000000000000001 x10: 0000000000ff0100 x9 : e28a51f1087e8400\nx8 : e28a51f1087e8400 x7 : ffff80008028f8d0 x6 : 0000000000000000\nx5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff800082b78714\nx2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000089\nCall trace:\n  skb_panic net/core/skbuff.c:189 [inline]\n  skb_under_panic+0x13c/0x140 net/core/skbuff.c:203\n  skb_push+0xf0/0x108 net/core/skbuff.c:2451\n  eth_header+0x44/0x1f8 net/ethernet/eth.c:83\n  dev_hard_header include/linux/netdevice.h:3188 [inline]\n  llc_mac_hdr_init+0x110/0x17c net/llc/llc_output.c:33\n  llc_sap_action_send_xid_c+0x170/0x344 net/llc/llc_s_ac.c:85\n  llc_exec_sap_trans_actions net/llc/llc_sap.c:153 [inline]\n  llc_sap_next_state net/llc/llc_sap.c:182 [inline]\n  llc_sap_state_process+0x1ec/0x774 net/llc/llc_sap.c:209\n  llc_build_and_send_xid_pkt+0x12c/0x1c0 net/llc/llc_sap.c:270\n  llc_ui_sendmsg+0x7bc/0xb1c net/llc/af_llc.c:997\n  sock_sendmsg_nosec net/socket.c:730 [inline]\n  __sock_sendmsg net/socket.c:745 [inline]\n  sock_sendmsg+0x194/0x274 net/socket.c:767\n  splice_to_socket+0x7cc/0xd58 fs/splice.c:881\n  do_splice_from fs/splice.c:933 [inline]\n  direct_splice_actor+0xe4/0x1c0 fs/splice.c:1142\n  splice_direct_to_actor+0x2a0/0x7e4 fs/splice.c:1088\n  do_splice_direct+0x20c/0x348 fs/splice.c:1194\n  do_sendfile+0x4bc/0xc70 fs/read_write.c:1254\n  __do_sys_sendfile64 fs/read_write.c:1322 [inline]\n  __se_sys_sendfile64 fs/read_write.c:1308 [inline]\n  __arm64_sys_sendfile64+0x160/0x3b4 fs/read_write.c:1308\n  __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]\n  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:51\n  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:136\n  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:155\n  el0_svc+0x54/0x158 arch/arm64/kernel/entry-common.c:678\n  el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:696\n  el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:595\nCode: aa1803e6 aa1903e7 a90023f5 94792f6a (d4210000)"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26637",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/aa74ce30a8a40d19a4256de4ae5322e71344a274",
+            "https://git.kernel.org/stable/c/556857aa1d0855aba02b1c63bc52b91ec63fc2cc"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath11k: rely on mac80211 debugfs handling for vif\n\nmac80211 started to delete debugfs entries in certain cases, causing a\nath11k to crash when it tried to delete the entries later. Fix this by\nrelying on mac80211 to delete the entries when appropriate and adding\nthem from the vif_add_debugfs handler."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26638",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d9c54763e5cdbbd3f81868597fe8aca3c96e6387",
+            "https://git.kernel.org/stable/c/1960f2b534da1e6c65fb96f9e98bda773495f406",
+            "https://git.kernel.org/stable/c/b0028f333420a65a53a63978522db680b37379dd",
+            "https://git.kernel.org/stable/c/78fbb92af27d0982634116c7a31065f24d092826"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnbd: always initialize struct msghdr completely\n\nsyzbot complains that msg->msg_get_inq value can be uninitialized [1]\n\nstruct msghdr got many new fields recently, we should always make\nsure their values is zero by default.\n\n[1]\n BUG: KMSAN: uninit-value in tcp_recvmsg+0x686/0xac0 net/ipv4/tcp.c:2571\n  tcp_recvmsg+0x686/0xac0 net/ipv4/tcp.c:2571\n  inet_recvmsg+0x131/0x580 net/ipv4/af_inet.c:879\n  sock_recvmsg_nosec net/socket.c:1044 [inline]\n  sock_recvmsg+0x12b/0x1e0 net/socket.c:1066\n  __sock_xmit+0x236/0x5c0 drivers/block/nbd.c:538\n  nbd_read_reply drivers/block/nbd.c:732 [inline]\n  recv_work+0x262/0x3100 drivers/block/nbd.c:863\n  process_one_work kernel/workqueue.c:2627 [inline]\n  process_scheduled_works+0x104e/0x1e70 kernel/workqueue.c:2700\n  worker_thread+0xf45/0x1490 kernel/workqueue.c:2781\n  kthread+0x3ed/0x540 kernel/kthread.c:388\n  ret_from_fork+0x66/0x80 arch/x86/kernel/process.c:147\n  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242\n\nLocal variable msg created at:\n  __sock_xmit+0x4c/0x5c0 drivers/block/nbd.c:513\n  nbd_read_reply drivers/block/nbd.c:732 [inline]\n  recv_work+0x262/0x3100 drivers/block/nbd.c:863\n\nCPU: 1 PID: 7465 Comm: kworker/u5:1 Not tainted 6.7.0-rc7-syzkaller-00041-gf016f7547aee #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023\nWorkqueue: nbd5-recv recv_work"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26639",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dc904345e3771aa01d0b8358b550802fdc6fe00b",
+            "https://git.kernel.org/stable/c/6335c0cdb2ea0ea02c999e04d34fd84f69fb27ff",
+            "https://git.kernel.org/stable/c/5a33420599fa0288792537e6872fd19cc8607ea6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm, kmsan: fix infinite recursion due to RCU critical section\n\nAlexander Potapenko writes in [1]: \"For every memory access in the code\ninstrumented by KMSAN we call kmsan_get_metadata() to obtain the metadata\nfor the memory being accessed.  For virtual memory the metadata pointers\nare stored in the corresponding `struct page`, therefore we need to call\nvirt_to_page() to get them.\n\nAccording to the comment in arch/x86/include/asm/page.h,\nvirt_to_page(kaddr) returns a valid pointer iff virt_addr_valid(kaddr) is\ntrue, so KMSAN needs to call virt_addr_valid() as well.\n\nTo avoid recursion, kmsan_get_metadata() must not call instrumented code,\ntherefore ./arch/x86/include/asm/kmsan.h forks parts of\narch/x86/mm/physaddr.c to check whether a virtual address is valid or not.\n\nBut the introduction of rcu_read_lock() to pfn_valid() added instrumented\nRCU API calls to virt_to_page_or_null(), which is called by\nkmsan_get_metadata(), so there is an infinite recursion now.  I do not\nthink it is correct to stop that recursion by doing\nkmsan_enter_runtime()/kmsan_exit_runtime() in kmsan_get_metadata(): that\nwould prevent instrumented functions called from within the runtime from\ntracking the shadow values, which might introduce false positives.\"\n\nFix the issue by switching pfn_valid() to the _sched() variant of\nrcu_read_lock/unlock(), which does not require calling into RCU.  Given\nthe critical section in pfn_valid() is very small, this is a reasonable\ntrade-off (with preemptible RCU).\n\nKMSAN further needs to be careful to suppress calls into the scheduler,\nwhich would be another source of recursion.  This can be done by wrapping\nthe call to pfn_valid() into preempt_disable/enable_no_resched().  The\ndownside is that this sacrifices breaking scheduling guarantees; however,\na kernel compiled with KMSAN has already given up any performance\nguarantees due to being heavily instrumented.\n\nNote, KMSAN code already disables tracing via Makefile, and since mmzone.h\nis included, it is not necessary to use the notrace variant, which is\ngenerally preferred in all other cases."
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26640",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f48bf9a83b1666d934247cb58a9887d7b3127b6f",
+            "https://git.kernel.org/stable/c/718f446e60316bf606946f7f42367d691d21541e",
+            "https://git.kernel.org/stable/c/b383d4ea272fe5795877506dcce5aad1f6330e5e",
+            "https://git.kernel.org/stable/c/d15cc0f66884ef2bed28c7ccbb11c102aa3a0760",
+            "https://git.kernel.org/stable/c/1b8adcc0e2c584fec778add7777fe28e20781e60",
+            "https://git.kernel.org/stable/c/577e4432f3ac810049cb7e6b71f4d96ec7c6e894"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntcp: add sanity checks to rx zerocopy\n\nTCP rx zerocopy intent is to map pages initially allocated\nfrom NIC drivers, not pages owned by a fs.\n\nThis patch adds to can_map_frag() these additional checks:\n\n- Page must not be a compound one.\n- page->mapping must be NULL.\n\nThis fixes the panic reported by ZhangPeng.\n\nsyzbot was able to loopback packets built with sendfile(),\nmapping pages owned by an ext4 file to TCP rx zerocopy.\n\nr3 = socket$inet_tcp(0x2, 0x1, 0x0)\nmmap(&(0x7f0000ff9000/0x4000)=nil, 0x4000, 0x0, 0x12, r3, 0x0)\nr4 = socket$inet_tcp(0x2, 0x1, 0x0)\nbind$inet(r4, &(0x7f0000000000)={0x2, 0x4e24, @multicast1}, 0x10)\nconnect$inet(r4, &(0x7f00000006c0)={0x2, 0x4e24, @empty}, 0x10)\nr5 = openat$dir(0xffffffffffffff9c, &(0x7f00000000c0)='./file0\\x00',\n    0x181e42, 0x0)\nfallocate(r5, 0x0, 0x0, 0x85b8)\nsendfile(r4, r5, 0x0, 0x8ba0)\ngetsockopt$inet_tcp_TCP_ZEROCOPY_RECEIVE(r4, 0x6, 0x23,\n    &(0x7f00000001c0)={&(0x7f0000ffb000/0x3000)=nil, 0x3000, 0x0, 0x0, 0x0,\n    0x0, 0x0, 0x0, 0x0}, &(0x7f0000000440)=0x40)\nr6 = openat$dir(0xffffffffffffff9c, &(0x7f00000000c0)='./file0\\x00',\n    0x181e42, 0x0)"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-18T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26641",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a9bc32879a08f23cdb80a48c738017e39aea1080",
+            "https://git.kernel.org/stable/c/af6b5c50d47ab43e5272ad61935d0ed2e264d3f0",
+            "https://git.kernel.org/stable/c/d54e4da98bbfa8c257bdca94c49652d81d18a4d8",
+            "https://git.kernel.org/stable/c/350a6640fac4b53564ec20aa3f4a0922cb0ba5e6",
+            "https://git.kernel.org/stable/c/c835df3bcc14858ae9b27315dd7de76370b94f3a",
+            "https://git.kernel.org/stable/c/8d975c15c0cd744000ca386247432d57b21f9df0"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nip6_tunnel: make sure to pull inner header in __ip6_tnl_rcv()\n\nsyzbot found __ip6_tnl_rcv() could access unitiliazed data [1].\n\nCall pskb_inet_may_pull() to fix this, and initialize ipv6h\nvariable after this call as it can change skb->head.\n\n[1]\n BUG: KMSAN: uninit-value in __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]\n BUG: KMSAN: uninit-value in INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]\n BUG: KMSAN: uninit-value in IP6_ECN_decapsulate+0x7df/0x1e50 include/net/inet_ecn.h:321\n  __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]\n  INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]\n  IP6_ECN_decapsulate+0x7df/0x1e50 include/net/inet_ecn.h:321\n  ip6ip6_dscp_ecn_decapsulate+0x178/0x1b0 net/ipv6/ip6_tunnel.c:727\n  __ip6_tnl_rcv+0xd4e/0x1590 net/ipv6/ip6_tunnel.c:845\n  ip6_tnl_rcv+0xce/0x100 net/ipv6/ip6_tunnel.c:888\n gre_rcv+0x143f/0x1870\n  ip6_protocol_deliver_rcu+0xda6/0x2a60 net/ipv6/ip6_input.c:438\n  ip6_input_finish net/ipv6/ip6_input.c:483 [inline]\n  NF_HOOK include/linux/netfilter.h:314 [inline]\n  ip6_input+0x15d/0x430 net/ipv6/ip6_input.c:492\n  ip6_mc_input+0xa7e/0xc80 net/ipv6/ip6_input.c:586\n  dst_input include/net/dst.h:461 [inline]\n  ip6_rcv_finish+0x5db/0x870 net/ipv6/ip6_input.c:79\n  NF_HOOK include/linux/netfilter.h:314 [inline]\n  ipv6_rcv+0xda/0x390 net/ipv6/ip6_input.c:310\n  __netif_receive_skb_one_core net/core/dev.c:5532 [inline]\n  __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5646\n  netif_receive_skb_internal net/core/dev.c:5732 [inline]\n  netif_receive_skb+0x58/0x660 net/core/dev.c:5791\n  tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1555\n  tun_get_user+0x53af/0x66d0 drivers/net/tun.c:2002\n  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n  call_write_iter include/linux/fs.h:2084 [inline]\n  new_sync_write fs/read_write.c:497 [inline]\n  vfs_write+0x786/0x1200 fs/read_write.c:590\n  ksys_write+0x20f/0x4c0 fs/read_write.c:643\n  __do_sys_write fs/read_write.c:655 [inline]\n  __se_sys_write fs/read_write.c:652 [inline]\n  __x64_sys_write+0x93/0xd0 fs/read_write.c:652\n  do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n  do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was created at:\n  slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\n  slab_alloc_node mm/slub.c:3478 [inline]\n  kmem_cache_alloc_node+0x5e9/0xb10 mm/slub.c:3523\n  kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560\n  __alloc_skb+0x318/0x740 net/core/skbuff.c:651\n  alloc_skb include/linux/skbuff.h:1286 [inline]\n  alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6334\n  sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2787\n  tun_alloc_skb drivers/net/tun.c:1531 [inline]\n  tun_get_user+0x1e8a/0x66d0 drivers/net/tun.c:1846\n  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n  call_write_iter include/linux/fs.h:2084 [inline]\n  new_sync_write fs/read_write.c:497 [inline]\n  vfs_write+0x786/0x1200 fs/read_write.c:590\n  ksys_write+0x20f/0x4c0 fs/read_write.c:643\n  __do_sys_write fs/read_write.c:655 [inline]\n  __se_sys_write fs/read_write.c:652 [inline]\n  __x64_sys_write+0x93/0xd0 fs/read_write.c:652\n  do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n  do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nCPU: 0 PID: 5034 Comm: syz-executor331 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023"
+    },
+    {
+        "Modified": "2024-03-18T11:15:00",
+        "Published": "2024-03-15T21:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47115",
+        "impact": {},
+        "last-modified": "2024-03-18T11:15:00",
+        "references": [],
+        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
+    },
+    {
+        "Modified": "2024-03-18T10:15:00",
+        "Published": "2024-03-18T10:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1604",
+        "impact": {},
+        "last-modified": "2024-03-18T10:15:00",
+        "references": [
+            "https://cert.pl/posts/2024/03/CVE-2024-1604",
+            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
+            "https://www.bmc.com/it-solutions/control-m.html"
+        ],
+        "summary": "Improper authorization in the report management and creation module of BMC Control-M branches\u00a09.0.20 and 9.0.21 allows logged-in users to read and make unauthorized changes to any reports available within the application, even without proper permissions. The attacker must know the unique identifier of the report they want to manipulate.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n"
+    },
+    {
+        "Modified": "2024-03-18T10:15:00",
+        "Published": "2024-03-18T10:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1604",
+        "impact": {},
+        "last-modified": "2024-03-18T10:15:00",
+        "references": [
+            "https://cert.pl/posts/2024/03/CVE-2024-1604",
+            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
+            "https://www.bmc.com/it-solutions/control-m.html"
+        ],
+        "summary": "Improper authorization in the report management and creation module of BMC Control-M branches\u00a09.0.20 and 9.0.21 allows logged-in users to read and make unauthorized changes to any reports available within the application, even without proper permissions. The attacker must know the unique identifier of the report they want to manipulate.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n"
+    },
+    {
+        "Modified": "2024-03-18T10:15:00",
+        "Published": "2024-03-18T10:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1605",
+        "impact": {},
+        "last-modified": "2024-03-18T10:15:00",
+        "references": [
+            "https://cert.pl/posts/2024/03/CVE-2024-1604",
+            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
+            "https://www.bmc.com/it-solutions/control-m.html"
+        ],
+        "summary": "BMC Control-M  branches 9.0.20 and 9.0.21 upon user login load all Dynamic Link Libraries (DLL)  from a directory that grants Write and Read permissions to all users. Leveraging it leads to loading of a potentially malicious libraries, which will execute with the application's privileges. \n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n\n"
+    },
+    {
+        "Modified": "2024-03-18T10:15:00",
+        "Published": "2024-03-18T10:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1605",
+        "impact": {},
+        "last-modified": "2024-03-18T10:15:00",
+        "references": [
+            "https://cert.pl/posts/2024/03/CVE-2024-1604",
+            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
+            "https://www.bmc.com/it-solutions/control-m.html"
+        ],
+        "summary": "BMC Control-M  branches 9.0.20 and 9.0.21 upon user login load all Dynamic Link Libraries (DLL)  from a directory that grants Write and Read permissions to all users. Leveraging it leads to loading of a potentially malicious libraries, which will execute with the application's privileges. \n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n\n"
+    },
+    {
+        "Modified": "2024-03-18T10:15:00",
+        "Published": "2024-03-18T10:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1606",
+        "impact": {},
+        "last-modified": "2024-03-18T10:15:00",
+        "references": [
+            "https://cert.pl/posts/2024/03/CVE-2024-1604",
+            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
+            "https://www.bmc.com/it-solutions/control-m.html"
+        ],
+        "summary": "Lack of input sanitization in BMC Control-M  branches 9.0.20 and 9.0.21 allows logged-in users for\u00a0manipulation of generated  web pages via injection of  HTML code. This might lead to a successful phishing attack for example by tricking users into using a hyperlink pointing to a website controlled by an attacker.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.200. \n\n"
+    },
+    {
+        "Modified": "2024-03-18T10:15:00",
+        "Published": "2024-03-18T10:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1606",
+        "impact": {},
+        "last-modified": "2024-03-18T10:15:00",
+        "references": [
+            "https://cert.pl/posts/2024/03/CVE-2024-1604",
+            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
+            "https://www.bmc.com/it-solutions/control-m.html"
+        ],
+        "summary": "Lack of input sanitization in BMC Control-M  branches 9.0.20 and 9.0.21 allows logged-in users for\u00a0manipulation of generated  web pages via injection of  HTML code. This might lead to a successful phishing attack for example by tricking users into using a hyperlink pointing to a website controlled by an attacker.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.200. \n\n"
+    },
+    {
         "Modified": "2024-03-18T09:15:00",
         "Published": "2024-03-18T09:15:00",
         "access": {},
@@ -1087,564 +1710,5 @@
             "https://github.com/PandaXGO/PandaX/issues/4"
         ],
         "summary": "A vulnerability, which was classified as critical, was found in PandaXGO PandaX up to 20240310. This affects the function InsertRole of the file /apps/system/services/role_menu.go. The manipulation of the argument roleKey leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-257061 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T12:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-24",
-        "id": "CVE-2024-2563",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257062",
-            "https://vuldb.com/?ctiid.257062",
-            "https://github.com/PandaXGO/PandaX/pull/3"
-        ],
-        "summary": "A vulnerability has been found in PandaXGO PandaX up to 20240310 and classified as critical. This vulnerability affects the function DeleteImage of the file /apps/system/router/upload.go. The manipulation of the argument fileName with the input ../../../../../../../../../tmp/1.txt leads to path traversal: '../filedir'. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-257062 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T10:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-2559",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257058",
-            "https://vuldb.com/?ctiid.257058",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/fromSysToolReboot.md"
-        ],
-        "summary": "A vulnerability classified as problematic has been found in Tenda AC18 15.03.05.05. Affected is the function fromSysToolReboot of the file /goform/SysToolReboot. The manipulation leads to cross-site request forgery. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-257058 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T11:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-2560",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257059",
-            "https://vuldb.com/?ctiid.257059",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/fromSysToolRestoreSet.md"
-        ],
-        "summary": "A vulnerability classified as problematic was found in Tenda AC18 15.03.05.05. Affected by this vulnerability is the function fromSysToolRestoreSet of the file /goform/SysToolRestoreSet. The manipulation leads to cross-site request forgery. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-257059. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T11:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2561",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257060",
-            "https://vuldb.com/?ctiid.257060",
-            "https://gist.github.com/Southseast/9f5284d8ee0f6d91e72eef73b285512a"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in 74CMS 3.28.0. Affected by this issue is the function sendCompanyLogo of the file /controller/company/Index.php#sendCompanyLogo of the component Company Logo Handler. The manipulation of the argument imgBase64 leads to unrestricted upload. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-257060."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T05:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2554",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257053",
-            "https://vuldb.com/?ctiid.257053",
-            "https://github.com/Peanut886/Vulnerability/blob/main/webray.com.cn/2024/Task%20Management%20System%20-%20multiple%20vulnerabilities.md#3sql-injection-vulnerability-in-update-employeephp"
-        ],
-        "summary": "A vulnerability has been found in SourceCodester Employee Task Management System 1.0 and classified as critical. Affected by this vulnerability is an unknown functionality of the file update-employee.php. The manipulation of the argument admin_id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-257053 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T07:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2555",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257054",
-            "https://vuldb.com/?ctiid.257054",
-            "https://github.com/Peanut886/Vulnerability/blob/main/webray.com.cn/2024/Task%20Management%20System%20-%20multiple%20vulnerabilities.md#4sql-injection-vulnerability-in-update-adminphp"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Employee Task Management System 1.0 and classified as critical. Affected by this issue is some unknown functionality of the file update-admin.php. The manipulation of the argument admin_id leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. VDB-257054 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T08:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2556",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257055",
-            "https://vuldb.com/?ctiid.257055",
-            "https://github.com/tht1997/WhiteBox/blob/main/sourcecodesters/employee-management-system-php-attendance-info.md"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Employee Task Management System 1.0. It has been classified as critical. This affects an unknown part of the file attendance-info.php. The manipulation of the argument user_id leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-257055."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T09:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-285",
-        "id": "CVE-2024-2557",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257056",
-            "https://vuldb.com/?ctiid.257056",
-            "https://github.com/vanitashtml/CVE-Dumps/blob/main/Execute%20After%20Redirect%20-%20Food%20Management%20System.md"
-        ],
-        "summary": "A vulnerability was found in kishor-23 Food Waste Management System 1.0. It has been declared as critical. This vulnerability affects unknown code of the file /admin/admin.php. The manipulation leads to improper authorization. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-257056. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T09:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-2558",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257057",
-            "https://vuldb.com/?ctiid.257057",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/formexeCommand.md"
-        ],
-        "summary": "A vulnerability was found in Tenda AC18 15.03.05.05. It has been rated as critical. This issue affects the function formexeCommand of the file /goform/execCommand. The manipulation of the argument cmdinput leads to stack-based buffer overflow. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-257057 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T00:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2534",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256971",
-            "https://vuldb.com/?ctiid.256971",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20users.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. This affects an unknown part of the file /admin/users.php. The manipulation of the argument user_id leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-256971. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2535",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256972",
-            "https://vuldb.com/?ctiid.256972",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20users.php.md"
-        ],
-        "summary": "A vulnerability has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0 and classified as problematic. This vulnerability affects unknown code of the file /admin/users.php. The manipulation of the argument id leads to cross site scripting. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-256972. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T02:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-2546",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256999",
-            "https://vuldb.com/?ctiid.256999",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/A18/fromSetWirelessRepeat_a.md"
-        ],
-        "summary": "A vulnerability has been found in Tenda AC18 15.13.07.09 and classified as critical. Affected by this vulnerability is the function fromSetWirelessRepeat. The manipulation of the argument wpapsk_crypto5g leads to stack-based buffer overflow. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-256999. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T04:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-2547",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257000",
-            "https://vuldb.com/?ctiid.257000",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/R7WebsSecurityHandler.md"
-        ],
-        "summary": "A vulnerability was found in Tenda AC18 15.03.05.05 and classified as critical. Affected by this issue is the function R7WebsSecurityHandler. The manipulation of the argument password leads to stack-based buffer overflow. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-257000. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-17T04:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2553",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.257052",
-            "https://vuldb.com/?ctiid.257052",
-            "https://github.com/BurakSevben/CVEs/blob/main/Product%20Rating%20System/Product%20Rating%20System%20-%20Cross-Site-Scripting-1.md"
-        ],
-        "summary": "A vulnerability, which was classified as problematic, was found in SourceCodester Product Review Rating System 1.0. Affected is an unknown function of the component Rate Product Handler. The manipulation of the argument Your Name/Comment leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-257052."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T22:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-2531",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256968",
-            "https://vuldb.com/?ctiid.256968",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Arbitrary%20File%20Upload%20-%20update-rooms.php.md"
-        ],
-        "summary": "A vulnerability classified as critical has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. Affected is an unknown function of the file /admin/update-rooms.php. The manipulation leads to unrestricted upload. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-256968. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T22:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2532",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256969",
-            "https://vuldb.com/?ctiid.256969",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20update-users.php.md"
-        ],
-        "summary": "A vulnerability classified as critical was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. Affected by this vulnerability is an unknown functionality of the file /admin/update-users.php. The manipulation of the argument id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-256969 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T23:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2533",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256970",
-            "https://vuldb.com/?ctiid.256970",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20update-users.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as problematic, has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. Affected by this issue is some unknown functionality of the file /admin/update-users.php. The manipulation of the argument id leads to cross site scripting. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. VDB-256970 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T20:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2528",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256965",
-            "https://vuldb.com/?ctiid.256965",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20update-rooms.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. It has been classified as critical. This affects an unknown part of the file /admin/update-rooms.php. The manipulation of the argument room_id leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-256965 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T20:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-2529",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256966",
-            "https://vuldb.com/?ctiid.256966",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Arbitrary%20File%20Upload%20-%20rooms.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. It has been declared as critical. This vulnerability affects unknown code of the file /admin/rooms.php. The manipulation leads to unrestricted upload. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-256966 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T21:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2530",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256967",
-            "https://vuldb.com/?ctiid.256967",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20update-rooms.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. It has been rated as problematic. This issue affects some unknown processing of the file /admin/update-rooms.php. The manipulation of the argument id leads to cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-256967. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T18:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2524",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256961",
-            "https://vuldb.com/?ctiid.256961",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20receipt.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. This issue affects some unknown processing of the file /admin/receipt.php. The manipulation of the argument room_id leads to sql injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-256961 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T18:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2525",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256962",
-            "https://vuldb.com/?ctiid.256962",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20receipt.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as problematic, was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. Affected is an unknown function of the file /admin/receipt.php. The manipulation of the argument id leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-256962 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T19:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2526",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256963",
-            "https://vuldb.com/?ctiid.256963",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20rooms.php.md"
-        ],
-        "summary": "A vulnerability has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0 and classified as problematic. Affected by this vulnerability is an unknown functionality of the file /admin/rooms.php. The manipulation of the argument id leads to cross site scripting. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-256963. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T19:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2527",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256964",
-            "https://vuldb.com/?ctiid.256964",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20rooms.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0 and classified as critical. Affected by this issue is some unknown functionality of the file /admin/rooms.php. The manipulation of the argument room_id leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-256964. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T16:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2520",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256957",
-            "https://vuldb.com/?ctiid.256957",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20bookdate.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. It has been declared as critical. Affected by this vulnerability is an unknown functionality of the file /admin/bookdate.php. The manipulation of the argument room_id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-256957 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T16:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2521",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256958",
-            "https://vuldb.com/?ctiid.256958",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20bookdate.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. It has been rated as problematic. Affected by this issue is some unknown functionality of the file /admin/bookdate.php. The manipulation of the argument id leads to cross site scripting. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. VDB-256958 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T17:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2522",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256959",
-            "https://vuldb.com/?ctiid.256959",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/SQL%20Injection%20-%20booktime.php.md"
-        ],
-        "summary": "A vulnerability classified as critical has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. This affects an unknown part of the file /admin/booktime.php. The manipulation of the argument room_id leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-256959. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T17:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2523",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256960",
-            "https://vuldb.com/?ctiid.256960",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20booktime.php.md"
-        ],
-        "summary": "A vulnerability classified as problematic was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. This vulnerability affects unknown code of the file /admin/booktime.php. The manipulation of the argument id leads to cross site scripting. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-256960. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T15:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2519",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256956",
-            "https://vuldb.com/?ctiid.256956",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20navbar.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. It has been classified as problematic. Affected is an unknown function of the file navbar.php. The manipulation of the argument id leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-256956. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T12:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2516",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256953",
-            "https://vuldb.com/?ctiid.256953",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Blind%20SQL%20Injection%20-%20home.php.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0. This affects an unknown part of the file home.php. The manipulation of the argument id leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-256953 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T12:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2517",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256954",
-            "https://vuldb.com/?ctiid.256954",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Blind%20SQL%20Injection%20-%20book_history.php.md"
-        ],
-        "summary": "A vulnerability has been found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0 and classified as critical. This vulnerability affects unknown code of the file book_history.php. The manipulation of the argument del_id leads to sql injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-256954 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T13:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2518",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://vuldb.com/?id.256955",
-            "https://vuldb.com/?ctiid.256955",
-            "https://github.com/skid-nochizplz/skid-nochizplz/blob/main/TrashBin/CVE/MAGESH-K21%20%20Online-College-Event-Hall-Reservation-System/Reflected%20XSS%20-%20book_history.php.md"
-        ],
-        "summary": "A vulnerability was found in MAGESH-K21 Online-College-Event-Hall-Reservation-System 1.0 and classified as problematic. This issue affects some unknown processing of the file book_history.php. The manipulation of the argument id leads to cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-256955. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-03-17T22:38:00",
-        "Published": "2024-03-16T05:15:00",
-        "access": {},
-        "assigner": "productsecurity@carrier.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-36483",
-        "impact": {},
-        "last-modified": "2024-03-17T22:38:00",
-        "references": [
-            "https://www.corporate.carrier.com/Images/CARR-PSA-MASMobile%20Classic%20Authorization%20Bypass-012-0623_tcm558-203964.pdf"
-        ],
-        "summary": "An authorization bypass was discovered in the Carrier MASmobile Classic application through 1.16.18 for Android, MASmobile Classic app through 1.7.24 for iOS, and MAS ASP.Net Services through 1.9. It can be achieved via session ID prediction, allowing remote attackers to retrieve sensitive data including customer data, security system status, and event history. NOTE: This vulnerability only affects products that are no longer supported by the maintainer. The affected products cannot simply be updated; they must be removed, but can be replaced by other Carrier software as explained in the Carrier advisory."
     }
 ]
