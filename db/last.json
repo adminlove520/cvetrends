@@ -1,62 +1,1295 @@
 [
     {
-        "Modified": "2024-03-18T17:56:00",
-        "Published": "2024-02-22T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
         "access": {},
-        "assigner": "cve@kernel.org",
+        "assigner": "psirt@adobe.com",
         "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2024-26589",
+        "cwe": "CWE-79",
+        "id": "CVE-2024-20760",
         "impact": {},
-        "last-modified": "2024-03-18T17:56:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
-            "https://git.kernel.org/stable/c/29ffa63f21bcdcef3e36b03cccf9d0cd031f6ab0",
-            "https://git.kernel.org/stable/c/4108b86e324da42f7ed425bd71632fd844300dc8",
-            "https://git.kernel.org/stable/c/e8d3872b617c21100c5ee4f64e513997a68c2e3d",
-            "https://git.kernel.org/stable/c/1b500d5d6cecf98dd6ca88bc9e7ae1783c83e6d3",
-            "https://git.kernel.org/stable/c/22c7fa171a02d310e3a3f6ed46a698ca8a0060ed"
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
         ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Reject variable offset alu on PTR_TO_FLOW_KEYS\n\nFor PTR_TO_FLOW_KEYS, check_flow_keys_access() only uses fixed off\nfor validation. However, variable offset ptr alu is not prohibited\nfor this ptr kind. So the variable offset is not checked.\n\nThe following prog is accepted:\n\n  func#0 @0\n  0: R1=ctx() R10=fp0\n  0: (bf) r6 = r1                       ; R1=ctx() R6_w=ctx()\n  1: (79) r7 = *(u64 *)(r6 +144)        ; R6_w=ctx() R7_w=flow_keys()\n  2: (b7) r8 = 1024                     ; R8_w=1024\n  3: (37) r8 /= 1                       ; R8_w=scalar()\n  4: (57) r8 &= 1024                    ; R8_w=scalar(smin=smin32=0,\n  smax=umax=smax32=umax32=1024,var_off=(0x0; 0x400))\n  5: (0f) r7 += r8\n  mark_precise: frame0: last_idx 5 first_idx 0 subseq_idx -1\n  mark_precise: frame0: regs=r8 stack= before 4: (57) r8 &= 1024\n  mark_precise: frame0: regs=r8 stack= before 3: (37) r8 /= 1\n  mark_precise: frame0: regs=r8 stack= before 2: (b7) r8 = 1024\n  6: R7_w=flow_keys(smin=smin32=0,smax=umax=smax32=umax32=1024,var_off\n  =(0x0; 0x400)) R8_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=1024,\n  var_off=(0x0; 0x400))\n  6: (79) r0 = *(u64 *)(r7 +0)          ; R0_w=scalar()\n  7: (95) exit\n\nThis prog loads flow_keys to r7, and adds the variable offset r8\nto r7, and finally causes out-of-bounds access:\n\n  BUG: unable to handle page fault for address: ffffc90014c80038\n  [...]\n  Call Trace:\n   <TASK>\n   bpf_dispatcher_nop_func include/linux/bpf.h:1231 [inline]\n   __bpf_prog_run include/linux/filter.h:651 [inline]\n   bpf_prog_run include/linux/filter.h:658 [inline]\n   bpf_prog_run_pin_on_cpu include/linux/filter.h:675 [inline]\n   bpf_flow_dissect+0x15f/0x350 net/core/flow_dissector.c:991\n   bpf_prog_test_run_flow_dissector+0x39d/0x620 net/bpf/test_run.c:1359\n   bpf_prog_test_run kernel/bpf/syscall.c:4107 [inline]\n   __sys_bpf+0xf8f/0x4560 kernel/bpf/syscall.c:5475\n   __do_sys_bpf kernel/bpf/syscall.c:5561 [inline]\n   __se_sys_bpf kernel/bpf/syscall.c:5559 [inline]\n   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:5559\n   do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n   do_syscall_64+0x3f/0x110 arch/x86/entry/common.c:83\n   entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nFix this by rejecting ptr alu with variable offset on flow_keys.\nApplying the patch rejects the program with \"R7 pointer arithmetic\non flow_keys prohibited\"."
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
     },
     {
-        "Modified": "2024-03-18T17:54:00",
-        "Published": "2024-02-22T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
         "access": {},
-        "assigner": "cve@kernel.org",
+        "assigner": "psirt@adobe.com",
         "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-26590",
+        "cwe": "CWE-787",
+        "id": "CVE-2024-20761",
         "impact": {},
-        "last-modified": "2024-03-18T17:54:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
-            "https://git.kernel.org/stable/c/823ba1d2106019ddf195287ba53057aee33cf724",
-            "https://git.kernel.org/stable/c/eed24b816e50c6cd18cbee0ff0d7218c8fced199",
-            "https://git.kernel.org/stable/c/118a8cf504d7dfa519562d000f423ee3ca75d2c4",
-            "https://git.kernel.org/stable/c/47467e04816cb297905c0f09bc2d11ef865942d9"
+            "https://helpx.adobe.com/security/products/animate/apsb24-19.html"
         ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nerofs: fix inconsistent per-file compression format\n\nEROFS can select compression algorithms on a per-file basis, and each\nper-file compression algorithm needs to be marked in the on-disk\nsuperblock for initialization.\n\nHowever, syzkaller can generate inconsistent crafted images that use\nan unsupported algorithmtype for specific inodes, e.g. use MicroLZMA\nalgorithmtype even it's not set in `sbi->available_compr_algs`.  This\ncan lead to an unexpected \"BUG: kernel NULL pointer dereference\" if\nthe corresponding decompressor isn't built-in.\n\nFix this by checking against `sbi->available_compr_algs` for each\nm_algorithmformat request.  Incorrect !erofs_sb_has_compr_cfgs preset\nbitmap is now fixed together since it was harmless previously."
+        "summary": "Animate versions 24.0, 23.0.3 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
     },
     {
-        "Modified": "2024-03-18T17:54:00",
-        "Published": "2024-02-22T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
         "access": {},
-        "assigner": "cve@kernel.org",
+        "assigner": "psirt@adobe.com",
         "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-26591",
+        "cwe": "CWE-125",
+        "id": "CVE-2024-20762",
         "impact": {},
-        "last-modified": "2024-03-18T17:54:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
-            "https://git.kernel.org/stable/c/a7b98aa10f895e2569403896f2d19b73b6c95653",
-            "https://git.kernel.org/stable/c/6cc9c0af0aa06f781fa515a1734b1a4239dfd2c0",
-            "https://git.kernel.org/stable/c/8c8bcd45e9b10eef12321f08d2e5be33d615509c",
-            "https://git.kernel.org/stable/c/50ae82f080cf87e84828f066c31723b781d68f5b",
-            "https://git.kernel.org/stable/c/715d82ba636cb3629a6e18a33bb9dbe53f9936ee"
+            "https://helpx.adobe.com/security/products/animate/apsb24-19.html"
         ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Fix re-attachment branch in bpf_tracing_prog_attach\n\nThe following case can cause a crash due to missing attach_btf:\n\n1) load rawtp program\n2) load fentry program with rawtp as target_fd\n3) create tracing link for fentry program with target_fd = 0\n4) repeat 3\n\nIn the end we have:\n\n- prog->aux->dst_trampoline == NULL\n- tgt_prog == NULL (because we did not provide target_fd to link_create)\n- prog->aux->attach_btf == NULL (the program was loaded with attach_prog_fd=X)\n- the program was loaded for tgt_prog but we have no way to find out which one\n\n    BUG: kernel NULL pointer dereference, address: 0000000000000058\n    Call Trace:\n     <TASK>\n     ? __die+0x20/0x70\n     ? page_fault_oops+0x15b/0x430\n     ? fixup_exception+0x22/0x330\n     ? exc_page_fault+0x6f/0x170\n     ? asm_exc_page_fault+0x22/0x30\n     ? bpf_tracing_prog_attach+0x279/0x560\n     ? btf_obj_id+0x5/0x10\n     bpf_tracing_prog_attach+0x439/0x560\n     __sys_bpf+0x1cf4/0x2de0\n     __x64_sys_bpf+0x1c/0x30\n     do_syscall_64+0x41/0xf0\n     entry_SYSCALL_64_after_hwframe+0x6e/0x76\n\nReturn -EINVAL in this situation."
+        "summary": "Animate versions 24.0, 23.0.3 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
     },
     {
-        "Modified": "2024-03-18T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-426",
+        "id": "CVE-2024-20754",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/lightroom/apsb24-17.html"
+        ],
+        "summary": "Lightroom Desktop versions 7.1.2 and earlier are affected by an Untrusted Search Path vulnerability that could result in arbitrary code execution in the context of the current user. If the application uses a search path to locate critical resources such as programs, then an attacker could modify that search path to point to a malicious program, which the targeted application would then execute. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-20763",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/animate/apsb24-19.html"
+        ],
+        "summary": "Animate versions 24.0, 23.0.3 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-20763",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/animate/apsb24-19.html"
+        ],
+        "summary": "Animate versions 24.0, 23.0.3 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-20764",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/animate/apsb24-19.html"
+        ],
+        "summary": "Animate versions 24.0, 23.0.3 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-20764",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/animate/apsb24-19.html"
+        ],
+        "summary": "Animate versions 24.0, 23.0.3 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-20768",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-20768",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21652",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-x32m-mvfj-52xv"
+        ],
+        "summary": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Prior to versions 2.8.13, 2.9.9, and 2.10.4, an attacker can exploit a chain of vulnerabilities, including a Denial of Service (DoS) flaw and in-memory data storage weakness, to effectively bypass the application's brute force login protection. This is a critical security vulnerability that allows attackers to bypass the brute force login protection mechanism. Not only can they crash the service affecting all users, but they can also make unlimited login attempts, increasing the risk of account compromise. Versions 2.8.13, 2.9.9, and 2.10.4 contain a patch for this issue.\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21652",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-x32m-mvfj-52xv"
+        ],
+        "summary": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Prior to versions 2.8.13, 2.9.9, and 2.10.4, an attacker can exploit a chain of vulnerabilities, including a Denial of Service (DoS) flaw and in-memory data storage weakness, to effectively bypass the application's brute force login protection. This is a critical security vulnerability that allows attackers to bypass the brute force login protection mechanism. Not only can they crash the service affecting all users, but they can also make unlimited login attempts, increasing the risk of account compromise. Versions 2.8.13, 2.9.9, and 2.10.4 contain a patch for this issue.\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26028",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26028",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26030",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26030",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26031",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26032",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable web pages. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable script. This could result in arbitrary code execution in the context of the victim's browser. Exploitation of this issue requires user interaction."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26038",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26033",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26034",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26041",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26035",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26042",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable web pages. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable script. This could result in arbitrary code execution in the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26040",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26043",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26044",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into a webpage. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable script. This could result in arbitrary code execution in the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26045",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26050",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26051",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26052",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26056",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26059",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26061",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26062",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2024-26063",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by an Information Exposure vulnerability that could result in a Security feature bypass. An attacker could leverage this vulnerability to gain unauthorized access to sensitive information, potentially bypassing security measures. Exploitation of this issue does not require user interaction."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26064",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into a webpage. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable script. This could result in arbitrary code execution in the context of the victim's browser. Exploitation of this issue requires user interaction."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26065",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26067",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26069",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26073",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26080",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable web pages. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable script."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26094",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26096",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26101",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26102",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26103",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26104",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26105",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26106",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26107",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26118",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26119",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by an Improper Access Control vulnerability that could result in a Security feature bypass. An attacker could leverage this vulnerability to bypass security measures and gain unauthorized access. Exploitation of this issue does not require user interaction."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26120",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26124",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T18:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-26125",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/experience-manager/apsb24-05.html"
+        ],
+        "summary": "Adobe Experience Manager versions 6.5.19 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-41334",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/astropy/astropy/security/advisories/GHSA-h2x6-5jx5-46hf",
+            "https://github.com/astropy/astropy/commit/22057d37b1313f5f5a9b5783df0a091d978dccb5",
+            "https://github.com/astropy/astropy/blob/9b97d98802ee4f5350a62b681c35d8687ee81d91/astropy/coordinates/transformations.py#L539"
+        ],
+        "summary": "Astropy is a project for astronomy in Python that fosters interoperability between Python astronomy packages. Version 5.3.2 of the Astropy core package is vulnerable to remote code execution due to improper input validation in the `TranformGraph().to_dot_graph` function. A malicious user can provide a command or a script file as a value to the `savelayout` argument, which will be placed as the first value in a list of arguments passed to `subprocess.Popen`.  Although an error will be raised, the command or script will be executed successfully. Version 5.3.3 fixes this issue."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-6821",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/6b1a998d-c97c-4305-b12a-69e29408ebd9/"
+        ],
+        "summary": "The Error Log Viewer by BestWebSoft WordPress plugin before 1.1.3 contains a vulnerability that allows you to read and download PHP logs without authorization"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-7085",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/a2ec1308-75a0-49d0-9288-33c6d9ee4328/"
+        ],
+        "summary": "The Scalable Vector Graphics (SVG) WordPress plugin through 3.4 does not sanitize uploaded SVG files, which could allow users with a role as low as Author to upload a malicious SVG containing XSS payloads."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-7236",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/2a4557e2-b764-4678-a6d6-af39dd1ba76b/"
+        ],
+        "summary": "The Backup Bolt WordPress plugin through 1.3.0 is vulnerable to Information Exposure via the unprotected access of debug logs. This makes it possible for unauthenticated attackers to retrieve the debug log which may contain information like system errors which could contain sensitive information."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0365",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/4b8b9638-d52a-40bc-b298-ae1c74788c18/"
+        ],
+        "summary": "The Fancy Product Designer WordPress plugin before 6.1.5 does not properly sanitise and escape a parameter before using it in a SQL statement, leading to a SQL injection exploitable by adminstrators."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0711",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/8e286c04-ef32-4af0-be78-d978999b2a90/"
+        ],
+        "summary": "The Buttons Shortcode and Widget WordPress plugin through 1.16 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0719",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/6e67bf7f-07e6-432b-a8f4-aa69299aecaf/"
+        ],
+        "summary": "The Tabs Shortcode and Widget WordPress plugin through 1.17 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0779",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/ced134cf-82c5-401b-9476-b6456e1924e2/"
+        ],
+        "summary": "The Enjoy Social Feed plugin for WordPress website WordPress plugin through 6.2.2 does not have authorisation and CSRF in various function hooked to admin_init, allowing unauthenticated users to call them and unlink arbitrary users Instagram Account for example"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0780",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/be3045b1-72e6-450a-8dd2-4702a9328447/"
+        ],
+        "summary": "The Enjoy Social Feed plugin for WordPress website WordPress plugin through 6.2.2 does not have authorisation when resetting its database, allowing any authenticated users, such as subscriber to perform such action"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0820",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/fc091bbd-7338-4bd4-add5-e46502a9a949/"
+        ],
+        "summary": "The Jobs for WordPress plugin before 2.7.4 does not sanitise and escape some parameters, which could allow users with a role as low as contributor to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0858",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/f6627a35-d158-495e-9d56-69405cfca221/"
+        ],
+        "summary": "The Innovs HR WordPress plugin through 1.0.3.4 does not have CSRF checks in some places, which could allow attackers to make logged in users perform unwanted actions via CSRF attacks such as adding them as employees."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0951",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/88b2e479-eb15-4213-9df8-3d353074974e/"
+        ],
+        "summary": "The Advanced Social Feeds Widget & Shortcode WordPress plugin through 1.7 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-0973",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/798de421-4814-46a9-a055-ebb95a7218ed/"
+        ],
+        "summary": "The Widget for Social Page Feeds WordPress plugin before 6.4 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21661",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-6v85-wr92-q4p7",
+            "https://github.com/argoproj/argo-cd/commit/2a22e19e06aaf6a1e734443043310a66c234e345",
+            "https://github.com/argoproj/argo-cd/commit/5bbb51ab423f273dda74ab956469843d2db2e208",
+            "https://github.com/argoproj/argo-cd/commit/ce04dc5c6f6e92033221ec6d96b74403b065ca8b",
+            "https://github.com/argoproj/argo-cd/blob/54601c8fd30b86a4c4b7eb449956264372c8bde0/util/session/sessionmanager.go#L302-L311"
+        ],
+        "summary": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Prior to versions 2.8.13, 2.9.9, and 2.10.4, an attacker can exploit a critical flaw in the application to initiate a Denial of Service (DoS) attack, rendering the application inoperable and affecting all users. The issue arises from unsafe manipulation of an array in a multi-threaded environment. The vulnerability is rooted in the application's code, where an array is being modified while it is being iterated over. This is a classic programming error but becomes critically unsafe when executed in a multi-threaded environment. When two threads interact with the same array simultaneously, the application crashes. This is a Denial of Service (DoS) vulnerability. Any attacker can crash the application continuously, making it impossible for legitimate users to access the service. The issue is exacerbated because it does not require authentication, widening the pool of potential attackers. Versions 2.8.13, 2.9.9, and 2.10.4 contain a patch for this issue."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21662",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/argoproj/argo-cd/security/advisories/GHSA-2vgg-9h6w-m454",
+            "https://github.com/argoproj/argo-cd/commit/17b0df1168a4c535f6f37e95f25ed7cd81e1fa4d",
+            "https://github.com/argoproj/argo-cd/commit/6e181d72b31522f886a2afa029d5b26d7912ec7b",
+            "https://github.com/argoproj/argo-cd/commit/cebb6538f7944c87ca2fecb5d17f8baacc431456",
+            "https://argo-cd.readthedocs.io/en/stable/security_considerations/#cve-2020-8827-insufficient-anti-automationanti-brute-force"
+        ],
+        "summary": "Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes. Prior to versions 2.8.13, 2.9.9, and 2.10.4, an attacker can effectively bypass the rate limit and brute force protections by exploiting the application's weak cache-based mechanism. This loophole in security can be combined with other vulnerabilities to attack the default admin account. This flaw undermines a patch for CVE-2020-8827 intended to protect against brute-force attacks. The application's brute force protection relies on a cache mechanism that tracks login attempts for each user. This cache is limited to a `defaultMaxCacheSize` of 1000 entries. An attacker can overflow this cache by bombarding it with login attempts for different users, thereby pushing out the admin account's failed attempts and effectively resetting the rate limit for that account. This is a severe vulnerability that enables attackers to perform brute force attacks at an accelerated rate, especially targeting the default admin account. Users should upgrade to version 2.8.13, 2.9.9, or 2.10.4 to receive a patch."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1333",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/30546402-03b8-4e18-ad7e-04a6b556ffd7/"
+        ],
+        "summary": "The Responsive Pricing Table WordPress plugin before 5.1.11 does not validate and escape some of its Pricing Table options before outputting them back in a page/post where the related shortcode is embed, which could allow users with the author role and above to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1331",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/b2bac900-3d8f-406c-b03d-c8db156acc59/"
+        ],
+        "summary": "The Team Members WordPress plugin before 5.3.2 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the author role and above to perform Stored Cross-Site Scripting attacks."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1658",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://wpscan.com/vulnerability/9489925e-5a47-4608-90a2-0139c5e1c43c/"
+        ],
+        "summary": "The Grid Shortcodes WordPress plugin before 1.1.1 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-20752",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by a Use After Free vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-122",
+        "id": "CVE-2024-20755",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-20756",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "psirt@adobe.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-20757",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
+        ],
+        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27930",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-82vv-j9pr-qmwq",
+            "https://github.com/glpi-project/glpi/commit/1942b70b2422fff51822f6eb3af500c94760871e",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can access sensitive fields data from items on which he has read access. This issue has been patched in version 10.0.13."
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27937",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://github.com/glpi-project/glpi/security/advisories/GHSA-98qw-hpg3-2hpj",
+            "https://github.com/glpi-project/glpi/commit/d02c537d23cbb729fe18b87f71b3c6e84e9892da",
+            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
+        ],
+        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can obtain the email address of all GLPI users. This issue has been patched in version 10.0.13.\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-2050",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
+        ],
+        "summary": "\nCWE-79: Improper Neutralization of Input During Web Page Generation (\u2018Cross-site Scripting\u2019)\nvulnerability exists when an attacker injects then executes arbitrary malicious JavaScript code\nwithin the context of the product.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "CWE-307",
+        "id": "CVE-2024-2051",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
+        ],
+        "summary": "\nCWE-307: Improper Restriction of Excessive Authentication Attempts vulnerability exists that\ncould cause account takeover and unauthorized access to the system when an attacker\nconducts brute-force attacks against the login form.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2052",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
+        ],
+        "summary": "\nCWE-552: Files or Directories Accessible to External Parties vulnerability exists that could allow\nunauthenticated files and logs exfiltration and download of files when an attacker modifies the\nURL to download to a different location.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "cybersecurity@schneider-electric.com",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2024-2229",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-02&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-02.pdf"
+        ],
+        "summary": "\nCWE-502: Deserialization of Untrusted Data vulnerability exists that could cause remote code\nexecution when a malicious project file is loaded into the application by a valid user.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
+        "Published": "2024-03-18T16:15:00",
+        "access": {},
+        "assigner": "vulnreport@tenable.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2390",
+        "impact": {},
+        "last-modified": "2024-03-18T19:40:00",
+        "references": [
+            "https://www.tenable.com/security/tns-2024-05"
+        ],
+        "summary": "\nAs a part of Tenable\u2019s vulnerability disclosure program, a vulnerability in a Nessus plugin was identified and reported. This vulnerability could allow a malicious actor with sufficient permissions on a scan target to place a binary in a specific filesystem location, and abuse the impacted plugin in order to escalate privileges.\n\n"
+    },
+    {
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T17:15:00",
         "access": {},
         "assigner": "security-advisories@github.com",
@@ -64,7 +1297,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-27096",
         "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://github.com/glpi-project/glpi/security/advisories/GHSA-2x8m-vrcm-2jqv",
             "https://github.com/glpi-project/glpi/commit/61a0c2302b4f633f5065358adc36058e1abc37f9",
@@ -73,7 +1306,7 @@
         "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can exploit a SQL injection vulnerability in the search engine to extract data from the database. This issue has been patched in version 10.0.13."
     },
     {
-        "Modified": "2024-03-18T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T17:15:00",
         "access": {},
         "assigner": "security-advisories@github.com",
@@ -81,7 +1314,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-27098",
         "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://github.com/glpi-project/glpi/security/advisories/GHSA-92x4-q9w5-837w",
             "https://github.com/glpi-project/glpi/commit/3b6bc1b4aa1f3693b20ada3425d2de5108522484",
@@ -90,7 +1323,7 @@
         "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can execute a SSRF based attack using Arbitrary Object Instantiation. This issue has been patched in version 10.0.13."
     },
     {
-        "Modified": "2024-03-18T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T17:15:00",
         "access": {},
         "assigner": "security-advisories@github.com",
@@ -98,7 +1331,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-27104",
         "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://github.com/glpi-project/glpi/security/advisories/GHSA-prc3-cx5m-h5mj",
             "https://github.com/glpi-project/glpi/commit/b409ca437864607b03c2014b9e3293b7f141af65",
@@ -107,7 +1340,7 @@
         "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. A user with rights to create and share dashboards can build a dashboard containing javascript code. Any user that will open this dashboard will be subject to an XSS attack. This issue has been patched in version 10.0.13.\n"
     },
     {
-        "Modified": "2024-03-18T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T17:15:00",
         "access": {},
         "assigner": "security-advisories@github.com",
@@ -115,7 +1348,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-27914",
         "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://github.com/glpi-project/glpi/security/advisories/GHSA-rcxj-fqr4-q34r",
             "https://github.com/glpi-project/glpi/commit/69e0dee8de0c0df139b42dbfa1a8997888c2af95",
@@ -124,7 +1357,7 @@
         "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An unauthenticated user can provide a malicious link to a GLPI administrator in order to exploit a reflected XSS  vulnerability. The XSS will only trigger if the administrator navigates through the debug bar. This issue has been patched in version 10.0.13.\n"
     },
     {
-        "Modified": "2024-03-18T17:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T17:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
@@ -132,7 +1365,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-28054",
         "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.amavis.org/release-notes.txt",
             "https://metacpan.org/pod/MIME::Tools",
@@ -143,313 +1376,7 @@
         "summary": "Amavis before 2.12.3 and 2.13.x before 2.13.1, in part because of its use of MIME-tools, has an Interpretation Conflict (relative to some mail user agents) when there are multiple boundary parameters in a MIME email message. Consequently, there can be an incorrect check for banned files or malware."
     },
     {
-        "Modified": "2024-03-18T17:15:00",
-        "Published": "2024-03-18T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-1753",
-        "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-1753",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2265513",
-            "https://github.com/containers/buildah/security/advisories/GHSA-pmf3-c36m-g5cf",
-            "https://github.com/containers/podman/security/advisories/GHSA-874v-pj72-92f3"
-        ],
-        "summary": "A flaw was found in Buildah (and subsequently Podman Build) which allows containers to mount arbitrary locations on the host filesystem into build containers. A malicious Containerfile can use a dummy image with a symbolic link to the root filesystem as a mount source and cause the mount operation to mount the host root filesystem inside the RUN step. The commands inside the RUN step will then have read-write access to the host filesystem, allowing for full container escape at build time."
-    },
-    {
-        "Modified": "2024-03-18T17:15:00",
-        "Published": "2024-02-08T13:15:00",
-        "access": {},
-        "assigner": "cna@postgresql.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-0985",
-        "impact": {},
-        "last-modified": "2024-03-18T17:15:00",
-        "references": [
-            "https://www.postgresql.org/support/security/CVE-2024-0985/",
-            "https://lists.debian.org/debian-lts-announce/2024/03/msg00017.html"
-        ],
-        "summary": "Late privilege drop in REFRESH MATERIALIZED VIEW CONCURRENTLY in PostgreSQL allows an object creator to execute arbitrary SQL functions as the command issuer. The command intends to run SQL functions as the owner of the materialized view, enabling safe refresh of untrusted materialized views. The victim is a superuser or member of one of the attacker's roles. The attack requires luring the victim into running REFRESH MATERIALIZED VIEW CONCURRENTLY on the attacker's materialized view. As part of exploiting this vulnerability, the attacker creates functions that use CREATE RULE to convert the internally-built temporary table to a view. Versions before PostgreSQL 15.6, 14.11, 13.14, and 12.18 are affected. The only known exploit does not work in PostgreSQL 16 and later. For defense in depth, PostgreSQL 16.2 adds the protections that older branches are using to fix their vulnerability."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1333",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://wpscan.com/vulnerability/30546402-03b8-4e18-ad7e-04a6b556ffd7/"
-        ],
-        "summary": "The Responsive Pricing Table WordPress plugin before 5.1.11 does not validate and escape some of its Pricing Table options before outputting them back in a page/post where the related shortcode is embed, which could allow users with the author role and above to perform Stored Cross-Site Scripting attacks"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1331",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://wpscan.com/vulnerability/b2bac900-3d8f-406c-b03d-c8db156acc59/"
-        ],
-        "summary": "The Team Members WordPress plugin before 5.3.2 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the author role and above to perform Stored Cross-Site Scripting attacks."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1658",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://wpscan.com/vulnerability/9489925e-5a47-4608-90a2-0139c5e1c43c/"
-        ],
-        "summary": "The Grid Shortcodes WordPress plugin before 1.1.1 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2024-20752",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
-        ],
-        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by a Use After Free vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-122",
-        "id": "CVE-2024-20755",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
-        ],
-        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-20756",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
-        ],
-        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20757",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/bridge/apsb24-15.html"
-        ],
-        "summary": "Bridge versions 13.0.5, 14.0.1 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27930",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://github.com/glpi-project/glpi/security/advisories/GHSA-82vv-j9pr-qmwq",
-            "https://github.com/glpi-project/glpi/commit/1942b70b2422fff51822f6eb3af500c94760871e",
-            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
-        ],
-        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can access sensitive fields data from items on which he has read access. This issue has been patched in version 10.0.13."
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27937",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://github.com/glpi-project/glpi/security/advisories/GHSA-98qw-hpg3-2hpj",
-            "https://github.com/glpi-project/glpi/commit/d02c537d23cbb729fe18b87f71b3c6e84e9892da",
-            "https://github.com/glpi-project/glpi/releases/tag/10.0.13"
-        ],
-        "summary": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing. An authenticated user can obtain the email address of all GLPI users. This issue has been patched in version 10.0.13.\n"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "cybersecurity@schneider-electric.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2050",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
-        ],
-        "summary": "\nCWE-79: Improper Neutralization of Input During Web Page Generation (\u2018Cross-site Scripting\u2019)\nvulnerability exists when an attacker injects then executes arbitrary malicious JavaScript code\nwithin the context of the product.\n\n"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "cybersecurity@schneider-electric.com",
-        "cvss": null,
-        "cwe": "CWE-307",
-        "id": "CVE-2024-2051",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
-        ],
-        "summary": "\nCWE-307: Improper Restriction of Excessive Authentication Attempts vulnerability exists that\ncould cause account takeover and unauthorized access to the system when an attacker\nconducts brute-force attacks against the login form.\n\n"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "cybersecurity@schneider-electric.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2052",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-01&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-01.pdf"
-        ],
-        "summary": "\nCWE-552: Files or Directories Accessible to External Parties vulnerability exists that could allow\nunauthenticated files and logs exfiltration and download of files when an attacker modifies the\nURL to download to a different location.\n\n"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "cybersecurity@schneider-electric.com",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2024-2229",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2024-072-02&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2024-072-02.pdf"
-        ],
-        "summary": "\nCWE-502: Deserialization of Untrusted Data vulnerability exists that could cause remote code\nexecution when a malicious project file is loaded into the application by a valid user.\n\n"
-    },
-    {
-        "Modified": "2024-03-18T16:15:00",
-        "Published": "2024-03-18T16:15:00",
-        "access": {},
-        "assigner": "vulnreport@tenable.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2390",
-        "impact": {},
-        "last-modified": "2024-03-18T16:15:00",
-        "references": [
-            "https://www.tenable.com/security/tns-2024-05"
-        ],
-        "summary": "\nAs a part of Tenable\u2019s vulnerability disclosure program, a vulnerability in a Nessus plugin was identified and reported. This vulnerability could allow a malicious actor with sufficient permissions on a scan target to place a binary in a specific filesystem location, and abuse the impacted plugin in order to escalate privileges.\n\n"
-    },
-    {
-        "Modified": "2024-03-18T15:15:00",
-        "Published": "2024-03-18T15:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-122",
-        "id": "CVE-2024-20745",
-        "impact": {},
-        "last-modified": "2024-03-18T15:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/premiere_pro/apsb24-12.html"
-        ],
-        "summary": "Premiere Pro versions 24.1, 23.6.2 and earlier are affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-03-18T15:15:00",
-        "Published": "2024-03-18T15:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-20746",
-        "impact": {},
-        "last-modified": "2024-03-18T15:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/premiere_pro/apsb24-12.html"
-        ],
-        "summary": "Premiere Pro versions 24.1, 23.6.2 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-03-18T15:15:00",
-        "Published": "2024-03-18T15:15:00",
-        "access": {},
-        "assigner": "security@vmware.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22257",
-        "impact": {},
-        "last-modified": "2024-03-18T15:15:00",
-        "references": [
-            "https://spring.io/security/cve-2024-22257"
-        ],
-        "summary": "In Spring Security, versions 5.7.x prior to 5.7.12, 5.8.x prior to \n5.8.11, versions 6.0.x prior to 6.0.9, versions 6.1.x prior to 6.1.8, \nversions 6.2.x prior to 6.2.3, an application is possible vulnerable to \nbroken access control when it directly uses the AuthenticatedVoter#vote passing a null Authentication parameter.\n\n"
-    },
-    {
-        "Modified": "2024-03-18T15:15:00",
-        "Published": "2024-03-06T07:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52605",
-        "impact": {},
-        "last-modified": "2024-03-18T15:15:00",
-        "references": [],
-        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -457,14 +1384,14 @@
         "cwe": "Unknown",
         "id": "CVE-2024-27767",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0"
         ],
         "summary": "\nCWE-287: Improper Authentication may allow Authentication Bypass\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -472,7 +1399,7 @@
         "cwe": "CWE-22",
         "id": "CVE-2024-27768",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -480,7 +1407,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 - CWE-22: 'Path Traversal' may allow RCE\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -488,7 +1415,7 @@
         "cwe": "CWE-200",
         "id": "CVE-2024-27769",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -496,7 +1423,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 - \n\nCWE-200: Exposure of Sensitive Information to an Unauthorized Actor may allow Taking Ownership Over Devices\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -504,7 +1431,7 @@
         "cwe": "CWE-23",
         "id": "CVE-2024-27770",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -512,7 +1439,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 - \n\nCWE-23: Relative Path Traversal\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -520,7 +1447,7 @@
         "cwe": "CWE-22",
         "id": "CVE-2024-27771",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -528,7 +1455,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 -\n\nCWE-22: 'Path Traversal'\u00a0may allow RCE\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -536,7 +1463,7 @@
         "cwe": "CWE-78",
         "id": "CVE-2024-27772",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -544,7 +1471,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 -\n\nCWE-78: 'OS Command Injection' may allow RCE\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -552,7 +1479,7 @@
         "cwe": "CWE-348",
         "id": "CVE-2024-27773",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -560,7 +1487,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 -\n\nCWE-348: Use of Less Trusted Source may allow RCE\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cna@cyber.gov.il",
@@ -568,7 +1495,7 @@
         "cwe": "CWE-259",
         "id": "CVE-2024-27774",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
             "https://claroty.com/team82/blog/new-critical-vulnerabilities-in-unitronics-unistream-devices-uncovered"
@@ -576,7 +1503,7 @@
         "summary": "\nUnitronics Unistream Unilogic \u2013 Versions prior to 1.35.227 -\n\nCWE-259: Use of Hard-coded Password may allow disclosing Sensitive Information Embedded inside Device's Firmware\n\n"
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
@@ -584,14 +1511,14 @@
         "cwe": "Unknown",
         "id": "CVE-2024-28537",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/fromNatStaticSetting.md"
         ],
         "summary": "Tenda AC18 V15.03.05.05 has a stack overflow vulnerability in the page parameter of fromNatStaticSetting function."
     },
     {
-        "Modified": "2024-03-18T14:15:00",
+        "Modified": "2024-03-18T19:40:00",
         "Published": "2024-03-18T14:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
@@ -599,1085 +1526,10 @@
         "cwe": "Unknown",
         "id": "CVE-2024-28547",
         "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
+        "last-modified": "2024-03-18T19:40:00",
         "references": [
             "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/formSetFirewallCfg.md"
         ],
         "summary": "Tenda AC18 V15.03.05.05 has a stack overflow vulnerability in the firewallEn parameter of formSetFirewallCfg function."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2584",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/book/main/select_send.php, in the 'sd_index' parameter. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2585",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/book/main/select_send_2.php, in the 'sd_index' parameter. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2586",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/index.php, in the 'username' parameter. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2587",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/book/main/bookdetail_khet_person.php, in multiple\u00a0parameters. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2588",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/admin/index.php, in the 'id'\u00a0parameter. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2589",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/book/main/bookdetail_school_person.php, in multiple parameters. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2590",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/mail/main/select_send.php, in the\u00a0'sd_index' parameter. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2591",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/book/main/bookdetail_group.php, in multiple\u00a0parameters. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-2592",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31 that allows SQL injection through /amssplus/modules/person/pic_show.php, in the 'person_id' parameter. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the server and retrieve all the information stored in the DB."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2593",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31, which does not sufficiently encode user-controlled input, resulting in a Cross-Site Scripting (XSS) vulnerability\u00a0through /amssplus/modules/book/main/bookdetail_group.php, in the 'b_id' parameter. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and steal their session cookie credentials."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2594",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31, which does not sufficiently encode user-controlled input, resulting in a Cross-Site Scripting (XSS) vulnerability\u00a0through /amssplus/admin/index.php, in multiple parameters. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and steal their session cookie credentials."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2595",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31, which does not sufficiently encode user-controlled input, resulting in a Cross-Site Scripting (XSS) vulnerability\u00a0through /amssplus/modules/book/main/bookdetail_khet_person.php, in the 'b_id' parameter. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and steal their session cookie credentials."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2596",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31, which does not sufficiently encode user-controlled input, resulting in a Cross-Site Scripting (XSS) vulnerability\u00a0through /amssplus/modules/mail/main/select_send.php, in multiple\u00a0parameters. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and steal their session cookie credentials."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2597",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31, which does not sufficiently encode user-controlled input, resulting in a Cross-Site Scripting (XSS) vulnerability\u00a0through /amssplus/modules/book/main/bookdetail_school_person.php, in the 'b_id' parameter. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and steal their session cookie credentials."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-2598",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "Vulnerability in AMSS++ version 4.31, which does not sufficiently encode user-controlled input, resulting in a Cross-Site Scripting (XSS) vulnerability\u00a0through /amssplus/modules/book/main/select_send_2.php, in multiple\u00a0parameters. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and steal their session cookie credentials."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-03-18T14:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-2599",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-amssplus-amss"
-        ],
-        "summary": "File upload restriction evasion vulnerability in AMSS++ version 4.31. This vulnerability could allow an authenticated user to potentially obtain RCE through webshell, compromising the entire infrastructure."
-    },
-    {
-        "Modified": "2024-03-18T14:15:00",
-        "Published": "2024-01-11T20:15:00",
-        "access": {},
-        "assigner": "disclosure@synopsys.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-0227",
-        "impact": {},
-        "last-modified": "2024-03-18T14:15:00",
-        "references": [],
-        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
-    },
-    {
-        "Modified": "2024-03-18T13:15:00",
-        "Published": "2024-03-18T13:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-183",
-        "id": "CVE-2023-7250",
-        "impact": {},
-        "last-modified": "2024-03-18T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-7250",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2244707"
-        ],
-        "summary": "A flaw was found in iperf, a utility for testing network performance using TCP, UDP, and SCTP. A malicious or malfunctioning client can send less than the expected amount of data to the iperf server, which can cause the server to hang indefinitely waiting for the remainder or until the connection gets closed. This will prevent other connections to the server, leading to a denial of service."
-    },
-    {
-        "Modified": "2024-03-18T13:15:00",
-        "Published": "2024-03-18T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28550",
-        "impact": {},
-        "last-modified": "2024-03-18T13:15:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC18/formExpandDlnaFile.md"
-        ],
-        "summary": "Tenda AC18 V15.03.05.05 has a stack overflow vulnerability in the filePath parameter of formExpandDlnaFile function."
-    },
-    {
-        "Modified": "2024-03-18T13:15:00",
-        "Published": "2024-03-18T13:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-415",
-        "id": "CVE-2024-2002",
-        "impact": {},
-        "last-modified": "2024-03-18T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2002",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2267700",
-            "https://github.com/davea42/libdwarf-code/blob/main/bugxml/data.txt"
-        ],
-        "summary": "A double-free vulnerability was found in libdwarf. In a multiply-corrupted DWARF object, libdwarf may try to dealloc(free) an allocation twice, potentially causing unpredictable and various results."
-    },
-    {
-        "Modified": "2024-03-18T13:15:00",
-        "Published": "2024-03-18T13:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-2496",
-        "impact": {},
-        "last-modified": "2024-03-18T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2496",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2269672"
-        ],
-        "summary": "A NULL pointer dereference flaw was found in the udevConnectListAllInterfaces() function in libvirt. This issue can occur when detaching a host interface while at the same time collecting the list of interfaces via virConnectListAllInterfaces API. This flaw could be used to perform a denial of service attack by causing the libvirt daemon to crash."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-284",
-        "id": "CVE-2024-20767",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/coldfusion/apsb24-14.html"
-        ],
-        "summary": "ColdFusion versions 2023.6, 2021.12 and earlier are affected by an Improper Access Control vulnerability that could lead to arbitrary file system read. An attacker could leverage this vulnerability to bypass security measures and gain unauthorized access to sensitive files and perform arbitrary file system write. Exploitation of this issue does not require user interaction."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T10:15:00",
-        "access": {},
-        "assigner": "cvd@cert.pl",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1604",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://cert.pl/posts/2024/03/CVE-2024-1604",
-            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
-            "https://www.bmc.com/it-solutions/control-m.html"
-        ],
-        "summary": "Improper authorization in the report management and creation module of BMC Control-M branches\u00a09.0.20 and 9.0.21 allows logged-in users to read and make unauthorized changes to any reports available within the application, even without proper permissions. The attacker must know the unique identifier of the report they want to manipulate.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T10:15:00",
-        "access": {},
-        "assigner": "cvd@cert.pl",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1605",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://cert.pl/posts/2024/03/CVE-2024-1604",
-            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
-            "https://www.bmc.com/it-solutions/control-m.html"
-        ],
-        "summary": "BMC Control-M  branches 9.0.20 and 9.0.21 upon user login load all Dynamic Link Libraries (DLL)  from a directory that grants Write and Read permissions to all users. Leveraging it leads to loading of a potentially malicious libraries, which will execute with the application's privileges. \n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.201. \n\n"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T10:15:00",
-        "access": {},
-        "assigner": "cvd@cert.pl",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1606",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://cert.pl/posts/2024/03/CVE-2024-1604",
-            "https://cert.pl/en/posts/2024/03/CVE-2024-1604",
-            "https://www.bmc.com/it-solutions/control-m.html"
-        ],
-        "summary": "Lack of input sanitization in BMC Control-M  branches 9.0.20 and 9.0.21 allows logged-in users for\u00a0manipulation of generated  web pages via injection of  HTML code. This might lead to a successful phishing attack for example by tricking users into using a hyperlink pointing to a website controlled by an attacker.\n\nFix for 9.0.20 branch was released in version 9.0.20.238.\u00a0Fix for 9.0.21 branch was released in version 9.0.21.200. \n\n"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52609",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/95b1d336b0642198b56836b89908d07b9a0c9608",
-            "https://git.kernel.org/stable/c/252a2a5569eb9f8d16428872cc24dea1ac0bb097",
-            "https://git.kernel.org/stable/c/7e7a0d86542b0ea903006d3f42f33c4f7ead6918",
-            "https://git.kernel.org/stable/c/98fee5bee97ad47b527a997d5786410430d1f0e9",
-            "https://git.kernel.org/stable/c/6696f76c32ff67fec26823fc2df46498e70d9bf3",
-            "https://git.kernel.org/stable/c/67f16bf2cc1698fd50e01ee8a2becc5a8e6d3a3e",
-            "https://git.kernel.org/stable/c/77d210e8db4d61d43b2d16df66b1ec46fad2ee01",
-            "https://git.kernel.org/stable/c/9a9ab0d963621d9d12199df9817e66982582d5a5"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix race between mmput() and do_exit()\n\nTask A calls binder_update_page_range() to allocate and insert pages on\na remote address space from Task B. For this, Task A pins the remote mm\nvia mmget_not_zero() first. This can race with Task B do_exit() and the\nfinal mmput() refcount decrement will come from Task A.\n\n  Task A            | Task B\n  ------------------+------------------\n  mmget_not_zero()  |\n                    |  do_exit()\n                    |    exit_mm()\n                    |      mmput()\n  mmput()           |\n    exit_mmap()     |\n      remove_vma()  |\n        fput()      |\n\nIn this case, the work of ____fput() from Task B is queued up in Task A\nas TWA_RESUME. So in theory, Task A returns to userspace and the cleanup\nwork gets executed. However, Task A instead sleep, waiting for a reply\nfrom Task B that never comes (it's dead).\n\nThis means the binder_deferred_release() is blocked until an unrelated\nbinder event forces Task A to go back to userspace. All the associated\ndeath notifications will also be delayed until then.\n\nIn order to fix this use mmput_async() that will schedule the work in\nthe corresponding mm->async_put_work WQ instead of Task A."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52610",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/172ba7d46c202e679f3ccb10264c67416aaeb1c4",
-            "https://git.kernel.org/stable/c/0b5b831122fc3789fff75be433ba3e4dd7b779d4",
-            "https://git.kernel.org/stable/c/73f7da5fd124f2cda9161e2e46114915e6e82e97",
-            "https://git.kernel.org/stable/c/f5346df0591d10bc948761ca854b1fae6d2ef441",
-            "https://git.kernel.org/stable/c/3f14b377d01d8357eba032b4cabc8c1149b458b6"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_ct: fix skb leak and crash on ooo frags\n\nact_ct adds skb->users before defragmentation. If frags arrive in order,\nthe last frag's reference is reset in:\n\n  inet_frag_reasm_prepare\n    skb_morph\n\nwhich is not straightforward.\n\nHowever when frags arrive out of order, nobody unref the last frag, and\nall frags are leaked. The situation is even worse, as initiating packet\ncapture can lead to a crash[0] when skb has been cloned and shared at the\nsame time.\n\nFix the issue by removing skb_get() before defragmentation. act_ct\nreturns TC_ACT_CONSUMED when defrag failed or in progress.\n\n[0]:\n[  843.804823] ------------[ cut here ]------------\n[  843.809659] kernel BUG at net/core/skbuff.c:2091!\n[  843.814516] invalid opcode: 0000 [#1] PREEMPT SMP\n[  843.819296] CPU: 7 PID: 0 Comm: swapper/7 Kdump: loaded Tainted: G S 6.7.0-rc3 #2\n[  843.824107] Hardware name: XFUSION 1288H V6/BC13MBSBD, BIOS 1.29 11/25/2022\n[  843.828953] RIP: 0010:pskb_expand_head+0x2ac/0x300\n[  843.833805] Code: 8b 70 28 48 85 f6 74 82 48 83 c6 08 bf 01 00 00 00 e8 38 bd ff ff 8b 83 c0 00 00 00 48 03 83 c8 00 00 00 e9 62 ff ff ff 0f 0b <0f> 0b e8 8d d0 ff ff e9 b3 fd ff ff 81 7c 24 14 40 01 00 00 4c 89\n[  843.843698] RSP: 0018:ffffc9000cce07c0 EFLAGS: 00010202\n[  843.848524] RAX: 0000000000000002 RBX: ffff88811a211d00 RCX: 0000000000000820\n[  843.853299] RDX: 0000000000000640 RSI: 0000000000000000 RDI: ffff88811a211d00\n[  843.857974] RBP: ffff888127d39518 R08: 00000000bee97314 R09: 0000000000000000\n[  843.862584] R10: 0000000000000000 R11: ffff8881109f0000 R12: 0000000000000880\n[  843.867147] R13: ffff888127d39580 R14: 0000000000000640 R15: ffff888170f7b900\n[  843.871680] FS:  0000000000000000(0000) GS:ffff889ffffc0000(0000) knlGS:0000000000000000\n[  843.876242] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  843.880778] CR2: 00007fa42affcfb8 CR3: 000000011433a002 CR4: 0000000000770ef0\n[  843.885336] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  843.889809] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  843.894229] PKRU: 55555554\n[  843.898539] Call Trace:\n[  843.902772]  <IRQ>\n[  843.906922]  ? __die_body+0x1e/0x60\n[  843.911032]  ? die+0x3c/0x60\n[  843.915037]  ? do_trap+0xe2/0x110\n[  843.918911]  ? pskb_expand_head+0x2ac/0x300\n[  843.922687]  ? do_error_trap+0x65/0x80\n[  843.926342]  ? pskb_expand_head+0x2ac/0x300\n[  843.929905]  ? exc_invalid_op+0x50/0x60\n[  843.933398]  ? pskb_expand_head+0x2ac/0x300\n[  843.936835]  ? asm_exc_invalid_op+0x1a/0x20\n[  843.940226]  ? pskb_expand_head+0x2ac/0x300\n[  843.943580]  inet_frag_reasm_prepare+0xd1/0x240\n[  843.946904]  ip_defrag+0x5d4/0x870\n[  843.950132]  nf_ct_handle_fragments+0xec/0x130 [nf_conntrack]\n[  843.953334]  tcf_ct_act+0x252/0xd90 [act_ct]\n[  843.956473]  ? tcf_mirred_act+0x516/0x5a0 [act_mirred]\n[  843.959657]  tcf_action_exec+0xa1/0x160\n[  843.962823]  fl_classify+0x1db/0x1f0 [cls_flower]\n[  843.966010]  ? skb_clone+0x53/0xc0\n[  843.969173]  tcf_classify+0x24d/0x420\n[  843.972333]  tc_run+0x8f/0xf0\n[  843.975465]  __netif_receive_skb_core+0x67a/0x1080\n[  843.978634]  ? dev_gro_receive+0x249/0x730\n[  843.981759]  __netif_receive_skb_list_core+0x12d/0x260\n[  843.984869]  netif_receive_skb_list_internal+0x1cb/0x2f0\n[  843.987957]  ? mlx5e_handle_rx_cqe_mpwrq_rep+0xfa/0x1a0 [mlx5_core]\n[  843.991170]  napi_complete_done+0x72/0x1a0\n[  843.994305]  mlx5e_napi_poll+0x28c/0x6d0 [mlx5_core]\n[  843.997501]  __napi_poll+0x25/0x1b0\n[  844.000627]  net_rx_action+0x256/0x330\n[  844.003705]  __do_softirq+0xb3/0x29b\n[  844.006718]  irq_exit_rcu+0x9e/0xc0\n[  844.009672]  common_interrupt+0x86/0xa0\n[  844.012537]  </IRQ>\n[  844.015285]  <TASK>\n[  844.017937]  asm_common_interrupt+0x26/0x40\n[  844.020591] RIP: 0010:acpi_safe_halt+0x1b/0x20\n[  844.023247] Code: ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 65 48 8b 04 25 00 18 03 00 48 8b 00 a8 08 75 0c 66 90 0f 00 2d 81 d0 44 00 fb\n---truncated---"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52611",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/5b5ddf21b978ec315cab9d9e7e6ac7374791a8c7",
-            "https://git.kernel.org/stable/c/0e9ffff72a0674cd6656314dbd99cdd2123a3030",
-            "https://git.kernel.org/stable/c/00384f565a91c08c4bedae167f749b093d10e3fe"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: rtw88: sdio: Honor the host max_req_size in the RX path\n\nLukas reports skb_over_panic errors on his Banana Pi BPI-CM4 which comes\nwith an Amlogic A311D (G12B) SoC and a RTL8822CS SDIO wifi/Bluetooth\ncombo card. The error he observed is identical to what has been fixed\nin commit e967229ead0e (\"wifi: rtw88: sdio: Check the HISR RX_REQUEST\nbit in rtw_sdio_rx_isr()\") but that commit didn't fix Lukas' problem.\n\nLukas found that disabling or limiting RX aggregation works around the\nproblem for some time (but does not fully fix it). In the following\ndiscussion a few key topics have been discussed which have an impact on\nthis problem:\n- The Amlogic A311D (G12B) SoC has a hardware bug in the SDIO controller\n  which prevents DMA transfers. Instead all transfers need to go through\n  the controller SRAM which limits transfers to 1536 bytes\n- rtw88 chips don't split incoming (RX) packets, so if a big packet is\n  received this is forwarded to the host in it's original form\n- rtw88 chips can do RX aggregation, meaning more multiple incoming\n  packets can be pulled by the host from the card with one MMC/SDIO\n  transfer. This Depends on settings in the REG_RXDMA_AGG_PG_TH\n  register (BIT_RXDMA_AGG_PG_TH limits the number of packets that will\n  be aggregated, BIT_DMA_AGG_TO_V1 configures a timeout for aggregation\n  and BIT_EN_PRE_CALC makes the chip honor the limits more effectively)\n\nUse multiple consecutive reads in rtw_sdio_read_port() and limit the\nnumber of bytes which are copied by the host from the card in one\nMMC/SDIO transfer. This allows receiving a buffer that's larger than\nthe hosts max_req_size (number of bytes which can be transferred in\none MMC/SDIO transfer). As a result of this the skb_over_panic error\nis gone as the rtw88 driver is now able to receive more than 1536 bytes\nfrom the card (either because the incoming packet is larger than that\nor because multiple packets have been aggregated).\n\nIn case of an receive errors (-EILSEQ has been observed by Lukas) we\nneed to drain the remaining data from the card's buffer, otherwise the\ncard will return corrupt data for the next rtw_sdio_read_port() call."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52612",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/1142d65c5b881590962ad763f94505b6dd67d2fe",
-            "https://git.kernel.org/stable/c/e0e3f4a18784182cfe34e20c00eca11e78d53e76",
-            "https://git.kernel.org/stable/c/4518dc468cdd796757190515a9be7408adc8911e",
-            "https://git.kernel.org/stable/c/a5f2f91b3fd7387e5102060809316a0f8f0bc625",
-            "https://git.kernel.org/stable/c/4df0c942d04a67df174195ad8082f6e30e7f71a5",
-            "https://git.kernel.org/stable/c/7d9e5bed036a7f9e2062a137e97e3c1e77fb8759",
-            "https://git.kernel.org/stable/c/71c6670f9f032ec67d8f4e3f8db4646bf5a62883",
-            "https://git.kernel.org/stable/c/744e1885922a9943458954cfea917b31064b4131"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: scomp - fix req->dst buffer overflow\n\nThe req->dst buffer size should be checked before copying from the\nscomp_scratch->dst to avoid req->dst buffer overflow problem."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52615",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/eafd83b92f6c044007a3591cbd476bcf90455990",
-            "https://git.kernel.org/stable/c/5030d4c798863ccb266563201b341a099e8cdd48",
-            "https://git.kernel.org/stable/c/c6a8111aacbfe7a8a70f46cc0de8eed00561693c",
-            "https://git.kernel.org/stable/c/26cc6d7006f922df6cc4389248032d955750b2a0",
-            "https://git.kernel.org/stable/c/aa8aa16ed9adf1df05bb339d588cf485a011839e",
-            "https://git.kernel.org/stable/c/ecabe8cd456d3bf81e92c53b074732f3140f170d",
-            "https://git.kernel.org/stable/c/6822a14271786150e178869f1495cc03e74c5029",
-            "https://git.kernel.org/stable/c/78aafb3884f6bc6636efcc1760c891c8500b9922"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nhwrng: core - Fix page fault dead lock on mmap-ed hwrng\n\nThere is a dead-lock in the hwrng device read path.  This triggers\nwhen the user reads from /dev/hwrng into memory also mmap-ed from\n/dev/hwrng.  The resulting page fault triggers a recursive read\nwhich then dead-locks.\n\nFix this by using a stack buffer when calling copy_to_user."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52613",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/70481755ed77400e783200e2d022e5fea16060ce",
-            "https://git.kernel.org/stable/c/6010a9fc14eb1feab5cafd84422001134fe8ec58",
-            "https://git.kernel.org/stable/c/15ef92e9c41124ee9d88b01208364f3fe1f45f84"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/thermal/loongson2_thermal: Fix incorrect PTR_ERR() judgment\n\nPTR_ERR() returns -ENODEV when thermal-zones are undefined, and we need\n-ENODEV as the right value for comparison.\n\nOtherwise, tz->type is NULL when thermal-zones is undefined, resulting\nin the following error:\n\n[   12.290030] CPU 1 Unable to handle kernel paging request at virtual address fffffffffffffff1, era == 900000000355f410, ra == 90000000031579b8\n[   12.302877] Oops[#1]:\n[   12.305190] CPU: 1 PID: 181 Comm: systemd-udevd Not tainted 6.6.0-rc7+ #5385\n[   12.312304] pc 900000000355f410 ra 90000000031579b8 tp 90000001069e8000 sp 90000001069eba10\n[   12.320739] a0 0000000000000000 a1 fffffffffffffff1 a2 0000000000000014 a3 0000000000000001\n[   12.329173] a4 90000001069eb990 a5 0000000000000001 a6 0000000000001001 a7 900000010003431c\n[   12.337606] t0 fffffffffffffff1 t1 54567fd5da9b4fd4 t2 900000010614ec40 t3 00000000000dc901\n[   12.346041] t4 0000000000000000 t5 0000000000000004 t6 900000010614ee20 t7 900000000d00b790\n[   12.354472] t8 00000000000dc901 u0 54567fd5da9b4fd4 s9 900000000402ae10 s0 900000010614ec40\n[   12.362916] s1 90000000039fced0 s2 ffffffffffffffed s3 ffffffffffffffed s4 9000000003acc000\n[   12.362931] s5 0000000000000004 s6 fffffffffffff000 s7 0000000000000490 s8 90000001028b2ec8\n[   12.362938]    ra: 90000000031579b8 thermal_add_hwmon_sysfs+0x258/0x300\n[   12.386411]   ERA: 900000000355f410 strscpy+0xf0/0x160\n[   12.391626]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)\n[   12.397898]  PRMD: 00000004 (PPLV0 +PIE -PWE)\n[   12.403678]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)\n[   12.409859]  ECFG: 00071c1c (LIE=2-4,10-12 VS=7)\n[   12.415882] ESTAT: 00010000 [PIL] (IS= ECode=1 EsubCode=0)\n[   12.415907]  BADV: fffffffffffffff1\n[   12.415911]  PRID: 0014a000 (Loongson-64bit, Loongson-2K1000)\n[   12.415917] Modules linked in: loongson2_thermal(+) vfat fat uio_pdrv_genirq uio fuse zram zsmalloc\n[   12.415950] Process systemd-udevd (pid: 181, threadinfo=00000000358b9718, task=00000000ace72fe3)\n[   12.415961] Stack : 0000000000000dc0 54567fd5da9b4fd4 900000000402ae10 9000000002df9358\n[   12.415982]         ffffffffffffffed 0000000000000004 9000000107a10aa8 90000001002a3410\n[   12.415999]         ffffffffffffffed ffffffffffffffed 9000000107a11268 9000000003157ab0\n[   12.416016]         9000000107a10aa8 ffffff80020fc0c8 90000001002a3410 ffffffffffffffed\n[   12.416032]         0000000000000024 ffffff80020cc1e8 900000000402b2a0 9000000003acc000\n[   12.416048]         90000001002a3410 0000000000000000 ffffff80020f4030 90000001002a3410\n[   12.416065]         0000000000000000 9000000002df6808 90000001002a3410 0000000000000000\n[   12.416081]         ffffff80020f4030 0000000000000000 90000001002a3410 9000000002df2ba8\n[   12.416097]         00000000000000b4 90000001002a34f4 90000001002a3410 0000000000000002\n[   12.416114]         ffffff80020f4030 fffffffffffffff0 90000001002a3410 9000000002df2f30\n[   12.416131]         ...\n[   12.416138] Call Trace:\n[   12.416142] [<900000000355f410>] strscpy+0xf0/0x160\n[   12.416167] [<90000000031579b8>] thermal_add_hwmon_sysfs+0x258/0x300\n[   12.416183] [<9000000003157ab0>] devm_thermal_add_hwmon_sysfs+0x50/0xe0\n[   12.416200] [<ffffff80020cc1e8>] loongson2_thermal_probe+0x128/0x200 [loongson2_thermal]\n[   12.416232] [<9000000002df6808>] platform_probe+0x68/0x140\n[   12.416249] [<9000000002df2ba8>] really_probe+0xc8/0x3c0\n[   12.416269] [<9000000002df2f30>] __driver_probe_device+0x90/0x180\n[   12.416286] [<9000000002df3058>] driver_probe_device+0x38/0x160\n[   12.416302] [<9000000002df33a8>] __driver_attach+0xa8/0x200\n[   12.416314] [<9000000002deffec>] bus_for_each_dev+0x8c/0x120\n[   12.416330] [<9000000002df198c>] bus_add_driver+0x10c/0x2a0\n[   12.416346] [<9000000002df46b4>] driver_register+0x74/0x160\n[   12.416358] [<90000000022201a4>] do_one_initcall+0x84/0x220\n[   12.416372] [<90000000022f3ab8>] do_init_module+0x58/0x2c0\n[\n---truncated---"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52614",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/796d3fad8c35ee9df9027899fb90ceaeb41b958f",
-            "https://git.kernel.org/stable/c/8a7729cda2dd276d7a3994638038fb89035b6f2c",
-            "https://git.kernel.org/stable/c/a979f56aa4b93579cf0e4265ae04d7e9300fd3e8",
-            "https://git.kernel.org/stable/c/eaef4650fa2050147ca25fd7ee43bc0082e03c87",
-            "https://git.kernel.org/stable/c/08e23d05fa6dc4fc13da0ccf09defdd4bbc92ff4"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPM / devfreq: Fix buffer overflow in trans_stat_show\n\nFix buffer overflow in trans_stat_show().\n\nConvert simple snprintf to the more secure scnprintf with size of\nPAGE_SIZE.\n\nAdd condition checking if we are exceeding PAGE_SIZE and exit early from\nloop. Also add at the end a warning that we exceeded PAGE_SIZE and that\nstats is disabled.\n\nReturn -EFBIG in the case where we don't have enough space to write the\nfull transition table.\n\nAlso document in the ABI that this function can return -EFBIG error."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52616",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/0c3687822259a7628c85cd21a3445cbe3c367165",
-            "https://git.kernel.org/stable/c/2bb86817b33c9d704e127f92b838035a72c315b6",
-            "https://git.kernel.org/stable/c/bb44477d4506e52785693a39f03cdc6a2c5e8598",
-            "https://git.kernel.org/stable/c/7ebf812b7019fd2d4d5a7ca45ef4bf3a6f4bda0a",
-            "https://git.kernel.org/stable/c/7abdfd45a650c714d5ebab564bb1b988f14d9b49",
-            "https://git.kernel.org/stable/c/ba3c5574203034781ac4231acf117da917efcd2a"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: lib/mpi - Fix unexpected pointer access in mpi_ec_init\n\nWhen the mpi_ec_ctx structure is initialized, some fields are not\ncleared, causing a crash when referencing the field when the\nstructure was released. Initially, this issue was ignored because\nmemory for mpi_ec_ctx is allocated with the __GFP_ZERO flag.\nFor example, this error will be triggered when calculating the\nZa value for SM2 separately."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52617",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/d8c293549946ee5078ed0ab77793cec365559355",
-            "https://git.kernel.org/stable/c/4a5d0528cf19dbf060313dffbe047bc11c90c24c",
-            "https://git.kernel.org/stable/c/ff1c7e2fb9e9c3f53715fbe04d3ac47b80be7eb8",
-            "https://git.kernel.org/stable/c/1d83c85922647758c1f1e4806a4c5c3cf591a20a",
-            "https://git.kernel.org/stable/c/0233b836312e39a3c763fb53512b3fa455b473b3",
-            "https://git.kernel.org/stable/c/e129c7fa7070fbce57feb0bfc5eaa65eef44b693",
-            "https://git.kernel.org/stable/c/df25461119d987b8c81d232cfe4411e91dcabe66"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: switchtec: Fix stdev_release() crash after surprise hot remove\n\nA PCI device hot removal may occur while stdev->cdev is held open. The call\nto stdev_release() then happens during close or exit, at a point way past\nswitchtec_pci_remove(). Otherwise the last ref would vanish with the\ntrailing put_device(), just before return.\n\nAt that later point in time, the devm cleanup has already removed the\nstdev->mmio_mrpc mapping. Also, the stdev->pdev reference was not a counted\none. Therefore, in DMA mode, the iowrite32() in stdev_release() will cause\na fatal page fault, and the subsequent dma_free_coherent(), if reached,\nwould pass a stale &stdev->pdev->dev pointer.\n\nFix by moving MRPC DMA shutdown into switchtec_pci_remove(), after\nstdev_kill(). Counting the stdev->pdev ref is now optional, but may prevent\nfuture accidents.\n\nReproducible via the script at\nhttps://lore.kernel.org/r/20231113212150.96410-1-dns@arista.com"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52618",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/95bc866c11974d3e4a9d922275ea8127ff809cf7",
-            "https://git.kernel.org/stable/c/f6abd5e17da33eba15df2bddc93413e76c2b55f7",
-            "https://git.kernel.org/stable/c/af7bbdac89739e2e7380387fda598848d3b7010f",
-            "https://git.kernel.org/stable/c/5b9ea86e662035a886ccb5c76d56793cba618827",
-            "https://git.kernel.org/stable/c/a2c6206f18104fba7f887bf4dbbfe4c41adc4339",
-            "https://git.kernel.org/stable/c/9e4bf6a08d1e127bcc4bd72557f2dfafc6bc7f41"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblock/rnbd-srv: Check for unlikely string overflow\n\nSince \"dev_search_path\" can technically be as large as PATH_MAX,\nthere was a risk of truncation when copying it and a second string\ninto \"full_path\" since it was also PATH_MAX sized. The W=1 builds were\nreporting this warning:\n\ndrivers/block/rnbd/rnbd-srv.c: In function 'process_msg_open.isra':\ndrivers/block/rnbd/rnbd-srv.c:616:51: warning: '%s' directive output may be truncated writing up to 254 bytes into a region of size between 0 and 4095 [-Wformat-truncation=]\n  616 |                 snprintf(full_path, PATH_MAX, \"%s/%s\",\n      |                                                   ^~\nIn function 'rnbd_srv_get_full_path',\n    inlined from 'process_msg_open.isra' at drivers/block/rnbd/rnbd-srv.c:721:14: drivers/block/rnbd/rnbd-srv.c:616:17: note: 'snprintf' output between 2 and 4351 bytes into a destination of size 4096\n  616 |                 snprintf(full_path, PATH_MAX, \"%s/%s\",\n      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n  617 |                          dev_search_path, dev_name);\n      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~\n\nTo fix this, unconditionally check for truncation (as was already done\nfor the case where \"%SESSNAME%\" was present)."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52619",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/8b69c30f4e8b69131d92096cb296dc1f217101e4",
-            "https://git.kernel.org/stable/c/e9f6ac50890104fdf8194f2865680689239d30fb",
-            "https://git.kernel.org/stable/c/a63e48cd835c34c38ef671d344cc029b1ea5bf10",
-            "https://git.kernel.org/stable/c/2a37905d47bffec61e95d99f0c1cc5dc6377956c",
-            "https://git.kernel.org/stable/c/75b0f71b26b3ad833c5c0670109c0af6e021e86a",
-            "https://git.kernel.org/stable/c/0593cfd321df9001142a9d2c58d4144917dff7ee",
-            "https://git.kernel.org/stable/c/cd40e43f870cf21726b22487a95ed223790b3542",
-            "https://git.kernel.org/stable/c/d49270a04623ce3c0afddbf3e984cb245aa48e9c"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npstore/ram: Fix crash when setting number of cpus to an odd number\n\nWhen the number of cpu cores is adjusted to 7 or other odd numbers,\nthe zone size will become an odd number.\nThe address of the zone will become:\n    addr of zone0 = BASE\n    addr of zone1 = BASE + zone_size\n    addr of zone2 = BASE + zone_size*2\n    ...\nThe address of zone1/3/5/7 will be mapped to non-alignment va.\nEventually crashes will occur when accessing these va.\n\nSo, use ALIGN_DOWN() to make sure the zone size is even\nto avoid this bug."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-823",
-        "id": "CVE-2024-1013",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-1013",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2260823",
-            "https://github.com/lurcher/unixODBC/pull/157"
-        ],
-        "summary": "An out-of-bounds stack write flaw was found in unixODBC on 64-bit architectures where the caller has 4 bytes and callee writes 8 bytes. This issue may go unnoticed on little-endian architectures, while big-endian architectures can be broken."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26631",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/62b3387beef11738eb6ce667601a28fa089fa02c",
-            "https://git.kernel.org/stable/c/380540bb06bb1d1b12bdc947d1b8f56cda6b5663",
-            "https://git.kernel.org/stable/c/3cc283fd16fba72e2cefe3a6f48d7a36b0438900",
-            "https://git.kernel.org/stable/c/3bb5849675ae1d592929798a2b37ea450879c855",
-            "https://git.kernel.org/stable/c/2e7ef287f07c74985f1bf2858bedc62bd9ebf155"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: mcast: fix data-race in ipv6_mc_down / mld_ifc_work\n\nidev->mc_ifc_count can be written over without proper locking.\n\nOriginally found by syzbot [1], fix this issue by encapsulating calls\nto mld_ifc_stop_work() (and mld_gq_stop_work() for good measure) with\nmutex_lock() and mutex_unlock() accordingly as these functions\nshould only be called with mc_lock per their declarations.\n\n[1]\nBUG: KCSAN: data-race in ipv6_mc_down / mld_ifc_work\n\nwrite to 0xffff88813a80c832 of 1 bytes by task 3771 on cpu 0:\n mld_ifc_stop_work net/ipv6/mcast.c:1080 [inline]\n ipv6_mc_down+0x10a/0x280 net/ipv6/mcast.c:2725\n addrconf_ifdown+0xe32/0xf10 net/ipv6/addrconf.c:3949\n addrconf_notify+0x310/0x980\n notifier_call_chain kernel/notifier.c:93 [inline]\n raw_notifier_call_chain+0x6b/0x1c0 kernel/notifier.c:461\n __dev_notify_flags+0x205/0x3d0\n dev_change_flags+0xab/0xd0 net/core/dev.c:8685\n do_setlink+0x9f6/0x2430 net/core/rtnetlink.c:2916\n rtnl_group_changelink net/core/rtnetlink.c:3458 [inline]\n __rtnl_newlink net/core/rtnetlink.c:3717 [inline]\n rtnl_newlink+0xbb3/0x1670 net/core/rtnetlink.c:3754\n rtnetlink_rcv_msg+0x807/0x8c0 net/core/rtnetlink.c:6558\n netlink_rcv_skb+0x126/0x220 net/netlink/af_netlink.c:2545\n rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:6576\n netlink_unicast_kernel net/netlink/af_netlink.c:1342 [inline]\n netlink_unicast+0x589/0x650 net/netlink/af_netlink.c:1368\n netlink_sendmsg+0x66e/0x770 net/netlink/af_netlink.c:1910\n ...\n\nwrite to 0xffff88813a80c832 of 1 bytes by task 22 on cpu 1:\n mld_ifc_work+0x54c/0x7b0 net/ipv6/mcast.c:2653\n process_one_work kernel/workqueue.c:2627 [inline]\n process_scheduled_works+0x5b8/0xa30 kernel/workqueue.c:2700\n worker_thread+0x525/0x730 kernel/workqueue.c:2781\n ..."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26632",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c6350b5cb78e9024c49eaee6fdb914ad2903a5fe",
-            "https://git.kernel.org/stable/c/a6bd8182137a12d22d3f2cee463271bdcb491659",
-            "https://git.kernel.org/stable/c/ca3ede3f5893e2d26d4dbdef1eec28a8487fafde",
-            "https://git.kernel.org/stable/c/7bed6f3d08b7af27b7015da8dc3acf2b9c1f21d7"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblock: Fix iterating over an empty bio with bio_for_each_folio_all\n\nIf the bio contains no data, bio_first_folio() calls page_folio() on a\nNULL pointer and oopses.  Move the test that we've reached the end of\nthe bio from bio_next_folio() to bio_first_folio().\n\n[axboe: add unlikely() to error case]"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26633",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/135414f300c5db995e2a2f3bf0f455de9d014aee",
-            "https://git.kernel.org/stable/c/3f15ba3dc14e6ee002ea01b4faddc3d49200377c",
-            "https://git.kernel.org/stable/c/da23bd709b46168f7dfc36055801011222b076cd",
-            "https://git.kernel.org/stable/c/4329426cf6b8e22b798db2331c7ef1dd2a9c748d",
-            "https://git.kernel.org/stable/c/62a1fedeb14c7ac0947ef33fadbabd35ed2400a2",
-            "https://git.kernel.org/stable/c/687c5d52fe53e602e76826dbd4d7af412747e183",
-            "https://git.kernel.org/stable/c/ba8d904c274268b18ef3dc11d3ca7b24a96cb087",
-            "https://git.kernel.org/stable/c/d375b98e0248980681e5e56b712026174d617198"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nip6_tunnel: fix NEXTHDR_FRAGMENT handling in ip6_tnl_parse_tlv_enc_lim()\n\nsyzbot pointed out [1] that NEXTHDR_FRAGMENT handling is broken.\n\nReading frag_off can only be done if we pulled enough bytes\nto skb->head. Currently we might access garbage.\n\n[1]\nBUG: KMSAN: uninit-value in ip6_tnl_parse_tlv_enc_lim+0x94f/0xbb0\nip6_tnl_parse_tlv_enc_lim+0x94f/0xbb0\nipxip6_tnl_xmit net/ipv6/ip6_tunnel.c:1326 [inline]\nip6_tnl_start_xmit+0xab2/0x1a70 net/ipv6/ip6_tunnel.c:1432\n__netdev_start_xmit include/linux/netdevice.h:4940 [inline]\nnetdev_start_xmit include/linux/netdevice.h:4954 [inline]\nxmit_one net/core/dev.c:3548 [inline]\ndev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564\n__dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349\ndev_queue_xmit include/linux/netdevice.h:3134 [inline]\nneigh_connected_output+0x569/0x660 net/core/neighbour.c:1592\nneigh_output include/net/neighbour.h:542 [inline]\nip6_finish_output2+0x23a9/0x2b30 net/ipv6/ip6_output.c:137\nip6_finish_output+0x855/0x12b0 net/ipv6/ip6_output.c:222\nNF_HOOK_COND include/linux/netfilter.h:303 [inline]\nip6_output+0x323/0x610 net/ipv6/ip6_output.c:243\ndst_output include/net/dst.h:451 [inline]\nip6_local_out+0xe9/0x140 net/ipv6/output_core.c:155\nip6_send_skb net/ipv6/ip6_output.c:1952 [inline]\nip6_push_pending_frames+0x1f9/0x560 net/ipv6/ip6_output.c:1972\nrawv6_push_pending_frames+0xbe8/0xdf0 net/ipv6/raw.c:582\nrawv6_sendmsg+0x2b66/0x2e70 net/ipv6/raw.c:920\ninet_sendmsg+0x105/0x190 net/ipv4/af_inet.c:847\nsock_sendmsg_nosec net/socket.c:730 [inline]\n__sock_sendmsg net/socket.c:745 [inline]\n____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584\n___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638\n__sys_sendmsg net/socket.c:2667 [inline]\n__do_sys_sendmsg net/socket.c:2676 [inline]\n__se_sys_sendmsg net/socket.c:2674 [inline]\n__x64_sys_sendmsg+0x307/0x490 net/socket.c:2674\ndo_syscall_x64 arch/x86/entry/common.c:52 [inline]\ndo_syscall_64+0x44/0x110 arch/x86/entry/common.c:83\nentry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was created at:\nslab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\nslab_alloc_node mm/slub.c:3478 [inline]\n__kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517\n__do_kmalloc_node mm/slab_common.c:1006 [inline]\n__kmalloc_node_track_caller+0x118/0x3c0 mm/slab_common.c:1027\nkmalloc_reserve+0x249/0x4a0 net/core/skbuff.c:582\npskb_expand_head+0x226/0x1a00 net/core/skbuff.c:2098\n__pskb_pull_tail+0x13b/0x2310 net/core/skbuff.c:2655\npskb_may_pull_reason include/linux/skbuff.h:2673 [inline]\npskb_may_pull include/linux/skbuff.h:2681 [inline]\nip6_tnl_parse_tlv_enc_lim+0x901/0xbb0 net/ipv6/ip6_tunnel.c:408\nipxip6_tnl_xmit net/ipv6/ip6_tunnel.c:1326 [inline]\nip6_tnl_start_xmit+0xab2/0x1a70 net/ipv6/ip6_tunnel.c:1432\n__netdev_start_xmit include/linux/netdevice.h:4940 [inline]\nnetdev_start_xmit include/linux/netdevice.h:4954 [inline]\nxmit_one net/core/dev.c:3548 [inline]\ndev_hard_start_xmit+0x247/0xa10 net/core/dev.c:3564\n__dev_queue_xmit+0x33b8/0x5130 net/core/dev.c:4349\ndev_queue_xmit include/linux/netdevice.h:3134 [inline]\nneigh_connected_output+0x569/0x660 net/core/neighbour.c:1592\nneigh_output include/net/neighbour.h:542 [inline]\nip6_finish_output2+0x23a9/0x2b30 net/ipv6/ip6_output.c:137\nip6_finish_output+0x855/0x12b0 net/ipv6/ip6_output.c:222\nNF_HOOK_COND include/linux/netfilter.h:303 [inline]\nip6_output+0x323/0x610 net/ipv6/ip6_output.c:243\ndst_output include/net/dst.h:451 [inline]\nip6_local_out+0xe9/0x140 net/ipv6/output_core.c:155\nip6_send_skb net/ipv6/ip6_output.c:1952 [inline]\nip6_push_pending_frames+0x1f9/0x560 net/ipv6/ip6_output.c:1972\nrawv6_push_pending_frames+0xbe8/0xdf0 net/ipv6/raw.c:582\nrawv6_sendmsg+0x2b66/0x2e70 net/ipv6/raw.c:920\ninet_sendmsg+0x105/0x190 net/ipv4/af_inet.c:847\nsock_sendmsg_nosec net/socket.c:730 [inline]\n__sock_sendmsg net/socket.c:745 [inline]\n____sys_sendmsg+0x9c2/0xd60 net/socket.c:2584\n___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638\n__sys_sendmsg net/socket.c:2667 [inline]\n__do_sys_sendms\n---truncated---"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26634",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a2232f29bf52c24f827865b3c90829c44b6c695b",
-            "https://git.kernel.org/stable/c/e855dded4b70d1975ee7b9fed0c700391e3c8ea6",
-            "https://git.kernel.org/stable/c/8072699aa9e67d1727692cfb3c347263bb627fb9",
-            "https://git.kernel.org/stable/c/d09486a04f5da0a812c26217213b89a3b1acf836"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix removing a namespace with conflicting altnames\n\nMark reports a BUG() when a net namespace is removed.\n\n    kernel BUG at net/core/dev.c:11520!\n\nPhysical interfaces moved outside of init_net get \"refunded\"\nto init_net when that namespace disappears. The main interface\nname may get overwritten in the process if it would have\nconflicted. We need to also discard all conflicting altnames.\nRecent fixes addressed ensuring that altnames get moved\nwith the main interface, which surfaced this problem."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26635",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/165ad1e22779685c3ed3dd349c6c4c632309cc62",
-            "https://git.kernel.org/stable/c/b8e8838f82f332ae80c643dbb1ca4418d0628097",
-            "https://git.kernel.org/stable/c/9ccdef19cf9497c2803b005369668feb91cacdfd",
-            "https://git.kernel.org/stable/c/c0fe2fe7a5a291dfcf6dc64301732c8d3dc6a828",
-            "https://git.kernel.org/stable/c/660c3053d992b68fee893a0e9ec9159228cffdc6",
-            "https://git.kernel.org/stable/c/f1f34a515fb1e25e85dee94f781e7869ae351fb8",
-            "https://git.kernel.org/stable/c/df57fc2f2abf548aa889a36ab0bdcc94a75399dc",
-            "https://git.kernel.org/stable/c/e3f9bed9bee261e3347131764e42aeedf1ffea61"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nllc: Drop support for ETH_P_TR_802_2.\n\nsyzbot reported an uninit-value bug below. [0]\n\nllc supports ETH_P_802_2 (0x0004) and used to support ETH_P_TR_802_2\n(0x0011), and syzbot abused the latter to trigger the bug.\n\n  write$tun(r0, &(0x7f0000000040)={@val={0x0, 0x11}, @val, @mpls={[], @llc={@snap={0xaa, 0x1, ')', \"90e5dd\"}}}}, 0x16)\n\nllc_conn_handler() initialises local variables {saddr,daddr}.mac\nbased on skb in llc_pdu_decode_sa()/llc_pdu_decode_da() and passes\nthem to __llc_lookup().\n\nHowever, the initialisation is done only when skb->protocol is\nhtons(ETH_P_802_2), otherwise, __llc_lookup_established() and\n__llc_lookup_listener() will read garbage.\n\nThe missing initialisation existed prior to commit 211ed865108e\n(\"net: delete all instances of special processing for token ring\").\n\nIt removed the part to kick out the token ring stuff but forgot to\nclose the door allowing ETH_P_TR_802_2 packets to sneak into llc_rcv().\n\nLet's remove llc_tr_packet_type and complete the deprecation.\n\n[0]:\nBUG: KMSAN: uninit-value in __llc_lookup_established+0xe9d/0xf90\n __llc_lookup_established+0xe9d/0xf90\n __llc_lookup net/llc/llc_conn.c:611 [inline]\n llc_conn_handler+0x4bd/0x1360 net/llc/llc_conn.c:791\n llc_rcv+0xfbb/0x14a0 net/llc/llc_input.c:206\n __netif_receive_skb_one_core net/core/dev.c:5527 [inline]\n __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5641\n netif_receive_skb_internal net/core/dev.c:5727 [inline]\n netif_receive_skb+0x58/0x660 net/core/dev.c:5786\n tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1555\n tun_get_user+0x53af/0x66d0 drivers/net/tun.c:2002\n tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n call_write_iter include/linux/fs.h:2020 [inline]\n new_sync_write fs/read_write.c:491 [inline]\n vfs_write+0x8ef/0x1490 fs/read_write.c:584\n ksys_write+0x20f/0x4c0 fs/read_write.c:637\n __do_sys_write fs/read_write.c:649 [inline]\n __se_sys_write fs/read_write.c:646 [inline]\n __x64_sys_write+0x93/0xd0 fs/read_write.c:646\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x44/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nLocal variable daddr created at:\n llc_conn_handler+0x53/0x1360 net/llc/llc_conn.c:783\n llc_rcv+0xfbb/0x14a0 net/llc/llc_input.c:206\n\nCPU: 1 PID: 5004 Comm: syz-executor994 Not tainted 6.6.0-syzkaller-14500-g1c41041124bd #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/09/2023"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26636",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/84e9d10419f6f4f3f3cd8f9aaf44a48719aa4b1b",
-            "https://git.kernel.org/stable/c/b643d0defcbacd7fe548bc65c3e4e6f17dc5eb2d",
-            "https://git.kernel.org/stable/c/04f2a74b562f3a7498be0399309669f342793d8c",
-            "https://git.kernel.org/stable/c/c22044270da68881074fda81a7d34812726cb249",
-            "https://git.kernel.org/stable/c/6d53b813ff8b177f86f149c2f744442681f720e4",
-            "https://git.kernel.org/stable/c/cafd3ad3fe03ef4d6632747be9ee15dc0029db4b",
-            "https://git.kernel.org/stable/c/c451c008f563d56d5e676c9dcafae565fcad84bb",
-            "https://git.kernel.org/stable/c/dad555c816a50c6a6a8a86be1f9177673918c647"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nllc: make llc_ui_sendmsg() more robust against bonding changes\n\nsyzbot was able to trick llc_ui_sendmsg(), allocating an skb with no\nheadroom, but subsequently trying to push 14 bytes of Ethernet header [1]\n\nLike some others, llc_ui_sendmsg() releases the socket lock before\ncalling sock_alloc_send_skb().\nThen it acquires it again, but does not redo all the sanity checks\nthat were performed.\n\nThis fix:\n\n- Uses LL_RESERVED_SPACE() to reserve space.\n- Check all conditions again after socket lock is held again.\n- Do not account Ethernet header for mtu limitation.\n\n[1]\n\nskbuff: skb_under_panic: text:ffff800088baa334 len:1514 put:14 head:ffff0000c9c37000 data:ffff0000c9c36ff2 tail:0x5dc end:0x6c0 dev:bond0\n\n kernel BUG at net/core/skbuff.c:193 !\nInternal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP\nModules linked in:\nCPU: 0 PID: 6875 Comm: syz-executor.0 Not tainted 6.7.0-rc8-syzkaller-00101-g0802e17d9aca-dirty #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023\npstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)\n pc : skb_panic net/core/skbuff.c:189 [inline]\n pc : skb_under_panic+0x13c/0x140 net/core/skbuff.c:203\n lr : skb_panic net/core/skbuff.c:189 [inline]\n lr : skb_under_panic+0x13c/0x140 net/core/skbuff.c:203\nsp : ffff800096f97000\nx29: ffff800096f97010 x28: ffff80008cc8d668 x27: dfff800000000000\nx26: ffff0000cb970c90 x25: 00000000000005dc x24: ffff0000c9c36ff2\nx23: ffff0000c9c37000 x22: 00000000000005ea x21: 00000000000006c0\nx20: 000000000000000e x19: ffff800088baa334 x18: 1fffe000368261ce\nx17: ffff80008e4ed000 x16: ffff80008a8310f8 x15: 0000000000000001\nx14: 1ffff00012df2d58 x13: 0000000000000000 x12: 0000000000000000\nx11: 0000000000000001 x10: 0000000000ff0100 x9 : e28a51f1087e8400\nx8 : e28a51f1087e8400 x7 : ffff80008028f8d0 x6 : 0000000000000000\nx5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff800082b78714\nx2 : 0000000000000001 x1 : 0000000100000000 x0 : 0000000000000089\nCall trace:\n  skb_panic net/core/skbuff.c:189 [inline]\n  skb_under_panic+0x13c/0x140 net/core/skbuff.c:203\n  skb_push+0xf0/0x108 net/core/skbuff.c:2451\n  eth_header+0x44/0x1f8 net/ethernet/eth.c:83\n  dev_hard_header include/linux/netdevice.h:3188 [inline]\n  llc_mac_hdr_init+0x110/0x17c net/llc/llc_output.c:33\n  llc_sap_action_send_xid_c+0x170/0x344 net/llc/llc_s_ac.c:85\n  llc_exec_sap_trans_actions net/llc/llc_sap.c:153 [inline]\n  llc_sap_next_state net/llc/llc_sap.c:182 [inline]\n  llc_sap_state_process+0x1ec/0x774 net/llc/llc_sap.c:209\n  llc_build_and_send_xid_pkt+0x12c/0x1c0 net/llc/llc_sap.c:270\n  llc_ui_sendmsg+0x7bc/0xb1c net/llc/af_llc.c:997\n  sock_sendmsg_nosec net/socket.c:730 [inline]\n  __sock_sendmsg net/socket.c:745 [inline]\n  sock_sendmsg+0x194/0x274 net/socket.c:767\n  splice_to_socket+0x7cc/0xd58 fs/splice.c:881\n  do_splice_from fs/splice.c:933 [inline]\n  direct_splice_actor+0xe4/0x1c0 fs/splice.c:1142\n  splice_direct_to_actor+0x2a0/0x7e4 fs/splice.c:1088\n  do_splice_direct+0x20c/0x348 fs/splice.c:1194\n  do_sendfile+0x4bc/0xc70 fs/read_write.c:1254\n  __do_sys_sendfile64 fs/read_write.c:1322 [inline]\n  __se_sys_sendfile64 fs/read_write.c:1308 [inline]\n  __arm64_sys_sendfile64+0x160/0x3b4 fs/read_write.c:1308\n  __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]\n  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:51\n  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:136\n  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:155\n  el0_svc+0x54/0x158 arch/arm64/kernel/entry-common.c:678\n  el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:696\n  el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:595\nCode: aa1803e6 aa1903e7 a90023f5 94792f6a (d4210000)"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26637",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/aa74ce30a8a40d19a4256de4ae5322e71344a274",
-            "https://git.kernel.org/stable/c/556857aa1d0855aba02b1c63bc52b91ec63fc2cc"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath11k: rely on mac80211 debugfs handling for vif\n\nmac80211 started to delete debugfs entries in certain cases, causing a\nath11k to crash when it tried to delete the entries later. Fix this by\nrelying on mac80211 to delete the entries when appropriate and adding\nthem from the vif_add_debugfs handler."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26638",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/d9c54763e5cdbbd3f81868597fe8aca3c96e6387",
-            "https://git.kernel.org/stable/c/1960f2b534da1e6c65fb96f9e98bda773495f406",
-            "https://git.kernel.org/stable/c/b0028f333420a65a53a63978522db680b37379dd",
-            "https://git.kernel.org/stable/c/78fbb92af27d0982634116c7a31065f24d092826"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnbd: always initialize struct msghdr completely\n\nsyzbot complains that msg->msg_get_inq value can be uninitialized [1]\n\nstruct msghdr got many new fields recently, we should always make\nsure their values is zero by default.\n\n[1]\n BUG: KMSAN: uninit-value in tcp_recvmsg+0x686/0xac0 net/ipv4/tcp.c:2571\n  tcp_recvmsg+0x686/0xac0 net/ipv4/tcp.c:2571\n  inet_recvmsg+0x131/0x580 net/ipv4/af_inet.c:879\n  sock_recvmsg_nosec net/socket.c:1044 [inline]\n  sock_recvmsg+0x12b/0x1e0 net/socket.c:1066\n  __sock_xmit+0x236/0x5c0 drivers/block/nbd.c:538\n  nbd_read_reply drivers/block/nbd.c:732 [inline]\n  recv_work+0x262/0x3100 drivers/block/nbd.c:863\n  process_one_work kernel/workqueue.c:2627 [inline]\n  process_scheduled_works+0x104e/0x1e70 kernel/workqueue.c:2700\n  worker_thread+0xf45/0x1490 kernel/workqueue.c:2781\n  kthread+0x3ed/0x540 kernel/kthread.c:388\n  ret_from_fork+0x66/0x80 arch/x86/kernel/process.c:147\n  ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242\n\nLocal variable msg created at:\n  __sock_xmit+0x4c/0x5c0 drivers/block/nbd.c:513\n  nbd_read_reply drivers/block/nbd.c:732 [inline]\n  recv_work+0x262/0x3100 drivers/block/nbd.c:863\n\nCPU: 1 PID: 7465 Comm: kworker/u5:1 Not tainted 6.7.0-rc7-syzkaller-00041-gf016f7547aee #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023\nWorkqueue: nbd5-recv recv_work"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26639",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/dc904345e3771aa01d0b8358b550802fdc6fe00b",
-            "https://git.kernel.org/stable/c/6335c0cdb2ea0ea02c999e04d34fd84f69fb27ff",
-            "https://git.kernel.org/stable/c/5a33420599fa0288792537e6872fd19cc8607ea6"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm, kmsan: fix infinite recursion due to RCU critical section\n\nAlexander Potapenko writes in [1]: \"For every memory access in the code\ninstrumented by KMSAN we call kmsan_get_metadata() to obtain the metadata\nfor the memory being accessed.  For virtual memory the metadata pointers\nare stored in the corresponding `struct page`, therefore we need to call\nvirt_to_page() to get them.\n\nAccording to the comment in arch/x86/include/asm/page.h,\nvirt_to_page(kaddr) returns a valid pointer iff virt_addr_valid(kaddr) is\ntrue, so KMSAN needs to call virt_addr_valid() as well.\n\nTo avoid recursion, kmsan_get_metadata() must not call instrumented code,\ntherefore ./arch/x86/include/asm/kmsan.h forks parts of\narch/x86/mm/physaddr.c to check whether a virtual address is valid or not.\n\nBut the introduction of rcu_read_lock() to pfn_valid() added instrumented\nRCU API calls to virt_to_page_or_null(), which is called by\nkmsan_get_metadata(), so there is an infinite recursion now.  I do not\nthink it is correct to stop that recursion by doing\nkmsan_enter_runtime()/kmsan_exit_runtime() in kmsan_get_metadata(): that\nwould prevent instrumented functions called from within the runtime from\ntracking the shadow values, which might introduce false positives.\"\n\nFix the issue by switching pfn_valid() to the _sched() variant of\nrcu_read_lock/unlock(), which does not require calling into RCU.  Given\nthe critical section in pfn_valid() is very small, this is a reasonable\ntrade-off (with preemptible RCU).\n\nKMSAN further needs to be careful to suppress calls into the scheduler,\nwhich would be another source of recursion.  This can be done by wrapping\nthe call to pfn_valid() into preempt_disable/enable_no_resched().  The\ndownside is that this sacrifices breaking scheduling guarantees; however,\na kernel compiled with KMSAN has already given up any performance\nguarantees due to being heavily instrumented.\n\nNote, KMSAN code already disables tracing via Makefile, and since mmzone.h\nis included, it is not necessary to use the notrace variant, which is\ngenerally preferred in all other cases."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26640",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/f48bf9a83b1666d934247cb58a9887d7b3127b6f",
-            "https://git.kernel.org/stable/c/718f446e60316bf606946f7f42367d691d21541e",
-            "https://git.kernel.org/stable/c/b383d4ea272fe5795877506dcce5aad1f6330e5e",
-            "https://git.kernel.org/stable/c/d15cc0f66884ef2bed28c7ccbb11c102aa3a0760",
-            "https://git.kernel.org/stable/c/1b8adcc0e2c584fec778add7777fe28e20781e60",
-            "https://git.kernel.org/stable/c/577e4432f3ac810049cb7e6b71f4d96ec7c6e894"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntcp: add sanity checks to rx zerocopy\n\nTCP rx zerocopy intent is to map pages initially allocated\nfrom NIC drivers, not pages owned by a fs.\n\nThis patch adds to can_map_frag() these additional checks:\n\n- Page must not be a compound one.\n- page->mapping must be NULL.\n\nThis fixes the panic reported by ZhangPeng.\n\nsyzbot was able to loopback packets built with sendfile(),\nmapping pages owned by an ext4 file to TCP rx zerocopy.\n\nr3 = socket$inet_tcp(0x2, 0x1, 0x0)\nmmap(&(0x7f0000ff9000/0x4000)=nil, 0x4000, 0x0, 0x12, r3, 0x0)\nr4 = socket$inet_tcp(0x2, 0x1, 0x0)\nbind$inet(r4, &(0x7f0000000000)={0x2, 0x4e24, @multicast1}, 0x10)\nconnect$inet(r4, &(0x7f00000006c0)={0x2, 0x4e24, @empty}, 0x10)\nr5 = openat$dir(0xffffffffffffff9c, &(0x7f00000000c0)='./file0\\x00',\n    0x181e42, 0x0)\nfallocate(r5, 0x0, 0x0, 0x85b8)\nsendfile(r4, r5, 0x0, 0x8ba0)\ngetsockopt$inet_tcp_TCP_ZEROCOPY_RECEIVE(r4, 0x6, 0x23,\n    &(0x7f00000001c0)={&(0x7f0000ffb000/0x3000)=nil, 0x3000, 0x0, 0x0, 0x0,\n    0x0, 0x0, 0x0, 0x0}, &(0x7f0000000440)=0x40)\nr6 = openat$dir(0xffffffffffffff9c, &(0x7f00000000c0)='./file0\\x00',\n    0x181e42, 0x0)"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26641",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a9bc32879a08f23cdb80a48c738017e39aea1080",
-            "https://git.kernel.org/stable/c/af6b5c50d47ab43e5272ad61935d0ed2e264d3f0",
-            "https://git.kernel.org/stable/c/d54e4da98bbfa8c257bdca94c49652d81d18a4d8",
-            "https://git.kernel.org/stable/c/350a6640fac4b53564ec20aa3f4a0922cb0ba5e6",
-            "https://git.kernel.org/stable/c/c835df3bcc14858ae9b27315dd7de76370b94f3a",
-            "https://git.kernel.org/stable/c/8d975c15c0cd744000ca386247432d57b21f9df0"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nip6_tunnel: make sure to pull inner header in __ip6_tnl_rcv()\n\nsyzbot found __ip6_tnl_rcv() could access unitiliazed data [1].\n\nCall pskb_inet_may_pull() to fix this, and initialize ipv6h\nvariable after this call as it can change skb->head.\n\n[1]\n BUG: KMSAN: uninit-value in __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]\n BUG: KMSAN: uninit-value in INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]\n BUG: KMSAN: uninit-value in IP6_ECN_decapsulate+0x7df/0x1e50 include/net/inet_ecn.h:321\n  __INET_ECN_decapsulate include/net/inet_ecn.h:253 [inline]\n  INET_ECN_decapsulate include/net/inet_ecn.h:275 [inline]\n  IP6_ECN_decapsulate+0x7df/0x1e50 include/net/inet_ecn.h:321\n  ip6ip6_dscp_ecn_decapsulate+0x178/0x1b0 net/ipv6/ip6_tunnel.c:727\n  __ip6_tnl_rcv+0xd4e/0x1590 net/ipv6/ip6_tunnel.c:845\n  ip6_tnl_rcv+0xce/0x100 net/ipv6/ip6_tunnel.c:888\n gre_rcv+0x143f/0x1870\n  ip6_protocol_deliver_rcu+0xda6/0x2a60 net/ipv6/ip6_input.c:438\n  ip6_input_finish net/ipv6/ip6_input.c:483 [inline]\n  NF_HOOK include/linux/netfilter.h:314 [inline]\n  ip6_input+0x15d/0x430 net/ipv6/ip6_input.c:492\n  ip6_mc_input+0xa7e/0xc80 net/ipv6/ip6_input.c:586\n  dst_input include/net/dst.h:461 [inline]\n  ip6_rcv_finish+0x5db/0x870 net/ipv6/ip6_input.c:79\n  NF_HOOK include/linux/netfilter.h:314 [inline]\n  ipv6_rcv+0xda/0x390 net/ipv6/ip6_input.c:310\n  __netif_receive_skb_one_core net/core/dev.c:5532 [inline]\n  __netif_receive_skb+0x1a6/0x5a0 net/core/dev.c:5646\n  netif_receive_skb_internal net/core/dev.c:5732 [inline]\n  netif_receive_skb+0x58/0x660 net/core/dev.c:5791\n  tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1555\n  tun_get_user+0x53af/0x66d0 drivers/net/tun.c:2002\n  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n  call_write_iter include/linux/fs.h:2084 [inline]\n  new_sync_write fs/read_write.c:497 [inline]\n  vfs_write+0x786/0x1200 fs/read_write.c:590\n  ksys_write+0x20f/0x4c0 fs/read_write.c:643\n  __do_sys_write fs/read_write.c:655 [inline]\n  __se_sys_write fs/read_write.c:652 [inline]\n  __x64_sys_write+0x93/0xd0 fs/read_write.c:652\n  do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n  do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was created at:\n  slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768\n  slab_alloc_node mm/slub.c:3478 [inline]\n  kmem_cache_alloc_node+0x5e9/0xb10 mm/slub.c:3523\n  kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:560\n  __alloc_skb+0x318/0x740 net/core/skbuff.c:651\n  alloc_skb include/linux/skbuff.h:1286 [inline]\n  alloc_skb_with_frags+0xc8/0xbd0 net/core/skbuff.c:6334\n  sock_alloc_send_pskb+0xa80/0xbf0 net/core/sock.c:2787\n  tun_alloc_skb drivers/net/tun.c:1531 [inline]\n  tun_get_user+0x1e8a/0x66d0 drivers/net/tun.c:1846\n  tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048\n  call_write_iter include/linux/fs.h:2084 [inline]\n  new_sync_write fs/read_write.c:497 [inline]\n  vfs_write+0x786/0x1200 fs/read_write.c:590\n  ksys_write+0x20f/0x4c0 fs/read_write.c:643\n  __do_sys_write fs/read_write.c:655 [inline]\n  __se_sys_write fs/read_write.c:652 [inline]\n  __x64_sys_write+0x93/0xd0 fs/read_write.c:652\n  do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n  do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nCPU: 0 PID: 5034 Comm: syz-executor331 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023"
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2018-25099",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/DCIT/perl-CryptX/issues/47",
-            "https://github.com/libtom/libtomcrypt/pull/451",
-            "https://metacpan.org/dist/CryptX/changes"
-        ],
-        "summary": "In the CryptX module before 0.062 for Perl, gcm_decrypt_verify() and chacha20poly1305_decrypt_verify() do not verify the tag."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47154",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://blog.urth.org/2021/03/29/security-issues-in-perl-ip-address-distros/",
-            "https://metacpan.org/pod/Net::CIDR::Lite",
-            "https://github.com/stigtsp/Net-CIDR-Lite/commit/23b6ff0590dc279521863a502e890ef19a5a76fc",
-            "https://metacpan.org/dist/Net-CIDR-Lite/changes"
-        ],
-        "summary": "The Net::CIDR::Lite module before 0.22 for Perl does not properly consider extraneous zero characters at the beginning of an IP address string, which (in some situations) allows attackers to bypass access control that is based on IP addresses."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47155",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://blog.urth.org/2021/03/29/security-issues-in-perl-ip-address-distros/#net-ipv4addrhttpsmetacpanorgreleasenet-ipv4addr",
-            "https://metacpan.org/release/Net-IPv4Addr"
-        ],
-        "summary": "The Net::IPV4Addr module 0.10 for Perl does not properly consider extraneous zero characters in an IP address string, which (in some situations) allows attackers to bypass access control that is based on IP addresses."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47156",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://blog.urth.org/2021/03/29/security-issues-in-perl-ip-address-distros/",
-            "https://metacpan.org/release/PWBENNETT/Net-IPAddress-Util-5.000/changes",
-            "https://metacpan.org/release/Net-IPAddress-Util"
-        ],
-        "summary": "The Net::IPAddress::Util module before 5.000 for Perl does not properly consider extraneous zero characters in an IP address string, which (in some situations) allows attackers to bypass access control that is based on IP addresses."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47157",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/kazeburo/Kossy/pull/16",
-            "https://metacpan.org/dist/Kossy/changes"
-        ],
-        "summary": "The Kossy module before 0.60 for Perl allows JSON hijacking because of X-Requested-With mishandling."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29151",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/RocketChat/Rocket.Chat.Audit/blob/5ad78e8017a9e190602e8257c22500ded0d931a9/requirements.txt#L3"
-        ],
-        "summary": "Rocket.Chat.Audit through 5ad78e8 depends on filecachetools, which does not exist in PyPI."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29154",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://sec1.io/security-advisories/cross-site-scripting-xss/"
-        ],
-        "summary": "danielmiessler fabric through 1.3.0 allows installer/client/gui/static/js/index.js XSS because of innerHTML mishandling, such as in htmlToPlainText."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T07:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29156",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://wiki.openstack.org/wiki/OSSN/OSSN-0093",
-            "https://launchpad.net/bugs/2048114",
-            "https://opendev.org/openstack/murano/tags",
-            "https://opendev.org/openstack/yaql/commit/83e28324e1a0ce3970dd854393d2431123a909d3"
-        ],
-        "summary": "In OpenStack Murano through 16.0.0, when YAQL before 3.0.0 is used, the Murano service's MuranoPL extension to the YAQL language fails to sanitize the supplied environment, leading to potential leakage of sensitive service account information."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T08:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-21824",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://support.brother.com/g/b/link.aspx?prod=group2&faqid=faqp00100601_000",
-            "https://support.brother.com/g/b/link.aspx?prod=lmgroup1&faqid=faq00100823_000",
-            "https://www.fujifilm.com/fbglobal/eng/company/news/notice/2024/0306_2_announce.html",
-            "https://www.ricoh.com/products/security/vulnerabilities/vul?id=ricoh-2024-000002",
-            "https://www.toshibatec.com/information/20240306_01.html",
-            "https://jvn.jp/en/jp/JVN82749078/"
-        ],
-        "summary": "Improper authentication vulnerability in exists in multiple printers and scanners which implement Web Based Management provided by BROTHER INDUSTRIES, LTD. If this vulnerability is exploited, a network-adjacent user who can access the product may impersonate an administrative user. As for the details of affected product names, model numbers, and versions, refer to the information provided by the respective vendors listed under [References]."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T08:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22475",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://support.brother.com/g/b/link.aspx?prod=group2&faqid=faqp00100601_000",
-            "https://support.brother.com/g/b/link.aspx?prod=lmgroup1&faqid=faq00100823_000",
-            "https://www.fujifilm.com/fbglobal/eng/company/news/notice/2024/0306_2_announce.html",
-            "https://www.ricoh.com/products/security/vulnerabilities/vul?id=ricoh-2024-000002",
-            "https://www.toshibatec.com/information/20240306_01.html",
-            "https://jvn.jp/en/jp/JVN82749078/"
-        ],
-        "summary": "Cross-site request forgery vulnerability in multiple printers and scanners which implement Web Based Management provided by BROTHER INDUSTRIES, LTD. allows a remote unauthenticated attacker to perform unintended operations on the affected product. As for the details of affected product names, model numbers, and versions, refer to the information provided by the respective vendors listed under [References]."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T08:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-23604",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/unclebob/fitnesse",
-            "http://fitnesse.org/FitNesseDownload",
-            "https://github.com/unclebob/fitnesse/blob/master/SECURITY.md",
-            "https://jvn.jp/en/jp/JVN94521208/"
-        ],
-        "summary": "Cross-site scripting vulnerability exists in FitNesse all releases, which may allow a remote unauthenticated attacker to execute an arbitrary script on the web browser of the user who is using the product and accessing a link with specially crafted multiple parameters."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T08:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27974",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://www.fujifilm.com/fbglobal/eng/company/news/notice/2024/0306_1_announce.html",
-            "https://jvn.jp/en/jp/JVN34328023/"
-        ],
-        "summary": "Cross-site request forgery vulnerability in FUJIFILM printers which implement CentreWare Internet Services or Internet Services allows a remote unauthenticated attacker to alter user information. In the case the user is an administrator, the settings such as the administrator's ID, password, etc. may be altered. As for the details of affected product names, model numbers, and versions, refer to the information provided by the vendor listed under [References]."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T08:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28125",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/unclebob/fitnesse",
-            "http://fitnesse.org/FitNesseDownload",
-            "https://github.com/unclebob/fitnesse/blob/master/SECURITY.md",
-            "https://jvn.jp/en/jp/JVN94521208/"
-        ],
-        "summary": "FitNesse all releases allows a remote authenticated attacker to execute arbitrary OS commands."
-    },
-    {
-        "Modified": "2024-03-18T12:38:00",
-        "Published": "2024-03-18T08:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28128",
-        "impact": {},
-        "last-modified": "2024-03-18T12:38:00",
-        "references": [
-            "https://github.com/unclebob/fitnesse",
-            "http://fitnesse.org/FitNesseDownload",
-            "https://github.com/unclebob/fitnesse/blob/master/SECURITY.md",
-            "https://jvn.jp/en/jp/JVN94521208/"
-        ],
-        "summary": "Cross-site scripting vulnerability exists in FitNesse releases prior to 20220319, which may allow a remote unauthenticated attacker to execute an arbitrary script on the web browser of the user who is using the product and accessing a link with a specially crafted certain parameter."
     }
 ]
