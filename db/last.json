@@ -1,5 +1,732 @@
 [
     {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47146",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0e35b7457b7b6e73ffeaaca1a577fdf1af0feca1",
+            "https://git.kernel.org/stable/c/17728616a4c85baf0edc975c60ba4e4157684d9a",
+            "https://git.kernel.org/stable/c/221142038f36d9f28b64e83e954774da4d4ccd17",
+            "https://git.kernel.org/stable/c/4b77ad9097067b31237eeeee0bf70f80849680a0",
+            "https://git.kernel.org/stable/c/37d697759958d111439080bab7e14d2b0e7b39f5",
+            "https://git.kernel.org/stable/c/beb39adb150f8f3b516ddf7c39835a9788704d23",
+            "https://git.kernel.org/stable/c/a76fb9ba545289379acf409653ad5f74417be59c",
+            "https://git.kernel.org/stable/c/020ef930b826d21c5446fdc9db80fd72a791bc21"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmld: fix panic in mld_newpack()\n\nmld_newpack() doesn't allow to allocate high order page,\nonly order-0 allocation is allowed.\nIf headroom size is too large, a kernel panic could occur in skb_put().\n\nTest commands:\n    ip netns del A\n    ip netns del B\n    ip netns add A\n    ip netns add B\n    ip link add veth0 type veth peer name veth1\n    ip link set veth0 netns A\n    ip link set veth1 netns B\n\n    ip netns exec A ip link set lo up\n    ip netns exec A ip link set veth0 up\n    ip netns exec A ip -6 a a 2001:db8:0::1/64 dev veth0\n    ip netns exec B ip link set lo up\n    ip netns exec B ip link set veth1 up\n    ip netns exec B ip -6 a a 2001:db8:0::2/64 dev veth1\n    for i in {1..99}\n    do\n        let A=$i-1\n        ip netns exec A ip link add ip6gre$i type ip6gre \\\n\tlocal 2001:db8:$A::1 remote 2001:db8:$A::2 encaplimit 100\n        ip netns exec A ip -6 a a 2001:db8:$i::1/64 dev ip6gre$i\n        ip netns exec A ip link set ip6gre$i up\n\n        ip netns exec B ip link add ip6gre$i type ip6gre \\\n\tlocal 2001:db8:$A::2 remote 2001:db8:$A::1 encaplimit 100\n        ip netns exec B ip -6 a a 2001:db8:$i::2/64 dev ip6gre$i\n        ip netns exec B ip link set ip6gre$i up\n    done\n\nSplat looks like:\nkernel BUG at net/core/skbuff.c:110!\ninvalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI\nCPU: 0 PID: 7 Comm: kworker/0:1 Not tainted 5.12.0+ #891\nWorkqueue: ipv6_addrconf addrconf_dad_work\nRIP: 0010:skb_panic+0x15d/0x15f\nCode: 92 fe 4c 8b 4c 24 10 53 8b 4d 70 45 89 e0 48 c7 c7 00 ae 79 83\n41 57 41 56 41 55 48 8b 54 24 a6 26 f9 ff <0f> 0b 48 8b 6c 24 20 89\n34 24 e8 4a 4e 92 fe 8b 34 24 48 c7 c1 20\nRSP: 0018:ffff88810091f820 EFLAGS: 00010282\nRAX: 0000000000000089 RBX: ffff8881086e9000 RCX: 0000000000000000\nRDX: 0000000000000089 RSI: 0000000000000008 RDI: ffffed1020123efb\nRBP: ffff888005f6eac0 R08: ffffed1022fc0031 R09: ffffed1022fc0031\nR10: ffff888117e00187 R11: ffffed1022fc0030 R12: 0000000000000028\nR13: ffff888008284eb0 R14: 0000000000000ed8 R15: 0000000000000ec0\nFS:  0000000000000000(0000) GS:ffff888117c00000(0000)\nknlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00007f8b801c5640 CR3: 0000000033c2c006 CR4: 00000000003706f0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nCall Trace:\n ? ip6_mc_hdr.isra.26.constprop.46+0x12a/0x600\n ? ip6_mc_hdr.isra.26.constprop.46+0x12a/0x600\n skb_put.cold.104+0x22/0x22\n ip6_mc_hdr.isra.26.constprop.46+0x12a/0x600\n ? rcu_read_lock_sched_held+0x91/0xc0\n mld_newpack+0x398/0x8f0\n ? ip6_mc_hdr.isra.26.constprop.46+0x600/0x600\n ? lock_contended+0xc40/0xc40\n add_grhead.isra.33+0x280/0x380\n add_grec+0x5ca/0xff0\n ? mld_sendpack+0xf40/0xf40\n ? lock_downgrade+0x690/0x690\n mld_send_initial_cr.part.34+0xb9/0x180\n ipv6_mc_dad_complete+0x15d/0x1b0\n addrconf_dad_completed+0x8d2/0xbb0\n ? lock_downgrade+0x690/0x690\n ? addrconf_rs_timer+0x660/0x660\n ? addrconf_dad_work+0x73c/0x10e0\n addrconf_dad_work+0x73c/0x10e0\n\nAllowing high order page allocation could fix this problem."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47147",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0e38e702f1152479e6afac34f151dbfd99417f99",
+            "https://git.kernel.org/stable/c/9c1bb37f8cad5e2ee1933fa1da9a6baa7876a8e4"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nptp: ocp: Fix a resource leak in an error handling path\n\nIf an error occurs after a successful 'pci_ioremap_bar()' call, it must be\nundone by a corresponding 'pci_iounmap()' call, as already done in the\nremove function."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47136",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ac493452e937b8939eaf2d24cac51a4804b6c20e",
+            "https://git.kernel.org/stable/c/86ab133b695ed7ba1f8786b12f4ca43137ad8c18",
+            "https://git.kernel.org/stable/c/9453d45ecb6c2199d72e73c993e9d98677a2801b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: zero-initialize tc skb extension on allocation\n\nFunction skb_ext_add() doesn't initialize created skb extension with any\nvalue and leaves it up to the user. However, since extension of type\nTC_SKB_EXT originally contained only single value tc_skb_ext->chain its\nusers used to just assign the chain value without setting whole extension\nmemory to zero first. This assumption changed when TC_SKB_EXT extension was\nextended with additional fields but not all users were updated to\ninitialize the new fields which leads to use of uninitialized memory\nafterwards. UBSAN log:\n\n[  778.299821] UBSAN: invalid-load in net/openvswitch/flow.c:899:28\n[  778.301495] load of value 107 is not a valid value for type '_Bool'\n[  778.303215] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.12.0-rc7+ #2\n[  778.304933] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014\n[  778.307901] Call Trace:\n[  778.308680]  <IRQ>\n[  778.309358]  dump_stack+0xbb/0x107\n[  778.310307]  ubsan_epilogue+0x5/0x40\n[  778.311167]  __ubsan_handle_load_invalid_value.cold+0x43/0x48\n[  778.312454]  ? memset+0x20/0x40\n[  778.313230]  ovs_flow_key_extract.cold+0xf/0x14 [openvswitch]\n[  778.314532]  ovs_vport_receive+0x19e/0x2e0 [openvswitch]\n[  778.315749]  ? ovs_vport_find_upcall_portid+0x330/0x330 [openvswitch]\n[  778.317188]  ? create_prof_cpu_mask+0x20/0x20\n[  778.318220]  ? arch_stack_walk+0x82/0xf0\n[  778.319153]  ? secondary_startup_64_no_verify+0xb0/0xbb\n[  778.320399]  ? stack_trace_save+0x91/0xc0\n[  778.321362]  ? stack_trace_consume_entry+0x160/0x160\n[  778.322517]  ? lock_release+0x52e/0x760\n[  778.323444]  netdev_frame_hook+0x323/0x610 [openvswitch]\n[  778.324668]  ? ovs_netdev_get_vport+0xe0/0xe0 [openvswitch]\n[  778.325950]  __netif_receive_skb_core+0x771/0x2db0\n[  778.327067]  ? lock_downgrade+0x6e0/0x6f0\n[  778.328021]  ? lock_acquire+0x565/0x720\n[  778.328940]  ? generic_xdp_tx+0x4f0/0x4f0\n[  778.329902]  ? inet_gro_receive+0x2a7/0x10a0\n[  778.330914]  ? lock_downgrade+0x6f0/0x6f0\n[  778.331867]  ? udp4_gro_receive+0x4c4/0x13e0\n[  778.332876]  ? lock_release+0x52e/0x760\n[  778.333808]  ? dev_gro_receive+0xcc8/0x2380\n[  778.334810]  ? lock_downgrade+0x6f0/0x6f0\n[  778.335769]  __netif_receive_skb_list_core+0x295/0x820\n[  778.336955]  ? process_backlog+0x780/0x780\n[  778.337941]  ? mlx5e_rep_tc_netdevice_event_unregister+0x20/0x20 [mlx5_core]\n[  778.339613]  ? seqcount_lockdep_reader_access.constprop.0+0xa7/0xc0\n[  778.341033]  ? kvm_clock_get_cycles+0x14/0x20\n[  778.342072]  netif_receive_skb_list_internal+0x5f5/0xcb0\n[  778.343288]  ? __kasan_kmalloc+0x7a/0x90\n[  778.344234]  ? mlx5e_handle_rx_cqe_mpwrq+0x9e0/0x9e0 [mlx5_core]\n[  778.345676]  ? mlx5e_xmit_xdp_frame_mpwqe+0x14d0/0x14d0 [mlx5_core]\n[  778.347140]  ? __netif_receive_skb_list_core+0x820/0x820\n[  778.348351]  ? mlx5e_post_rx_mpwqes+0xa6/0x25d0 [mlx5_core]\n[  778.349688]  ? napi_gro_flush+0x26c/0x3c0\n[  778.350641]  napi_complete_done+0x188/0x6b0\n[  778.351627]  mlx5e_napi_poll+0x373/0x1b80 [mlx5_core]\n[  778.352853]  __napi_poll+0x9f/0x510\n[  778.353704]  ? mlx5_flow_namespace_set_mode+0x260/0x260 [mlx5_core]\n[  778.355158]  net_rx_action+0x34c/0xa40\n[  778.356060]  ? napi_threaded_poll+0x3d0/0x3d0\n[  778.357083]  ? sched_clock_cpu+0x18/0x190\n[  778.358041]  ? __common_interrupt+0x8e/0x1a0\n[  778.359045]  __do_softirq+0x1ce/0x984\n[  778.359938]  __irq_exit_rcu+0x137/0x1d0\n[  778.360865]  irq_exit_rcu+0xa/0x20\n[  778.361708]  common_interrupt+0x80/0xa0\n[  778.362640]  </IRQ>\n[  778.363212]  asm_common_interrupt+0x1e/0x40\n[  778.364204] RIP: 0010:native_safe_halt+0xe/0x10\n[  778.365273] Code: 4f ff ff ff 4c 89 e7 e8 50 3f 40 fe e9 dc fe ff ff 48 89 df e8 43 3f 40 fe eb 90 cc e9 07 00 00 00 0f 00 2d 74 05 62 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d 64 05 62 00 f4 c3 cc cc 0f 1f 44 00\n[  778.369355] RSP: 0018:ffffffff84407e48 EFLAGS: 00000246\n[  778.370570] RAX\n---truncated---"
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47137",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8bb1077448d43a871ed667520763e3b9f9b7975d",
+            "https://git.kernel.org/stable/c/5ac72351655f8b033a2935646f53b7465c903418",
+            "https://git.kernel.org/stable/c/46dd4abced3cb2c912916f4a5353e0927db0c4a2",
+            "https://git.kernel.org/stable/c/c7718ee96dbc2f9c5fc3b578abdf296dd44b9c20"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: lantiq: fix memory corruption in RX ring\n\nIn a situation where memory allocation or dma mapping fails, an\ninvalid address is programmed into the descriptor. This can lead\nto memory corruption. If the memory allocation fails, DMA should\nreuse the previous skb and mapping and drop the packet. This patch\nalso increments rx drop counter."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47138",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0bf49b3c8d8b3a43ce09f1b2db70e5484d31fcdf",
+            "https://git.kernel.org/stable/c/02f03883fdb10ad7e66717c70ea163a8d27ae6e7",
+            "https://git.kernel.org/stable/c/285207a558ab456aa7d8aa877ecc7e91fcc51710",
+            "https://git.kernel.org/stable/c/88c380df84fbd03f9b137c2b9d0a44b9f2f553b0"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncxgb4: avoid accessing registers when clearing filters\n\nHardware register having the server TID base can contain\ninvalid values when adapter is in bad state (for example,\ndue to AER fatal error). Reading these invalid values in the\nregister can lead to out-of-bound memory access. So, fix\nby using the saved server TID base when clearing filters."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47139",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a663c1e418a3b5b8e8edfad4bc8e7278c312d6fc",
+            "https://git.kernel.org/stable/c/0921a0620b5077796fddffb22a8e6bc635a4bb50",
+            "https://git.kernel.org/stable/c/a289a7e5c1d49b7d47df9913c1cc81fb48fab613"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hns3: put off calling register_netdev() until client initialize complete\n\nCurrently, the netdevice is registered before client initializing\ncomplete. So there is a timewindow between netdevice available\nand usable. In this case, if user try to change the channel number\nor ring param, it may cause the hns3_set_rx_cpu_rmap() being called\ntwice, and report bug.\n\n[47199.416502] hns3 0000:35:00.0 eth1: set channels: tqp_num=1, rxfh=0\n[47199.430340] hns3 0000:35:00.0 eth1: already uninitialized\n[47199.438554] hns3 0000:35:00.0: rss changes from 4 to 1\n[47199.511854] hns3 0000:35:00.0: Channels changed, rss_size from 4 to 1, tqps from 4 to 1\n[47200.163524] ------------[ cut here ]------------\n[47200.171674] kernel BUG at lib/cpu_rmap.c:142!\n[47200.177847] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP\n[47200.185259] Modules linked in: hclge(+) hns3(-) hns3_cae(O) hns_roce_hw_v2 hnae3 vfio_iommu_type1 vfio_pci vfio_virqfd vfio pv680_mii(O) [last unloaded: hclge]\n[47200.205912] CPU: 1 PID: 8260 Comm: ethtool Tainted: G           O      5.11.0-rc3+ #1\n[47200.215601] Hardware name:  , xxxxxx 02/04/2021\n[47200.223052] pstate: 60400009 (nZCv daif +PAN -UAO -TCO BTYPE=--)\n[47200.230188] pc : cpu_rmap_add+0x38/0x40\n[47200.237472] lr : irq_cpu_rmap_add+0x84/0x140\n[47200.243291] sp : ffff800010e93a30\n[47200.247295] x29: ffff800010e93a30 x28: ffff082100584880\n[47200.254155] x27: 0000000000000000 x26: 0000000000000000\n[47200.260712] x25: 0000000000000000 x24: 0000000000000004\n[47200.267241] x23: ffff08209ba03000 x22: ffff08209ba038c0\n[47200.273789] x21: 000000000000003f x20: ffff0820e2bc1680\n[47200.280400] x19: ffff0820c970ec80 x18: 00000000000000c0\n[47200.286944] x17: 0000000000000000 x16: ffffb43debe4a0d0\n[47200.293456] x15: fffffc2082990600 x14: dead000000000122\n[47200.300059] x13: ffffffffffffffff x12: 000000000000003e\n[47200.306606] x11: ffff0820815b8080 x10: ffff53e411988000\n[47200.313171] x9 : 0000000000000000 x8 : ffff0820e2bc1700\n[47200.319682] x7 : 0000000000000000 x6 : 000000000000003f\n[47200.326170] x5 : 0000000000000040 x4 : ffff800010e93a20\n[47200.332656] x3 : 0000000000000004 x2 : ffff0820c970ec80\n[47200.339168] x1 : ffff0820e2bc1680 x0 : 0000000000000004\n[47200.346058] Call trace:\n[47200.349324]  cpu_rmap_add+0x38/0x40\n[47200.354300]  hns3_set_rx_cpu_rmap+0x6c/0xe0 [hns3]\n[47200.362294]  hns3_reset_notify_init_enet+0x1cc/0x340 [hns3]\n[47200.370049]  hns3_change_channels+0x40/0xb0 [hns3]\n[47200.376770]  hns3_set_channels+0x12c/0x2a0 [hns3]\n[47200.383353]  ethtool_set_channels+0x140/0x250\n[47200.389772]  dev_ethtool+0x714/0x23d0\n[47200.394440]  dev_ioctl+0x4cc/0x640\n[47200.399277]  sock_do_ioctl+0x100/0x2a0\n[47200.404574]  sock_ioctl+0x28c/0x470\n[47200.409079]  __arm64_sys_ioctl+0xb4/0x100\n[47200.415217]  el0_svc_common.constprop.0+0x84/0x210\n[47200.422088]  do_el0_svc+0x28/0x34\n[47200.426387]  el0_svc+0x28/0x70\n[47200.431308]  el0_sync_handler+0x1a4/0x1b0\n[47200.436477]  el0_sync+0x174/0x180\n[47200.441562] Code: 11000405 79000c45 f8247861 d65f03c0 (d4210000)\n[47200.448869] ---[ end trace a01efe4ce42e5f34 ]---\n\nThe process is like below:\nexcuting hns3_client_init\n|\nregister_netdev()\n|                           hns3_set_channels()\n|                           |\nhns3_set_rx_cpu_rmap()      hns3_reset_notify_uninit_enet()\n|                               |\n|                            quit without calling function\n|                            hns3_free_rx_cpu_rmap for flag\n|                            HNS3_NIC_STATE_INITED is unset.\n|                           |\n|                           hns3_reset_notify_init_enet()\n|                               |\nset HNS3_NIC_STATE_INITED    call hns3_set_rx_cpu_rmap()-- crash\n\nFix it by calling register_netdev() at the end of function\nhns3_client_init()."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47140",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f3f2cf46291a693eab21adb94171b0128c2a9ec1",
+            "https://git.kernel.org/stable/c/d6177a6556f853785867e2ec6d5b7f4906f0d809"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\niommu/amd: Clear DMA ops when switching domain\n\nSince commit 08a27c1c3ecf (\"iommu: Add support to change default domain\nof an iommu group\") a user can switch a device between IOMMU and direct\nDMA through sysfs. This doesn't work for AMD IOMMU at the moment because\ndev->dma_ops is not cleared when switching from a DMA to an identity\nIOMMU domain. The DMA layer thus attempts to use the dma-iommu ops on an\nidentity domain, causing an oops:\n\n  # echo 0000:00:05.0 > /sys/sys/bus/pci/drivers/e1000e/unbind\n  # echo identity > /sys/bus/pci/devices/0000:00:05.0/iommu_group/type\n  # echo 0000:00:05.0 > /sys/sys/bus/pci/drivers/e1000e/bind\n   ...\n  BUG: kernel NULL pointer dereference, address: 0000000000000028\n   ...\n   Call Trace:\n    iommu_dma_alloc\n    e1000e_setup_tx_resources\n    e1000e_open\n\nSince iommu_change_dev_def_domain() calls probe_finalize() again, clear\nthe dma_ops there like Vt-d does."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47141",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/821149ee88c206fa37e79c1868cc270518484876",
+            "https://git.kernel.org/stable/c/da21a35c00ff1a1794d4f166d3b3fa8db4d0f6fb",
+            "https://git.kernel.org/stable/c/5278c75266c5094d3c0958793bf12fc90300e580",
+            "https://git.kernel.org/stable/c/5218e919c8d06279884aa0baf76778a6817d5b93"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngve: Add NULL pointer checks when freeing irqs.\n\nWhen freeing notification blocks, we index priv->msix_vectors.\nIf we failed to allocate priv->msix_vectors (see abort_with_msix_vectors)\nthis could lead to a NULL pointer dereference if the driver is unloaded."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47142",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0707c3fea8102d211631ba515ef2159707561b0d",
+            "https://git.kernel.org/stable/c/3293cf3513d69f00c14d43e2020826d45ea0e46a",
+            "https://git.kernel.org/stable/c/952ab3f9f48eb0e8050596d41951cf516be6b122",
+            "https://git.kernel.org/stable/c/a849e218556f932576c0fb1c5a88714b61709a17",
+            "https://git.kernel.org/stable/c/7398c2aab4da960761ec182d04d6d5abbb4a226e",
+            "https://git.kernel.org/stable/c/f98cdf084405333ee2f5be548a91b2d168e49276",
+            "https://git.kernel.org/stable/c/d4ea141fd4b40636a8326df5a377d9c5cf9b3faa",
+            "https://git.kernel.org/stable/c/1e5c37385097c35911b0f8a0c67ffd10ee1af9a2"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdgpu: Fix a use-after-free\n\nlooks like we forget to set ttm->sg to NULL.\nHit panic below\n\n[ 1235.844104] general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b7b4b: 0000 [#1] SMP DEBUG_PAGEALLOC NOPTI\n[ 1235.989074] Call Trace:\n[ 1235.991751]  sg_free_table+0x17/0x20\n[ 1235.995667]  amdgpu_ttm_backend_unbind.cold+0x4d/0xf7 [amdgpu]\n[ 1236.002288]  amdgpu_ttm_backend_destroy+0x29/0x130 [amdgpu]\n[ 1236.008464]  ttm_tt_destroy+0x1e/0x30 [ttm]\n[ 1236.013066]  ttm_bo_cleanup_memtype_use+0x51/0xa0 [ttm]\n[ 1236.018783]  ttm_bo_release+0x262/0xa50 [ttm]\n[ 1236.023547]  ttm_bo_put+0x82/0xd0 [ttm]\n[ 1236.027766]  amdgpu_bo_unref+0x26/0x50 [amdgpu]\n[ 1236.032809]  amdgpu_amdkfd_gpuvm_alloc_memory_of_gpu+0x7aa/0xd90 [amdgpu]\n[ 1236.040400]  kfd_ioctl_alloc_memory_of_gpu+0xe2/0x330 [amdgpu]\n[ 1236.046912]  kfd_ioctl+0x463/0x690 [amdgpu]"
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47143",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8b2cdc004d21a7255f219706dca64411108f7897",
+            "https://git.kernel.org/stable/c/40588782f1016c655ae1d302892f61d35af96842",
+            "https://git.kernel.org/stable/c/444d7be9532dcfda8e0385226c862fd7e986f607"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/smc: remove device from smcd_dev_list after failed device_add()\n\nIf the device_add() for a smcd_dev fails, there's no cleanup step that\nrolls back the earlier list_add(). The device subsequently gets freed,\nand we end up with a corrupted list.\n\nAdd some error handling that removes the device from the list."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47144",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/599e5d61ace952b0bb9bd942b198bbd0cfded1d7",
+            "https://git.kernel.org/stable/c/dde2656e0bbb2ac7d83a7bd95a8d5c3c95bbc009",
+            "https://git.kernel.org/stable/c/9fdb8ed37a3a44f9c49372b69f87fd5f61cb3240",
+            "https://git.kernel.org/stable/c/95a4ec905e51a30c64cf2d78b04a7acbeae5ca94",
+            "https://git.kernel.org/stable/c/fa7e6abc75f3d491bc561734312d065dc9dc2a77"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/amdgpu: fix refcount leak\n\n[Why]\nthe gem object rfb->base.obj[0] is get according to num_planes\nin amdgpufb_create, but is not put according to num_planes\n\n[How]\nput rfb->base.obj[0] in amdgpu_fbdev_destroy according to num_planes"
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47145",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/76bfd8ac20bebeae599452a03dfc5724c0475dcf",
+            "https://git.kernel.org/stable/c/e934c4ee17b33bafb0444f2f9766cda7166d3c40",
+            "https://git.kernel.org/stable/c/0eaf383c6a4a83c09f60fd07a1bea9f1a9181611",
+            "https://git.kernel.org/stable/c/6eccfb28f8dca70c9b1b3bb3194ca54cbe73a9fa",
+            "https://git.kernel.org/stable/c/0ed102453aa1cd12fefde8f6b60b9519b0b1f003",
+            "https://git.kernel.org/stable/c/7e13db503918820e6333811cdc6f151dcea5090a",
+            "https://git.kernel.org/stable/c/b545442133580dcb2f2496133bf850824d41255c",
+            "https://git.kernel.org/stable/c/91df99a6eb50d5a1bc70fff4a09a0b7ae6aab96d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: do not BUG_ON in link_to_fixup_dir\n\nWhile doing error injection testing I got the following panic\n\n  kernel BUG at fs/btrfs/tree-log.c:1862!\n  invalid opcode: 0000 [#1] SMP NOPTI\n  CPU: 1 PID: 7836 Comm: mount Not tainted 5.13.0-rc1+ #305\n  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.13.0-2.fc32 04/01/2014\n  RIP: 0010:link_to_fixup_dir+0xd5/0xe0\n  RSP: 0018:ffffb5800180fa30 EFLAGS: 00010216\n  RAX: fffffffffffffffb RBX: 00000000fffffffb RCX: ffff8f595287faf0\n  RDX: ffffb5800180fa37 RSI: ffff8f5954978800 RDI: 0000000000000000\n  RBP: ffff8f5953af9450 R08: 0000000000000019 R09: 0000000000000001\n  R10: 000151f408682970 R11: 0000000120021001 R12: ffff8f5954978800\n  R13: ffff8f595287faf0 R14: ffff8f5953c77dd0 R15: 0000000000000065\n  FS:  00007fc5284c8c40(0000) GS:ffff8f59bbd00000(0000) knlGS:0000000000000000\n  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n  CR2: 00007fc5287f47c0 CR3: 000000011275e002 CR4: 0000000000370ee0\n  Call Trace:\n   replay_one_buffer+0x409/0x470\n   ? btree_read_extent_buffer_pages+0xd0/0x110\n   walk_up_log_tree+0x157/0x1e0\n   walk_log_tree+0xa6/0x1d0\n   btrfs_recover_log_trees+0x1da/0x360\n   ? replay_one_extent+0x7b0/0x7b0\n   open_ctree+0x1486/0x1720\n   btrfs_mount_root.cold+0x12/0xea\n   ? __kmalloc_track_caller+0x12f/0x240\n   legacy_get_tree+0x24/0x40\n   vfs_get_tree+0x22/0xb0\n   vfs_kern_mount.part.0+0x71/0xb0\n   btrfs_mount+0x10d/0x380\n   ? vfs_parse_fs_string+0x4d/0x90\n   legacy_get_tree+0x24/0x40\n   vfs_get_tree+0x22/0xb0\n   path_mount+0x433/0xa10\n   __x64_sys_mount+0xe3/0x120\n   do_syscall_64+0x3d/0x80\n   entry_SYSCALL_64_after_hwframe+0x44/0xae\n\nWe can get -EIO or any number of legitimate errors from\nbtrfs_search_slot(), panicing here is not the appropriate response.  The\nerror path for this code handles errors properly, simply return the\nerror."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47148",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/389146bc6d2bbb20714d06624b74856320ce40f7",
+            "https://git.kernel.org/stable/c/e5cc361e21648b75f935f9571d4003aaee480214"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nocteontx2-pf: fix a buffer overflow in otx2_set_rxfh_context()\n\nThis function is called from ethtool_set_rxfh() and \"*rss_context\"\ncomes from the user.  Add some bounds checking to prevent memory\ncorruption."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47150",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/15102886bc8f5f29daaadf2d925591d564c17e9f",
+            "https://git.kernel.org/stable/c/20255d41ac560397b6a07d8d87dcc5e2efc7672a",
+            "https://git.kernel.org/stable/c/8ee7ef4a57a9e1228b6f345aaa70aa8951c7e9cd",
+            "https://git.kernel.org/stable/c/32a1777fd113335c3f70dc445dffee0ad1c6870f",
+            "https://git.kernel.org/stable/c/619fee9eb13b5d29e4267cb394645608088c28a8"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fec: fix the potential memory leak in fec_enet_init()\n\nIf the memory allocated for cbd_base is failed, it should\nfree the memory allocated for the queues, otherwise it causes\nmemory leak.\n\nAnd if the memory allocated for the queues is failed, it can\nreturn error directly."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47149",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b92170e209f7746ed72eaac98f2c2f4b9af734e6",
+            "https://git.kernel.org/stable/c/6dbf1101594f7c76990b63c35b5a40205a914b6b",
+            "https://git.kernel.org/stable/c/c4f1c23edbe921ab2ecd6140d700e756cd44c5f7",
+            "https://git.kernel.org/stable/c/7883d3895d0fbb0ba9bff0f8665f99974b45210f",
+            "https://git.kernel.org/stable/c/22049c3d40f08facd1867548716a484dad6b3251",
+            "https://git.kernel.org/stable/c/71723a796ab7881f491d663c6cd94b29be5fba50",
+            "https://git.kernel.org/stable/c/f14bf57a08779a5dee9936f63ada0149ea89c5e6",
+            "https://git.kernel.org/stable/c/52202be1cd996cde6e8969a128dc27ee45a7cb5e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fujitsu: fix potential null-ptr-deref\n\nIn fmvj18x_get_hwinfo(), if ioremap fails there will be NULL pointer\nderef. To fix this, check the return value of ioremap and return -1\nto the caller in case of failure."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47151",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/4e3cea8035b6f1b9055e69cc6ebf9fa4e50763ae",
+            "https://git.kernel.org/stable/c/93d1dbe7043b3c9492bdf396b2e98a008435b55b",
+            "https://git.kernel.org/stable/c/a00593737f8bac2c9e97b696e7ff84a4446653e8"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ninterconnect: qcom: bcm-voter: add a missing of_node_put()\n\nAdd a missing of_node_put() in of_bcm_voter_get() to avoid the\nreference leak."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47152",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3267a061096efc91eda52c2a0c61ba76e46e4b34",
+            "https://git.kernel.org/stable/c/18e7f0580da15cac1e79d73683ada5a9e70980f8",
+            "https://git.kernel.org/stable/c/29249eac5225429b898f278230a6ca2baa1ae154"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: fix data stream corruption\n\nMaxim reported several issues when forcing a TCP transparent proxy\nto use the MPTCP protocol for the inbound connections. He also\nprovided a clean reproducer.\n\nThe problem boils down to 'mptcp_frag_can_collapse_to()' assuming\nthat only MPTCP will use the given page_frag.\n\nIf others - e.g. the plain TCP protocol - allocate page fragments,\nwe can end-up re-using already allocated memory for mptcp_data_frag.\n\nFix the issue ensuring that the to-be-expanded data fragment is\nlocated at the current page frag end.\n\nv1 -> v2:\n - added missing fixes tag (Mat)"
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47153",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f9469082126cebb7337db3992d143f5e4edfe629",
+            "https://git.kernel.org/stable/c/09c9e79f4c10cfb6b9e0e1b4dd355232e4b5a3b3",
+            "https://git.kernel.org/stable/c/dfa8929e117b0228a7765f5c3f5988a4a028f3c6",
+            "https://git.kernel.org/stable/c/c70e1ba2e7e65255a0ce004f531dd90dada97a8c",
+            "https://git.kernel.org/stable/c/04cc05e3716ae31b17ecdab7bc55c8170def1b8b",
+            "https://git.kernel.org/stable/c/b523feb7e8e44652f92f3babb953a976e7ccbbef",
+            "https://git.kernel.org/stable/c/1f583d3813f204449037cd2acbfc09168171362a",
+            "https://git.kernel.org/stable/c/e4d8716c3dcec47f1557024add24e1f3c09eb24b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ni2c: i801: Don't generate an interrupt on bus reset\n\nNow that the i2c-i801 driver supports interrupts, setting the KILL bit\nin a attempt to recover from a timed out transaction triggers an\ninterrupt. Unfortunately, the interrupt handler (i801_isr) is not\nprepared for this situation and will try to process the interrupt as\nif it was signaling the end of a successful transaction. In the case\nof a block transaction, this can result in an out-of-range memory\naccess.\n\nThis condition was reproduced several times by syzbot:\nhttps://syzkaller.appspot.com/bug?extid=ed71512d469895b5b34e\nhttps://syzkaller.appspot.com/bug?extid=8c8dedc0ba9e03f6c79e\nhttps://syzkaller.appspot.com/bug?extid=c8ff0b6d6c73d81b610e\nhttps://syzkaller.appspot.com/bug?extid=33f6c360821c399d69eb\nhttps://syzkaller.appspot.com/bug?extid=be15dc0b1933f04b043a\nhttps://syzkaller.appspot.com/bug?extid=b4d3fd1dfd53e90afd79\n\nSo disable interrupts while trying to reset the bus. Interrupts will\nbe enabled again for the following transaction."
+    },
+    {
+        "Modified": "2024-03-25T09:15:00",
+        "Published": "2024-03-25T09:15:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25964",
+        "impact": {},
+        "last-modified": "2024-03-25T09:15:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000222691/dsa-2024-062-security-update-for-dell-powerscale-onefs-for-proprietary-code-vulnerabilities"
+        ],
+        "summary": "Dell PowerScale OneFS 9.5.0.x through 9.7.0.x contain a covert timing channel vulnerability. A remote unauthenticated attacker could potentially exploit this vulnerability, leading to denial of service."
+    },
+    {
+        "Modified": "2024-03-25T08:15:00",
+        "Published": "2024-03-25T08:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30187",
+        "impact": {},
+        "last-modified": "2024-03-25T08:15:00",
+        "references": [
+            "https://github.com/anope/anope/issues/351",
+            "https://github.com/anope/anope/commit/2b7872139c40ea5b0ca96c1d6595b7d5f9fa60a5"
+        ],
+        "summary": "Anope before 2.0.15 does not prevent resetting the password of a suspended account."
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "securities@openeuler.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24892",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1275",
+            "https://gitee.com/src-openeuler/migration-tools/pulls/12"
+        ],
+        "summary": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection'), Improper Privilege Management vulnerability in openEuler migration-tools on Linux allows Command Injection, Restful Privilege Elevation. This vulnerability is associated with program files https://gitee.Com/openeuler/migration-tools/blob/master/index.Py.\n\nThis issue affects migration-tools: from 1.0.0 through 1.0.1.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "securities@openeuler.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-33632",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1307",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1287",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1290",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1289",
+            "https://gitee.com/src-openeuler/iSulad/pulls/645",
+            "https://gitee.com/src-openeuler/iSulad/pulls/640",
+            "https://gitee.com/src-openeuler/iSulad/pulls/639"
+        ],
+        "summary": "Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability in openEuler iSulad on Linux allows Leveraging Time-of-Check and Time-of-Use (TOCTOU) Race Conditions. This vulnerability is associated with program files https://gitee.Com/openeuler/iSulad/blob/master/src/cmd/isulad/main.C.\n\nThis issue affects iSulad: 2.0.18-13, from 2.1.4-1 through 2.1.4-2.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "securities@openeuler.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24899",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1292",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1293",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1294",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1291",
+            "https://gitee.com/src-openeuler/aops-zeus/pulls/108",
+            "https://gitee.com/src-openeuler/aops-zeus/pulls/107"
+        ],
+        "summary": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability in openEuler aops-zeus on Linux allows Command Injection. This vulnerability is associated with program files https://gitee.Com/openeuler/aops-zeus/blob/master/zeus/conf/constant.Py.\n\nThis issue affects aops-zeus: from 1.2.0 through 1.4.0.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "product.security@lge.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2862",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://lgsecurity.lge.com/bulletins/idproducts#updateDetails"
+        ],
+        "summary": "\nThis vulnerability allows remote attackers to reset the password of anonymous users without authorization on the affected LG LED Assistant.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2020-36826",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://vuldb.com/?id.257784",
+            "https://vuldb.com/?ctiid.257784",
+            "https://github.com/AwesomestCode/LiveBot/commit/57505527f838d1e46e8f93d567ba552a30185bfa",
+            "https://github.com/AwesomestCode/LiveBot/releases/tag/0.1"
+        ],
+        "summary": "A vulnerability was found in AwesomestCode LiveBot. It has been classified as problematic. Affected is the function parseSend of the file js/parseMessage.js. The manipulation leads to cross site scripting. It is possible to launch the attack remotely. This product is using a rolling release to provide continious delivery. Therefore, no version details for affected nor updated releases are available. Upgrading to version 0.1 is able to address this issue. The name of the patch is 57505527f838d1e46e8f93d567ba552a30185bfa. It is recommended to upgrade the affected component. The identifier of this vulnerability is VDB-257784."
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "securities@openeuler.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24890",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1278",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1279",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1277",
+            "https://gitee.com/src-openeuler/gala-gopher/pulls/81",
+            "https://gitee.com/src-openeuler/gala-gopher/pulls/85",
+            "https://gitee.com/src-openeuler/gala-gopher/pulls/82"
+        ],
+        "summary": "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability in openEuler gala-gopher on Linux allows Command Injection. This vulnerability is associated with program files https://gitee.Com/openeuler/gala-gopher/blob/master/src/probes/extends/ebpf.Probe/src/ioprobe/ioprobe.C.\n\nThis issue affects gala-gopher: through 1.0.2.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "securities@openeuler.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24897",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1273",
+            "https://www.openeuler.org/zh/security/security-bulletins/detail/?id=openEuler-SA-2024-1271",
+            "https://gitee.com/src-openeuler/A-Tune-Collector/pulls/45",
+            "https://gitee.com/src-openeuler/A-Tune-Collector/pulls/47"
+        ],
+        "summary": "Improper Neutralization of Special Elements used in a Command ('Command Injection') vulnerability in openEuler A-Tune-Collector on Linux allows Command Injection. This vulnerability is associated with program files https://gitee.Com/openeuler/A-Tune-Collector/blob/master/atune_collector/plugin/monitor/process/sched.Py.\n\nThis issue affects A-Tune-Collector: from 1.1.0-3 through 1.3.0.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "vultures@jpcert.or.jp",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-29216",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://sangomakb.atlassian.net/wiki/spaces/DVC/pages/45351279/Natural+Access+Software+Download",
+            "https://jvn.jp/en/vu/JVNVU90671953/"
+        ],
+        "summary": "Exposed IOCTL with insufficient access control issue exists in cg6kwin2k.sys prior to 2.1.7.0. By sending a specific IOCTL request, a user without the administrator privilege may perform I/O to arbitrary hardware port or physical address, resulting in erasing or altering the firmware."
+    },
+    {
+        "Modified": "2024-03-25T07:15:00",
+        "Published": "2024-03-25T07:15:00",
+        "access": {},
+        "assigner": "product.security@lge.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2863",
+        "impact": {},
+        "last-modified": "2024-03-25T07:15:00",
+        "references": [
+            "https://lgsecurity.lge.com/bulletins/idproducts#updateDetails"
+        ],
+        "summary": "This vulnerability allows remote attackers to traverse paths via file upload on the affected LG LED Assistant."
+    },
+    {
+        "Modified": "2024-03-25T06:15:00",
+        "Published": "2024-03-25T06:15:00",
+        "access": {},
+        "assigner": "hirt@hitachi.co.jp",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-36407",
+        "impact": {},
+        "last-modified": "2024-03-25T06:15:00",
+        "references": [
+            "https://www.hitachi.com/products/it/storage-solutions/sec_info/2024/2022_313.html"
+        ],
+        "summary": "Insertion of Sensitive Information into Log File vulnerability in Hitachi Virtual Storage Platform, Hitachi Virtual Storage Platform VP9500, Hitachi Virtual Storage Platform G1000, G1500, Hitachi Virtual Storage Platform F1500, Hitachi Virtual Storage Platform 5100, 5500, 5100H, 5500H, Hitachi Virtual Storage Platform 5200, 5600, 5200H, 5600H, Hitachi Unified Storage VM, Hitachi Virtual Storage Platform G100, G200, G400, G600, G800, Hitachi Virtual Storage Platform F400, F600, F800, Hitachi Virtual Storage Platform G130, G150, G350, G370, G700, G900, Hitachi Virtual Storage Platform F350, F370, F700, F900, Hitachi Virtual Storage Platform E390, E590, E790, E990, E1090, E390H, E590H, E790H, E1090H allows \n\nlocal users to gain sensitive information.This issue affects Hitachi Virtual Storage Platform: before DKCMAIN Ver. 70-06-74-00/00, SVP Ver. 70-06-58/00; Hitachi Virtual Storage Platform VP9500: before DKCMAIN Ver. 70-06-74-00/00, SVP Ver. 70-06-58/00; Hitachi Virtual Storage Platform G1000, G1500: before DKCMAIN Ver. 80-06-92-00/00, SVP Ver. 80-06-87/00; Hitachi Virtual Storage Platform F1500: before DKCMAIN Ver. 80-06-92-00/00, SVP Ver. 80-06-87/00; Hitachi Virtual Storage Platform 5100, 5500,5100H, 5500H: before DKCMAIN Ver. 90-08-81-00/00, SVP Ver. 90-08-81/00, before DKCMAIN Ver. 90-08-62-00/00, SVP Ver. 90-08-62/00, before DKCMAIN Ver. 90-08-43-00/00, SVP Ver. 90-08-43/00; Hitachi Virtual Storage Platform 5200, 5600,5200H, 5600H: before DKCMAIN Ver. 90-08-81-00/00, SVP Ver. 90-08-81/00, before DKCMAIN Ver. 90-08-62-00/00, SVP Ver. 90-08-62/00, before DKCMAIN Ver. 90-08-43-00/00, SVP Ver. 90-08-43/00; Hitachi Unified Storage VM: before DKCMAIN Ver. 73-03-75-X0/00, SVP Ver. 73-03-74/00, before DKCMAIN Ver. 73(75)-03-75-X0/00, SVP Ver. 73(75)-03-74/00; Hitachi Virtual Storage Platform G100, G200, G400, G600, G800: before DKCMAIN Ver. 83-06-19-X0/00, SVP Ver. 83-06-20-X0/00, before DKCMAIN Ver. 83-05-47-X0/00, SVP Ver. 83-05-51-X0/00; Hitachi Virtual Storage Platform F400, F600, F800: before DKCMAIN Ver. 83-06-19-X0/00, SVP Ver. 83-06-20-X0/00, before DKCMAIN Ver. 83-05-47-X0/00, SVP Ver. 83-05-51-X0/00; Hitachi Virtual Storage Platform G130, G150, G350, G370, G700, G900: before DKCMAIN Ver. 88-08-09-XX/00, SVP Ver. 88-08-11-X0/02; Hitachi Virtual Storage Platform F350, F370, F700, F900: before DKCMAIN Ver. 88-08-09-XX/00, SVP Ver. 88-08-11-X0/02; Hitachi Virtual Storage Platform E390, E590, E790, E990, E1090, E390H, E590H, E790H, E1090H: before DKCMAIN Ver. 93-06-81-X0/00, SVP Ver. 93-06-81-X0/00, before DKCMAIN Ver. 93-06-62-X0/00, SVP Ver. 93-06-62-X0/00, before DKCMAIN Ver. 93-06-43-X0/00, SVP Ver. 93-06-43-X0/00.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-30480",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/educenter/wordpress-educenter-theme-1-5-1-broken-access-control?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in Sparkle WP Educenter.This issue affects Educenter: from n/a through 1.5.5.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2023-37886",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/realhomes/wordpress-realhomes-theme-4-0-2-broken-access-control-vulnerability-2?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in InspiryThemes RealHomes.This issue affects RealHomes: from n/a through 4.0.2.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1564",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/ecb1e36f-9c6e-4754-8878-03c97194644d/"
+        ],
+        "summary": "The wp-schema-pro WordPress plugin before 2.7.16 does not validate post access allowing a contributor user to access custom fields on any post regardless of post type or status via a shortcode"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "report@snyk.io",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21505",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://security.snyk.io/vuln/SNYK-JS-WEB3UTILS-6229337",
+            "https://github.com/web3/web3.js/commit/8ed041c6635d807b3da8960ad49e125e3d1b0e80"
+        ],
+        "summary": "Versions of the package web3-utils before 4.2.1 are vulnerable to Prototype Pollution via the utility functions format and mergeDeep, due to insecure recursive merge.\rAn attacker can manipulate an object's prototype, potentially leading to the alteration of the behavior of all objects inheriting from the affected prototype by passing specially crafted input to these functions."
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "vultures@jpcert.or.jp",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-29009",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://wordpress.org/plugins/easy-popup-show/",
+            "https://jvn.jp/en/jp/JVN86206017/"
+        ],
+        "summary": "Cross-site request forgery (CSRF) vulnerability in easy-popup-show all versions allows a remote unauthenticated attacker to hijack the authentication of the administrator and to perform unintended operations if the administrator views a malicious page while logged in."
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2023-33923",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/viral-news/wordpress-viral-news-theme-1-4-5-authenticated-arbitrary-plugin-activation-vulnerability?_s_id=cve",
+            "https://patchstack.com/database/vulnerability/viral/wordpress-viral-theme-1-8-0-broken-access-control-vulnerability?_s_id=cve",
+            "https://patchstack.com/database/vulnerability/hashone/wordpress-hashone-theme-1-3-0-broken-access-control-vulnerability?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in HashThemes Viral News, HashThemes Viral, HashThemes HashOne.This issue affects Viral News: from n/a through 1.4.5; Viral: from n/a through 1.8.0; HashOne: from n/a through 1.3.0.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-37885",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/realhomes/wordpress-realhomes-theme-4-0-2-broken-access-control-vulnerability?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in InspiryThemes RealHomes.This issue affects RealHomes: from n/a through 4.0.2.\n\n"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1231",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/7d3968d9-61ed-4c00-8764-0360cf03255e/"
+        ],
+        "summary": "The CM Download Manager  WordPress plugin before 2.9.0 does not have CSRF checks in some places, which could allow attackers to make logged in admins unpublish downloads via a CSRF attack"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1232",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/2a29b509-4cd5-43c8-84f4-f86251dd28f8/"
+        ],
+        "summary": "The CM Download Manager  WordPress plugin before 2.9.0 does not have CSRF checks in some places, which could allow attackers to make logged in admins delete downloads via a CSRF attack"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1962",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/469486d4-7677-4d66-83c0-a6b9ac7c503b/"
+        ],
+        "summary": "The CM Download Manager  WordPress plugin before 2.9.1 does not have CSRF checks in some places, which could allow attackers to make logged in admins edit downloads via a CSRF attack"
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2024-03-25T05:15:00",
+        "access": {},
+        "assigner": "vultures@jpcert.or.jp",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21865",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://www.au.com/support/service/internet/guide/modem/bl1500hm/firmware/",
+            "https://jvn.jp/en/vu/JVNVU93546510/"
+        ],
+        "summary": "HGW BL1500HM Ver 002.001.013 and earlier contains a use of week credentials issue. A network-adjacent unauthenticated attacker may connect to the product via SSH and use a shell."
+    },
+    {
+        "Modified": "2024-03-25T05:15:00",
+        "Published": "2023-03-10T21:15:00",
+        "access": {},
+        "assigner": "security.cna@qualcomm.com",
+        "cvss": null,
+        "cwe": "CWE-120",
+        "id": "CVE-2022-40540",
+        "impact": {},
+        "last-modified": "2024-03-25T05:15:00",
+        "references": [
+            "https://www.qualcomm.com/company/product-security/bulletins/march-2023-bulletin",
+            "https://security.netapp.com/advisory/ntap-20230616-0001/",
+            "https://bugzilla.suse.com/show_bug.cgi?id=1209597"
+        ],
+        "summary": "Memory corruption due to buffer copy without checking the size of input while loading firmware in Linux Kernel."
+    },
+    {
         "Modified": "2024-03-25T04:15:00",
         "Published": "2024-03-25T04:15:00",
         "access": {},
@@ -984,991 +1711,5 @@
             "https://bugzilla.suse.com/show_bug.cgi?id=1211597"
         ],
         "summary": "The Linux kernel 6.3 has a use-after-free in iopt_unmap_iova_range in drivers/iommu/iommufd/io_pagetable.c."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-04-24T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2023-31083",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230929-0003/",
-            "https://lore.kernel.org/all/CA+UBctC3p49aTgzbVgkSZ2+TQcqq4fPDO7yZitFT5uBPDeCO2g%40mail.gmail.com/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9c33663af9ad115f90c076a1828129a3fbadea98",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1210780"
-        ],
-        "summary": "An issue was discovered in drivers/bluetooth/hci_ldisc.c in the Linux kernel 6.2. In hci_uart_tty_ioctl, there is a race condition between HCIUARTSETPROTO and HCIUARTGETPROTO. HCI_UART_PROTO_SET is set before hu->proto is set. A NULL pointer dereference may occur."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-04-24T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-31084",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.debian.org/security/2023/dsa-5448",
-            "https://lists.debian.org/debian-lts-announce/2023/07/msg00030.html",
-            "https://www.debian.org/security/2023/dsa-5480",
-            "https://security.netapp.com/advisory/ntap-20230929-0003/",
-            "https://lists.debian.org/debian-lts-announce/2023/10/msg00027.html",
-            "https://lore.kernel.org/all/CA+UBctCu7fXn4q41O_3=id1+OdyQ85tZY1x+TkT-6OVBL6KAUw%40mail.gmail.com/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/AOATNX5UFL7V7W2QDIQKOHFFHYKWFP4W/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/6HIEOLEOURP4BJZMIL7UGGPYRRB44UDN/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=b8c75e4a1b325ea0a9433fa8834be97b5836b946"
-        ],
-        "summary": "An issue was discovered in drivers/media/dvb-core/dvb_frontend.c in the Linux kernel 6.2. There is a blocking operation when a task is in !TASK_RUNNING. In dvb_frontend_get_event, wait_event_interruptible is called; the condition is dvb_frontend_test_event(fepriv,events). In dvb_frontend_test_event, down(&fepriv->sem) is called. However, wait_event_interruptible would put the process to sleep, and down(&fepriv->sem) may block the process."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-04-24T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2023-31081",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230929-0003/",
-            "https://lore.kernel.org/all/CA+UBctDXyiosaiR7YNKCs8k0aWu4gU+YutRcnC+TDJkXpHjQag%40mail.gmail.com/",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1210782"
-        ],
-        "summary": "An issue was discovered in drivers/media/test-drivers/vidtv/vidtv_bridge.c in the Linux kernel 6.2. There is a NULL pointer dereference in vidtv_mux_stop_thread. In vidtv_stop_streaming, after dvb->mux=NULL occurs, it executes vidtv_mux_stop_thread(dvb->mux)."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-04-24T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-763",
-        "id": "CVE-2023-31082",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230929-0003/",
-            "https://lore.kernel.org/all/CA+UBctCZok5FSQ=LPRA+A-jocW=L8FuMVZ_7MNqhh483P5yN8A%40mail.gmail.com/",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1210781"
-        ],
-        "summary": "An issue was discovered in drivers/tty/n_gsm.c in the Linux kernel 6.2. There is a sleeping function called from an invalid context in gsmld_write, which will block the kernel."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-04-24T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-369",
-        "id": "CVE-2023-31085",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230929-0003/",
-            "https://lore.kernel.org/all/687864524.118195.1681799447034.JavaMail.zimbra%40nod.at/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=017c73a34a661a861712f7cc1393a123e5b2208c"
-        ],
-        "summary": "An issue was discovered in drivers/mtd/ubi/cdev.c in the Linux kernel 6.2. There is a divide-by-zero error in do_div(sz,mtd->erasesize), used indirectly by ctrl_cdev_ioctl, when mtd->erasesize is 0."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-02-26T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-26605",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lkml.org/lkml/2023/2/22/3",
-            "https://security.netapp.com/advisory/ntap-20230316-0010/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=4e3c51f4e805291b057d12f5dda5aeb50a538dc4"
-        ],
-        "summary": "In the Linux kernel 6.0.8, there is a use-after-free in inode_cgwb_move_to_attached in fs/fs-writeback.c, related to __list_del_entry_valid."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-02-26T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-26606",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lkml.org/lkml/2023/2/20/860",
-            "https://security.netapp.com/advisory/ntap-20230316-0010/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=557d19675a470bb0a98beccec38c5dc3735c20fa"
-        ],
-        "summary": "In the Linux kernel 6.0.8, there is a use-after-free in ntfs_trim_fs in fs/ntfs3/bitmap.c."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-02-26T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2023-26607",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lkml.org/lkml/2023/2/21/1353",
-            "https://security.netapp.com/advisory/ntap-20230316-0010/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=36a4d82dddbbd421d2b8e79e1cab68c8126d5075",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1208703"
-        ],
-        "summary": "In the Linux kernel 6.0.8, there is an out-of-bounds read in ntfs_attr_find in fs/ntfs/attrib.c."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-02-25T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-26544",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lkml.org/lkml/2023/2/20/128",
-            "https://security.netapp.com/advisory/ntap-20230316-0010/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=887bfc546097fbe8071dac13b2fef73b77920899",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1208697"
-        ],
-        "summary": "In the Linux kernel 6.0.8, there is a use-after-free in run_unpack in fs/ntfs3/run.c, related to a difference between NTFS sector size and media sector size."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-02-21T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-190",
-        "id": "CVE-2023-26242",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230406-0002/",
-            "https://patchwork.kernel.org/project/linux-fpga/patch/20230206054326.89323-1-k1rh4.lee%40gmail.com",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1208518"
-        ],
-        "summary": "afu_mmio_region_get_by_offset in drivers/fpga/dfl-afu-region.c in the Linux kernel through 6.1.12 has an integer overflow."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-02-02T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-25012",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://seclists.org/oss-sec/2023/q1/53",
-            "http://www.openwall.com/lists/oss-security/2023/02/02/1",
-            "https://lists.debian.org/debian-lts-announce/2023/05/msg00005.html",
-            "http://www.openwall.com/lists/oss-security/2023/11/05/1",
-            "https://lore.kernel.org/all/20230125-hid-unregister-leds-v1-1-9a5192dcef16%40diag.uniroma1.it/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=76ca8da989c7d97a7f76c75d475fe95a584439d7",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=27d2a2fd844ec7da70d19fabb482304fd1e0595b",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9fefb6201c4f8dd9f58c581b2a66e5cde2895ea2",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1207560"
-        ],
-        "summary": "The Linux kernel through 6.1.9 has a Use-After-Free in bigben_remove in drivers/hid/hid-bigbenff.c via a crafted USB device because the LED controllers remain registered for too long."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2023-01-13T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-190",
-        "id": "CVE-2023-23559",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230302-0003/",
-            "https://lists.debian.org/debian-lts-announce/2023/05/msg00005.html",
-            "https://lists.debian.org/debian-lts-announce/2023/05/msg00006.html",
-            "https://patchwork.kernel.org/project/linux-wireless/patch/20230110173007.57110-1-szymon.heidrich%40gmail.com/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=b870e73a56c4cccbec33224233eaf295839f228c"
-        ],
-        "summary": "In rndis_query_oid in drivers/net/wireless/rndis_wlan.c in the Linux kernel through 6.1.5, there is an integer overflow in an addition."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-09-30T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-41849",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lists.debian.org/debian-lts-announce/2022/12/msg00031.html",
-            "https://lists.debian.org/debian-lts-announce/2022/12/msg00034.html",
-            "https://lore.kernel.org/all/20220925133243.GA383897%40ubuntu/T/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=5610bcfe8693c02e2e4c8b31427f1bdbdecc839c"
-        ],
-        "summary": "drivers/video/fbdev/smscufx.c in the Linux kernel through 5.19.12 has a race condition and resultant use-after-free if a physically proximate attacker removes a USB device while calling open(), aka a race condition between ufx_ops_open and ufx_usb_disconnect."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-09-30T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-41850",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lists.debian.org/debian-lts-announce/2022/12/msg00031.html",
-            "https://lists.debian.org/debian-lts-announce/2022/12/msg00034.html",
-            "https://lore.kernel.org/all/20220904193115.GA28134%40ubuntu/t/#u",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=cacdb14b1c8d3804a3a7d31773bc7569837b71a4"
-        ],
-        "summary": "roccat_report_event in drivers/hid/hid-roccat.c in the Linux kernel through 5.19.12 has a race condition and resultant use-after-free in certain situations where a report is received while copying a report->value is in progress."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-11-27T02:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-45919",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230113-0008/",
-            "https://lore.kernel.org/linux-media/20221121063308.GA33821%40ubuntu/T/#u",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=280a8ab81733da8bc442253c700a52c4c0886ffd"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.10. In drivers/media/dvb-core/dvb_ca_en50221.c, a use-after-free can occur is there is a disconnect after an open, because of the lack of a wait_event."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-11-25T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-45884",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230113-0006/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-1-imv4bel%40gmail.com/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-4-imv4bel%40gmail.com/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=627bb528b086b4136315c25d6a447a98ea9448d3"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.9. drivers/media/dvb-core/dvbdev.c has a use-after-free, related to dvb_register_device dynamically allocating fops."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-11-25T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-45885",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230113-0006/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-1-imv4bel%40gmail.com/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-2-imv4bel%40gmail.com/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=6769a0b7ee0c3b31e1b22c3fadff2bfb642de23f"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.9. drivers/media/dvb-core/dvb_frontend.c has a race condition that can cause a use-after-free when a device is disconnected."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-11-25T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-45886",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230113-0006/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-1-imv4bel%40gmail.com/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-3-imv4bel%40gmail.com/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=4172385b0c9ac366dcab78eda48c26814b87ed1a"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.9. drivers/media/dvb-core/dvb_net.c has a .disconnect versus dvb_device_open race condition that leads to a use-after-free."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-11-25T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-772",
-        "id": "CVE-2022-45887",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230113-0006/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-1-imv4bel%40gmail.com/",
-            "https://lore.kernel.org/linux-media/20221115131822.6640-5-imv4bel%40gmail.com/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=517a281338322ff8293f988771c98aaa7205e457"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.9. drivers/media/usb/ttusb-dec/ttusb_dec.c has a memory leak because of the lack of a dvb_frontend_detach call."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-11-25T04:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-45888",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20230113-0006/",
-            "https://lore.kernel.org/all/20221022175404.GA375335%40ubuntu/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=282a4b71816b6076029017a7bab3a9dcee12a920"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.9. drivers/char/xillybus/xillyusb.c has a race condition and use-after-free during physical removal of a USB device."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-10-30T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-362",
-        "id": "CVE-2022-44032",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lore.kernel.org/lkml/20220919040701.GA302806%40ubuntu/",
-            "https://lore.kernel.org/lkml/20220915020834.GA110086%40ubuntu/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b12f050c76f090cc6d0aebe0ef76fed79ec3f15"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.6. drivers/char/pcmcia/cm4000_cs.c has a race condition and resultant use-after-free if a physically proximate attacker removes a PCMCIA device while calling open(), aka a race condition between cmm_open() and cm4000_detach()."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-10-30T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-362",
-        "id": "CVE-2022-44033",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lore.kernel.org/lkml/20220915020834.GA110086%40ubuntu/",
-            "https://lore.kernel.org/lkml/20220919040457.GA302681%40ubuntu/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b12f050c76f090cc6d0aebe0ef76fed79ec3f15"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.6. drivers/char/pcmcia/cm4040_cs.c has a race condition and resultant use-after-free if a physically proximate attacker removes a PCMCIA device while calling open(), aka a race condition between cm4040_open() and reader_detach()."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-10-30T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-362",
-        "id": "CVE-2022-44034",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://lore.kernel.org/lkml/20220919101825.GA313940%40ubuntu/",
-            "https://lore.kernel.org/lkml/20220916050333.GA188358%40ubuntu/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9b12f050c76f090cc6d0aebe0ef76fed79ec3f15"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 6.0.6. drivers/char/pcmcia/scr24x_cs.c has a race condition and resultant use-after-free if a physically proximate attacker removes a PCMCIA device while calling open(), aka a race condition between scr24x_open() and scr24x_remove()."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-09-21T07:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2022-41218",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/media/dvb-core/dmxdev.c",
-            "http://www.openwall.com/lists/oss-security/2022/09/23/4",
-            "http://www.openwall.com/lists/oss-security/2022/09/24/1",
-            "http://www.openwall.com/lists/oss-security/2022/09/24/2",
-            "https://www.debian.org/security/2023/dsa-5324",
-            "https://lists.debian.org/debian-lts-announce/2023/03/msg00000.html",
-            "https://lists.debian.org/debian-lts-announce/2023/05/msg00006.html",
-            "https://lore.kernel.org/all/20220908132754.30532-1-tiwai%40suse.de/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=fd3d91ab1c6ab0628fe642dd570b56302c30a792"
-        ],
-        "summary": "In drivers/media/dvb-core/dmxdev.c in the Linux kernel through 5.19.10, there is a use-after-free caused by refcount races, affecting dvb_demux_open and dvb_dmxdev_release."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-09-18T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-908",
-        "id": "CVE-2022-40768",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/scsi/stex.c",
-            "https://www.openwall.com/lists/oss-security/2022/09/09/1",
-            "http://www.openwall.com/lists/oss-security/2022/09/19/1",
-            "https://lists.debian.org/debian-lts-announce/2022/12/msg00034.html",
-            "https://lore.kernel.org/all/20220908145154.2284098-1-gregkh%40linuxfoundation.org/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/GGHENNMLCWIQV2LLA56BJNFIUZ7WB4IY/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/VNN3VFQPECS6D4PS6ZWD7AFXTOSJDSSR/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/S2KTU5LFZNQS7YNGE56MT46VHMXL3DD2/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=6022f210461fef67e6e676fd8544ca02d1bcfa7a"
-        ],
-        "summary": "drivers/scsi/stex.c in the Linux kernel through 5.19.9 allows local users to obtain sensitive information from kernel memory because stex_queuecommand_lck lacks a memset for the PASSTHRU_CMD case."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-07-27T20:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2022-36946",
-        "impact": {},
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://marc.info/?l=netfilter-devel&m=165883202007292&w=2",
-            "https://www.debian.org/security/2022/dsa-5207",
-            "https://security.netapp.com/advisory/ntap-20220901-0007/",
-            "https://lists.debian.org/debian-lts-announce/2022/09/msg00011.html",
-            "https://lists.debian.org/debian-lts-announce/2022/10/msg00000.html",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=99a63d36cb3ed5ca3aa6fcb64cffbeaf3b0fb164"
-        ],
-        "summary": "nfqnl_mangle in net/netfilter/nfnetlink_queue.c in the Linux kernel through 5.18.14 allows remote attackers to cause a denial of service (panic) because, in the case of an nf_queue verdict with a one-byte nfta_payload attribute, an skb_pull can encounter a negative skb->len."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2022-01-14T08:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 7.2,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:C/I:C/A:C",
-        "cwe": "CWE-476",
-        "id": "CVE-2022-23222",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "COMPLETE",
-            "integrity": "COMPLETE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.openwall.com/lists/oss-security/2022/01/13/1",
-            "http://www.openwall.com/lists/oss-security/2022/01/14/1",
-            "http://www.openwall.com/lists/oss-security/2022/01/18/2",
-            "https://www.debian.org/security/2022/dsa-5050",
-            "https://security.netapp.com/advisory/ntap-20220217-0002/",
-            "http://www.openwall.com/lists/oss-security/2022/06/01/1",
-            "http://www.openwall.com/lists/oss-security/2022/06/04/3",
-            "http://www.openwall.com/lists/oss-security/2022/06/07/3",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/FCR3LIRUEXR7CA63W5M2HT3K63MZGKBR/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/Z5VTIZZUPC73IEJNZX66BY2YCBRZAELB/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=64620e0a1e712a778095bd35cbb277dc2259281f",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1194765"
-        ],
-        "summary": "kernel/bpf/verifier.c in the Linux kernel through 5.15.14 allows local users to gain privileges because of the availability of pointer arithmetic via certain *_OR_NULL pointer types."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-12-22T17:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.4,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
-        "cwe": "CWE-362",
-        "id": "CVE-2021-44733",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/tee/tee_shm.c",
-            "https://github.com/pjlantz/optee-qemu/blob/main/README.md",
-            "https://security.netapp.com/advisory/ntap-20220114-0003/",
-            "https://www.debian.org/security/2022/dsa-5096",
-            "https://lists.debian.org/debian-lts-announce/2022/03/msg00012.html",
-            "https://lore.kernel.org/lkml/20211215092501.1861229-1-jens.wiklander%40linaro.org/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dfd0743f1d9ea76931510ed150334d571fbab49d"
-        ],
-        "summary": "A use-after-free exists in drivers/tee/tee_shm.c in the TEE subsystem in the Linux kernel through 5.15.11. This occurs because of a race condition in tee_shm_get_from_id during an attempt to free a shared memory object."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-11-17T17:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 2.1,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2021-43976",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://security.netapp.com/advisory/ntap-20211210-0001/",
-            "https://www.debian.org/security/2022/dsa-5096",
-            "https://lists.debian.org/debian-lts-announce/2022/03/msg00012.html",
-            "https://lists.debian.org/debian-lts-announce/2022/03/msg00011.html",
-            "https://www.debian.org/security/2022/dsa-5092",
-            "https://www.oracle.com/security-alerts/cpujul2022.html",
-            "https://patchwork.kernel.org/project/linux-wireless/patch/YX4CqjfRcTa6bVL+%40Zekuns-MBP-16.fios-router.home/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/X24M7KDC4OJOZNS3RDSYC7ELNELOLQ2N/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/YODMYMGZYDXQKGJGX7TJG4XV4L5YLLBD/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=04d80663f67ccef893061b49ec8a42ff7045ae84"
-        ],
-        "summary": "In the Linux kernel through 5.15.2, mwifiex_usb_recv in drivers/net/wireless/marvell/mwifiex/usb.c allows an attacker (who can connect a crafted USB device) to cause a denial of service (skb_over_panic)."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-10-21T17:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.6,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
-        "cwe": "CWE-787",
-        "id": "CVE-2021-42327",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c",
-            "https://security.netapp.com/advisory/ntap-20211118-0005/",
-            "https://www.mail-archive.com/amd-gfx%40lists.freedesktop.org/msg69080.html",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RDDEW4APTYKJK365HC2JZIVXYUV7ZRN7/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=f23750b5b3d98653b31d4469592935ef6364ad67"
-        ],
-        "summary": "dp_link_settings_write in drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c in the Linux kernel through 5.14.14 allows a heap-based buffer overflow by an attacker who can write a string to the AMD GPU display drivers debug filesystem. There are no checks on size within parse_write_buffer_into_params when it uses the size of copy_from_user to copy a userspace buffer into a 40-byte heap buffer."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-07-21T15:16:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.4,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
-        "cwe": "CWE-416",
-        "id": "CVE-2021-37159",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.spinics.net/lists/linux-usb/msg202228.html",
-            "https://security.netapp.com/advisory/ntap-20210819-0003/",
-            "https://lists.debian.org/debian-lts-announce/2021/10/msg00010.html",
-            "https://lists.debian.org/debian-lts-announce/2021/12/msg00012.html",
-            "https://www.oracle.com/security-alerts/cpujul2022.html",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=a6ecfb39ba9d7316057cea823b196b734f6b18ca",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=dcb713d53e2eadf42b878c12a471e74dc6ed3145",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1188601"
-        ],
-        "summary": "hso_free_net_device in drivers/net/usb/hso.c in the Linux kernel through 5.13.4 calls unregister_netdev without checking for the NETREG_REGISTERED state, leading to a use-after-free and a double free."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-06-14T22:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 2.1,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:N/A:N",
-        "cwe": "CWE-909",
-        "id": "CVE-2021-34693",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "PARTIAL",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "http://www.openwall.com/lists/oss-security/2021/06/15/1",
-            "https://lists.debian.org/debian-lts-announce/2021/07/msg00016.html",
-            "https://lists.debian.org/debian-lts-announce/2021/07/msg00015.html",
-            "https://lists.debian.org/debian-lts-announce/2021/07/msg00014.html",
-            "https://www.debian.org/security/2021/dsa-4941",
-            "https://lore.kernel.org/netdev/trinity-87eaea25-2a7d-4aa9-92a5-269b822e5d95-1623609211076%403c-app-gmx-bs04/T/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=5e87ddbe3942e27e939bdc02deb8579b0cbd8ecc"
-        ],
-        "summary": "net/can/bcm.c in the Linux kernel through 5.12.10 allows local users to obtain sensitive information from kernel stack memory because parts of a data structure are uninitialized."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-05-27T13:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 7.2,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:C/I:C/A:C",
-        "cwe": "CWE-787",
-        "id": "CVE-2021-33200",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "COMPLETE",
-            "integrity": "COMPLETE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.openwall.com/lists/oss-security/2021/05/27/1",
-            "https://security.netapp.com/advisory/ntap-20210706-0004/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/JJCABL43FT3FKRX5DBPZG25FNKR6CEK4/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/7LR3OKKPHIBGOMHN476CMLW2T7UG53QX/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=3d0220f6861d713213b015b582e9f21e5b28d2e0",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=bb01a1bba579b4b1c5566af24d95f1767859771e",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=a7036191277f9fa68d92f2071ddc38c09b1e5ee5"
-        ],
-        "summary": "kernel/bpf/verifier.c in the Linux kernel through 5.12.7 enforces incorrect limits for pointer arithmetic operations, aka CID-bb01a1bba579. This can be abused to perform out-of-bounds reads and writes in kernel memory, leading to local privilege escalation to root. In particular, there is a corner case where the off reg causes a masking direction change, which then results in an incorrect final aux->alu_limit."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-05-11T23:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 7.2,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:C/I:C/A:C",
-        "cwe": "CWE-416",
-        "id": "CVE-2021-32606",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "COMPLETE",
-            "integrity": "COMPLETE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.openwall.com/lists/oss-security/2021/05/11/16",
-            "http://www.openwall.com/lists/oss-security/2021/05/12/1",
-            "http://www.openwall.com/lists/oss-security/2021/05/13/2",
-            "http://www.openwall.com/lists/oss-security/2021/05/14/1",
-            "http://www.openwall.com/lists/oss-security/2021/05/28/1",
-            "https://security.netapp.com/advisory/ntap-20210625-0001/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/HD3NJBG25AADVGPRC63RX2JOQBMPSWK4/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/GI7Z7UBWBGD3ABNIL2DC7RQDCGA4UVQW/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/73D53S4IZFPFQMRABMXXLW4AJK3EULDX/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=2b17c400aeb44daf041627722581ade527bb3c1d"
-        ],
-        "summary": "In the Linux kernel 5.11 through 5.12.2, isotp_setsockopt in net/can/isotp.c allows privilege escalation to root by leveraging a use-after-free. (This does not affect earlier versions that lack CAN ISOTP SF_BROADCAST support.)"
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-04-20T16:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 2.1,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:N/A:N",
-        "cwe": "CWE-125",
-        "id": "CVE-2021-29155",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "PARTIAL",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.kernel.org",
-            "https://www.openwall.com/lists/oss-security/2021/04/18/4",
-            "https://lists.debian.org/debian-lts-announce/2021/06/msg00019.html",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/PAEQ3H6HKNO6KUCGRZVYSFSAGEUX23JL/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/CUX2CA63453G34C6KYVBLJXJXEARZI2X/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/XZASHZVCOFJ4VU2I3BN5W5EPHWJQ7QWX/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=9601148392520e2e134936e76788fc2a6371e7be",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=6f55b2f2a1178856c19bbce2f71449926e731914",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=24c109bb1537c12c02aeed2d51a347b4d6a9b76e",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=b658bbb844e28f1862867f37e8ca11a8e2aa94a3",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=a6aaece00a57fa6f22575364b3903dfbccf5345d",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=073815b756c51ba9d8384d924c5d1c03ca3d1ae4",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=f528819334881fd622fdadeddb3f7edaed8b7c9b",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=7fedb63a8307dda0ec3b8969a3b233a1dd7ea8e0"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 5.11.x. kernel/bpf/verifier.c performs undesirable out-of-bounds speculation on pointer arithmetic, leading to side-channel attacks that defeat Spectre mitigations and obtain sensitive information from kernel memory. Specifically, for sequences of pointer arithmetic operations, the pointer modification performed by the first operation is not correctly accounted for when restricting subsequent operations."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-04-08T21:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 7.2,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:C/I:C/A:C",
-        "cwe": "CWE-77",
-        "id": "CVE-2021-29154",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "COMPLETE",
-            "integrity": "COMPLETE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "https://www.openwall.com/lists/oss-security/2021/04/08/1",
-            "https://news.ycombinator.com/item?id=26757760",
-            "http://packetstormsecurity.com/files/162434/Kernel-Live-Patch-Security-Notice-LSN-0076-1.html",
-            "https://security.netapp.com/advisory/ntap-20210604-0006/",
-            "https://lists.debian.org/debian-lts-announce/2021/06/msg00019.html",
-            "https://lists.debian.org/debian-lts-announce/2021/06/msg00020.html",
-            "https://www.oracle.com/security-alerts/cpujul2022.html",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/W5YFGIIF24475A2LNW3UWHW2SNCS3G7M/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=e4d4d456436bfb2fe412ee2cd489f7658449b098",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=26f55a59dc65ff77cd1c4b37991e26497fc68049"
-        ],
-        "summary": "BPF JIT compilers in the Linux kernel through 5.11.12 have incorrect computation of branch displacements, allowing them to execute arbitrary code within the kernel context. This affects arch/x86/net/bpf_jit_comp.c and arch/x86/net/bpf_jit_comp32.c."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-03-05T18:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.9,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:N/I:N/A:C",
-        "cwe": "CWE-770",
-        "id": "CVE-2021-28038",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "http://xenbits.xen.org/xsa/advisory-367.html",
-            "http://www.openwall.com/lists/oss-security/2021/03/05/1",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00010.html",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00035.html",
-            "https://security.netapp.com/advisory/ntap-20210409-0001/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=2991397d23ec597405b116d96de3813420bdcbc3"
-        ],
-        "summary": "An issue was discovered in the Linux kernel through 5.11.3, as used with Xen PV. A certain part of the netback driver lacks necessary treatment of errors such as failed memory allocations (as a result of changes to the handling of grant mapping errors). A host OS denial of service may occur during misbehavior of a networking frontend driver. NOTE: this issue exists because of an incomplete fix for CVE-2021-26931."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-03-05T18:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 2.1,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
-        "cwe": "CWE-131",
-        "id": "CVE-2021-28039",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "http://xenbits.xen.org/xsa/advisory-369.html",
-            "http://www.openwall.com/lists/oss-security/2021/03/05/2",
-            "https://security.netapp.com/advisory/ntap-20210409-0001/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=882213990d32fd224340a4533f6318dd152be4b2"
-        ],
-        "summary": "An issue was discovered in the Linux kernel 5.9.x through 5.11.3, as used with Xen. In some less-common configurations, an x86 PV guest OS user can crash a Dom0 or driver domain via a large amount of I/O activity. The issue relates to misuse of guest physical addresses when a configuration has CONFIG_XEN_UNPOPULATED_ALLOC but not CONFIG_XEN_BALLOON_MEMORY_HOTPLUG."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-02-17T01:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.6,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:P/A:P",
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2021-26930",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "http://xenbits.xen.org/xsa/advisory-365.html",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00010.html",
-            "https://security.netapp.com/advisory/ntap-20210326-0001/",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00035.html",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/2XQR52ICKRK3GC4HDWLMWF2U55YGAR63/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/GWQWPWYZRXVFJI5M3VCM72X27IB7CKOB/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=871997bc9e423f05c7da7c9178e62dde5df2a7f8"
-        ],
-        "summary": "An issue was discovered in the Linux kernel 3.11 through 5.10.16, as used by Xen. To service requests to the PV backend, the driver maps grant references provided by the frontend. In this process, errors may be encountered. In one case, an error encountered earlier might be discarded by later processing, resulting in the caller assuming successful mapping, and hence subsequent operations trying to access space that wasn't mapped. In another case, internal state would be insufficiently updated, preventing safe recovery from the error. This affects drivers/block/xen-blkback/blkback.c."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-02-17T02:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 1.9,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:M/Au:N/C:N/I:N/A:P",
-        "cwe": "CWE-770",
-        "id": "CVE-2021-26931",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "http://xenbits.xen.org/xsa/advisory-362.html",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00010.html",
-            "https://security.netapp.com/advisory/ntap-20210326-0001/",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00035.html",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/2XQR52ICKRK3GC4HDWLMWF2U55YGAR63/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/GWQWPWYZRXVFJI5M3VCM72X27IB7CKOB/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=7c77474b2d22176d2bfb592ec74e0f2cb71352c9",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=5a264285ed1cd32e26d9de4f3c8c6855e467fd63",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=3194a1746e8aabe86075fd3c5e7cf1f4632d7f16"
-        ],
-        "summary": "An issue was discovered in the Linux kernel 2.6.39 through 5.10.16, as used in Xen. Block, net, and SCSI backends consider certain errors a plain bug, deliberately causing a kernel crash. For errors potentially being at least under the influence of guests (such as out of memory conditions), it isn't correct to assume a plain bug. Memory allocations potentially causing such crashes occur only when Linux is running in PV mode, though. This affects drivers/block/xen-blkback/blkback.c and drivers/xen/xen-scsiback.c."
-    },
-    {
-        "Modified": "2024-03-25T01:15:00",
-        "Published": "2021-02-17T02:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 1.9,
-        "cvss-time": "2024-03-25T01:15:00",
-        "cvss-vector": "AV:L/AC:M/Au:N/C:N/I:N/A:P",
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2021-26932",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "NONE",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-03-25T01:15:00",
-        "references": [
-            "http://xenbits.xen.org/xsa/advisory-361.html",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00010.html",
-            "https://security.netapp.com/advisory/ntap-20210326-0001/",
-            "https://lists.debian.org/debian-lts-announce/2021/03/msg00035.html",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/2XQR52ICKRK3GC4HDWLMWF2U55YGAR63/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/GWQWPWYZRXVFJI5M3VCM72X27IB7CKOB/",
-            "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=ebee0eab08594b2bd5db716288a4f1ae5936e9bc"
-        ],
-        "summary": "An issue was discovered in the Linux kernel 3.2 through 5.10.16, as used by Xen. Grant mapping operations often occur in batch hypercalls, where a number of operations are done in a single hypercall, the success or failure of each one is reported to the backend driver, and the backend driver then loops over the results, performing follow-up actions based on the success or failure of each operation. Unfortunately, when running in PV mode, the Linux backend drivers mishandle this: Some errors are ignored, effectively implying their success from the success of related batch elements. In other cases, errors resulting from one batch element lead to further batch elements not being inspected, and hence successful ones to not be possible to properly unmap upon error recovery. Only systems with Linux backends running in PV mode are vulnerable. Linux backends run in HVM / PVH modes are not vulnerable. This affects arch/*/xen/p2m.c and drivers/xen/gntdev.c."
-    },
-    {
-        "Modified": "2024-03-24T23:15:00",
-        "Published": "2024-03-19T16:15:00",
-        "access": {},
-        "assigner": "cna@python.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-6597",
-        "impact": {},
-        "last-modified": "2024-03-24T23:15:00",
-        "references": [
-            "https://github.com/python/cpython/commit/81c16cd94ec38d61aa478b9a452436dc3b1b524d",
-            "https://github.com/python/cpython/commit/6ceb8aeda504b079fef7a57b8d81472f15cdd9a5",
-            "https://github.com/python/cpython/commit/5585334d772b253a01a6730e8202ffb1607c3d25",
-            "https://github.com/python/cpython/commit/8eaeefe49d179ca4908d052745e3bb8b6f238f82",
-            "https://github.com/python/cpython/commit/d54e22a669ae6e987199bb5d2c69bb5a46b0083b",
-            "https://github.com/python/cpython/commit/02a9259c717738dfe6b463c44d7e17f2b6d2cb3a",
-            "https://github.com/python/cpython/issues/91133",
-            "https://mail.python.org/archives/list/security-announce@python.org/thread/Q5C6ATFC67K53XFV4KE45325S7NS62LD/",
-            "https://lists.debian.org/debian-lts-announce/2024/03/msg00025.html"
-        ],
-        "summary": "An issue was found in the CPython `tempfile.TemporaryDirectory` class affecting versions 3.12.2, 3.11.8, 3.10.13, 3.9.18, and 3.8.18 and prior.\n\nThe tempfile.TemporaryDirectory class would dereference symlinks during cleanup of permissions-related errors. This means users which can run privileged programs are potentially able to modify permissions of files referenced by symlinks in some circumstances.\n"
     }
 ]
