@@ -1,5 +1,71 @@
 [
     {
+        "Modified": "2024-03-29T11:15:00",
+        "Published": "2024-03-29T11:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2848",
+        "impact": {},
+        "last-modified": "2024-03-29T11:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/dbe0cc57-a17d-4f91-887f-fe819b32f6b3?source=cve",
+            "https://themes.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=222494%40responsive&new=222494%40responsive&sfp_email=&sfph_mail="
+        ],
+        "summary": "The Responsive theme for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the save_footer_text_callback function in all versions up to, and including, 5.0.2. This makes it possible for unauthenticated attackers to inject arbitrary HTML content into the site's footer."
+    },
+    {
+        "Modified": "2024-03-29T10:15:00",
+        "Published": "2024-03-29T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52629",
+        "impact": {},
+        "last-modified": "2024-03-29T10:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/610dbd8ac271aa36080aac50b928d700ee3fe4de",
+            "https://git.kernel.org/stable/c/246f80a0b17f8f582b2c0996db02998239057c65"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsh: push-switch: Reorder cleanup operations to avoid use-after-free bug\n\nThe original code puts flush_work() before timer_shutdown_sync()\nin switch_drv_remove(). Although we use flush_work() to stop\nthe worker, it could be rescheduled in switch_timer(). As a result,\na use-after-free bug can occur. The details are shown below:\n\n      (cpu 0)                    |      (cpu 1)\nswitch_drv_remove()              |\n flush_work()                    |\n  ...                            |  switch_timer // timer\n                                 |   schedule_work(&psw->work)\n timer_shutdown_sync()           |\n ...                             |  switch_work_handler // worker\n kfree(psw) // free              |\n                                 |   psw->state = 0 // use\n\nThis patch puts timer_shutdown_sync() before flush_work() to\nmitigate the bugs. As a result, the worker and timer will be\nstopped safely before the deallocate operations."
+    },
+    {
+        "Modified": "2024-03-29T10:15:00",
+        "Published": "2024-03-29T10:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3061",
+        "impact": {},
+        "last-modified": "2024-03-29T10:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/6a0a0395-c193-4686-ba97-73fdd40d3048?source=cve",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3051027%40woocommerce-products-filter&new=3051027%40woocommerce-products-filter&sfp_email=&sfph_mail=#file10"
+        ],
+        "summary": "The HUSKY \u2013 Products Filter Professional for WooCommerce plugin for WordPress is vulnerable to Local File Inclusion in all versions up to, and including, 1.3.5.2 via the 'type' parameter. This makes it possible for authenticated attackers, with administrator-level access and above, to include and execute arbitrary files on the server, allowing the execution of any PHP code in those files. This can be used to bypass access controls, obtain sensitive data, or achieve code execution in cases where images and other \u201csafe\u201d file types can be uploaded and included."
+    },
+    {
+        "Modified": "2024-03-29T10:15:00",
+        "Published": "2023-05-15T10:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-20",
+        "id": "CVE-2022-47937",
+        "impact": {},
+        "last-modified": "2024-03-29T10:15:00",
+        "references": [
+            "https://github.com/apache/sling-org-apache-sling-commons-johnzon",
+            "https://lists.apache.org/thread/sws7z50x47gv0c38q4kx6ktqrvrrg1pm",
+            "https://issues.apache.org/jira/browse/SLING-6536",
+            "https://www.openwall.com/lists/oss-security/2023/05/15/2"
+        ],
+        "summary": "Improper input validation in the Apache Sling Commons JSON bundle allows an attacker to trigger unexpected errors by supplying specially-crafted input.\n\nThe org.apache.sling.commons.json bundle has been deprecated as of March\n 2017 and should not be used anymore. Consumers are encouraged to \nconsider the Apache Sling Commons Johnzon OSGi bundle provided by the \nApache Sling project, but may of course use other JSON libraries.\n\n"
+    },
+    {
         "Modified": "2024-03-29T09:15:00",
         "Published": "2024-03-29T09:15:00",
         "access": {},
@@ -1613,68 +1679,5 @@
             "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1202/saveParentControlInfo_deviceId.md"
         ],
         "summary": "Tenda FH1202 v1.2.0.14(408) has a stack overflow vulnerability in the deviceId parameter of the saveParentControlInfo function."
-    },
-    {
-        "Modified": "2024-03-28T16:07:00",
-        "Published": "2024-03-28T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30587",
-        "impact": {},
-        "last-modified": "2024-03-28T16:07:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1202/saveParentControlInfo_urls.md"
-        ],
-        "summary": "Tenda FH1202 v1.2.0.14(408) has a stack overflow vulnerability in the urls parameter of the saveParentControlInfo function."
-    },
-    {
-        "Modified": "2024-03-28T16:07:00",
-        "Published": "2024-03-28T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30592",
-        "impact": {},
-        "last-modified": "2024-03-28T16:07:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1202/fromAddressNat_page.md"
-        ],
-        "summary": "Tenda FH1202 v1.2.0.14(408) has a stack overflow vulnerability in the page parameter of the fromAddressNat function."
-    },
-    {
-        "Modified": "2024-03-28T16:07:00",
-        "Published": "2024-03-28T14:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29200",
-        "impact": {},
-        "last-modified": "2024-03-28T16:07:00",
-        "references": [
-            "https://github.com/kimai/kimai/security/advisories/GHSA-cj3c-5xpm-cx94"
-        ],
-        "summary": "Kimai is a web-based multi-user time-tracking application. The permission `view_other_timesheet` performs differently for the Kimai UI and the API, thus returning unexpected data through the API. When setting the `view_other_timesheet` permission to true, on the frontend, users can only see timesheet entries for teams they are a part of. When requesting all timesheets from the API, however, all timesheet entries are returned, regardless of whether the user shares team permissions or not. This vulnerability is fixed in 2.13.0."
-    },
-    {
-        "Modified": "2024-03-28T16:07:00",
-        "Published": "2024-03-28T14:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29897",
-        "impact": {},
-        "last-modified": "2024-03-28T16:07:00",
-        "references": [
-            "https://github.com/miraheze/CreateWiki/security/advisories/GHSA-4rcf-3cj2-46mq",
-            "https://github.com/miraheze/mw-config/commit/fb3e68bcef459e9cf2a415241b28042a6c9727e8",
-            "https://issue-tracker.miraheze.org/F3093343",
-            "https://issue-tracker.miraheze.org/T11999"
-        ],
-        "summary": "CreateWiki is Miraheze's MediaWiki extension for requesting & creating wikis. It is possible for users with (delete) or (suppressrevision) on any wiki in the farm to access suppressed wiki requests by going to the request's entry on Special:RequestWikiQueue on the wiki where they have these rights. The same vulnerability was present briefly on the REST API before being quickly corrected in commit `6bc0685`. To our knowledge, the vulnerable commits of the REST API are not running in production anywhere. This vulnerability is fixed in 23415c17ffb4832667c06abcf1eadadefd4c8937."
     }
 ]
