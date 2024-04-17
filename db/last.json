@@ -1,5 +1,819 @@
 [
     {
+        "Modified": "2024-04-17T19:55:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-26595",
+        "impact": {},
+        "last-modified": "2024-04-17T19:55:00",
+        "references": [
+            "https://git.kernel.org/stable/c/817840d125a370626895df269c50c923b79b0a39",
+            "https://git.kernel.org/stable/c/d0a1efe417c97a1e9b914056ee6b86f1ef75fe1f",
+            "https://git.kernel.org/stable/c/efeb7dfea8ee10cdec11b6b6ba4e405edbe75809"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmlxsw: spectrum_acl_tcam: Fix NULL pointer dereference in error path\n\nWhen calling mlxsw_sp_acl_tcam_region_destroy() from an error path after\nfailing to attach the region to an ACL group, we hit a NULL pointer\ndereference upon 'region->group->tcam' [1].\n\nFix by retrieving the 'tcam' pointer using mlxsw_sp_acl_to_tcam().\n\n[1]\nBUG: kernel NULL pointer dereference, address: 0000000000000000\n[...]\nRIP: 0010:mlxsw_sp_acl_tcam_region_destroy+0xa0/0xd0\n[...]\nCall Trace:\n mlxsw_sp_acl_tcam_vchunk_get+0x88b/0xa20\n mlxsw_sp_acl_tcam_ventry_add+0x25/0xe0\n mlxsw_sp_acl_rule_add+0x47/0x240\n mlxsw_sp_flower_replace+0x1a9/0x1d0\n tc_setup_cb_add+0xdc/0x1c0\n fl_hw_replace_filter+0x146/0x1f0\n fl_change+0xc17/0x1360\n tc_new_tfilter+0x472/0xb90\n rtnetlink_rcv_msg+0x313/0x3b0\n netlink_rcv_skb+0x58/0x100\n netlink_unicast+0x244/0x390\n netlink_sendmsg+0x1e4/0x440\n ____sys_sendmsg+0x164/0x260\n ___sys_sendmsg+0x9a/0xe0\n __sys_sendmsg+0x7a/0xc0\n do_syscall_64+0x40/0xe0\n entry_SYSCALL_64_after_hwframe+0x63/0x6b"
+    },
+    {
+        "Modified": "2024-04-17T19:54:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-26596",
+        "impact": {},
+        "last-modified": "2024-04-17T19:54:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dbd909c20c11f0d29c0054d41e0d1f668a60e8c8",
+            "https://git.kernel.org/stable/c/844f104790bd69c2e4dbb9ee3eba46fde1fcea7b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: dsa: fix netdev_priv() dereference before check on non-DSA netdevice events\n\nAfter the blamed commit, we started doing this dereference for every\nNETDEV_CHANGEUPPER and NETDEV_PRECHANGEUPPER event in the system.\n\nstatic inline struct dsa_port *dsa_user_to_port(const struct net_device *dev)\n{\n\tstruct dsa_user_priv *p = netdev_priv(dev);\n\n\treturn p->dp;\n}\n\nWhich is obviously bogus, because not all net_devices have a netdev_priv()\nof type struct dsa_user_priv. But struct dsa_user_priv is fairly small,\nand p->dp means dereferencing 8 bytes starting with offset 16. Most\ndrivers allocate that much private memory anyway, making our access not\nfault, and we discard the bogus data quickly afterwards, so this wasn't\ncaught.\n\nBut the dummy interface is somewhat special in that it calls\nalloc_netdev() with a priv size of 0. So every netdev_priv() dereference\nis invalid, and we get this when we emit a NETDEV_PRECHANGEUPPER event\nwith a VLAN as its new upper:\n\n$ ip link add dummy1 type dummy\n$ ip link add link dummy1 name dummy1.100 type vlan id 100\n[   43.309174] ==================================================================\n[   43.316456] BUG: KASAN: slab-out-of-bounds in dsa_user_prechangeupper+0x30/0xe8\n[   43.323835] Read of size 8 at addr ffff3f86481d2990 by task ip/374\n[   43.330058]\n[   43.342436] Call trace:\n[   43.366542]  dsa_user_prechangeupper+0x30/0xe8\n[   43.371024]  dsa_user_netdevice_event+0xb38/0xee8\n[   43.375768]  notifier_call_chain+0xa4/0x210\n[   43.379985]  raw_notifier_call_chain+0x24/0x38\n[   43.384464]  __netdev_upper_dev_link+0x3ec/0x5d8\n[   43.389120]  netdev_upper_dev_link+0x70/0xa8\n[   43.393424]  register_vlan_dev+0x1bc/0x310\n[   43.397554]  vlan_newlink+0x210/0x248\n[   43.401247]  rtnl_newlink+0x9fc/0xe30\n[   43.404942]  rtnetlink_rcv_msg+0x378/0x580\n\nAvoid the kernel oops by dereferencing after the type check, as customary."
+    },
+    {
+        "Modified": "2024-04-17T19:46:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-26597",
+        "impact": {},
+        "last-modified": "2024-04-17T19:46:00",
+        "references": [
+            "https://git.kernel.org/stable/c/093dab655808207f7a9f54cf156240aeafc70590",
+            "https://git.kernel.org/stable/c/02467ab8b404d80429107588e0f3425cf5fcd2e5",
+            "https://git.kernel.org/stable/c/2295c22348faf795e1ccdf618f6eb7afdb2f7447",
+            "https://git.kernel.org/stable/c/3b5254862258b595662a0ccca6e9eeb88d6e7468",
+            "https://git.kernel.org/stable/c/ee1dc3bf86f2df777038506b139371a9add02534",
+            "https://git.kernel.org/stable/c/c4734535034672f59f2652e1e0058c490da62a5c",
+            "https://git.kernel.org/stable/c/17d06a5c44d8fd2e8e61bac295b09153496f87e1",
+            "https://git.kernel.org/stable/c/b33fb5b801c6db408b774a68e7c8722796b59ecc"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: qualcomm: rmnet: fix global oob in rmnet_policy\n\nThe variable rmnet_link_ops assign a *bigger* maxtype which leads to a\nglobal out-of-bounds read when parsing the netlink attributes. See bug\ntrace below:\n\n==================================================================\nBUG: KASAN: global-out-of-bounds in validate_nla lib/nlattr.c:386 [inline]\nBUG: KASAN: global-out-of-bounds in __nla_validate_parse+0x24af/0x2750 lib/nlattr.c:600\nRead of size 1 at addr ffffffff92c438d0 by task syz-executor.6/84207\n\nCPU: 0 PID: 84207 Comm: syz-executor.6 Tainted: G                 N 6.1.0 #3\nHardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x8b/0xb3 lib/dump_stack.c:106\n print_address_description mm/kasan/report.c:284 [inline]\n print_report+0x172/0x475 mm/kasan/report.c:395\n kasan_report+0xbb/0x1c0 mm/kasan/report.c:495\n validate_nla lib/nlattr.c:386 [inline]\n __nla_validate_parse+0x24af/0x2750 lib/nlattr.c:600\n __nla_parse+0x3e/0x50 lib/nlattr.c:697\n nla_parse_nested_deprecated include/net/netlink.h:1248 [inline]\n __rtnl_newlink+0x50a/0x1880 net/core/rtnetlink.c:3485\n rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3594\n rtnetlink_rcv_msg+0x43c/0xd70 net/core/rtnetlink.c:6091\n netlink_rcv_skb+0x14f/0x410 net/netlink/af_netlink.c:2540\n netlink_unicast_kernel net/netlink/af_netlink.c:1319 [inline]\n netlink_unicast+0x54e/0x800 net/netlink/af_netlink.c:1345\n netlink_sendmsg+0x930/0xe50 net/netlink/af_netlink.c:1921\n sock_sendmsg_nosec net/socket.c:714 [inline]\n sock_sendmsg+0x154/0x190 net/socket.c:734\n ____sys_sendmsg+0x6df/0x840 net/socket.c:2482\n ___sys_sendmsg+0x110/0x1b0 net/socket.c:2536\n __sys_sendmsg+0xf3/0x1c0 net/socket.c:2565\n do_syscall_x64 arch/x86/entry/common.c:50 [inline]\n do_syscall_64+0x3b/0x90 arch/x86/entry/common.c:80\n entry_SYSCALL_64_after_hwframe+0x63/0xcd\nRIP: 0033:0x7fdcf2072359\nCode: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48\nRSP: 002b:00007fdcf13e3168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e\nRAX: ffffffffffffffda RBX: 00007fdcf219ff80 RCX: 00007fdcf2072359\nRDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003\nRBP: 00007fdcf20bd493 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000\nR13: 00007fffbb8d7bdf R14: 00007fdcf13e3300 R15: 0000000000022000\n </TASK>\n\nThe buggy address belongs to the variable:\n rmnet_policy+0x30/0xe0\n\nThe buggy address belongs to the physical page:\npage:0000000065bdeb3c refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x155243\nflags: 0x200000000001000(reserved|node=0|zone=2)\nraw: 0200000000001000 ffffea00055490c8 ffffea00055490c8 0000000000000000\nraw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000\npage dumped because: kasan: bad access detected\n\nMemory state around the buggy address:\n ffffffff92c43780: f9 f9 f9 f9 00 00 00 02 f9 f9 f9 f9 00 00 00 07\n ffffffff92c43800: f9 f9 f9 f9 00 00 00 05 f9 f9 f9 f9 06 f9 f9 f9\n>ffffffff92c43880: f9 f9 f9 f9 00 00 00 00 00 00 f9 f9 f9 f9 f9 f9\n                                                 ^\n ffffffff92c43900: 00 00 00 00 00 00 00 00 07 f9 f9 f9 f9 f9 f9 f9\n ffffffff92c43980: 00 00 00 07 f9 f9 f9 f9 00 00 00 05 f9 f9 f9 f9\n\nAccording to the comment of `nla_parse_nested_deprecated`, the maxtype\nshould be len(destination array) - 1. Hence use `IFLA_RMNET_MAX` here."
+    },
+    {
+        "Modified": "2024-04-17T19:40:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-26598",
+        "impact": {},
+        "last-modified": "2024-04-17T19:40:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d04acadb6490aa3314f9c9e087691e55de153b88",
+            "https://git.kernel.org/stable/c/ba7be666740847d967822bed15500656b26bc703",
+            "https://git.kernel.org/stable/c/12c2759ab1343c124ed46ba48f27bd1ef5d2dff4",
+            "https://git.kernel.org/stable/c/dba788e25f05209adf2b0175eb1691dc89fb1ba6",
+            "https://git.kernel.org/stable/c/65b201bf3e9af1b0254243a5881390eda56f72d1",
+            "https://git.kernel.org/stable/c/dd3956a1b3dd11f46488c928cb890d6937d1ca80",
+            "https://git.kernel.org/stable/c/ad362fe07fecf0aba839ff2cc59a3617bd42c33f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: vgic-its: Avoid potential UAF in LPI translation cache\n\nThere is a potential UAF scenario in the case of an LPI translation\ncache hit racing with an operation that invalidates the cache, such\nas a DISCARD ITS command. The root of the problem is that\nvgic_its_check_cache() does not elevate the refcount on the vgic_irq\nbefore dropping the lock that serializes refcount changes.\n\nHave vgic_its_check_cache() raise the refcount on the returned vgic_irq\nand add the corresponding decrement after queueing the interrupt."
+    },
+    {
+        "Modified": "2024-04-17T19:34:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-119",
+        "id": "CVE-2024-26599",
+        "impact": {},
+        "last-modified": "2024-04-17T19:34:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7b85554c7c2aee91171e038e4d5442ffa130b282",
+            "https://git.kernel.org/stable/c/e5f2b4b62977fb6c2efcbc5779e0c9dce18215f7",
+            "https://git.kernel.org/stable/c/bae45b7ebb31984b63b13c3519fd724b3ce92123",
+            "https://git.kernel.org/stable/c/a297d07b9a1e4fb8cda25a4a2363a507d294b7c9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npwm: Fix out-of-bounds access in of_pwm_single_xlate()\n\nWith args->args_count == 2 args->args[2] is not defined. Actually the\nflags are contained in args->args[1]."
+    },
+    {
+        "Modified": "2024-04-17T19:33:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2021-46904",
+        "impact": {},
+        "last-modified": "2024-04-17T19:33:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a462067d7c8e6953a733bf5ade8db947b1bb5449",
+            "https://git.kernel.org/stable/c/145c89c441d27696961752bf51b323f347601bee",
+            "https://git.kernel.org/stable/c/caf5ac93b3b5d5fac032fc11fbea680e115421b4",
+            "https://git.kernel.org/stable/c/92028d7a31e55d53e41cff679156b9432cffcb36",
+            "https://git.kernel.org/stable/c/4a2933c88399c0ebc738db39bbce3ae89786d723",
+            "https://git.kernel.org/stable/c/dc195928d7e4ec7b5cfc6cd10dc4c8d87a7c72ac",
+            "https://git.kernel.org/stable/c/388d05f70f1ee0cac4a2068fd295072f1a44152a",
+            "https://git.kernel.org/stable/c/8a12f8836145ffe37e9c8733dce18c22fb668b66"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hso: fix null-ptr-deref during tty device unregistration\n\nMultiple ttys try to claim the same the minor number causing a double\nunregistration of the same device. The first unregistration succeeds\nbut the next one results in a null-ptr-deref.\n\nThe get_free_serial_index() function returns an available minor number\nbut doesn't assign it immediately. The assignment is done by the caller\nlater. But before this assignment, calls to get_free_serial_index()\nwould return the same minor number.\n\nFix this by modifying get_free_serial_index to assign the minor number\nimmediately after one is found to be and rename it to obtain_minor()\nto better reflect what it does. Similary, rename set_serial_by_index()\nto release_minor() and modify it to free up the minor number of the\ngiven hso_serial. Every obtain_minor() should have corresponding\nrelease_minor() call."
+    },
+    {
+        "Modified": "2024-04-17T19:30:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2021-46905",
+        "impact": {},
+        "last-modified": "2024-04-17T19:30:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5c17cfe155d21954b4c7e2a78fa771cebcd86725",
+            "https://git.kernel.org/stable/c/d7fad2ce15bdbbd0fec3ebe999fd7cab2267f53e",
+            "https://git.kernel.org/stable/c/90642ee9eb581a13569b1c0bd57e85d962215273",
+            "https://git.kernel.org/stable/c/0f000005da31f6947f843ce6b3e3a960540c6e00",
+            "https://git.kernel.org/stable/c/41c44e1f3112d7265dae522c026399b2a42d19ef",
+            "https://git.kernel.org/stable/c/2ad5692db72874f02b9ad551d26345437ea4f7f3",
+            "https://git.kernel.org/stable/c/5871761c5f0f20d6e98bf3b6bd7486d857589554",
+            "https://git.kernel.org/stable/c/0c71d4c89559f72cec2592d078681a843bce570e",
+            "https://git.kernel.org/stable/c/24b699bea7553fc0b98dad9d864befb6005ac7f1"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hso: fix NULL-deref on disconnect regression\n\nCommit 8a12f8836145 (\"net: hso: fix null-ptr-deref during tty device\nunregistration\") fixed the racy minor allocation reported by syzbot, but\nintroduced an unconditional NULL-pointer dereference on every disconnect\ninstead.\n\nSpecifically, the serial device table must no longer be accessed after\nthe minor has been released by hso_serial_tty_unregister()."
+    },
+    {
+        "Modified": "2024-04-17T19:28:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2022-48626",
+        "impact": {},
+        "last-modified": "2024-04-17T19:28:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f5dc193167591e88797262ec78515a0cbe79ff5f",
+            "https://git.kernel.org/stable/c/e6f580d0b3349646d4ee1ce0057eb273e8fb7e2e",
+            "https://git.kernel.org/stable/c/9c25d5ff1856b91bd4365e813f566cb59aaa9552",
+            "https://git.kernel.org/stable/c/3a0a7ec5574b510b067cfc734b8bdb6564b31d4e",
+            "https://git.kernel.org/stable/c/be93028d306dac9f5b59ebebd9ec7abcfc69c156",
+            "https://git.kernel.org/stable/c/af0e6c49438b1596e4be8a267d218a0c88a42323",
+            "https://git.kernel.org/stable/c/7f901d53f120d1921f84f7b9b118e87e94b403c5",
+            "https://git.kernel.org/stable/c/bd2db32e7c3e35bd4d9b8bbff689434a50893546"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmoxart: fix potential use-after-free on remove path\n\nIt was reported that the mmc host structure could be accessed after it\nwas freed in moxart_remove(), so fix this by saving the base register of\nthe device and using it instead of the pointer dereference."
+    },
+    {
+        "Modified": "2024-04-17T19:16:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52465",
+        "impact": {},
+        "last-modified": "2024-04-17T19:16:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e2717302fbc20f148bcda362facee0444b949a3a",
+            "https://git.kernel.org/stable/c/bd3d2ec447ede9da822addf3960a5f4275e3ae76",
+            "https://git.kernel.org/stable/c/88f04bc3e737155e13caddf0ba8ed19db87f0212"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npower: supply: Fix null pointer dereference in smb2_probe\n\ndevm_kasprintf and devm_kzalloc return a pointer to dynamically\nallocated memory which can be NULL upon failure."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31040",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/nanomq/nanomq/issues/1720"
+        ],
+        "summary": "Buffer Overflow vulnerability in the get_var_integer function in mqtt_parser.c in NanoMQ 0.21.7 allows remote attackers to cause a denial of service via a series of specially crafted hexstreams."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31580",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/pytorch/pytorch/commit/b5c3a17c2c207ebefcb85043f0cf94be9b2fef81",
+            "https://gist.github.com/1047524396/038c78f2f007345e6f497698ace2aa3d"
+        ],
+        "summary": "PyTorch before v2.2.0 was discovered to contain a heap buffer overflow vulnerability in the component /runtime/vararg_functions.cpp. This vulnerability allows attackers to cause a Denial of Service (DoS) via a crafted input."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31581",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/ffmpeg/ffmpeg/commit/ce0c178a408d43e71085c28a47d50dc939b60196",
+            "https://github.com/FFmpeg/FFmpeg/blob/n6.1.1/libavcodec/cbs_h266_syntax_template.c#L2048",
+            "https://gist.github.com/1047524396/a7e9273e12553775826784035333cdd8"
+        ],
+        "summary": "FFmpeg version n6.1 was discovered to contain an improper validation of array index vulnerability in libavcodec/cbs_h266_syntax_template.c. This vulnerability allows attackers to cause undefined behavior within the application."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31582",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg/blob/n6.1.1/libavfilter/vf_codecview.c#L220",
+            "https://github.com/ffmpeg/ffmpeg/commit/99debe5f823f45a482e1dc08de35879aa9c74bd2",
+            "https://gist.github.com/1047524396/b47d5efe3bc420fb91dbb77c73c0fff3"
+        ],
+        "summary": "FFmpeg version n6.1 was discovered to contain a heap buffer overflow vulnerability in the draw_block_rectangle function of libavfilter/vf_codecview.c. This vulnerability allows attackers to cause undefined behavior or a Denial of Service (DoS) via crafted input."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31583",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/pytorch/pytorch/commit/9c7071b0e324f9fb68ab881283d6b8d388a4bcd2",
+            "https://github.com/pytorch/pytorch/blob/v2.1.2/torch/csrc/jit/mobile/interpreter.cpp#L132",
+            "https://gist.github.com/1047524396/43e19a41f2b36503a4a228c32cdbc176"
+        ],
+        "summary": "Pytorch before version v2.2.0 was discovered to contain a use-after-free vulnerability in torch/csrc/jit/mobile/interpreter.cpp."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31585",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/ffmpeg/ffmpeg/commit/ab0fdaedd1e7224f7e84ea22fcbfaa4ca75a6c06",
+            "https://github.com/FFmpeg/FFmpeg/commit/81df787b53eb5c6433731f6eaaf7f2a94d8a8c80",
+            "https://gist.github.com/1047524396/dc2c64ffe0c3934a6176bcd2c5cf5656"
+        ],
+        "summary": "FFmpeg version n5.1 to n6.1 was discovered to contain an Off-by-one Error vulnerability in libavfilter/avf_showspectrum.c. This vulnerability allows attackers to cause a Denial of Service (DoS) via a crafted input."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32162",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "http://cmseasy.com",
+            "https://github.com/XiLitter/CMS_vulnerability-discovery/blob/main/CMSeasy_7.7.7_file_deletion.md"
+        ],
+        "summary": "CMSeasy 7.7.7.9 is vulnerable to Arbitrary file deletion."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32163",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://www.cmseasy.cn/",
+            "https://github.com/XiLitter/CMS_vulnerability-discovery/blob/main/CMSeasy_7.7.7.9_code_execution.md"
+        ],
+        "summary": "CMSeasy 7.7.7.9 is vulnerable to code execution."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "security@tibco.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3323",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://community.tibco.com/advisories/tibco-security-advisory-april-9-2024-tibco-jasperreports-server-cve-2024-3323-r209/"
+        ],
+        "summary": "Cross Site Scripting in \n\nUI Request/Response Validation\n\n in TIBCO JasperReports Server 8.0.4 and 8.2.0 allows allows for the injection of malicious executable scripts into the code of a trusted application that may lead to stealing the user's active session cookie\u00a0via sending malicious link, enticing the user to interact."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "xpdf@xpdfreader.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3900",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://www.xpdfreader.com/security-bug/CVE-2024-3900.html"
+        ],
+        "summary": "Out-of-bounds array write in Xpdf 4.05 and earlier, triggered by long Unicode sequence in ActualText.\n"
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "sirt@brocade.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-29950",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://support.broadcom.com/external/content/SecurityAdvisories/0/23236"
+        ],
+        "summary": "The class FileTransfer implemented in Brocade SANnav before v2.3.1, v2.3.0a, uses the ssh-rsa signature scheme, which has a SHA-1 hash.\nThe vulnerability could allow a remote, unauthenticated attacker to perform a man-in-the-middle attack.\n"
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30950",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/CrownZTX/vulnerabilities/blob/main/fudforum/stored_xss_in_admsql.md"
+        ],
+        "summary": "A stored cross-site scripting (XSS) vulnerability in FUDforum v3.1.3 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the SQL statements field under /adm/admsql.php."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30953",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/CrownZTX/vulnerabilities/blob/main/htmly/stored_xss_in_Menueditor.md"
+        ],
+        "summary": "A stored cross-site scripting (XSS) vulnerability in Htmly v2.9.5 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the Link Name parameter of Menu Editor module."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30989",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30989-multiple-stored-cross-site-scripting-vulnerabilities-in-client-management-system-3cfa1c54e4a6"
+        ],
+        "summary": "Cross Site Scripting vulnerability in /edit-client-details.php of phpgurukul Client Management System using PHP & MySQL 1.1 allows attackers to execute arbitrary code via the \"cname\", \"comname\", \"state\" and \"city\" parameter."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30990",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30990-sql-injection-vulnerability-in-invoices-page-of-client-management-system-using-php-58baa94a1761"
+        ],
+        "summary": "SQL Injection vulnerability in the \"Invoices\" page in phpgurukul Client Management System using PHP & MySQL 1.1 allows attacker to execute arbitrary SQL commands via \"searchdata\" parameter."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31031",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/obgm/libcoap/issues/1351"
+        ],
+        "summary": "An issue in `coap_pdu.c` in libcoap 4.3.4 allows attackers to cause undefined behavior via a sequence of messages leading to unsigned integer overflow."
+    },
+    {
+        "Modified": "2024-04-17T19:15:00",
+        "Published": "2024-04-17T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31041",
+        "impact": {},
+        "last-modified": "2024-04-17T19:15:00",
+        "references": [
+            "https://github.com/nanomq/nanomq/issues/1723"
+        ],
+        "summary": "Null Pointer Dereference vulnerability in topic_filtern function in mqtt_parser.c in NanoMQ 0.21.7 allows attackers to cause a denial of service."
+    },
+    {
+        "Modified": "2024-04-17T19:14:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52467",
+        "impact": {},
+        "last-modified": "2024-04-17T19:14:00",
+        "references": [
+            "https://git.kernel.org/stable/c/927626a2073887ee30ba00633260d4d203f8e875",
+            "https://git.kernel.org/stable/c/c3e3a2144bf50877551138ffce9f7aa6ddfe385b",
+            "https://git.kernel.org/stable/c/527e8c5f3d00299822612c495d5adf1f8f43c001",
+            "https://git.kernel.org/stable/c/3ef1130deee98997275904d9bfc37af75e1e906c",
+            "https://git.kernel.org/stable/c/7f2c410ac470959b88e03dadd94b7a0b71df7973",
+            "https://git.kernel.org/stable/c/41673c66b3d0c09915698fec5c13b24336f18dd1"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmfd: syscon: Fix null pointer dereference in of_syscon_register()\n\nkasprintf() returns a pointer to dynamically allocated memory\nwhich can be NULL upon failure."
+    },
+    {
+        "Modified": "2024-04-17T19:00:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2023-52468",
+        "impact": {},
+        "last-modified": "2024-04-17T19:00:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b57196a5ec5e4c0ffecde8348b085b778c7dce04",
+            "https://git.kernel.org/stable/c/0f1486dafca3398c4c46b9f6e6452fa27e73b559",
+            "https://git.kernel.org/stable/c/93ec4a3b76404bce01bd5c9032bef5df6feb1d62"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nclass: fix use-after-free in class_register()\n\nThe lock_class_key is still registered and can be found in\nlock_keys_hash hlist after subsys_private is freed in error\nhandler path.A task who iterate over the lock_keys_hash\nlater may cause use-after-free.So fix that up and unregister\nthe lock_class_key before kfree(cp).\n\nOn our platform, a driver fails to kset_register because of\ncreating duplicate filename '/class/xxx'.With Kasan enabled,\nit prints a invalid-access bug report.\n\nKASAN bug report:\n\nBUG: KASAN: invalid-access in lockdep_register_key+0x19c/0x1bc\nWrite of size 8 at addr 15ffff808b8c0368 by task modprobe/252\nPointer tag: [15], memory tag: [fe]\n\nCPU: 7 PID: 252 Comm: modprobe Tainted: G        W\n 6.6.0-mainline-maybe-dirty #1\n\nCall trace:\ndump_backtrace+0x1b0/0x1e4\nshow_stack+0x2c/0x40\ndump_stack_lvl+0xac/0xe0\nprint_report+0x18c/0x4d8\nkasan_report+0xe8/0x148\n__hwasan_store8_noabort+0x88/0x98\nlockdep_register_key+0x19c/0x1bc\nclass_register+0x94/0x1ec\ninit_module+0xbc/0xf48 [rfkill]\ndo_one_initcall+0x17c/0x72c\ndo_init_module+0x19c/0x3f8\n...\nMemory state around the buggy address:\nffffff808b8c0100: 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a 8a\nffffff808b8c0200: 8a 8a 8a 8a 8a 8a 8a 8a fe fe fe fe fe fe fe fe\n>ffffff808b8c0300: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe\n                                     ^\nffffff808b8c0400: 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03 03\n\nAs CONFIG_KASAN_GENERIC is not set, Kasan reports invalid-access\nnot use-after-free here.In this case, modprobe is manipulating\nthe corrupted lock_keys_hash hlish where lock_class_key is already\nfreed before.\n\nIt's worth noting that this only can happen if lockdep is enabled,\nwhich is not true for normal system."
+    },
+    {
+        "Modified": "2024-04-17T19:00:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2023-52469",
+        "impact": {},
+        "last-modified": "2024-04-17T19:00:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8a27d9d9fc9b5564b8904c3a77a7dea482bfa34e",
+            "https://git.kernel.org/stable/c/8b55b06e737feb2a645b0293ea27e38418876d63",
+            "https://git.kernel.org/stable/c/520e213a0b97b64735a13950e9371e0a5d7a5dc3",
+            "https://git.kernel.org/stable/c/b6dcba02ee178282e0d28684d241e0b8462dea6a",
+            "https://git.kernel.org/stable/c/35fa2394d26e919f63600ce631e6aefc95ec2706",
+            "https://git.kernel.org/stable/c/95084632a65d5c0d682a83b55935560bdcd2a1e3",
+            "https://git.kernel.org/stable/c/3426f059eacc33ecc676b0d66539297e1cfafd02",
+            "https://git.kernel.org/stable/c/28dd788382c43b330480f57cd34cde0840896743"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/amd/pm: fix a use-after-free in kv_parse_power_table\n\nWhen ps allocated by kzalloc equals to NULL, kv_parse_power_table\nfrees adev->pm.dpm.ps that allocated before. However, after the control\nflow goes through the following call chains:\n\nkv_parse_power_table\n  |-> kv_dpm_init\n        |-> kv_dpm_sw_init\n\t      |-> kv_dpm_fini\n\nThe adev->pm.dpm.ps is used in the for loop of kv_dpm_fini after its\nfirst free in kv_parse_power_table and causes a use-after-free bug."
+    },
+    {
+        "Modified": "2024-04-17T18:59:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52471",
+        "impact": {},
+        "last-modified": "2024-04-17T18:59:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3cd9b9bee33f39f6c6d52360fe381b89a7b12695",
+            "https://git.kernel.org/stable/c/3027e7b15b02d2d37e3f82d6b8404f6d37e3b8cf"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nice: Fix some null pointer dereference issues in ice_ptp.c\n\ndevm_kasprintf() returns a pointer to dynamically allocated memory\nwhich can be NULL upon failure."
+    },
+    {
+        "Modified": "2024-04-17T18:47:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52472",
+        "impact": {},
+        "last-modified": "2024-04-17T18:47:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2831f4d3bfa68e64c5f83e96688be779c87b3511",
+            "https://git.kernel.org/stable/c/95ad8b6879e2e49d02e3bfc0e1fb46421633fe2a",
+            "https://git.kernel.org/stable/c/d872ca165cb67112f2841ef9c37d51ef7e63d1e4"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: rsa - add a check for allocation failure\n\nStatic checkers insist that the mpi_alloc() allocation can fail so add\na check to prevent a NULL dereference.  Small allocations like this\ncan't actually fail in current kernels, but adding a check is very\nsimple and makes the static checkers happy."
+    },
+    {
+        "Modified": "2024-04-17T18:46:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52470",
+        "impact": {},
+        "last-modified": "2024-04-17T18:46:00",
+        "references": [
+            "https://git.kernel.org/stable/c/21b1645660717d6126dd4866c850fcc5c4703a41",
+            "https://git.kernel.org/stable/c/5d12c5d75f7c78b83a738025947651ec5c95b4d4",
+            "https://git.kernel.org/stable/c/57ca7984806d79b38af528de88fd803babf27feb",
+            "https://git.kernel.org/stable/c/14bbfaa5df273b26cde6707f6e655585700e6fe1",
+            "https://git.kernel.org/stable/c/c4ff55408187f2595066967047363ca84e76db85",
+            "https://git.kernel.org/stable/c/0b813a6a0087451cb702b6eb841f10856f49d088",
+            "https://git.kernel.org/stable/c/fb2d8bc9b5e55848b8a7c3c028e2ee8d49f28f97",
+            "https://git.kernel.org/stable/c/7a2464fac80d42f6f8819fed97a553e9c2f43310"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/radeon: check the alloc_workqueue return value in radeon_crtc_init()\n\ncheck the alloc_workqueue return value in radeon_crtc_init()\nto avoid null-ptr-deref."
+    },
+    {
+        "Modified": "2024-04-17T18:30:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52473",
+        "impact": {},
+        "last-modified": "2024-04-17T18:30:00",
+        "references": [
+            "https://git.kernel.org/stable/c/335176dd8ebaca6493807dceea33c478305667fa",
+            "https://git.kernel.org/stable/c/02871710b93058eb1249d5847c0b2d1c2c3c98ae",
+            "https://git.kernel.org/stable/c/04e6ccfc93c5a1aa1d75a537cf27e418895e20ea"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nthermal: core: Fix NULL pointer dereference in zone registration error path\n\nIf device_register() in thermal_zone_device_register_with_trips()\nreturns an error, the tz variable is set to NULL and subsequently\ndereferenced in kfree(tz->tzp).\n\nCommit adc8749b150c (\"thermal/drivers/core: Use put_device() if\ndevice_register() fails\") added the tz = NULL assignment in question to\navoid a possible double-free after dropping the reference to the zone\ndevice.  However, after commit 4649620d9404 (\"thermal: core: Make\nthermal_zone_device_unregister() return after freeing the zone\"), that\nassignment has become redundant, because dropping the reference to the\nzone device does not cause the zone object to be freed any more.\n\nDrop it to address the NULL pointer dereference."
+    },
+    {
+        "Modified": "2024-04-17T18:29:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-26600",
+        "impact": {},
+        "last-modified": "2024-04-17T18:29:00",
+        "references": [
+            "https://git.kernel.org/stable/c/486218c11e8d1c8f515a3bdd70d62203609d4b6b",
+            "https://git.kernel.org/stable/c/8398d8d735ee93a04fb9e9f490e8cacd737e3bf5",
+            "https://git.kernel.org/stable/c/be3b82e4871ba00e9b5d0ede92d396d579d7b3b3",
+            "https://git.kernel.org/stable/c/8cc889b9dea0579726be9520fcc766077890b462",
+            "https://git.kernel.org/stable/c/0430bfcd46657d9116a26cd377f112cbc40826a4",
+            "https://git.kernel.org/stable/c/14ef61594a5a286ae0d493b8acbf9eac46fd04c4",
+            "https://git.kernel.org/stable/c/396e17af6761b3cc9e6e4ca94b4de7f642bfece1",
+            "https://git.kernel.org/stable/c/7104ba0f1958adb250319e68a15eff89ec4fd36d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nphy: ti: phy-omap-usb2: Fix NULL pointer dereference for SRP\n\nIf the external phy working together with phy-omap-usb2 does not implement\nsend_srp(), we may still attempt to call it. This can happen on an idle\nEthernet gadget triggering a wakeup for example:\n\nconfigfs-gadget.g1 gadget.0: ECM Suspend\nconfigfs-gadget.g1 gadget.0: Port suspended. Triggering wakeup\n...\nUnable to handle kernel NULL pointer dereference at virtual address\n00000000 when execute\n...\nPC is at 0x0\nLR is at musb_gadget_wakeup+0x1d4/0x254 [musb_hdrc]\n...\nmusb_gadget_wakeup [musb_hdrc] from usb_gadget_wakeup+0x1c/0x3c [udc_core]\nusb_gadget_wakeup [udc_core] from eth_start_xmit+0x3b0/0x3d4 [u_ether]\neth_start_xmit [u_ether] from dev_hard_start_xmit+0x94/0x24c\ndev_hard_start_xmit from sch_direct_xmit+0x104/0x2e4\nsch_direct_xmit from __dev_queue_xmit+0x334/0xd88\n__dev_queue_xmit from arp_solicit+0xf0/0x268\narp_solicit from neigh_probe+0x54/0x7c\nneigh_probe from __neigh_event_send+0x22c/0x47c\n__neigh_event_send from neigh_resolve_output+0x14c/0x1c0\nneigh_resolve_output from ip_finish_output2+0x1c8/0x628\nip_finish_output2 from ip_send_skb+0x40/0xd8\nip_send_skb from udp_send_skb+0x124/0x340\nudp_send_skb from udp_sendmsg+0x780/0x984\nudp_sendmsg from __sys_sendto+0xd8/0x158\n__sys_sendto from ret_fast_syscall+0x0/0x58\n\nLet's fix the issue by checking for send_srp() and set_vbus() before\ncalling them. For USB peripheral only cases these both could be NULL."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2961",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://sourceware.org/git/?p=glibc.git;a=blob;f=advisories/GLIBC-SA-2024-0004"
+        ],
+        "summary": "The iconv() function in the GNU C Library versions 2.39 and older may overflow the output buffer passed to it by up to 4 bytes when converting strings to the ISO-2022-CN-EXT character set, which may be used to crash an application or overwrite a neighbouring variable.\n"
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30951",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://github.com/CrownZTX/vulnerabilities/blob/main/fudforum/Reflected_xss_in_FUDforum.md"
+        ],
+        "summary": "FUDforum v3.1.3 was discovered to contain a reflected cross-site scripting (XSS) vulnerability via the chpos parameter at /adm/admsmiley.php."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30982",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30982-sql-injection-vulnerability-in-cyber-cafe-management-system-using-php-mysql-v1-0-2024a9eed6d7"
+        ],
+        "summary": "SQL Injection vulnerability in phpgurukul Cyber Cafe Management System Using PHP & MySQL 1.0 allows attackers to run arbitrary SQL commands via the upid parameter in the /view-user-detail.php file."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30985",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30985-sql-injection-vulnerability-in-client-management-system-using-php-mysql-1-1-c21fecbda062"
+        ],
+        "summary": "SQL Injection vulnerability in \"B/W Dates Reports\" page in phpgurukul Client Management System using PHP & MySQL 1.1 allows attacker to execute arbitrary SQL commands via \"todate\" and \"fromdate\" parameters."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30986",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30986-multiple-stored-cross-site-scripting-vulnerabilities-in-client-management-system-3fb702d9d510"
+        ],
+        "summary": "Cross Site Scripting vulnerability in /edit-services-details.php of phpgurukul Client Management System using PHP & MySQL 1.1 allows attackers to execute arbitrary code and via \"price\" and \"sname\" parameter."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30987",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30987-multiple-stored-cross-site-scripting-vulnerabilities-in-client-management-system-b6a7a177d254"
+        ],
+        "summary": "Cross Site Scripting vulnerability in /bwdates-reports-ds.php of phpgurukul Client Management System using PHP & MySQL 1.1 allows attackers to execute arbitrary code and obtain sensitive information via the fromdate and todate parameters."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30988",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://medium.com/%40shanunirwan/cve-2024-30988-cross-site-scripting-vulnerability-in-client-management-system-using-php-mysql-1-1-e7a677936c23"
+        ],
+        "summary": "Cross Site Scripting vulnerability in /search-invoices.php of phpgurukul Client Management System using PHP & MySQL 1.1 allows attackers to execute arbitrary code and obtain sensitive information via the Search bar."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32161",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "http://jizhicms.com",
+            "https://github.com/XiLitter/CMS_vulnerability-discovery/blob/main/jizhicms%20v_2.5.md"
+        ],
+        "summary": "jizhiCMS 2.5 suffers from a File upload vulnerability."
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2024-04-17T18:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3914",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/04/stable-channel-update-for-desktop_16.html",
+            "https://issues.chromium.org/issues/330759272"
+        ],
+        "summary": "Use after free in V8 in Google Chrome prior to 124.0.6367.60 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-04-17T18:15:00",
+        "Published": "2023-07-24T16:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-281",
+        "id": "CVE-2023-1386",
+        "impact": {},
+        "last-modified": "2024-04-17T18:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-1386",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2223985",
+            "https://security.netapp.com/advisory/ntap-20230831-0005/",
+            "https://github.com/advisories/GHSA-ppj8-867g-rgjr",
+            "https://github.com/v9fs/linux/issues/29"
+        ],
+        "summary": "A flaw was found in the 9p passthrough filesystem (9pfs) implementation in QEMU. When a local user in the guest writes an executable file with SUID or SGID, none of these privileged bits are correctly dropped. As a result, in rare circumstances, this flaw could be used by malicious users in the guest to elevate their privileges within the guest and help a host local user to elevate privileges on the host."
+    },
+    {
+        "Modified": "2024-04-17T18:03:00",
+        "Published": "2024-02-26T16:27:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-26601",
+        "impact": {},
+        "last-modified": "2024-04-17T18:03:00",
+        "references": [
+            "https://git.kernel.org/stable/c/78327acd4cdc4a1601af718b781eece577b6b7d4",
+            "https://git.kernel.org/stable/c/ea42d6cffb0dd27a417f410b9d0011e9859328cb",
+            "https://git.kernel.org/stable/c/6b0d48647935e4b8c7b75d1eccb9043fcd4ee581",
+            "https://git.kernel.org/stable/c/c9b528c35795b711331ed36dc3dbee90d5812d4e",
+            "https://git.kernel.org/stable/c/94ebf71bddbcd4ab1ce43ae32c6cb66396d2d51a",
+            "https://git.kernel.org/stable/c/c1317822e2de80e78f137d3a2d99febab1b80326"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: regenerate buddy after block freeing failed if under fc replay\n\nThis mostly reverts commit 6bd97bf273bd (\"ext4: remove redundant\nmb_regenerate_buddy()\") and reintroduces mb_regenerate_buddy(). Based on\ncode in mb_free_blocks(), fast commit replay can end up marking as free\nblocks that are already marked as such. This causes corruption of the\nbuddy bitmap so we need to regenerate it in that case."
+    },
+    {
+        "Modified": "2024-04-17T18:01:00",
+        "Published": "2024-02-26T16:28:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-26602",
+        "impact": {},
+        "last-modified": "2024-04-17T18:01:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3cd139875e9a7688b3fc715264032620812a5fa3",
+            "https://git.kernel.org/stable/c/2441a64070b85c14eecc3728cc87e883f953f265",
+            "https://git.kernel.org/stable/c/db896bbe4a9c67cee377e5f6a743350d3ae4acf6",
+            "https://git.kernel.org/stable/c/50fb4e17df319bb33be6f14e2a856950c1577dee",
+            "https://git.kernel.org/stable/c/24ec7504a08a67247fbe798d1de995208a8c128a",
+            "https://git.kernel.org/stable/c/b6a2a9cbb67545c825ec95f06adb7ff300a2ad71",
+            "https://git.kernel.org/stable/c/c5b2063c65d05e79fad8029324581d86cfba7eea",
+            "https://git.kernel.org/stable/c/944d5fe50f3f03daacfea16300e656a1691c4a23"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsched/membarrier: reduce the ability to hammer on sys_membarrier\n\nOn some systems, sys_membarrier can be very expensive, causing overall\nslowdowns for everything.  So put a lock on the path in order to\nserialize the accesses to prevent the ability for this to be called at\ntoo high of a frequency and saturate the machine."
+    },
+    {
+        "Modified": "2024-04-17T18:00:00",
+        "Published": "2024-02-26T16:28:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-835",
+        "id": "CVE-2024-26603",
+        "impact": {},
+        "last-modified": "2024-04-17T18:00:00",
+        "references": [
+            "https://git.kernel.org/stable/c/627339cccdc9166792ecf96bc3c9f711a60ce996",
+            "https://git.kernel.org/stable/c/b2479ab426cef7ab79a13005650eff956223ced2",
+            "https://git.kernel.org/stable/c/627e28cbb65564e55008315d9e02fbb90478beda",
+            "https://git.kernel.org/stable/c/d877550eaf2dc9090d782864c96939397a3c6835",
+            "https://git.kernel.org/stable/c/8bd3eee7720c14b59a206bd05b98d7586bccf99a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/fpu: Stop relying on userspace for info to fault in xsave buffer\n\nBefore this change, the expected size of the user space buffer was\ntaken from fx_sw->xstate_size. fx_sw->xstate_size can be changed\nfrom user-space, so it is possible construct a sigreturn frame where:\n\n * fx_sw->xstate_size is smaller than the size required by valid bits in\n   fx_sw->xfeatures.\n * user-space unmaps parts of the sigrame fpu buffer so that not all of\n   the buffer required by xrstor is accessible.\n\nIn this case, xrstor tries to restore and accesses the unmapped area\nwhich results in a fault. But fault_in_readable succeeds because buf +\nfx_sw->xstate_size is within the still mapped area, so it goes back and\ntries xrstor again. It will spin in this loop forever.\n\nInstead, fault in the maximum size which can be touched by XRSTOR (taken\nfrom fpstate->user_size).\n\n[ dhansen: tweak subject / changelog ]"
+    },
+    {
         "Modified": "2024-04-17T17:55:00",
         "Published": "2024-02-26T16:28:00",
         "access": {},
@@ -879,770 +1693,5 @@
             "https://github.com/peris-navince/founded-0-days/blob/main/Tenda/ac500/fromSetVlanInfo/1.md"
         ],
         "summary": "A Buffer Overflow vulnerability in Tenda AC500 v.2.0.1.9 allows a remote attacker to cause a denial of service via the port parameter at the goform/setVlanInfo component."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26911",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://git.kernel.org/stable/c/4b59c3fada06e5e8010ef7700689c71986e667a2",
-            "https://git.kernel.org/stable/c/8746c6c9dfa31d269c65dd52ab42fde0720b7d91"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/buddy: Fix alloc_range() error handling code\n\nFew users have observed display corruption when they boot\nthe machine to KDE Plasma or playing games. We have root\ncaused the problem that whenever alloc_range() couldn't\nfind the required memory blocks the function was returning\nSUCCESS in some of the corner cases.\n\nThe right approach would be if the total allocated size\nis less than the required size, the function should\nreturn -ENOSPC."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26913",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://git.kernel.org/stable/c/cdbe0be8874c63bca85b8c38e5b1eecbdd18df31",
-            "https://git.kernel.org/stable/c/faf51b201bc42adf500945732abb6220c707d6f3"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Fix dcn35 8k30 Underflow/Corruption Issue\n\n[why]\nodm calculation is missing for pipe split policy determination\nand cause Underflow/Corruption issue.\n\n[how]\nAdd the odm calculation."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26915",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://git.kernel.org/stable/c/9a9d00c23d170d4ef5a1b28e6b69f5c85dd12bc1",
-            "https://git.kernel.org/stable/c/a28f4d1e0bed85943d309ac243fd1c200f8af9a2",
-            "https://git.kernel.org/stable/c/8983397951b4b0bd51bb4b4ba9749424e1ccbb70",
-            "https://git.kernel.org/stable/c/2827633c9dab6304ec4cdbf369363219832e605d",
-            "https://git.kernel.org/stable/c/7330256268664ea0a7dd5b07a3fed363093477dd"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdgpu: Reset IH OVERFLOW_CLEAR bit\n\nAllows us to detect subsequent IH ring buffer overflows as well."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26914",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://git.kernel.org/stable/c/0bd8ef618a42d7e6ea3f701065264e15678025e3",
-            "https://git.kernel.org/stable/c/39079fe8e660851abbafa90cd55cbf029210661f"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: fix incorrect mpc_combine array size\n\n[why]\nMAX_SURFACES is per stream, while MAX_PLANES is per asic. The\nmpc_combine is an array that records all the planes per asic. Therefore\nMAX_PLANES should be used as the array size. Using MAX_SURFACES causes\narray overflow when there are more than 3 planes.\n\n[how]\nUse the MAX_PLANES for the mpc_combine array size."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26918",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://git.kernel.org/stable/c/63b1a3d9dd3b3f6d67f524e76270e66767090583",
-            "https://git.kernel.org/stable/c/a4f12e5cbac2865c151d1e97e36eb24205afb23b",
-            "https://git.kernel.org/stable/c/41044d5360685e78a869d40a168491a70cdb7e73"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: Fix active state requirement in PME polling\n\nThe commit noted in fixes added a bogus requirement that runtime PM managed\ndevices need to be in the RPM_ACTIVE state for PME polling.  In fact, only\ndevices in low power states should be polled.\n\nHowever there's still a requirement that the device config space must be\naccessible, which has implications for both the current state of the polled\ndevice and the parent bridge, when present.  It's not sufficient to assume\nthe bridge remains in D0 and cases have been observed where the bridge\npasses the D0 test, but the PM state indicates RPM_SUSPENDING and config\nspace of the polled device becomes inaccessible during pci_pme_wakeup().\n\nTherefore, since the bridge is already effectively required to be in the\nRPM_ACTIVE state, formalize this in the code and elevate the PM usage count\nto maintain the state while polling the subordinate device.\n\nThis resolves a regression reported in the bugzilla below where a\nThunderbolt/USB4 hierarchy fails to scan for an attached NVMe endpoint\ndownstream of a bridge in a D3hot power state."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26920",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://git.kernel.org/stable/c/bcf4a115a5068f3331fafb8c176c1af0da3d8b19",
-            "https://git.kernel.org/stable/c/8ffd5590f4d6ef5460acbeac7fbdff7025f9b419",
-            "https://git.kernel.org/stable/c/56cfbe60710772916a5ba092c99542332b48e870",
-            "https://git.kernel.org/stable/c/b5085b5ac1d96ea2a8a6240f869655176ce44197",
-            "https://git.kernel.org/stable/c/36be97e9eb535fe3008a5cb040b1e56f29f2e398",
-            "https://git.kernel.org/stable/c/6022c065c9ec465d84cebff8f480db083e4ee06b",
-            "https://git.kernel.org/stable/c/4b001ef14baab16b553a002cb9979e31b8fc0c6b",
-            "https://git.kernel.org/stable/c/0958b33ef5a04ed91f61cef4760ac412080c4e08"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntracing/trigger: Fix to return error if failed to alloc snapshot\n\nFix register_snapshot_trigger() to return error code if it failed to\nallocate a snapshot instead of 0 (success). Unless that, it will register\nsnapshot trigger without an error."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32303",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC15/V15.03.05.18/fromWizardHandle.md"
-        ],
-        "summary": "Tenda AC15 v15.03.20_multi, v15.03.05.19, and v15.03.05.18 firmware has a stack overflow vulnerability located via the PPW parameter in the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T16:51:00",
-        "Published": "2024-04-17T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32316",
-        "impact": {},
-        "last-modified": "2024-04-17T16:51:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC500/fromDhcpListClient_list1.md"
-        ],
-        "summary": "Tenda AC500 V2.0.1.9(1307) firmware has a stack overflow vulnerability in the fromDhcpListClient function."
-    },
-    {
-        "Modified": "2024-04-17T16:21:00",
-        "Published": "2023-10-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2023-44824",
-        "impact": {},
-        "last-modified": "2024-04-17T16:21:00",
-        "references": [
-            "https://abstracted-howler-727.notion.site/CVE-2023-44824-ab76909b4a0e477b87aa8d0ca4aa4ca7",
-            "https://abstracted-howler-727.notion.site/Vulnerability-Description-ccc2e6489a0d43859c61a7982e649da1",
-            "https://gist.github.com/Muscial/e46c4e4031d25a3684cda124dfc45d96"
-        ],
-        "summary": "An issue in Expense Management System v.1.0 allows a local attacker to execute arbitrary code via a crafted file uploaded to the sign-up.php component."
-    },
-    {
-        "Modified": "2024-04-17T16:21:00",
-        "Published": "2022-09-28T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2021-41434",
-        "impact": {},
-        "last-modified": "2024-04-17T16:21:00",
-        "references": [
-            "https://egavilanmedia.com/Expense-Management-System/",
-            "https://github.com/martinkubecka/CVE-References/blob/main/CVE-2021-41434.md"
-        ],
-        "summary": "A stored Cross-Site Scripting (XSS) vulnerability exists in version 1.0 of the Expense Management System application that allows for arbitrary execution of JavaScript commands through index.php."
-    },
-    {
-        "Modified": "2024-04-17T16:21:00",
-        "Published": "2022-09-02T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-36754",
-        "impact": {},
-        "last-modified": "2024-04-17T16:21:00",
-        "references": [
-            "https://github.com/mikeccltt/0724/blob/main/ci_ems/sql.md"
-        ],
-        "summary": "Expense Management System v1.0 was discovered to contain a SQL injection vulnerability via the id parameter at /Home/debit_credit_p."
-    },
-    {
-        "Modified": "2024-04-17T16:15:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-1132",
-        "impact": {},
-        "last-modified": "2024-04-17T16:15:00",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2024:1868",
-            "https://access.redhat.com/security/cve/CVE-2024-1132",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2262117",
-            "https://access.redhat.com/errata/RHSA-2024:1860",
-            "https://access.redhat.com/errata/RHSA-2024:1861",
-            "https://access.redhat.com/errata/RHSA-2024:1862",
-            "https://access.redhat.com/errata/RHSA-2024:1864",
-            "https://access.redhat.com/errata/RHSA-2024:1866",
-            "https://access.redhat.com/errata/RHSA-2024:1867"
-        ],
-        "summary": "A flaw was found in Keycloak, where it does not properly validate URLs included in a redirect. This issue could allow an attacker to construct a malicious request to bypass validation and access other URLs and sensitive information within the domain or conduct further attacks. This flaw affects any client that utilizes a wildcard in the Valid Redirect URIs field, and requires user interaction within the malicious URL."
-    },
-    {
-        "Modified": "2024-04-17T16:15:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-601",
-        "id": "CVE-2024-2419",
-        "impact": {},
-        "last-modified": "2024-04-17T16:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2419",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2269371",
-            "https://access.redhat.com/errata/RHSA-2024:1867"
-        ],
-        "summary": "A flaw was found in Keycloak's redirect_uri validation logic. This issue may allow a bypass of otherwise explicitly allowed hosts. A successful attack may lead to the theft of an access token, making it possible for the attacker to impersonate other users. It is very similar to CVE-2023-6291."
-    },
-    {
-        "Modified": "2024-04-17T16:15:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1249",
-        "impact": {},
-        "last-modified": "2024-04-17T16:15:00",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2024:1868",
-            "https://access.redhat.com/security/cve/CVE-2024-1249",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2262918",
-            "https://access.redhat.com/errata/RHSA-2024:1860",
-            "https://access.redhat.com/errata/RHSA-2024:1861",
-            "https://access.redhat.com/errata/RHSA-2024:1862",
-            "https://access.redhat.com/errata/RHSA-2024:1864",
-            "https://access.redhat.com/errata/RHSA-2024:1866",
-            "https://access.redhat.com/errata/RHSA-2024:1867"
-        ],
-        "summary": "A flaw was found in Keycloak's OIDC component in the \"checkLoginIframe,\" which allows unvalidated cross-origin messages. This flaw allows attackers to coordinate and send millions of requests in seconds using simple code, significantly impacting the application's availability without proper origin validation for incoming messages."
-    },
-    {
-        "Modified": "2024-04-17T16:15:00",
-        "Published": "2024-02-19T22:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-400",
-        "id": "CVE-2024-1635",
-        "impact": {},
-        "last-modified": "2024-04-17T16:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-1635",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2264928",
-            "https://security.netapp.com/advisory/ntap-20240322-0007/",
-            "https://access.redhat.com/errata/RHSA-2024:1674",
-            "https://access.redhat.com/errata/RHSA-2024:1675",
-            "https://access.redhat.com/errata/RHSA-2024:1676",
-            "https://access.redhat.com/errata/RHSA-2024:1677",
-            "https://access.redhat.com/errata/RHSA-2024:1860",
-            "https://access.redhat.com/errata/RHSA-2024:1861",
-            "https://access.redhat.com/errata/RHSA-2024:1862",
-            "https://access.redhat.com/errata/RHSA-2024:1864",
-            "https://access.redhat.com/errata/RHSA-2024:1866"
-        ],
-        "summary": "A vulnerability was found in Undertow. This vulnerability impacts a server that supports the wildfly-http-client protocol. Whenever a malicious user opens and closes a connection with the HTTP port of the server and then closes the connection immediately, the server will end with both memory and open file limits exhausted at some point, depending on the amount of memory available. \r\n\r\nAt HTTP upgrade to remoting, the WriteTimeoutStreamSinkConduit leaks connections if RemotingConnection is closed by Remoting ServerConnectionOpenListener. Because the remoting connection originates in Undertow as part of the HTTP upgrade, there is an external layer to the remoting connection. This connection is unaware of the outermost layer when closing the connection during the connection opening procedure. Hence, the Undertow WriteTimeoutStreamSinkConduit is not notified of the closed connection in this scenario. Because WriteTimeoutStreamSinkConduit creates a timeout task, the whole dependency tree leaks via that task, which is added to XNIO WorkerThread. So, the workerThread points to the Undertow conduit, which contains the connections and causes the leak."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-601",
-        "id": "CVE-2024-2419",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2419",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2269371"
-        ],
-        "summary": "A flaw was found in Keycloak's redirect_uri validation logic. This issue may allow a bypass of otherwise explicitly allowed hosts. A successful attack may lead to the theft of an access token, making it possible for the attacker to impersonate other users. It is very similar to CVE-2023-6291."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31578",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/ffmpeg/ffmpeg/commit/3bb00c0a420c3ce83c6fafee30270d69622ccad7",
-            "https://gist.github.com/1047524396/45400cce5859d78dcd3a62010df8d179"
-        ],
-        "summary": "FFmpeg version n6.1.1 was discovered to contain a heap use-after-free via the av_hwframe_ctx_init function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32282",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1202/formexecommand_cmdi.md"
-        ],
-        "summary": "Tenda FH1202 v1.2.0.14(408) firmware contains a command injection vulnerablility in the formexeCommand function via the cmdinput parameter."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32283",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1203/formexecommand_cmdi.md"
-        ],
-        "summary": "Tenda FH1203 V2.0.1.6 firmware has a command injection vulnerablility in formexeCommand function via the cmdinput parameter."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32290",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/fromAddressNat_page.md"
-        ],
-        "summary": "Tenda W30E v1.0 v1.0.1.25(633) firmware has a stack overflow vulnerability via the page parameter in the fromAddressNat function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32285",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/formaddUserName.md"
-        ],
-        "summary": "Tenda W30E v1.0 V1.0.1.25(633) firmware has a stack overflow vulnerability via the password parameter in the formaddUserName function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32291",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/fromNatlimit.md"
-        ],
-        "summary": "Tenda W30E v1.0 firmware v1.0.1.25(633) has a stack overflow vulnerability via the page parameter in the fromNatlimit function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32286",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/fromVirtualSer.md"
-        ],
-        "summary": "Tenda W30E v1.0 V1.0.1.25(633) firmware has a stack overflow vulnerability located via the page parameter in the fromVirtualSer function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32287",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/fromqossetting.md"
-        ],
-        "summary": "Tenda W30E v1.0 V1.0.1.25(633) firmware has a stack overflow vulnerability via the qos parameter in the fromqossetting function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32293",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/fromDhcpListClient_page.md"
-        ],
-        "summary": "Tenda W30E v1.0 V1.0.1.25(633) firmware has a stack overflow vulnerability via the page parameter in the fromDhcpListClient function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32288",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/fromwebExcptypemanFilter.md"
-        ],
-        "summary": "Tenda W30E v1.0 V1.0.1.25(633) firmware has a stack overflow vulnerability located via the page parameter in the fromwebExcptypemanFilter function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32299",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1203/fromWizardHandle.md"
-        ],
-        "summary": "Tenda FH1203 v2.0.1.6 firmware has a stack overflow vulnerability via the PPW parameter in the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32302",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1202/fromWizardHandle.md"
-        ],
-        "summary": "Tenda FH1202 v1.2.0.14(408) firmware has a stack overflow vulnerability via the PPW parameter in the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32292",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/W30E/formexecommand_cmdi.md"
-        ],
-        "summary": "Tenda W30E v1.0 V1.0.1.25(633) firmware contains a command injection vulnerablility in the formexeCommand function via the cmdinput parameter."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32306",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC10U/v1.V15.03.06.48/fromWizardHandle.md"
-        ],
-        "summary": "Tenda AC10U v1.0 Firmware v15.03.06.49 has a stack overflow vulnerability located via the PPW parameter in the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32311",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1203/formWanParameterSetting.md"
-        ],
-        "summary": "Tenda FH1203 v2.0.1.6 firmware has a stack overflow vulnerability via the adslPwd parameter in the formWanParameterSetting function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32315",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1202/formWanParameterSetting.md"
-        ],
-        "summary": "Tenda FH1202 v1.2.0.14(408) firmware has a stack overflow vulnerability via the adslPwd parameter in the formWanParameterSetting function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T15:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29035",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/umbraco/Umbraco-CMS/security/advisories/GHSA-74p6-39f2-23v3",
-            "https://github.com/umbraco/Umbraco-CMS/commit/6b8067815c02ae43161966a8075a3585e1bc4de0"
-        ],
-        "summary": "Umbraco is an ASP.NET CMS. Failing webhooks logs are available when solution is not in debug mode. Those logs can contain information that is critical. This vulnerability is fixed in 13.1.1."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T15:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30253",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/solana-labs/solana-web3.js/security/advisories/GHSA-8m45-2rjm-j347",
-            "https://github.com/solana-labs/solana-web3.js/commit/77d935221a4805107b20b60ae7c1148725e4e2d0"
-        ],
-        "summary": "@solana/web3.js is the Solana JavaScript SDK. Using particular inputs with `@solana/web3.js` will result in memory exhaustion (OOM). If you have a server, client, mobile, or desktop product that accepts untrusted input for use with `@solana/web3.js`, your application/service may crash, resulting in a loss of availability. This vulnerability is fixed in 1.0.1, 1.10.2, 1.11.1, 1.12.1, 1.1.2, 1.13.1, 1.14.1, 1.15.1, 1.16.2, 1.17.1, 1.18.1, 1.19.1, 1.20.3, 1.21.1, 1.22.1, 1.23.1, 1.24.3, 1.25.1, 1.26.1, 1.27.1, 1.28.1, 1.2.8, 1.29.4, 1.30.3, 1.31.1, 1.3.1, 1.32.3, 1.33.1, 1.34.1, 1.35.2, 1.36.1, 1.37.3, 1.38.1, 1.39.2, 1.40.2, 1.41.11, 1.4.1, 1.42.1, 1.43.7, 1.44.4, 1.45.1, 1.46.1, 1.47.5, 1.48.1, 1.49.1, 1.50.2, 1.51.1, 1.5.1, 1.52.1, 1.53.1, 1.54.2, 1.55.1, 1.56.3, 1.57.1, 1.58.1, 1.59.2, 1.60.1, 1.61.2, 1.6.1, 1.62.2, 1.63.2, 1.64.1, 1.65.1, 1.66.6, 1.67.3, 1.68.2, 1.69.1, 1.70.4, 1.71.1, 1.72.1, 1.7.2, 1.73.5, 1.74.1, 1.75.1, 1.76.1, 1.77.4, 1.78.8, 1.79.1, 1.80.1, 1.81.1, 1.8.1, 1.82.1, 1.83.1, 1.84.1, 1.85.1, 1.86.1, 1.87.7, 1.88.1, 1.89.2, 1.90.2, 1.9.2, and 1.91.3."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T15:15:00",
-        "access": {},
-        "assigner": "security@perforce.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3825",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://portal.perforce.com/s/detail/a91PA000001STsvYAG",
-            "https://github.com/Blazemeter/blazemeter-jenkins-plugin/commit/11ec94f68136a0612ae1b37b5370053132cb2528"
-        ],
-        "summary": "Versions of the BlazeMeter Jenkins plugin prior to 4.22 contain a flaw which results in credential enumeration\n"
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-6805",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/46978e1d-7adb-49f6-8e41-093f177c9a4d?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3070624/feedzy-rss-feeds"
-        ],
-        "summary": "The RSS Aggregator by Feedzy \u2013 Feed to Post, Autoblogging, News & YouTube Video Feeds Aggregator plugin for WordPress is vulnerable to Blind Server-Side Request Forgery in all versions up to, and including, 4.4.7 via the fetch_feed functionality. This makes it possible for authenticated attackers, with contributor access and above, to make web requests to arbitrary locations originating from the web application and can be used to modify information from internal services. NOTE: This vulnerability, exploitable by contributor-level users, was was fixed in version 4.4.7. The same vulnerability was fixed for author-level users in version 4.4.8."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30952",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/CrownZTX/vulnerabilities/blob/main/pescms/stored_xss.md"
-        ],
-        "summary": "A stored cross-site scripting (XSS) vulnerability in PESCMS-TEAM v2.3.6 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the domain input field under /youdoamin/?g=Team&m=Setting&a=action."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32301",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC7/v1/fromWizardHandle.md"
-        ],
-        "summary": "Tenda AC7V1.0 v15.03.06.44 firmware has a stack overflow vulnerability via the PPW parameter in the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32307",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1205/fromWizardHandle.md"
-        ],
-        "summary": "Tenda FH1205 V2.0.0.7(775) firmware has a stack overflow vulnerability located via the PPW parameter in the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32310",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/F/F1203/fromWizardHandle.md"
-        ],
-        "summary": "Tenda F1203 V2.0.1.6 firmware has a stack overflow vulnerability located in the PPW parameter of the fromWizardHandle function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32312",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/F/F1203/formWanParameterSetting.md"
-        ],
-        "summary": "Tenda F1203 V2.0.1.6 firmware has a stack overflow vulnerability located in the adslPwd parameter of the formWanParameterSetting function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32313",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/FH/FH1205/formWanParameterSetting.md"
-        ],
-        "summary": "Tenda FH1205 V2.0.0.7(775) firmware has a stack overflow vulnerability located via the adslPwd parameter of the formWanParameterSetting function."
-    },
-    {
-        "Modified": "2024-04-17T15:31:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32281",
-        "impact": {},
-        "last-modified": "2024-04-17T15:31:00",
-        "references": [
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC7/v1/formexecommand.md"
-        ],
-        "summary": "Tenda AC7V1.0 v15.03.06.44 firmware contains a command injection vulnerablility in formexeCommand function via the cmdinput parameter."
-    },
-    {
-        "Modified": "2024-04-17T13:15:00",
-        "Published": "2024-04-17T13:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2023-40146",
-        "impact": {},
-        "last-modified": "2024-04-17T13:15:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2023-1868",
-            "https://forum.peplink.com/t/peplink-security-advisory-smart-reader-firmware-1-2-0-cve-2023-43491-cve-2023-45209-cve-2023-39367-cve-2023-45744-cve-2023-40146/47256"
-        ],
-        "summary": "A privilege escalation vulnerability exists in the /bin/login functionality of Peplink Smart Reader v1.2.0 (in QEMU). A specially crafted command line argument can lead to a limited-shell escape and elevated capabilities. An attacker can authenticate with hard-coded credentials and execute unblocked default busybox functionality to trigger this vulnerability."
-    },
-    {
-        "Modified": "2024-04-17T12:48:00",
-        "Published": "2024-04-17T12:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2024-3908",
-        "impact": {},
-        "last-modified": "2024-04-17T12:48:00",
-        "references": [
-            "https://vuldb.com/?id.261144",
-            "https://vuldb.com/?ctiid.261144",
-            "https://vuldb.com/?submit.313803",
-            "https://github.com/abcdefg-png/IoT-vulnerable/blob/main/Tenda/AC500/formWriteFacMac.md"
-        ],
-        "summary": "A vulnerability classified as critical has been found in Tenda AC500 2.0.1.9(1307). Affected is the function formWriteFacMac of the file /goform/WriteFacMac. The manipulation of the argument mac leads to command injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-261144. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-04-17T12:48:00",
-        "Published": "2024-04-17T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3333",
-        "impact": {},
-        "last-modified": "2024-04-17T12:48:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/aa5bdaf9-fbde-40d4-a72a-fd24489818b3?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3067596/essential-addons-for-elementor-lite"
-        ],
-        "summary": "The Essential Addons for Elementor plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the URL attributes of widgets in all versions up to, and including, 5.9.14 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-04-17T12:48:00",
-        "Published": "2024-04-17T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3333",
-        "impact": {},
-        "last-modified": "2024-04-17T12:48:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/aa5bdaf9-fbde-40d4-a72a-fd24489818b3?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3067596/essential-addons-for-elementor-lite"
-        ],
-        "summary": "The Essential Addons for Elementor plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the URL attributes of widgets in all versions up to, and including, 5.9.14 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
     }
 ]
