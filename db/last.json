@@ -1,5 +1,605 @@
 [
     {
+        "Modified": "2024-04-19T19:25:00",
+        "Published": "2024-04-10T16:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-532",
+        "id": "CVE-2024-31353",
+        "impact": {},
+        "last-modified": "2024-04-19T19:25:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/slideshow-gallery/wordpress-slideshow-gallery-lite-plugin-1-7-8-sensitive-data-exposure-vulnerability?_s_id=cve"
+        ],
+        "summary": "Insertion of Sensitive Information into Log File vulnerability in Tribulant Slideshow Gallery.This issue affects Slideshow Gallery: from n/a through 1.7.8.\n\n"
+    },
+    {
+        "Modified": "2024-04-19T19:20:00",
+        "Published": "2024-04-10T19:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-401",
+        "id": "CVE-2021-47193",
+        "impact": {},
+        "last-modified": "2024-04-19T19:20:00",
+        "references": [
+            "https://git.kernel.org/stable/c/269a4311b15f68d24e816f43f123888f241ed13d",
+            "https://git.kernel.org/stable/c/51e6ed83bb4ade7c360551fa4ae55c4eacea354b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: pm80xx: Fix memory leak during rmmod\n\nDriver failed to release all memory allocated. This would lead to memory\nleak during driver removal.\n\nProperly free memory when the module is removed."
+    },
+    {
+        "Modified": "2024-04-19T19:19:00",
+        "Published": "2024-04-10T19:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-665",
+        "id": "CVE-2021-47194",
+        "impact": {},
+        "last-modified": "2024-04-19T19:19:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8f06bb8c216bcd172394f61e557727e691b4cb24",
+            "https://git.kernel.org/stable/c/0738cdb636c21ab552eaecf905efa4a6070e3ebc",
+            "https://git.kernel.org/stable/c/4e458abbb4a523f1413bfe15c079cf4e24c15b21",
+            "https://git.kernel.org/stable/c/b8a045e2a9b234cfbc06cf36923886164358ddec",
+            "https://git.kernel.org/stable/c/52affc201fc22a1ab9a59ef0ed641a9adfcb8d13",
+            "https://git.kernel.org/stable/c/7b97b5776daa0b39dbdadfea176f9cc0646d4a66",
+            "https://git.kernel.org/stable/c/5a9b671c8d74a3e1b999e7a0c7f366079bcc93dd",
+            "https://git.kernel.org/stable/c/563fbefed46ae4c1f70cffb8eb54c02df480b2c2"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncfg80211: call cfg80211_stop_ap when switch from P2P_GO type\n\nIf the userspace tools switch from NL80211_IFTYPE_P2P_GO to\nNL80211_IFTYPE_ADHOC via send_msg(NL80211_CMD_SET_INTERFACE), it\ndoes not call the cleanup cfg80211_stop_ap(), this leads to the\ninitialization of in-use data. For example, this path re-init the\nsdata->assigned_chanctx_list while it is still an element of\nassigned_vifs list, and makes that linked list corrupt."
+    },
+    {
+        "Modified": "2024-04-19T19:16:00",
+        "Published": "2024-04-10T19:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2021-47195",
+        "impact": {},
+        "last-modified": "2024-04-19T19:16:00",
+        "references": [
+            "https://git.kernel.org/stable/c/37330f37f6666c7739a44b2b6b95b047ccdbed2d",
+            "https://git.kernel.org/stable/c/6c53b45c71b4920b5e62f0ea8079a1da382b9434"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nspi: fix use-after-free of the add_lock mutex\n\nCommit 6098475d4cb4 (\"spi: Fix deadlock when adding SPI controllers on\nSPI buses\") introduced a per-controller mutex. But mutex_unlock() of\nsaid lock is called after the controller is already freed:\n\n  spi_unregister_controller(ctlr)\n  -> put_device(&ctlr->dev)\n    -> spi_controller_release(dev)\n  -> mutex_unlock(&ctrl->add_lock)\n\nMove the put_device() after the mutex_unlock()."
+    },
+    {
+        "Modified": "2024-04-19T19:15:00",
+        "Published": "2024-04-19T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31450",
+        "impact": {},
+        "last-modified": "2024-04-19T19:15:00",
+        "references": [
+            "https://securitylab.github.com/advisories/GHSL-2023-277_Owncast/",
+            "https://github.com/owncast/owncast/commit/1b14800c7d7f54be14ed4d130bfe7f480645076e",
+            "https://github.com/owncast/owncast/blob/v0.1.2/controllers/admin/emoji.go#L63",
+            "https://github.com/owncast/owncast/releases/tag/v0.1.3"
+        ],
+        "summary": "Owncast is an open source, self-hosted, decentralized, single user live video streaming and chat server. The Owncast application exposes an administrator API at the URL /api/admin. The emoji/delete endpoint of said API allows administrators to delete custom emojis, which are saved on disk. The parameter name is taken from the JSON request and directly appended to the filepath that points to the emoji to delete. By using path traversal sequences (../), attackers with administrative privileges can exploit this endpoint to delete arbitrary files on the system, outside of the emoji directory. This vulnerability is fixed in 0.1.3."
+    },
+    {
+        "Modified": "2024-04-19T19:15:00",
+        "Published": "2024-04-19T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32652",
+        "impact": {},
+        "last-modified": "2024-04-19T19:15:00",
+        "references": [
+            "https://github.com/honojs/node-server/security/advisories/GHSA-hgxw-5xg3-69jx",
+            "https://github.com/honojs/node-server/issues/159",
+            "https://github.com/honojs/node-server/commit/d847e60249fd8183ba0998bc379ba20505643204"
+        ],
+        "summary": "The adapter @hono/node-server allows you to run your Hono application on Node.js. Prior to 1.10.1, the application hangs when receiving a Host header with a value that `@hono/node-server` can't handle well. Invalid values are those that cannot be parsed by the `URL` as a hostname such as an empty string, slashes `/`, and other strings. The version 1.10.1 includes the fix for this issue."
+    },
+    {
+        "Modified": "2024-04-19T19:15:00",
+        "Published": "2024-04-10T19:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2021-47198",
+        "impact": {},
+        "last-modified": "2024-04-19T19:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dbebf865b3239595c1d4dba063b122862583b52a",
+            "https://git.kernel.org/stable/c/79b20beccea3a3938a8500acef4e6b9d7c66142f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: lpfc: Fix use-after-free in lpfc_unreg_rpi() routine\n\nAn error is detected with the following report when unloading the driver:\n  \"KASAN: use-after-free in lpfc_unreg_rpi+0x1b1b\"\n\nThe NLP_REG_LOGIN_SEND nlp_flag is set in lpfc_reg_fab_ctrl_node(), but the\nflag is not cleared upon completion of the login.\n\nThis allows a second call to lpfc_unreg_rpi() to proceed with nlp_rpi set\nto LPFC_RPI_ALLOW_ERROR.  This results in a use after free access when used\nas an rpi_ids array index.\n\nFix by clearing the NLP_REG_LOGIN_SEND nlp_flag in\nlpfc_mbx_cmpl_fc_reg_login()."
+    },
+    {
+        "Modified": "2024-04-19T19:15:00",
+        "Published": "2024-02-29T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-25180",
+        "impact": {},
+        "last-modified": "2024-04-19T19:15:00",
+        "references": [
+            "https://github.com/joaoviictorti/My-CVES/blob/main/CVE-2024-25180/README.md",
+            "https://www.youtube.com/watch?v=QcOlrWUGo6o"
+        ],
+        "summary": "An issue discovered in pdfmake 0.2.9 allows remote attackers to run arbitrary code via crafted POST request to the path '/pdf'."
+    },
+    {
+        "Modified": "2024-04-19T18:49:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52458",
+        "impact": {},
+        "last-modified": "2024-04-19T18:49:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5010c27120962c85d2f421d2cf211791c9603503",
+            "https://git.kernel.org/stable/c/ef31cc87794731ffcb578a195a2c47d744e25fb8",
+            "https://git.kernel.org/stable/c/cb16cc1abda18a9514106d2ac8c8d7abc0be5ed8",
+            "https://git.kernel.org/stable/c/bcdc288e7bc008daf38ef0401b53e4a8bb61bbe5",
+            "https://git.kernel.org/stable/c/6f64f866aa1ae6975c95d805ed51d7e9433a0016",
+            "https://git.kernel.org/stable/c/8f6dfa1f1efe6dcca2d43e575491d8fcbe922f62"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblock: add check that partition length needs to be aligned with block size\n\nBefore calling add partition or resize partition, there is no check\non whether the length is aligned with the logical block size.\nIf the logical block size of the disk is larger than 512 bytes,\nthen the partition size maybe not the multiple of the logical block size,\nand when the last sector is read, bio_truncate() will adjust the bio size,\nresulting in an IO error if the size of the read command is smaller than\nthe logical block size.If integrity data is supported, this will also\nresult in a null pointer dereference when calling bio_integrity_free."
+    },
+    {
+        "Modified": "2024-04-19T18:49:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52459",
+        "impact": {},
+        "last-modified": "2024-04-19T18:49:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b7062628caeaec90e8f691ebab2d70f31b7b6b91",
+            "https://git.kernel.org/stable/c/49d82811428469566667f22749610b8c132cdb3e",
+            "https://git.kernel.org/stable/c/3de6ee94aae701fa949cd3b5df6b6a440ddfb8f2"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: v4l: async: Fix duplicated list deletion\n\nThe list deletion call dropped here is already called from the\nhelper function in the line before. Having a second list_del()\ncall results in either a warning (with CONFIG_DEBUG_LIST=y):\n\nlist_del corruption, c46c8198->next is LIST_POISON1 (00000100)\n\nIf CONFIG_DEBUG_LIST is disabled the operation results in a\nkernel error due to NULL pointer dereference."
+    },
+    {
+        "Modified": "2024-04-19T18:42:00",
+        "Published": "2024-02-23T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-26594",
+        "impact": {},
+        "last-modified": "2024-04-19T18:42:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dd1de9268745f0eac83a430db7afc32cbd62e84b",
+            "https://git.kernel.org/stable/c/6eb8015492bcc84e40646390e50a862b2c0529c9",
+            "https://git.kernel.org/stable/c/a2b21ef1ea4cf632d19b3a7cc4d4245b8e63202a",
+            "https://git.kernel.org/stable/c/5e6dfec95833edc54c48605a98365a7325e5541e",
+            "https://git.kernel.org/stable/c/92e470163d96df8db6c4fa0f484e4a229edb903d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: validate mech token in session setup\n\nIf client send invalid mech token in session setup request, ksmbd\nvalidate and make the error if it is invalid."
+    },
+    {
+        "Modified": "2024-04-19T18:40:00",
+        "Published": "2024-02-23T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52454",
+        "impact": {},
+        "last-modified": "2024-04-19T18:40:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ee5e7632e981673f42a50ade25e71e612e543d9d",
+            "https://git.kernel.org/stable/c/f775f2621c2ac5cc3a0b3a64665dad4fb146e510",
+            "https://git.kernel.org/stable/c/4cb3cf7177ae3666be7fb27d4ad4d72a295fb02d",
+            "https://git.kernel.org/stable/c/2871aa407007f6f531fae181ad252486e022df42",
+            "https://git.kernel.org/stable/c/24e05760186dc070d3db190ca61efdbce23afc88",
+            "https://git.kernel.org/stable/c/70154e8d015c9b4fb56c1a2ef1fc8b83d45c7f68",
+            "https://git.kernel.org/stable/c/efa56305908ba20de2104f1b8508c6a7401833be"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnvmet-tcp: Fix a kernel panic when host sends an invalid H2C PDU length\n\nIf the host sends an H2CData command with an invalid DATAL,\nthe kernel may crash in nvmet_tcp_build_pdu_iovec().\n\nUnable to handle kernel NULL pointer dereference at\nvirtual address 0000000000000000\nlr : nvmet_tcp_io_work+0x6ac/0x718 [nvmet_tcp]\nCall trace:\n  process_one_work+0x174/0x3c8\n  worker_thread+0x2d0/0x3e8\n  kthread+0x104/0x110\n\nFix the bug by raising a fatal error if DATAL isn't coherent\nwith the packet size.\nAlso, the PDU length should never exceed the MAXH2CDATA parameter which\nhas been communicated to the host in nvmet_tcp_handle_icreq()."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-47435",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/blinkfox/hexo-theme-matery/issues/897"
+        ],
+        "summary": "An issue in the verifyPassword function of hexo-theme-matery v2.0.0 allows attackers to bypass authentication and access password protected pages."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31546",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/emirhanmtl/vuln-research/blob/main/SQLi-2-Computer-Laboratory-Management-System-PoC.md"
+        ],
+        "summary": "Computer Laboratory Management System v1.0 is vulnerable to SQL Injection via the \"id\" parameter of /admin/damage/view_damage.php."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31547",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/emirhanmtl/vuln-research/blob/main/SQLi-3-Computer-Laboratory-Management-System-PoC.md"
+        ],
+        "summary": "Computer Laboratory Management System v1.0 is vulnerable to SQL Injection via the \"id\" parameter of /admin/item/view_item.php."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T18:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-362",
+        "id": "CVE-2024-3979",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://vuldb.com/?id.261596",
+            "https://vuldb.com/?ctiid.261596",
+            "https://vuldb.com/?submit.312410",
+            "https://github.com/COVESA/vsomeip/issues/663",
+            "https://github.com/COVESA/vsomeip/files/14904610/details.zip"
+        ],
+        "summary": "A vulnerability, which was classified as problematic, has been found in COVESA vsomeip up to 3.4.10. Affected by this issue is some unknown functionality. The manipulation leads to race condition. An attack has to be approached locally. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-261596."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-27279",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7148632",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/248533"
+        ],
+        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.7 could allow a user to cause a denial of service due to missing API rate limiting.  IBM X-Force ID:  248533."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-295",
+        "id": "CVE-2023-37397",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7148632",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/259672"
+        ],
+        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.7 could allow a local user to obtain or modify sensitive information due to improper encryption of certain data.  IBM X-Force ID:  259672."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-49501",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg",
+            "https://trac.ffmpeg.org/ticket/10686#no1",
+            "https://trac.ffmpeg.org/ticket/10686"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the config_eq_output function in the libavfilter/asrc_afirsrc.c:495:30 component."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-49963",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://loudmouth.io",
+            "https://gitlab.com/loudmouth-security/vulnerability-disclosures/cve-2023-49963"
+        ],
+        "summary": "DYMO LabelWriter Print Server through 2.366 contains a backdoor hard-coded password that could allow an attacker to take control."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-50007",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg/commit/b1942734c7cbcdc9034034373abcc9ecb9644c47",
+            "https://trac.ffmpeg.org/ticket/10700"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via theav_samples_set_silence function in thelibavutil/samplefmt.c:260:9 component."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-50009",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg",
+            "https://trac.ffmpeg.org/ticket/10699",
+            "https://ffmpeg.org/"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the ff_gaussian_blur_8 function in libavfilter/edge_template.c:116:5 component."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-326",
+        "id": "CVE-2022-40745",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7148632",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/236452"
+        ],
+        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.7 could allow a local user to obtain sensitive information due to weaker than expected security.  IBM X-Force ID:  236452."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-50010",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10702"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the set_encoder_id function in /fftools/ffmpeg_enc.c component."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51791",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10738"
+        ],
+        "summary": "Buffer Overflow vulenrability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavcodec/jpegxl_parser.c in gen_alias_map."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-49502",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg",
+            "https://trac.ffmpeg.org/ticket/10688"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the ff_bwdif_filter_intra_c function in the libavfilter/bwdifdsp.c:125:5 component."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51792",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/strukturag/libde265",
+            "https://github.com/strukturag/libde265/issues/427"
+        ],
+        "summary": "Buffer Overflow vulnerability in libde265 v1.0.12 allows a local attacker to cause a denial of service via the allocation size exceeding the maximum supported size of 0x10000000000."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-50008",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg/commit/5f87a68cf70dafeab2fb89b42e41a4c29053b89b",
+            "https://trac.ffmpeg.org/ticket/10701"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the av_malloc function in libavutil/mem.c:105:9 component."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51793",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10743"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavutil/imgutils.c:353:9 in image_copy_plane."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51795",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10749"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavfilter/avf_showspectrum.c:1789:52 component in showspectrumpic_request_frame"
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51796",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10753"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavfilter/f_reverse.c:269:26 in areverse_request_frame."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51797",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://github.com/FFmpeg/FFmpeg",
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10756"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavfilter/avf_showwaves.c:722:24 in showwaves_filter_frame"
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-51798",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://ffmpeg.org/",
+            "https://trac.ffmpeg.org/ticket/10758"
+        ],
+        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via a floating point exception (FPE) error at libavfilter/vf_minterpolate.c:1078:60 in interpolate."
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "secure@microsoft.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-29991",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-29991"
+        ],
+        "summary": "Microsoft Edge (Chromium-based) Security Feature Bypass Vulnerability"
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "product-cna@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2440",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://docs.github.com/en/enterprise-server@3.9/admin/release-notes#3.9.13",
+            "https://docs.github.com/en/enterprise-server@3.10/admin/release-notes#3.10.10",
+            "https://docs.github.com/en/enterprise-server@3.11/admin/release-notes#3.11.8",
+            "https://docs.github.com/en/enterprise-server@3.12/admin/release-notes#3.12.2"
+        ],
+        "summary": "A race condition in GitHub Enterprise Server allowed an existing admin to maintain permissions on a detached repository by making a GraphQL mutation to alter repository permissions while the repository is detached.\u00a0This vulnerability affected all versions of GitHub Enterprise Server prior to 3.13 and was fixed in versions 3.9.13, 3.10.10, 3.11.8 and 3.12.1.\u00a0This vulnerability was reported via the GitHub Bug Bounty program. "
+    },
+    {
+        "Modified": "2024-04-19T18:29:00",
+        "Published": "2024-04-19T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-31552",
+        "impact": {},
+        "last-modified": "2024-04-19T18:29:00",
+        "references": [
+            "https://www.yuque.com/sickle-ffnce/awixr8/gsu7nyi0gu9q1nl8"
+        ],
+        "summary": "CuteHttpFileServer v.3.1 version has an arbitrary file download vulnerability, which allows attackers to download arbitrary files on the server and obtain sensitive information."
+    },
+    {
         "Modified": "2024-04-19T17:58:00",
         "Published": "2024-02-23T10:15:00",
         "access": {},
@@ -291,329 +891,6 @@
             "https://issues.chromium.org/issues/41491859"
         ],
         "summary": "Out of bounds read in Fonts in Google Chrome prior to 124.0.6367.60 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)"
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-27279",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7148632",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/248533"
-        ],
-        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.7 could allow a user to cause a denial of service due to missing API rate limiting.  IBM X-Force ID:  248533."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-295",
-        "id": "CVE-2023-37397",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7148632",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/259672"
-        ],
-        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.7 could allow a local user to obtain or modify sensitive information due to improper encryption of certain data.  IBM X-Force ID:  259672."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-49501",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/FFmpeg/FFmpeg",
-            "https://trac.ffmpeg.org/ticket/10686#no1",
-            "https://trac.ffmpeg.org/ticket/10686"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the config_eq_output function in the libavfilter/asrc_afirsrc.c:495:30 component."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-49963",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://loudmouth.io",
-            "https://gitlab.com/loudmouth-security/vulnerability-disclosures/cve-2023-49963"
-        ],
-        "summary": "DYMO LabelWriter Print Server through 2.366 contains a backdoor hard-coded password that could allow an attacker to take control."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-50007",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/FFmpeg/FFmpeg/commit/b1942734c7cbcdc9034034373abcc9ecb9644c47",
-            "https://trac.ffmpeg.org/ticket/10700"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via theav_samples_set_silence function in thelibavutil/samplefmt.c:260:9 component."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-50009",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/FFmpeg/FFmpeg",
-            "https://trac.ffmpeg.org/ticket/10699",
-            "https://ffmpeg.org/"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the ff_gaussian_blur_8 function in libavfilter/edge_template.c:116:5 component."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-326",
-        "id": "CVE-2022-40745",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7148632",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/236452"
-        ],
-        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.7 could allow a local user to obtain sensitive information due to weaker than expected security.  IBM X-Force ID:  236452."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-50010",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10702"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the set_encoder_id function in /fftools/ffmpeg_enc.c component."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51791",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10738"
-        ],
-        "summary": "Buffer Overflow vulenrability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavcodec/jpegxl_parser.c in gen_alias_map."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-49502",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/FFmpeg/FFmpeg",
-            "https://trac.ffmpeg.org/ticket/10688"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the ff_bwdif_filter_intra_c function in the libavfilter/bwdifdsp.c:125:5 component."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51792",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/strukturag/libde265",
-            "https://github.com/strukturag/libde265/issues/427"
-        ],
-        "summary": "Buffer Overflow vulnerability in libde265 v1.0.12 allows a local attacker to cause a denial of service via the allocation size exceeding the maximum supported size of 0x10000000000."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-50008",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/FFmpeg/FFmpeg/commit/5f87a68cf70dafeab2fb89b42e41a4c29053b89b",
-            "https://trac.ffmpeg.org/ticket/10701"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.n6.1-3-g466799d4f5 allows a local attacker to execute arbitrary code via the av_malloc function in libavutil/mem.c:105:9 component."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51793",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10743"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavutil/imgutils.c:353:9 in image_copy_plane."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51795",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10749"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavfilter/avf_showspectrum.c:1789:52 component in showspectrumpic_request_frame"
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51796",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10753"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavfilter/f_reverse.c:269:26 in areverse_request_frame."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51797",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://github.com/FFmpeg/FFmpeg",
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10756"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via the libavfilter/avf_showwaves.c:722:24 in showwaves_filter_frame"
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51798",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://ffmpeg.org/",
-            "https://trac.ffmpeg.org/ticket/10758"
-        ],
-        "summary": "Buffer Overflow vulnerability in Ffmpeg v.N113007-g8d24a28d06 allows a local attacker to execute arbitrary code via a floating point exception (FPE) error at libavfilter/vf_minterpolate.c:1078:60 in interpolate."
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "secure@microsoft.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-29991",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-29991"
-        ],
-        "summary": "Microsoft Edge (Chromium-based) Security Feature Bypass Vulnerability"
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "product-cna@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2440",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://docs.github.com/en/enterprise-server@3.9/admin/release-notes#3.9.13",
-            "https://docs.github.com/en/enterprise-server@3.10/admin/release-notes#3.10.10",
-            "https://docs.github.com/en/enterprise-server@3.11/admin/release-notes#3.11.8",
-            "https://docs.github.com/en/enterprise-server@3.12/admin/release-notes#3.12.2"
-        ],
-        "summary": "A race condition in GitHub Enterprise Server allowed an existing admin to maintain permissions on a detached repository by making a GraphQL mutation to alter repository permissions while the repository is detached.\u00a0This vulnerability affected all versions of GitHub Enterprise Server prior to 3.13 and was fixed in versions 3.9.13, 3.10.10, 3.11.8 and 3.12.1.\u00a0This vulnerability was reported via the GitHub Bug Bounty program. "
-    },
-    {
-        "Modified": "2024-04-19T17:15:00",
-        "Published": "2024-04-19T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31552",
-        "impact": {},
-        "last-modified": "2024-04-19T17:15:00",
-        "references": [
-            "https://www.yuque.com/sickle-ffnce/awixr8/gsu7nyi0gu9q1nl8"
-        ],
-        "summary": "CuteHttpFileServer v.3.1 version has an arbitrary file download vulnerability, which allows attackers to download arbitrary files on the server and obtain sensitive information."
     },
     {
         "Modified": "2024-04-19T17:15:00",
@@ -1424,285 +1701,5 @@
             "https://bugzilla.redhat.com/show_bug.cgi?id=2214373"
         ],
         "summary": "An issue in the logic used to check 0.0.0.0 against the cURL blocked hosts lists resulted in an SSRF risk. This flaw affects Moodle versions 4.2, 4.1 to 4.1.3, 4.0 to 4.0.8, 3.11 to 3.11.14, 3.9 to 3.9.21 and earlier unsupported versions."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-05-02T20:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-610",
-        "id": "CVE-2023-30943",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "http://git.moodle.org/gw?p=moodle.git&a=search&h=HEAD&st=commit&s=MDL-77718",
-            "https://moodle.org/mod/forum/discuss.php?d=446285",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2188605",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/PBFSXRYLT4ICKJVQSRBAOUDMDRVSVBLS/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/54TM5H5PDUDYXOQ7X7PPYWP4AJDAE73I/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/MZBWRVUJF7HI53XCJPJ3YJZPOV5HBRUY/"
-        ],
-        "summary": "The vulnerability was found Moodle which exists because the application allows a user to control path of the older to create in TinyMCE loaders. A remote user can send a specially crafted HTTP request and create arbitrary folders on the system."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-05-02T20:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-30944",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=446286",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2188606",
-            "http://git.moodle.org/gw?p=moodle.git&a=search&h=HEAD&st=commit&s=MDL-77187",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/PBFSXRYLT4ICKJVQSRBAOUDMDRVSVBLS/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/54TM5H5PDUDYXOQ7X7PPYWP4AJDAE73I/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/MZBWRVUJF7HI53XCJPJ3YJZPOV5HBRUY/"
-        ],
-        "summary": "The vulnerability was found Moodle which exists due to insufficient sanitization of user-supplied data in external Wiki method for listing pages. A remote attacker can send a specially crafted request to the affected application and execute limited SQL commands within the application database."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T20:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-770",
-        "id": "CVE-2023-1544",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://lists.nongnu.org/archive/html/qemu-devel/2023-03/msg00206.html",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2180364",
-            "https://security.netapp.com/advisory/ntap-20230511-0005/",
-            "https://access.redhat.com/security/cve/CVE-2023-1544"
-        ],
-        "summary": "A flaw was found in the QEMU implementation of VMWare's paravirtual RDMA device. This flaw allows a crafted guest driver to allocate and initialize a huge number of page tables to be used as a ring of descriptors for CQ and async events, potentially leading to an out-of-bounds read and crash of QEMU."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-28329",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445061",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179406"
-        ],
-        "summary": "Insufficient validation of profile field availability condition resulted in an SQL injection risk (by default only available to teachers and managers)."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-668",
-        "id": "CVE-2023-1402",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445069",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179427"
-        ],
-        "summary": "The course participation report required additional checks to prevent roles being displayed which the user did not have access to view."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-28330",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445062",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179412"
-        ],
-        "summary": "Insufficient sanitizing in backup resulted in an arbitrary file read risk. The capability to access this feature is only available to teachers, managers and admins by default."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-28331",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445063",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179418"
-        ],
-        "summary": "Content output by the database auto-linking filter required additional sanitizing to prevent an XSS risk."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-28332",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445064",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179419"
-        ],
-        "summary": "If the algebra filter was enabled but not functional (eg the necessary binaries were missing from the server), it presented an XSS risk."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2023-28333",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445065",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179422"
-        ],
-        "summary": "The Mustache pix helper contained a potential Mustache injection risk if combined with user input (note: This did not appear to be implemented/exploitable anywhere in the core Moodle LMS)."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2023-28334",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445066",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179423"
-        ],
-        "summary": "Authenticated users were able to enumerate other users' names via the learning plans page."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-28335",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445067",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179424"
-        ],
-        "summary": "The link to reset all templates of a database activity did not include the necessary token to prevent a CSRF risk."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-23T21:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-668",
-        "id": "CVE-2023-28336",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://moodle.org/mod/forum/discuss.php?d=445068",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/3QZN34VSF4HTCW3C3ZP2OZYSLYUKADPF/",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2179426"
-        ],
-        "summary": "Insufficient filtering of grade report history made it possible for teachers to access the names of users they could not otherwise access."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-03-06T23:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-0330",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://lists.nongnu.org/archive/html/qemu-devel/2023-01/msg03411.html",
-            "https://lists.debian.org/debian-lts-announce/2023/10/msg00006.html",
-            "https://access.redhat.com/security/cve/CVE-2023-0330",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2160151"
-        ],
-        "summary": "A vulnerability in the lsi53c895a device affects the latest version of qemu. A DMA-MMIO reentrancy problem may lead to memory corruption bugs like stack overflow or use-after-free."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-01-12T19:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-23456",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2160381",
-            "https://github.com/upx/upx/commit/510505a85cbe45e51fbd470f1aa8b02157c429d4",
-            "https://github.com/upx/upx/issues/632",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/EL3BVKIGG3SH6I3KPOYQAWCBD4UMPOPI/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/TGEP3FBNRZXGLIA2B2ICMB32JVMPREFZ/"
-        ],
-        "summary": "A heap-based buffer overflow issue was discovered in UPX in PackTmt::pack() in p_tmt.cpp file. The flow allows an attacker to cause a denial of service (abort) via a crafted file."
-    },
-    {
-        "Modified": "2024-04-19T14:15:00",
-        "Published": "2023-01-12T19:15:00",
-        "access": {},
-        "assigner": "patrick@puiterwijk.org",
-        "cvss": null,
-        "cwe": "CWE-119",
-        "id": "CVE-2023-23457",
-        "impact": {},
-        "last-modified": "2024-04-19T14:15:00",
-        "references": [
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2160382",
-            "https://github.com/upx/upx/commit/779b648c5f6aa9b33f4728f79dd4d0efec0bf860",
-            "https://github.com/upx/upx/issues/631",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/EL3BVKIGG3SH6I3KPOYQAWCBD4UMPOPI/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/TGEP3FBNRZXGLIA2B2ICMB32JVMPREFZ/"
-        ],
-        "summary": "A Segmentation fault was found in UPX in PackLinuxElf64::invert_pt_dynamic() in p_lx_elf.cpp. An attacker with a crafted input file allows invalid memory address access that could lead to a denial of service."
-    },
-    {
-        "Modified": "2024-04-19T13:10:00",
-        "Published": "2024-04-19T12:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-32683",
-        "impact": {},
-        "last-modified": "2024-04-19T13:10:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-ultimate-review/wordpress-wp-ultimate-review-plugin-2-2-5-insecure-direct-object-references-idor-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authorization Bypass Through User-Controlled Key vulnerability in Wpmet Wp Ultimate Review.This issue affects Wp Ultimate Review: from n/a through 2.2.5.\n\n"
     }
 ]
