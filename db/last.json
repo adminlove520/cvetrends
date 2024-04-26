@@ -1,5 +1,644 @@
 [
     {
+        "Modified": "2024-04-26T16:10:00",
+        "Published": "2024-02-22T17:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-26586",
+        "impact": {},
+        "last-modified": "2024-04-26T16:10:00",
+        "references": [
+            "https://git.kernel.org/stable/c/56750ea5d15426b5f307554e7699e8b5f76c3182",
+            "https://git.kernel.org/stable/c/348112522a35527c5bcba933b9fefb40a4f44f15",
+            "https://git.kernel.org/stable/c/2f5e1565740490706332c06f36211d4ce0f88e62",
+            "https://git.kernel.org/stable/c/a361c2c1da5dbb13ca67601cf961ab3ad68af383",
+            "https://git.kernel.org/stable/c/483ae90d8f976f8339cf81066312e1329f2d3706",
+            "https://git.kernel.org/stable/c/6fd24675188d354b1cad47462969afa2ab09d819"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmlxsw: spectrum_acl_tcam: Fix stack corruption\n\nWhen tc filters are first added to a net device, the corresponding local\nport gets bound to an ACL group in the device. The group contains a list\nof ACLs. In turn, each ACL points to a different TCAM region where the\nfilters are stored. During forwarding, the ACLs are sequentially\nevaluated until a match is found.\n\nOne reason to place filters in different regions is when they are added\nwith decreasing priorities and in an alternating order so that two\nconsecutive filters can never fit in the same region because of their\nkey usage.\n\nIn Spectrum-2 and newer ASICs the firmware started to report that the\nmaximum number of ACLs in a group is more than 16, but the layout of the\nregister that configures ACL groups (PAGT) was not updated to account\nfor that. It is therefore possible to hit stack corruption [1] in the\nrare case where more than 16 ACLs in a group are required.\n\nFix by limiting the maximum ACL group size to the minimum between what\nthe firmware reports and the maximum ACLs that fit in the PAGT register.\n\nAdd a test case to make sure the machine does not crash when this\ncondition is hit.\n\n[1]\nKernel panic - not syncing: stack-protector: Kernel stack is corrupted in: mlxsw_sp_acl_tcam_group_update+0x116/0x120\n[...]\n dump_stack_lvl+0x36/0x50\n panic+0x305/0x330\n __stack_chk_fail+0x15/0x20\n mlxsw_sp_acl_tcam_group_update+0x116/0x120\n mlxsw_sp_acl_tcam_group_region_attach+0x69/0x110\n mlxsw_sp_acl_tcam_vchunk_get+0x492/0xa20\n mlxsw_sp_acl_tcam_ventry_add+0x25/0xe0\n mlxsw_sp_acl_rule_add+0x47/0x240\n mlxsw_sp_flower_replace+0x1a9/0x1d0\n tc_setup_cb_add+0xdc/0x1c0\n fl_hw_replace_filter+0x146/0x1f0\n fl_change+0xc17/0x1360\n tc_new_tfilter+0x472/0xb90\n rtnetlink_rcv_msg+0x313/0x3b0\n netlink_rcv_skb+0x58/0x100\n netlink_unicast+0x244/0x390\n netlink_sendmsg+0x1e4/0x440\n ____sys_sendmsg+0x164/0x260\n ___sys_sendmsg+0x9a/0xe0\n __sys_sendmsg+0x7a/0xc0\n do_syscall_64+0x40/0xe0\n entry_SYSCALL_64_after_hwframe+0x63/0x6b"
+    },
+    {
+        "Modified": "2024-04-26T16:10:00",
+        "Published": "2013-11-27T04:43:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "MEDIUM",
+            "vector": "LOCAL"
+        },
+        "assigner": "secalert@redhat.com",
+        "cvss": 6.9,
+        "cvss-time": "2024-04-26T16:10:00",
+        "cvss-vector": "AV:L/AC:M/Au:N/C:C/I:C/A:C",
+        "cwe": "CWE-119",
+        "id": "CVE-2013-6381",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2024-04-26T16:10:00",
+        "references": [
+            "https://bugzilla.redhat.com/show_bug.cgi?id=1033600",
+            "https://github.com/torvalds/linux/commit/6fb392b1a63ae36c31f62bc3fc8630b49d602b62",
+            "http://www.openwall.com/lists/oss-security/2013/11/22/5",
+            "http://rhn.redhat.com/errata/RHSA-2014-0159.html",
+            "http://rhn.redhat.com/errata/RHSA-2014-0284.html",
+            "http://rhn.redhat.com/errata/RHSA-2014-0285.html",
+            "http://www.securityfocus.com/bid/63890",
+            "http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git%3Ba=commit%3Bh=6fb392b1a63ae36c31f62bc3fc8630b49d602b62"
+        ],
+        "summary": "Buffer overflow in the qeth_snmp_command function in drivers/s390/net/qeth_core_main.c in the Linux kernel through 3.12.1 allows local users to cause a denial of service or possibly have unspecified other impact via an SNMP ioctl call with a length value that is incompatible with the command-buffer size."
+    },
+    {
+        "Modified": "2024-04-26T16:09:00",
+        "Published": "2024-01-12T19:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-6683",
+        "impact": {},
+        "last-modified": "2024-04-26T16:09:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-6683",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2254825",
+            "https://security.netapp.com/advisory/ntap-20240223-0001/"
+        ],
+        "summary": "A flaw was found in the QEMU built-in VNC server while processing ClientCutText messages. The qemu_clipboard_request() function can be reached before vnc_server_cut_text_caps() was called and had the chance to initialize the clipboard peer, leading to a NULL pointer dereference. This could allow a malicious authenticated VNC client to crash QEMU and trigger a denial of service."
+    },
+    {
+        "Modified": "2024-04-26T16:09:00",
+        "Published": "2023-09-12T10:15:00",
+        "access": {},
+        "assigner": "security@eclipse.org",
+        "cvss": null,
+        "cwe": "CWE-178",
+        "id": "CVE-2023-4759",
+        "impact": {},
+        "last-modified": "2024-04-26T16:09:00",
+        "references": [
+            "https://projects.eclipse.org/projects/technology.jgit/releases/6.6.1",
+            "https://git.eclipse.org/c/jgit/jgit.git/commit/?id=9072103f3b3cf64dd12ad2949836ab98f62dabf1",
+            "https://gitlab.eclipse.org/security/vulnerability-reports/-/issues/11"
+        ],
+        "summary": "Arbitrary File Overwrite in Eclipse JGit <= 6.6.0\n\nIn Eclipse JGit, all versions <= 6.6.0.202305301015-r, a symbolic link present in a specially crafted git repository can be used to write a file to locations outside the working tree when this repository is cloned with JGit to a case-insensitive filesystem, or when a checkout from a clone of such a repository is performed on a case-insensitive filesystem.\n\nThis can happen on checkout (DirCacheCheckout), merge (ResolveMerger\u00a0via its WorkingTreeUpdater), pull (PullCommand\u00a0using merge), and when applying a patch (PatchApplier). This can be exploited for remote code execution (RCE), for instance if the file written outside the working tree is a git filter that gets executed on a subsequent git command.\n\nThe issue occurs only on case-insensitive filesystems, like the default filesystems on Windows and macOS. The user performing the clone or checkout must have the rights to create symbolic links for the problem to occur, and symbolic links must be enabled in the git configuration.\n\nSetting git configuration option core.symlinks = false\u00a0before checking out avoids the problem.\n\nThe issue was fixed in Eclipse JGit version 6.6.1.202309021850-r and 6.7.0.202309050840-r, available via  Maven Central https://repo1.maven.org/maven2/org/eclipse/jgit/ \u00a0and  repo.eclipse.org https://repo.eclipse.org/content/repositories/jgit-releases/ . A backport is available in 5.13.3 starting from  5.13.3.202401111512-r.\n\n\nThe JGit maintainers would like to thank RyotaK for finding and reporting this issue.\n\n\n\n"
+    },
+    {
+        "Modified": "2024-04-26T16:08:00",
+        "Published": "2023-11-20T09:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-74",
+        "id": "CVE-2022-46337",
+        "impact": {},
+        "last-modified": "2024-04-26T16:08:00",
+        "references": [
+            "https://lists.apache.org/thread/q23kvvtoohgzwybxpwozmvvk17rp0td3"
+        ],
+        "summary": "A cleverly devised username might bypass LDAP authentication checks. In \nLDAP-authenticated Derby installations, this could let an attacker fill \nup the disk by creating junk Derby databases. In LDAP-authenticated \nDerby installations, this could also allow the attacker to execute \nmalware which was visible to and executable by the account which booted \nthe Derby server. In LDAP-protected databases which weren't also \nprotected by SQL GRANT/REVOKE authorization, this vulnerability could \nalso let an attacker view and corrupt sensitive data and run sensitive \ndatabase functions and procedures.\n\nMitigation:\n\nUsers should upgrade to Java 21 and Derby 10.17.1.0.\n\nAlternatively, users who wish to remain on older Java versions should \nbuild their own Derby distribution from one of the release families to \nwhich the fix was backported: 10.16, 10.15, and 10.14. Those are the \nreleases which correspond, respectively, with Java LTS versions 17, 11, \nand 8.\n\n"
+    },
+    {
+        "Modified": "2024-04-26T16:08:00",
+        "Published": "2022-04-25T16:16:00",
+        "access": {
+            "authentication": "SINGLE",
+            "complexity": "MEDIUM",
+            "vector": "NETWORK"
+        },
+        "assigner": "contact@wpscan.com",
+        "cvss": 3.5,
+        "cvss-time": "2024-04-26T16:08:00",
+        "cvss-vector": "AV:N/AC:M/Au:S/C:N/I:P/A:N",
+        "cwe": "CWE-79",
+        "id": "CVE-2022-1153",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "NONE",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2024-04-26T16:08:00",
+        "references": [
+            "https://wpscan.com/vulnerability/1d9d5516-f1c3-4134-b6bf-7f2f890533c4"
+        ],
+        "summary": "The LayerSlider WordPress plugin before 7.1.2 does not sanitise and escape Project's slug before outputting it back in various place, which could allow high privilege users such as admin to perform Cross-Site Scripting attacks even when the unfiltered_html is disallowed"
+    },
+    {
+        "Modified": "2024-04-26T16:08:00",
+        "Published": "2019-04-25T15:29:00",
+        "access": {
+            "authentication": "SINGLE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert@redhat.com",
+        "cvss": 6.8,
+        "cvss-time": "2024-04-26T16:08:00",
+        "cvss-vector": "AV:N/AC:L/Au:S/C:N/I:N/A:C",
+        "cwe": "CWE-835",
+        "id": "CVE-2019-3900",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "NONE",
+            "integrity": "NONE"
+        },
+        "last-modified": "2024-04-26T16:08:00",
+        "references": [
+            "https://www.spinics.net/lists/kernel/msg3111012.html",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2019-3900",
+            "http://www.securityfocus.com/bid/108076",
+            "https://security.netapp.com/advisory/ntap-20190517-0005/",
+            "https://access.redhat.com/errata/RHSA-2019:1973",
+            "https://access.redhat.com/errata/RHSA-2019:2043",
+            "https://access.redhat.com/errata/RHSA-2019:2029",
+            "https://www.debian.org/security/2019/dsa-4497",
+            "https://seclists.org/bugtraq/2019/Aug/18",
+            "https://lists.debian.org/debian-lts-announce/2019/08/msg00016.html",
+            "https://lists.debian.org/debian-lts-announce/2019/08/msg00017.html",
+            "https://usn.ubuntu.com/4114-1/",
+            "https://usn.ubuntu.com/4117-1/",
+            "https://usn.ubuntu.com/4116-1/",
+            "https://usn.ubuntu.com/4115-1/",
+            "https://usn.ubuntu.com/4118-1/",
+            "https://access.redhat.com/errata/RHSA-2019:3220",
+            "https://access.redhat.com/errata/RHSA-2019:3517",
+            "https://access.redhat.com/errata/RHSA-2019:3309",
+            "https://seclists.org/bugtraq/2019/Nov/11",
+            "http://packetstormsecurity.com/files/155212/Slackware-Security-Advisory-Slackware-14.2-kernel-Updates.html",
+            "https://access.redhat.com/errata/RHSA-2019:3836",
+            "https://access.redhat.com/errata/RHSA-2019:3967",
+            "https://access.redhat.com/errata/RHSA-2019:4058",
+            "https://access.redhat.com/errata/RHSA-2020:0204",
+            "https://www.oracle.com/security-alerts/cpuApr2021.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RI3WXXM5URTZSR3RVEKO6MDXDFIKTZ5R/",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/TOFNJA5NNVXQ6AV6KGZB677JIVXAMJHT/",
+            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/AYTZH6QCNITK7353S6RCRT2PQHZSDPXD/"
+        ],
+        "summary": "An infinite loop issue was found in the vhost_net kernel module in Linux Kernel up to and including v5.1-rc6, while handling incoming packets in handle_rx(). It could occur if one end sends packets faster than the other end can process them. A guest user, maybe remote one, could use this flaw to stall the vhost_net kernel thread, resulting in a DoS scenario."
+    },
+    {
+        "Modified": "2024-04-26T16:08:00",
+        "Published": "2008-01-12T00:46:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "MEDIUM",
+            "vector": "NETWORK"
+        },
+        "assigner": "cve@mitre.org",
+        "cvss": 4.3,
+        "cvss-time": "2024-04-26T16:08:00",
+        "cvss-vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "cwe": "CWE-352",
+        "id": "CVE-2007-6420",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "NONE",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2024-04-26T16:08:00",
+        "references": [
+            "http://www.securityfocus.com/bid/27236",
+            "http://securityreason.com/securityalert/3523",
+            "http://security.gentoo.org/glsa/glsa-200807-06.xml",
+            "http://secunia.com/advisories/31026",
+            "http://www.securityfocus.com/bid/31681",
+            "http://lists.apple.com/archives/security-announce/2008/Oct/msg00001.html",
+            "http://support.apple.com/kb/HT3216",
+            "http://secunia.com/advisories/32222",
+            "http://lists.opensuse.org/opensuse-security-announce/2008-11/msg00000.html",
+            "http://www.redhat.com/support/errata/RHSA-2008-0966.html",
+            "http://marc.info/?l=bugtraq&m=123376588623823&w=2",
+            "http://secunia.com/advisories/33797",
+            "http://www.ubuntu.com/usn/USN-731-1",
+            "http://secunia.com/advisories/34219",
+            "http://www.vupen.com/english/advisories/2009/0320",
+            "http://www.vupen.com/english/advisories/2008/2780",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A8371",
+            "http://www.securityfocus.com/archive/1/494858/100/0/threaded",
+            "http://www.securityfocus.com/archive/1/486169/100/0/threaded",
+            "https://lists.apache.org/thread.html/8d63cb8e9100f28a99429b4328e4e7cebce861d5772ac9863ba2ae6f%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/f7f95ac1cd9895db2714fa3ebaa0b94d0c6df360f742a40951384a53%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/r57608dc51b79102f3952ae06f54d5277b649c86d6533dcd6a7d201f7%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/rfbaf647d52c1cb843e726a0933f156366a806cead84fbd430951591b%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/rf6449464fd8b7437704c55f88361b66f12d5b5f90bcce66af4be4ba9%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/r7dd6be4dc38148704f2edafb44a8712abaa3a2be120d6c3314d55919%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/r9ea3538f229874c80a10af473856a81fbf5f694cd7f471cc679ba70b%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/r84d043c2115176958562133d96d851495d712aa49da155d81f6733be%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/rdca61ae990660bacb682295f2a09d34612b7bb5f457577fe17f4d064%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/r9f93cf6dde308d42a9c807784e8102600d0397f5f834890708bf6920%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/rc4c53a0d57b2771ecd4b965010580db355e38137c8711311ee1073a8%40%3Ccvs.httpd.apache.org%3E",
+            "https://lists.apache.org/thread.html/r75cbe9ea3e2114e4271bbeca7aff96117b50c1b6eb7c4772b0337c1f%40%3Ccvs.httpd.apache.org%3E"
+        ],
+        "summary": "Cross-site request forgery (CSRF) vulnerability in the balancer-manager in mod_proxy_balancer for Apache HTTP Server 2.2.x allows remote attackers to gain privileges via unspecified vectors."
+    },
+    {
+        "Modified": "2024-04-26T16:07:00",
+        "Published": "2013-06-18T22:55:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert_us@oracle.com",
+        "cvss": 10.0,
+        "cvss-time": "2024-04-26T16:07:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2013-2465",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2024-04-26T16:07:00",
+        "references": [
+            "http://www.oracle.com/technetwork/topics/security/javacpujun2013-1899847.html",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=975118",
+            "http://rhn.redhat.com/errata/RHSA-2013-0963.html",
+            "http://hg.openjdk.java.net/jdk7u/jdk7u-dev/jdk/rev/2a9c79db0040",
+            "http://secunia.com/advisories/54154",
+            "http://www-01.ibm.com/support/docview.wss?uid=swg21642336",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-08/msg00000.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-07/msg00026.html",
+            "http://rhn.redhat.com/errata/RHSA-2013-1081.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-08/msg00003.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-07/msg00027.html",
+            "http://rhn.redhat.com/errata/RHSA-2013-1060.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-07/msg00028.html",
+            "http://h20000.www2.hp.com/bizsupport/TechSupport/Document.jsp?objectID=c03898880",
+            "http://rhn.redhat.com/errata/RHSA-2013-1455.html",
+            "http://rhn.redhat.com/errata/RHSA-2013-1456.html",
+            "http://www.us-cert.gov/ncas/alerts/TA13-169A",
+            "http://marc.info/?l=bugtraq&m=137545592101387&w=2",
+            "http://marc.info/?l=bugtraq&m=137545505800971&w=2",
+            "http://www.mandriva.com/security/advisories?name=MDVSA-2013:183",
+            "http://rhn.redhat.com/errata/RHSA-2013-1059.html",
+            "http://advisories.mageia.org/MGASA-2013-0185.html",
+            "http://security.gentoo.org/glsa/glsa-201406-32.xml",
+            "http://www.securityfocus.com/bid/60657",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A19703",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A19455",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A19074",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A17106",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-07/msg00031.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-07/msg00029.html",
+            "https://access.redhat.com/errata/RHSA-2014:0414"
+        ],
+        "summary": "Unspecified vulnerability in the Java Runtime Environment (JRE) component in Oracle Java SE 7 Update 21 and earlier, 6 Update 45 and earlier, and 5.0 Update 45 and earlier, and OpenJDK 7, allows remote attackers to affect confidentiality, integrity, and availability via unknown vectors related to 2D.  NOTE: the previous information is from the June 2013 CPU. Oracle has not commented on claims from another vendor that this issue allows remote attackers to bypass the Java sandbox via vectors related to \"Incorrect image channel verification\" in 2D."
+    },
+    {
+        "Modified": "2024-04-26T16:07:00",
+        "Published": "2012-10-16T21:55:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert_us@oracle.com",
+        "cvss": 10.0,
+        "cvss-time": "2024-04-26T16:07:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2012-5076",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2024-04-26T16:07:00",
+        "references": [
+            "http://www.oracle.com/technetwork/topics/security/javacpuoct2012-1515924.html",
+            "http://rhn.redhat.com/errata/RHSA-2012-1391.html",
+            "http://rhn.redhat.com/errata/RHSA-2012-1386.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2012-10/msg00016.html",
+            "http://rhn.redhat.com/errata/RHSA-2012-1467.html",
+            "http://secunia.com/advisories/51029",
+            "http://secunia.com/advisories/51326",
+            "http://secunia.com/advisories/51390",
+            "http://security.gentoo.org/glsa/glsa-201406-32.xml",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A16641"
+        ],
+        "summary": "Unspecified vulnerability in the Java Runtime Environment (JRE) component in Oracle Java SE 7 Update 7 and earlier allows remote attackers to affect confidentiality, integrity, and availability, related to JAX-WS."
+    },
+    {
+        "Modified": "2024-04-26T16:07:00",
+        "Published": "2013-04-17T18:55:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "MEDIUM",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert_us@oracle.com",
+        "cvss": 4.3,
+        "cvss-time": "2024-04-26T16:07:00",
+        "cvss-vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2013-2423",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "NONE",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2024-04-26T16:07:00",
+        "references": [
+            "http://www.oracle.com/technetwork/topics/security/javacpuapr2013-1928497.html",
+            "http://weblog.ikvm.net/PermaLink.aspx?guid=acd2dd6d-1028-4996-95df-efa42ac237f0",
+            "http://blog.spiderlabs.com/2013/04/java-is-so-confusing.html",
+            "http://hg.openjdk.java.net/jdk7u/jdk7u-dev/jdk/rev/b453d9be6b3f",
+            "http://rhn.redhat.com/errata/RHSA-2013-0752.html",
+            "http://www.ubuntu.com/usn/USN-1806-1",
+            "http://blog.fuseyism.com/index.php/2013/04/22/security-icedtea-2-3-9-for-openjdk-7-released/",
+            "http://rhn.redhat.com/errata/RHSA-2013-0757.html",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=952398",
+            "http://lists.opensuse.org/opensuse-updates/2013-06/msg00099.html",
+            "http://www.us-cert.gov/ncas/alerts/TA13-107A",
+            "http://www.exploit-db.com/exploits/24976",
+            "http://www.mandriva.com/security/advisories?name=MDVSA-2013:161",
+            "https://wiki.mageia.org/en/Support/Advisories/MGASA-2013-0130",
+            "http://security.gentoo.org/glsa/glsa-201406-32.xml",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A16700"
+        ],
+        "summary": "Unspecified vulnerability in the Java Runtime Environment (JRE) component in Oracle Java SE 7 Update 17 and earlier, and OpenJDK 7, allows remote attackers to affect integrity via unknown vectors related to HotSpot.  NOTE: the previous information is from the April 2013 CPU. Oracle has not commented on claims from the original researcher that this vulnerability allows remote attackers to bypass permission checks by the MethodHandles method and modify arbitrary public final fields using reflection and type confusion, as demonstrated using integer and double fields to disable the security manager."
+    },
+    {
+        "Modified": "2024-04-26T16:07:00",
+        "Published": "2012-06-07T22:55:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert_us@oracle.com",
+        "cvss": 10.0,
+        "cvss-time": "2024-04-26T16:07:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2012-0507",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2024-04-26T16:07:00",
+        "references": [
+            "http://www.securityfocus.com/bid/52161",
+            "http://www.oracle.com/technetwork/topics/security/javacpufeb2012-366318.html",
+            "http://blogs.technet.com/b/mmpc/archive/2012/03/20/an-interesting-case-of-jre-sandbox-breach-cve-2012-0507.aspx",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=788994",
+            "http://krebsonsecurity.com/2012/03/new-java-attack-rolled-into-exploit-packs/",
+            "http://weblog.ikvm.net/PermaLink.aspx?guid=cd48169a-9405-4f63-9087-798c4a1866d3",
+            "http://secunia.com/advisories/48589",
+            "http://secunia.com/advisories/48692",
+            "http://secunia.com/advisories/48948",
+            "http://secunia.com/advisories/48950",
+            "http://secunia.com/advisories/48915",
+            "http://rhn.redhat.com/errata/RHSA-2013-1455.html",
+            "http://www.debian.org/security/2012/dsa-2420",
+            "http://marc.info/?l=bugtraq&m=133365109612558&w=2",
+            "http://marc.info/?l=bugtraq&m=133364885411663&w=2",
+            "http://marc.info/?l=bugtraq&m=133847939902305&w=2",
+            "http://marc.info/?l=bugtraq&m=134254957702612&w=2",
+            "http://marc.info/?l=bugtraq&m=134254866602253&w=2",
+            "http://rhn.redhat.com/errata/RHSA-2012-0514.html",
+            "http://rhn.redhat.com/errata/RHSA-2012-0508.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2012-05/msg00010.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2012-05/msg00009.html"
+        ],
+        "summary": "Unspecified vulnerability in the Java Runtime Environment (JRE) component in Oracle Java SE 7 Update 2 and earlier, 6 Update 30 and earlier, and 5.0 Update 33 and earlier allows remote attackers to affect confidentiality, integrity, and availability via unknown vectors related to Concurrency.  NOTE: the previous information was obtained from the February 2012 Oracle CPU. Oracle has not commented on claims from a downstream vendor and third party researchers that this issue occurs because the AtomicReferenceArray class implementation does not ensure that the array is of the Object[] type, which allows attackers to cause a denial of service (JVM crash) or bypass Java sandbox restrictions.  NOTE: this issue was originally mapped to CVE-2011-3571, but that identifier was already assigned to a different issue."
+    },
+    {
+        "Modified": "2024-04-26T16:07:00",
+        "Published": "2013-01-31T14:55:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert_us@oracle.com",
+        "cvss": 5.0,
+        "cvss-time": "2024-04-26T16:07:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2013-0431",
+        "impact": {
+            "availability": "NONE",
+            "confidentiality": "NONE",
+            "integrity": "PARTIAL"
+        },
+        "last-modified": "2024-04-26T16:07:00",
+        "references": [
+            "http://www.informationweek.com/security/application-security/java-hacker-uncovers-two-flaws-in-latest/240146717",
+            "http://seclists.org/fulldisclosure/2013/Jan/142",
+            "http://blogs.computerworld.com/malware-and-vulnerabilities/21693/yet-another-java-security-flaw-discovered-number-53",
+            "http://www.securityfocus.com/archive/1/525387/30/0/threaded",
+            "http://seclists.org/fulldisclosure/2013/Jan/195",
+            "http://arstechnica.com/security/2013/01/critical-java-vulnerabilies-confirmed-in-latest-version/",
+            "http://www.oracle.com/technetwork/topics/security/javacpufeb2013-1841061.html",
+            "http://rhn.redhat.com/errata/RHSA-2013-0237.html",
+            "http://www.us-cert.gov/cas/techalerts/TA13-032A.html",
+            "http://www.kb.cert.org/vuls/id/858729",
+            "http://rhn.redhat.com/errata/RHSA-2013-0247.html",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-03/msg00001.html",
+            "http://marc.info/?l=bugtraq&m=136733161405818&w=2",
+            "http://marc.info/?l=bugtraq&m=136439120408139&w=2",
+            "https://wiki.mageia.org/en/Support/Advisories/MGASA-2013-0056",
+            "http://www.mandriva.com/security/advisories?name=MDVSA-2013:095",
+            "http://security.gentoo.org/glsa/glsa-201406-32.xml",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A19418",
+            "https://oval.cisecurity.org/repository/search/definition/oval%3Aorg.mitre.oval%3Adef%3A16579"
+        ],
+        "summary": "Unspecified vulnerability in the Java Runtime Environment (JRE) component in Oracle Java SE 7 through Update 11, and OpenJDK 7, allows user-assisted remote attackers to bypass the Java security sandbox via unspecified vectors related to JMX, aka \"Issue 52,\" a different vulnerability than CVE-2013-1490."
+    },
+    {
+        "Modified": "2024-04-26T16:07:00",
+        "Published": "2013-01-10T21:55:00",
+        "access": {
+            "authentication": "NONE",
+            "complexity": "LOW",
+            "vector": "NETWORK"
+        },
+        "assigner": "secalert_us@oracle.com",
+        "cvss": 10.0,
+        "cvss-time": "2024-04-26T16:07:00",
+        "cvss-vector": "AV:N/AC:L/Au:N/C:C/I:C/A:C",
+        "cwe": "CWE-264",
+        "id": "CVE-2013-0422",
+        "impact": {
+            "availability": "COMPLETE",
+            "confidentiality": "COMPLETE",
+            "integrity": "COMPLETE"
+        },
+        "last-modified": "2024-04-26T16:07:00",
+        "references": [
+            "http://www.kb.cert.org/vuls/id/625617",
+            "http://krebsonsecurity.com/2013/01/zero-day-java-exploit-debuts-in-crimeware/",
+            "http://malware.dontneedcoffee.com/2013/01/0-day-17u10-spotted-in-while-disable.html",
+            "http://blog.fireeye.com/research/2013/01/happy-new-year-from-new-java-zero-day.html",
+            "http://labs.alienvault.com/labs/index.php/2013/new-year-new-java-zeroday/",
+            "https://threatpost.com/en_us/blogs/nasty-new-java-zero-day-found-exploit-kits-already-have-it-011013",
+            "http://www.oracle.com/technetwork/topics/security/alert-cve-2013-0422-1896849.html",
+            "http://immunityproducts.blogspot.ca/2013/01/confirmed-java-only-fixed-one-of-two.html",
+            "https://www-304.ibm.com/connections/blogs/PSIRT/entry/oracle_java_7_security_manager_bypass_vulnerability_cve_2013_04224?lang=en_us",
+            "https://partners.immunityinc.com/idocs/Java%20MBeanInstantiator.findClass%200day%20Analysis.pdf",
+            "http://rhn.redhat.com/errata/RHSA-2013-0156.html",
+            "http://www.ubuntu.com/usn/USN-1693-1",
+            "http://seclists.org/bugtraq/2013/Jan/48",
+            "http://lists.opensuse.org/opensuse-security-announce/2013-01/msg00025.html",
+            "http://rhn.redhat.com/errata/RHSA-2013-0165.html",
+            "http://www.us-cert.gov/cas/techalerts/TA13-010A.html",
+            "http://www.mandriva.com/security/advisories?name=MDVSA-2013:095",
+            "https://wiki.mageia.org/en/Support/Advisories/MGASA-2013-0018",
+            "http://blog.fuseyism.com/index.php/2013/01/15/security-icedtea-2-1-4-2-2-4-2-3-4-released/"
+        ],
+        "summary": "Multiple vulnerabilities in Oracle Java 7 before Update 11 allow remote attackers to execute arbitrary code by (1) using the public getMBeanInstantiator method in the JmxMBeanServer class to obtain a reference to a private MBeanInstantiator object, then retrieving arbitrary Class references using the findClass method, and (2) using the Reflection API with recursion in a way that bypasses a security check by the java.lang.invoke.MethodHandles.Lookup.checkSecurityManager method due to the inability of the sun.reflect.Reflection.getCallerClass method to skip frames related to the new reflection API, as exploited in the wild in January 2013, as demonstrated by Blackhole and Nuclear Pack, and a different vulnerability than CVE-2012-4681 and CVE-2012-3174. NOTE: some parties have mapped the recursive Reflection API issue to CVE-2012-3174, but CVE-2012-3174 is for a different vulnerability whose details are not public as of 20130114.  CVE-2013-0422 covers both the JMX/MBean and Reflection API issues.  NOTE: it was originally reported that Java 6 was also vulnerable, but the reporter has retracted this claim, stating that Java 6 is not exploitable because the relevant code is called in a way that does not bypass security checks.  NOTE: as of 20130114, a reliable third party has claimed that the findClass/MBeanInstantiator vector was not fixed in Oracle Java 7 Update 11.  If there is still a vulnerable condition, then a separate CVE identifier might be created for the unfixed issue."
+    },
+    {
+        "Modified": "2024-04-26T16:06:00",
+        "Published": "2024-02-14T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-25300",
+        "impact": {},
+        "last-modified": "2024-04-26T16:06:00",
+        "references": [
+            "https://github.com/WoodManGitHub/MyCVEs/blob/main/2024-REDAXO/XSS.md"
+        ],
+        "summary": "A cross-site scripting (XSS) vulnerability in Redaxo v5.15.1 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the Name parameter in the Template section."
+    },
+    {
+        "Modified": "2024-04-26T16:04:00",
+        "Published": "2024-02-14T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2024-25301",
+        "impact": {},
+        "last-modified": "2024-04-26T16:04:00",
+        "references": [
+            "https://github.com/evildrummer/MyOwnCVEs/tree/main/CVE-2021-39459",
+            "https://github.com/WoodManGitHub/MyCVEs/blob/main/2024-REDAXO/RCE.md"
+        ],
+        "summary": "Redaxo v5.15.1 was discovered to contain a remote code execution (RCE) vulnerability via the component /pages/templates.php."
+    },
+    {
+        "Modified": "2024-04-26T16:03:00",
+        "Published": "2024-02-17T02:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-20929",
+        "impact": {},
+        "last-modified": "2024-04-26T16:03:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpujan2024.html"
+        ],
+        "summary": "Vulnerability in the Oracle Application Object Library product of Oracle E-Business Suite (component: DB Privileges).  Supported versions that are affected are 12.2.3-12.2.13. Easily exploitable vulnerability allows unauthenticated attacker with network access via HTTP to compromise Oracle Application Object Library.  Successful attacks of this vulnerability can result in  unauthorized update, insert or delete access to some of Oracle Application Object Library accessible data as well as  unauthorized read access to a subset of Oracle Application Object Library accessible data. CVSS 3.1 Base Score 6.5 (Confidentiality and Integrity impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N)."
+    },
+    {
+        "Modified": "2024-04-26T16:03:00",
+        "Published": "2024-02-17T02:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-20935",
+        "impact": {},
+        "last-modified": "2024-04-26T16:03:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpujan2024.html"
+        ],
+        "summary": "Vulnerability in the Oracle Installed Base product of Oracle E-Business Suite (component: Engineering Change Order).  Supported versions that are affected are 12.2.3-12.2.13. Easily exploitable vulnerability allows unauthenticated attacker with network access via HTTP to compromise Oracle Installed Base.  Successful attacks require human interaction from a person other than the attacker and while the vulnerability is in Oracle Installed Base, attacks may significantly impact additional products (scope change). Successful attacks of this vulnerability can result in  unauthorized update, insert or delete access to some of Oracle Installed Base accessible data as well as  unauthorized read access to a subset of Oracle Installed Base accessible data. CVSS 3.1 Base Score 6.1 (Confidentiality and Integrity impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N)."
+    },
+    {
+        "Modified": "2024-04-26T16:03:00",
+        "Published": "2024-02-17T02:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-20933",
+        "impact": {},
+        "last-modified": "2024-04-26T16:03:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpujan2024.html"
+        ],
+        "summary": "Vulnerability in the Oracle Installed Base product of Oracle E-Business Suite (component: Engineering Change Order).  Supported versions that are affected are 12.2.3-12.2.13. Easily exploitable vulnerability allows unauthenticated attacker with network access via HTTP to compromise Oracle Installed Base.  Successful attacks require human interaction from a person other than the attacker and while the vulnerability is in Oracle Installed Base, attacks may significantly impact additional products (scope change). Successful attacks of this vulnerability can result in  unauthorized update, insert or delete access to some of Oracle Installed Base accessible data as well as  unauthorized read access to a subset of Oracle Installed Base accessible data. CVSS 3.1 Base Score 6.1 (Confidentiality and Integrity impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N)."
+    },
+    {
+        "Modified": "2024-04-26T16:02:00",
+        "Published": "2024-02-20T13:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2024-1661",
+        "impact": {},
+        "last-modified": "2024-04-26T16:02:00",
+        "references": [
+            "https://vuldb.com/?id.254179",
+            "https://vuldb.com/?ctiid.254179",
+            "https://github.com/WoodManGitHub/MyCVEs/blob/main/2024-Totolink/X6000R-Hardcoded-Password.md"
+        ],
+        "summary": "A vulnerability classified as problematic was found in Totolink X6000R 9.4.0cu.852_B20230719. Affected by this vulnerability is an unknown functionality of the file /etc/shadow. The manipulation leads to hard-coded credentials. It is possible to launch the attack on the local host. The complexity of an attack is rather high. The exploitation appears to be difficult. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-254179. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-04-26T16:00:00",
+        "Published": "2024-04-06T15:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-3156",
+        "impact": {},
+        "last-modified": "2024-04-26T16:00:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/04/stable-channel-update-for-desktop.html",
+            "https://issues.chromium.org/issues/329130358",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EVEJEW7UCSUSK2J2FYQRZZPI74P2D3JP/"
+        ],
+        "summary": "Inappropriate implementation in V8 in Google Chrome prior to 123.0.6312.105 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-04-26T16:00:00",
+        "Published": "2024-04-06T15:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-3158",
+        "impact": {},
+        "last-modified": "2024-04-26T16:00:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/04/stable-channel-update-for-desktop.html",
+            "https://issues.chromium.org/issues/329965696",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EVEJEW7UCSUSK2J2FYQRZZPI74P2D3JP/"
+        ],
+        "summary": "Use after free in Bookmarks in Google Chrome prior to 123.0.6312.105 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-04-26T15:59:00",
+        "Published": "2024-04-06T15:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "CWE-119",
+        "id": "CVE-2024-3159",
+        "impact": {},
+        "last-modified": "2024-04-26T15:59:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/04/stable-channel-update-for-desktop.html",
+            "https://issues.chromium.org/issues/330760873",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EVEJEW7UCSUSK2J2FYQRZZPI74P2D3JP/"
+        ],
+        "summary": "Out of bounds memory access in V8 in Google Chrome prior to 123.0.6312.105 allowed a remote attacker to perform arbitrary read/write via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
         "Modified": "2024-04-26T15:59:00",
         "Published": "2024-04-09T17:15:00",
         "access": {},
@@ -1176,365 +1815,5 @@
             "https://patchstack.com/database/vulnerability/advanced-post-list/wordpress-advanced-post-list-plugin-0-5-6-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in EkoJR Advanced Post List allows Stored XSS.This issue affects Advanced Post List: from n/a through 0.5.6.1.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T08:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-33650",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/cryout-serious-slider/wordpress-serious-slider-plugin-1-2-4-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
-        ],
-        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Cryout Creations Serious Slider.This issue affects Serious Slider: from n/a through 1.2.4.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T08:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-33651",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/mf-gig-calendar/wordpress-mf-gig-calendar-plugin-1-2-1-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
-        ],
-        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Matthew Fries MF Gig Calendar.This issue affects MF Gig Calendar : from n/a through 1.2.1.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3678",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2dea1bcb-14c2-4ec9-8a4d-087bac2db486?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3069574/blog2social/trunk/includes/Meta.php",
-            "https://plugins.trac.wordpress.org/changeset/3074883/blog2social/trunk/includes/Meta.php"
-        ],
-        "summary": "The Blog2Social: Social Media Auto Post & Scheduler plugin for WordPress is vulnerable to Sensitive Information Exposure in all versions up to, and including, 7.4.2. This makes it possible for unauthenticated attackers to view limited information from password protected posts."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3890",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/22e4eb2a-2c2b-4f4f-821e-8d2d7e558364?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3076871/happy-elementor-addons/trunk/widgets/calendly/widget.php"
-        ],
-        "summary": "The Happy Addons for Elementor plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the Calendly widget in all versions up to, and including, 3.10.5 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1789",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ee269bc7-2822-4a07-be91-6763c1cf6cf2?source=cve",
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3076663%40wp-smtp&new=3076663%40wp-smtp&sfp_email=&sfph_mail="
-        ],
-        "summary": "The WP SMTP plugin for WordPress is vulnerable to SQL Injection via the 'search' parameter in versions 1.2 to 1.2.6 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with administrator-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22091",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://mattermost.com/security-updates"
-        ],
-        "summary": "Mattermost versions 8.1.x <= 8.1.10, 9.6.x <= 9.6.0, 9.5.x <= 9.5.2 and 8.1.x <= 8.1.11 fail to limit the size of a request path that includes user inputs which allows an attacker to cause\u00a0excessive resource\u00a0consumption, possibly leading to a DoS\u00a0via sending large request paths\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32046",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://mattermost.com/security-updates"
-        ],
-        "summary": "Mattermost versions 9.6.x <= 9.6.0, 9.5.x <= 9.5.2, 9.4.x <= 9.4.4 and 8.1.x <= 8.1.11 fail to remove detailed error messages in API requests even if the developer mode is off which allows an attacker to get information about the server such as the full path were files are stored\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3962",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/4f95bcc3-354e-4016-9a17-945569b076b6?source=cve",
-            "https://themeisle.com/plugins/ppom-pro/",
-            "https://plugins.trac.wordpress.org/changeset/3075669/woocommerce-product-addon"
-        ],
-        "summary": "The Product Addons & Fields for WooCommerce plugin for WordPress is vulnerable to arbitrary file uploads due to missing file type validation in the ppom_upload_file function in all versions up to, and including, 32.0.18. This makes it possible for unauthenticated attackers to upload arbitrary files on the affected site's server which may make remote code execution possible. Successful exploitation requires the PPOM Pro plugin to be installed along with a WooCommerce product that contains a file upload field to retrieve the correct nonce."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4182",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://mattermost.com/security-updates"
-        ],
-        "summary": "Mattermost versions 9.6.0, 9.5.x before 9.5.3, 9.4.x before 9.4.5, and 8.1.x before 8.1.12 fail to handle JSON parsing errors in custom status values, which allows an authenticated attacker to crash other users' web clients via a malformed custom status.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4183",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://mattermost.com/security-updates"
-        ],
-        "summary": "Mattermost versions 8.1.x before 8.1.12, 9.6.x before 9.6.1, 9.5.x before 9.5.3, 9.4.x before 9.4.5 fail to limit the number of active sessions, which allows an authenticated attacker to crash the server via repeated requests to the getSessions API after flooding the sessions table.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4195",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://mattermost.com/security-updates"
-        ],
-        "summary": "Mattermost versions 9.6.0, 9.5.x before 9.5.3, and 8.1.x before 8.1.12 fail to fully validate role changes, which allows an attacker authenticated as a team admin to promote guests to team admins via crafted HTTP requests.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T09:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4198",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://mattermost.com/security-updates"
-        ],
-        "summary": "Mattermost versions 9.6.0, 9.5.x before 9.5.3, and 8.1.x before 8.1.12 fail to fully validate role changes which allows an attacker authenticated as team admin to demote users to guest via crafted HTTP requests.\n\n"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T05:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-0905",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://wpscan.com/vulnerability/3b9eba0d-29aa-47e4-b17f-4cf4bbf8b690/"
-        ],
-        "summary": "The Fancy Product Designer WordPress plugin before 6.1.8 does not sanitise and escape a parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against unauthenticated and admin-level users"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T05:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2310",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://wpscan.com/vulnerability/7a2c173c-19e3-4f48-b3af-14790b5b8e94/"
-        ],
-        "summary": "The WP Google Review Slider WordPress plugin before 13.6 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T05:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2429",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://wpscan.com/vulnerability/1c6812d8-a218-4c15-9e2d-d43f3f3b0e78/"
-        ],
-        "summary": "The Salon booking system WordPress plugin through 9.6.5 does not have CSRF check in place when updating its settings, which could allow attackers to make a logged in admin change them via a CSRF attack"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T05:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2439",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://wpscan.com/vulnerability/7a375077-fc70-4389-b109-28fce3db2aef/"
-        ],
-        "summary": "The Salon booking system WordPress plugin through 9.6.5 does not sanitise and escape some of its settings, which could allow high privilege users such as Editor to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T05:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2159",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://wpscan.com/vulnerability/d7fa9849-c82a-4efd-84b6-9245053975ba/"
-        ],
-        "summary": "The Social Sharing Plugin  WordPress plugin before 3.3.61 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T05:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2908",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://wpscan.com/vulnerability/58c9e088-ed74-461a-b305-e217679f26c1/"
-        ],
-        "summary": "The Call Now Button  WordPress plugin before 1.4.7 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T00:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32651",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://github.com/dgtlmoon/changedetection.io/security/advisories/GHSA-4r7v-whpg-8rx3",
-            "https://github.com/dgtlmoon/changedetection.io/releases/tag/0.45.21",
-            "https://www.onsecurity.io/blog/server-side-template-injection-with-jinja2"
-        ],
-        "summary": "changedetection.io is an open source web page change detection, website watcher, restock monitor and notification service. There is a Server Side Template Injection (SSTI) in Jinja2 that allows Remote Command Execution on the server host. Attackers can run any system command without any restriction and they could use a reverse shell. The impact is critical as the attacker can completely takeover the server machine. This can be reduced if changedetection is behind a login page, but this isn't required by the application (not by default and not enforced)."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-33661",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://www.portainer.io/",
-            "https://github.com/portainer/portainer/pull/11236",
-            "https://github.com/portainer/portainer/pull/11233",
-            "https://github.com/portainer/portainer/compare/2.19.4...2.20.0"
-        ],
-        "summary": "Portainer before 2.20.0 allows redirects when the target is not index.yaml."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-33663",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://github.com/mpdavis/python-jose/issues/346"
-        ],
-        "summary": "python-jose through 3.3.0 has algorithm confusion with OpenSSH ECDSA keys and other key formats. This is similar to CVE-2022-29217."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-33664",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://github.com/mpdavis/python-jose/issues/344",
-            "https://github.com/mpdavis/python-jose/pull/345"
-        ],
-        "summary": "python-jose through 3.3.0 allows attackers to cause a denial of service (resource consumption) during a decode via a crafted JSON Web Encryption (JWE) token with a high compression ratio, aka a \"JWT bomb.\" This is similar to CVE-2024-21319."
-    },
-    {
-        "Modified": "2024-04-26T12:58:00",
-        "Published": "2024-04-26T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48682",
-        "impact": {},
-        "last-modified": "2024-04-26T12:58:00",
-        "references": [
-            "https://github.com/adrianlopezroche/fdupes/blob/4b6bcde1b3eb1cebe87cd30814f7d6cf4ee46e95/fdupes.c",
-            "https://github.com/adrianlopezroche/fdupes/commit/85680897148f1ac33b55418e00334116e419717f",
-            "https://bugzilla.suse.com/show_bug.cgi?id=1200381",
-            "https://github.com/adrianlopezroche/fdupes/compare/v2.1.2...v2.2.0"
-        ],
-        "summary": "In deletefiles in FDUPES before 2.2.0, a TOCTOU race condition allows arbitrary file deletion via a symlink."
     }
 ]
