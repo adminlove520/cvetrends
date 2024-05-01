@@ -1,5 +1,71 @@
 [
     {
+        "Modified": "2024-05-01T11:15:00",
+        "Published": "2024-05-01T11:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32973",
+        "impact": {},
+        "last-modified": "2024-05-01T11:15:00",
+        "references": [
+            "https://github.com/PlutoLang/Pluto/security/advisories/GHSA-84hj-7j2v-w665",
+            "https://github.com/PlutoLang/Pluto/pull/851"
+        ],
+        "summary": "Pluto is a superset of Lua 5.4 with a focus on general-purpose programming. In affected versions an attacker with the ability to actively intercept network traffic would be able to use a specifically-crafted certificate to fool Pluto into trusting it to be the intended remote for the TLS session. This results in the HTTP library and socket.starttls providing less transport integrity than expected. This issue has been patched in pull request #851 which has been included in version 0.9.3. Users are advised to upgrade. there are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-05-01T11:15:00",
+        "Published": "2024-05-01T11:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32979",
+        "impact": {},
+        "last-modified": "2024-05-01T11:15:00",
+        "references": [
+            "https://github.com/nautobot/nautobot/security/advisories/GHSA-jxgr-gcj5-cqqg",
+            "https://github.com/nautobot/nautobot/pull/5646",
+            "https://github.com/nautobot/nautobot/pull/5647",
+            "https://github.com/nautobot/nautobot/commit/42440ebd9b381534ad89d62420ebea00d703d64e"
+        ],
+        "summary": "Nautobot is a Network Source of Truth and Network Automation Platform built as a web application atop the Django Python framework with a PostgreSQL or MySQL database. It was discovered that due to improper handling and escaping of user-provided query parameters, a maliciously crafted Nautobot URL could potentially be used to execute a Reflected Cross-Site Scripting (Reflected XSS) attack against users. All filterable object-list views in Nautobot are vulnerable. This issue has been fixed in Nautobot versions 1.6.20 and 2.2.3. There are no known workarounds for this vulnerability.\n"
+    },
+    {
+        "Modified": "2024-05-01T11:15:00",
+        "Published": "2024-05-01T11:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32984",
+        "impact": {},
+        "last-modified": "2024-05-01T11:15:00",
+        "references": [
+            "https://github.com/libp2p/rust-yamux/security/advisories/GHSA-3999-5ffv-wp2r",
+            "https://github.com/sigp/rust-yamux/commit/6689e227a48258a52347cd1d984adfc94afc6f7a",
+            "https://github.com/libp2p/rust-yamux/blob/yamux-v0.13.1/yamux/src/connection.rs#L289"
+        ],
+        "summary": "Yamux is a stream multiplexer over reliable, ordered connections such as TCP/IP. The Rust implementation of the Yamux stream multiplexer uses a vector for pending frames. This vector is not bounded in length. Every time the Yamux protocol requires sending of a new frame, this frame gets appended to this vector. This can be remotely triggered in a number of ways, for example by: 1. Opening a new libp2p Identify stream. This causes the node to send its Identify message. Of course, every other protocol that causes the sending of data also works. The larger the response, the more data is enqueued. 2. Sending a Yamux Ping frame. This causes a Pong frame to be enqueued. Under normal circumstances, this queue of pending frames would be drained once they\u2019re sent out over the network. However, the attacker can use TCP\u2019s receive window mechanism to prevent the victim from sending out any data: By not reading from the TCP connection, the receive window will never be increased, and the victim won\u2019t be able to send out any new data (this is how TCP implements backpressure). Once this happens, Yamux\u2019s queue of pending frames will start growing indefinitely. The queue will only be drained once the underlying TCP connection is closed. An attacker can cause a remote node to run out of memory, which will result in the corresponding process getting terminated by the operating system.\n"
+    },
+    {
+        "Modified": "2024-05-01T11:15:00",
+        "Published": "2024-05-01T11:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-33835",
+        "impact": {},
+        "last-modified": "2024-05-01T11:15:00",
+        "references": [
+            "https://github.com/isBigChen/iot/blob/main/tenda/formSetSafeWanWebMan.md"
+        ],
+        "summary": "Tenda AC18 V15.03.05.05 has a stack overflow vulnerability in the remoteIp parameter from formSetSafeWanWebMan function."
+    },
+    {
         "Modified": "2024-05-01T07:15:00",
         "Published": "2024-05-01T07:15:00",
         "access": {},
@@ -1794,75 +1860,5 @@
             "https://git.kernel.org/stable/c/1be3226445362bfbf461c92a5bcdb1723f2e4907"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nserial/pmac_zilog: Remove flawed mitigation for rx irq flood\n\nThe mitigation was intended to stop the irq completely. That may be\nbetter than a hard lock-up but it turns out that you get a crash anyway\nif you're using pmac_zilog as a serial console:\n\nttyPZ0: pmz: rx irq flood !\nBUG: spinlock recursion on CPU#0, swapper/0\n\nThat's because the pr_err() call in pmz_receive_chars() results in\npmz_console_write() attempting to lock a spinlock already locked in\npmz_interrupt(). With CONFIG_DEBUG_SPINLOCK=y, this produces a fatal\nBUG splat. The spinlock in question is the one in struct uart_port.\n\nEven when it's not fatal, the serial port rx function ceases to work.\nAlso, the iteration limit doesn't play nicely with QEMU, as can be\nseen in the bug report linked below.\n\nA web search for other reports of the error message \"pmz: rx irq flood\"\ndidn't produce anything. So I don't think this code is needed any more.\nRemove it."
-    },
-    {
-        "Modified": "2024-05-01T06:15:00",
-        "Published": "2024-05-01T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27011",
-        "impact": {},
-        "last-modified": "2024-05-01T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/49d0e656d19dfb2d4d7c230e4a720d37b3decff6",
-            "https://git.kernel.org/stable/c/86a1471d7cde792941109b93b558b5dc078b9ee9"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: fix memleak in map from abort path\n\nThe delete set command does not rely on the transaction object for\nelement removal, therefore, a combination of delete element + delete set\nfrom the abort path could result in restoring twice the refcount of the\nmapping.\n\nCheck for inactive element in the next generation for the delete element\ncommand in the abort path, skip restoring state if next generation bit\nhas been already cleared. This is similar to the activate logic using\nthe set walk iterator.\n\n[ 6170.286929] ------------[ cut here ]------------\n[ 6170.286939] WARNING: CPU: 6 PID: 790302 at net/netfilter/nf_tables_api.c:2086 nf_tables_chain_destroy+0x1f7/0x220 [nf_tables]\n[ 6170.287071] Modules linked in: [...]\n[ 6170.287633] CPU: 6 PID: 790302 Comm: kworker/6:2 Not tainted 6.9.0-rc3+ #365\n[ 6170.287768] RIP: 0010:nf_tables_chain_destroy+0x1f7/0x220 [nf_tables]\n[ 6170.287886] Code: df 48 8d 7d 58 e8 69 2e 3b df 48 8b 7d 58 e8 80 1b 37 df 48 8d 7d 68 e8 57 2e 3b df 48 8b 7d 68 e8 6e 1b 37 df 48 89 ef eb c4 <0f> 0b 48 83 c4 08 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 0f\n[ 6170.287895] RSP: 0018:ffff888134b8fd08 EFLAGS: 00010202\n[ 6170.287904] RAX: 0000000000000001 RBX: ffff888125bffb28 RCX: dffffc0000000000\n[ 6170.287912] RDX: 0000000000000003 RSI: ffffffffa20298ab RDI: ffff88811ebe4750\n[ 6170.287919] RBP: ffff88811ebe4700 R08: ffff88838e812650 R09: fffffbfff0623a55\n[ 6170.287926] R10: ffffffff8311d2af R11: 0000000000000001 R12: ffff888125bffb10\n[ 6170.287933] R13: ffff888125bffb10 R14: dead000000000122 R15: dead000000000100\n[ 6170.287940] FS:  0000000000000000(0000) GS:ffff888390b00000(0000) knlGS:0000000000000000\n[ 6170.287948] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[ 6170.287955] CR2: 00007fd31fc00710 CR3: 0000000133f60004 CR4: 00000000001706f0\n[ 6170.287962] Call Trace:\n[ 6170.287967]  <TASK>\n[ 6170.287973]  ? __warn+0x9f/0x1a0\n[ 6170.287986]  ? nf_tables_chain_destroy+0x1f7/0x220 [nf_tables]\n[ 6170.288092]  ? report_bug+0x1b1/0x1e0\n[ 6170.287986]  ? nf_tables_chain_destroy+0x1f7/0x220 [nf_tables]\n[ 6170.288092]  ? report_bug+0x1b1/0x1e0\n[ 6170.288104]  ? handle_bug+0x3c/0x70\n[ 6170.288112]  ? exc_invalid_op+0x17/0x40\n[ 6170.288120]  ? asm_exc_invalid_op+0x1a/0x20\n[ 6170.288132]  ? nf_tables_chain_destroy+0x2b/0x220 [nf_tables]\n[ 6170.288243]  ? nf_tables_chain_destroy+0x1f7/0x220 [nf_tables]\n[ 6170.288366]  ? nf_tables_chain_destroy+0x2b/0x220 [nf_tables]\n[ 6170.288483]  nf_tables_trans_destroy_work+0x588/0x590 [nf_tables]"
-    },
-    {
-        "Modified": "2024-05-01T06:15:00",
-        "Published": "2024-05-01T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27001",
-        "impact": {},
-        "last-modified": "2024-05-01T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b0b268eeb087e324ef3ea71f8e6cabd07630517f",
-            "https://git.kernel.org/stable/c/ac882d6b21bffecb57bcc4486701239eef5aa67b",
-            "https://git.kernel.org/stable/c/59f33af9796160f851641d960bd93937f282c696",
-            "https://git.kernel.org/stable/c/6ec3514a7d35ad9cfab600187612c29f669069d2",
-            "https://git.kernel.org/stable/c/d1718530e3f640b7d5f0050e725216eab57a85d8"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncomedi: vmk80xx: fix incomplete endpoint checking\n\nWhile vmk80xx does have endpoint checking implemented, some things\ncan fall through the cracks. Depending on the hardware model,\nURBs can have either bulk or interrupt type, and current version\nof vmk80xx_find_usb_endpoints() function does not take that fully\ninto account. While this warning does not seem to be too harmful,\nat the very least it will crash systems with 'panic_on_warn' set on\nthem.\n\nFix the issue found by Syzkaller [1] by somewhat simplifying the\nendpoint checking process with usb_find_common_endpoints() and\nensuring that only expected endpoint types are present.\n\nThis patch has not been tested on real hardware.\n\n[1] Syzkaller report:\nusb 1-1: BOGUS urb xfer, pipe 1 != type 3\nWARNING: CPU: 0 PID: 781 at drivers/usb/core/urb.c:504 usb_submit_urb+0xc4e/0x18c0 drivers/usb/core/urb.c:503\n...\nCall Trace:\n <TASK>\n usb_start_wait_urb+0x113/0x520 drivers/usb/core/message.c:59\n vmk80xx_reset_device drivers/comedi/drivers/vmk80xx.c:227 [inline]\n vmk80xx_auto_attach+0xa1c/0x1a40 drivers/comedi/drivers/vmk80xx.c:818\n comedi_auto_config+0x238/0x380 drivers/comedi/drivers.c:1067\n usb_probe_interface+0x5cd/0xb00 drivers/usb/core/driver.c:399\n...\n\nSimilar issue also found by Syzkaller:"
-    },
-    {
-        "Modified": "2024-05-01T06:15:00",
-        "Published": "2024-05-01T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27012",
-        "impact": {},
-        "last-modified": "2024-05-01T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/86658fc7414d4b9e25c2699d751034537503d637",
-            "https://git.kernel.org/stable/c/e79b47a8615d42c68aaeb68971593333667382ed"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: restore set elements when delete set fails\n\nFrom abort path, nft_mapelem_activate() needs to restore refcounters to\nthe original state. Currently, it uses the set->ops->walk() to iterate\nover these set elements. The existing set iterator skips inactive\nelements in the next generation, this does not work from the abort path\nto restore the original state since it has to skip active elements\ninstead (not inactive ones).\n\nThis patch moves the check for inactive elements to the set iterator\ncallback, then it reverses the logic for the .activate case which\nneeds to skip active elements.\n\nToggle next generation bit for elements when delete set command is\ninvoked and call nft_clear() from .activate (abort) path to restore the\nnext generation bit.\n\nThe splat below shows an object in mappings memleak:\n\n[43929.457523] ------------[ cut here ]------------\n[43929.457532] WARNING: CPU: 0 PID: 1139 at include/net/netfilter/nf_tables.h:1237 nft_setelem_data_deactivate+0xe4/0xf0 [nf_tables]\n[...]\n[43929.458014] RIP: 0010:nft_setelem_data_deactivate+0xe4/0xf0 [nf_tables]\n[43929.458076] Code: 83 f8 01 77 ab 49 8d 7c 24 08 e8 37 5e d0 de 49 8b 6c 24 08 48 8d 7d 50 e8 e9 5c d0 de 8b 45 50 8d 50 ff 89 55 50 85 c0 75 86 <0f> 0b eb 82 0f 0b eb b3 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90\n[43929.458081] RSP: 0018:ffff888140f9f4b0 EFLAGS: 00010246\n[43929.458086] RAX: 0000000000000000 RBX: ffff8881434f5288 RCX: dffffc0000000000\n[43929.458090] RDX: 00000000ffffffff RSI: ffffffffa26d28a7 RDI: ffff88810ecc9550\n[43929.458093] RBP: ffff88810ecc9500 R08: 0000000000000001 R09: ffffed10281f3e8f\n[43929.458096] R10: 0000000000000003 R11: ffff0000ffff0000 R12: ffff8881434f52a0\n[43929.458100] R13: ffff888140f9f5f4 R14: ffff888151c7a800 R15: 0000000000000002\n[43929.458103] FS:  00007f0c687c4740(0000) GS:ffff888390800000(0000) knlGS:0000000000000000\n[43929.458107] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[43929.458111] CR2: 00007f58dbe5b008 CR3: 0000000123602005 CR4: 00000000001706f0\n[43929.458114] Call Trace:\n[43929.458118]  <TASK>\n[43929.458121]  ? __warn+0x9f/0x1a0\n[43929.458127]  ? nft_setelem_data_deactivate+0xe4/0xf0 [nf_tables]\n[43929.458188]  ? report_bug+0x1b1/0x1e0\n[43929.458196]  ? handle_bug+0x3c/0x70\n[43929.458200]  ? exc_invalid_op+0x17/0x40\n[43929.458211]  ? nft_setelem_data_deactivate+0xd7/0xf0 [nf_tables]\n[43929.458271]  ? nft_setelem_data_deactivate+0xe4/0xf0 [nf_tables]\n[43929.458332]  nft_mapelem_deactivate+0x24/0x30 [nf_tables]\n[43929.458392]  nft_rhash_walk+0xdd/0x180 [nf_tables]\n[43929.458453]  ? __pfx_nft_rhash_walk+0x10/0x10 [nf_tables]\n[43929.458512]  ? rb_insert_color+0x2e/0x280\n[43929.458520]  nft_map_deactivate+0xdc/0x1e0 [nf_tables]\n[43929.458582]  ? __pfx_nft_map_deactivate+0x10/0x10 [nf_tables]\n[43929.458642]  ? __pfx_nft_mapelem_deactivate+0x10/0x10 [nf_tables]\n[43929.458701]  ? __rcu_read_unlock+0x46/0x70\n[43929.458709]  nft_delset+0xff/0x110 [nf_tables]\n[43929.458769]  nft_flush_table+0x16f/0x460 [nf_tables]\n[43929.458830]  nf_tables_deltable+0x501/0x580 [nf_tables]"
-    },
-    {
-        "Modified": "2024-05-01T06:15:00",
-        "Published": "2024-05-01T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27004",
-        "impact": {},
-        "last-modified": "2024-05-01T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a29ec0465dce0b871003698698ac6fa92c9a5034",
-            "https://git.kernel.org/stable/c/a424e713e0cc33d4b969cfda25b9f46df4d7b5bc",
-            "https://git.kernel.org/stable/c/60ff482c4205a5aac3b0595ab794cfd62295dab5",
-            "https://git.kernel.org/stable/c/115554862294397590088ba02f11f2aba6d5016c",
-            "https://git.kernel.org/stable/c/e581cf5d216289ef292d1a4036d53ce90e122469"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nclk: Get runtime PM before walking tree during disable_unused\n\nDoug reported [1] the following hung task:\n\n INFO: task swapper/0:1 blocked for more than 122 seconds.\n       Not tainted 5.15.149-21875-gf795ebc40eb8 #1\n \"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\" disables this message.\n task:swapper/0       state:D stack:    0 pid:    1 ppid:     0 flags:0x00000008\n Call trace:\n  __switch_to+0xf4/0x1f4\n  __schedule+0x418/0xb80\n  schedule+0x5c/0x10c\n  rpm_resume+0xe0/0x52c\n  rpm_resume+0x178/0x52c\n  __pm_runtime_resume+0x58/0x98\n  clk_pm_runtime_get+0x30/0xb0\n  clk_disable_unused_subtree+0x58/0x208\n  clk_disable_unused_subtree+0x38/0x208\n  clk_disable_unused_subtree+0x38/0x208\n  clk_disable_unused_subtree+0x38/0x208\n  clk_disable_unused_subtree+0x38/0x208\n  clk_disable_unused+0x4c/0xe4\n  do_one_initcall+0xcc/0x2d8\n  do_initcall_level+0xa4/0x148\n  do_initcalls+0x5c/0x9c\n  do_basic_setup+0x24/0x30\n  kernel_init_freeable+0xec/0x164\n  kernel_init+0x28/0x120\n  ret_from_fork+0x10/0x20\n INFO: task kworker/u16:0:9 blocked for more than 122 seconds.\n       Not tainted 5.15.149-21875-gf795ebc40eb8 #1\n \"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\" disables this message.\n task:kworker/u16:0   state:D stack:    0 pid:    9 ppid:     2 flags:0x00000008\n Workqueue: events_unbound deferred_probe_work_func\n Call trace:\n  __switch_to+0xf4/0x1f4\n  __schedule+0x418/0xb80\n  schedule+0x5c/0x10c\n  schedule_preempt_disabled+0x2c/0x48\n  __mutex_lock+0x238/0x488\n  __mutex_lock_slowpath+0x1c/0x28\n  mutex_lock+0x50/0x74\n  clk_prepare_lock+0x7c/0x9c\n  clk_core_prepare_lock+0x20/0x44\n  clk_prepare+0x24/0x30\n  clk_bulk_prepare+0x40/0xb0\n  mdss_runtime_resume+0x54/0x1c8\n  pm_generic_runtime_resume+0x30/0x44\n  __genpd_runtime_resume+0x68/0x7c\n  genpd_runtime_resume+0x108/0x1f4\n  __rpm_callback+0x84/0x144\n  rpm_callback+0x30/0x88\n  rpm_resume+0x1f4/0x52c\n  rpm_resume+0x178/0x52c\n  __pm_runtime_resume+0x58/0x98\n  __device_attach+0xe0/0x170\n  device_initial_probe+0x1c/0x28\n  bus_probe_device+0x3c/0x9c\n  device_add+0x644/0x814\n  mipi_dsi_device_register_full+0xe4/0x170\n  devm_mipi_dsi_device_register_full+0x28/0x70\n  ti_sn_bridge_probe+0x1dc/0x2c0\n  auxiliary_bus_probe+0x4c/0x94\n  really_probe+0xcc/0x2c8\n  __driver_probe_device+0xa8/0x130\n  driver_probe_device+0x48/0x110\n  __device_attach_driver+0xa4/0xcc\n  bus_for_each_drv+0x8c/0xd8\n  __device_attach+0xf8/0x170\n  device_initial_probe+0x1c/0x28\n  bus_probe_device+0x3c/0x9c\n  deferred_probe_work_func+0x9c/0xd8\n  process_one_work+0x148/0x518\n  worker_thread+0x138/0x350\n  kthread+0x138/0x1e0\n  ret_from_fork+0x10/0x20\n\nThe first thread is walking the clk tree and calling\nclk_pm_runtime_get() to power on devices required to read the clk\nhardware via struct clk_ops::is_enabled(). This thread holds the clk\nprepare_lock, and is trying to runtime PM resume a device, when it finds\nthat the device is in the process of resuming so the thread schedule()s\naway waiting for the device to finish resuming before continuing. The\nsecond thread is runtime PM resuming the same device, but the runtime\nresume callback is calling clk_prepare(), trying to grab the\nprepare_lock waiting on the first thread.\n\nThis is a classic ABBA deadlock. To properly fix the deadlock, we must\nnever runtime PM resume or suspend a device with the clk prepare_lock\nheld. Actually doing that is near impossible today because the global\nprepare_lock would have to be dropped in the middle of the tree, the\ndevice runtime PM resumed/suspended, and then the prepare_lock grabbed\nagain to ensure consistency of the clk tree topology. If anything\nchanges with the clk tree in the meantime, we've lost and will need to\nstart the operation all over again.\n\nLuckily, most of the time we're simply incrementing or decrementing the\nruntime PM count on an active device, so we don't have the chance to\nschedule away with the prepare_lock held. Let's fix this immediate\nproblem that can be\n---truncated---"
     }
 ]
