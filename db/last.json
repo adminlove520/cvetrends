@@ -1,5 +1,260 @@
 [
     {
+        "Modified": "2024-05-02T09:15:00",
+        "Published": "2024-05-02T09:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-1188",
+        "id": "CVE-2024-32114",
+        "impact": {},
+        "last-modified": "2024-05-02T09:15:00",
+        "references": [
+            "https://activemq.apache.org/security-advisories.data/CVE-2024-32114-announcement.txt"
+        ],
+        "summary": "In Apache ActiveMQ 6.x, the default configuration doesn't secure the API web context (where the Jolokia JMX REST API and the Message REST API are located).\nIt means that anyone can use these layers without any required authentication. Potentially, anyone can interact with the broker (using Jolokia JMX REST API) and/or produce/consume messages or purge/delete destinations (using the Message REST API).\n\nTo mitigate, users can update the default conf/jetty.xml configuration file to add authentication requirement:\n<bean id=\"securityConstraintMapping\" class=\"org.eclipse.jetty.security.ConstraintMapping\">\n\u00a0 <property name=\"constraint\" ref=\"securityConstraint\" />\n\u00a0 <property name=\"pathSpec\" value=\"/\" />\n</bean>\n\nOr we encourage users to upgrade to Apache ActiveMQ 6.1.2 where the default configuration has been updated with authentication by default.\n"
+    },
+    {
+        "Modified": "2024-05-02T09:15:00",
+        "Published": "2024-05-02T09:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3883",
+        "impact": {},
+        "last-modified": "2024-05-02T09:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/016462cf-abe9-4c90-abd2-b5bb69348d7e?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3079536/interactive-3d-flipbook-powered-physics-engine"
+        ],
+        "summary": "The 3D FlipBook plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the Bookmark URL field in all versions up to, and including, 1.15.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-05-02T08:15:00",
+        "Published": "2024-05-02T08:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3280",
+        "impact": {},
+        "last-modified": "2024-05-02T08:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ef1ccef8-9066-4f5c-b5c5-9fa6e54f0e87?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3078718/wpsite-follow-us-badges"
+        ],
+        "summary": "The Follow Us Badges plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's wpsite_follow_us_badges shortcode in all versions up to, and including, 3.1.10 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-05-02T07:15:00",
+        "Published": "2024-05-02T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3490",
+        "impact": {},
+        "last-modified": "2024-05-02T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/69cc7b6c-b6c2-4bba-afb4-86ba1b36b295?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3078644/wp-recipe-maker"
+        ],
+        "summary": "The WP Recipe Maker plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's wprm-recipe-roundup-item shortcode in all versions up to, and including, 9.3.1 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-05-02T07:15:00",
+        "Published": "2024-05-02T07:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32962",
+        "impact": {},
+        "last-modified": "2024-05-02T07:15:00",
+        "references": [
+            "https://github.com/node-saml/xml-crypto/security/advisories/GHSA-2xp3-57p7-qf4v",
+            "https://github.com/node-saml/xml-crypto/pull/301",
+            "https://github.com/node-saml/xml-crypto/pull/445",
+            "https://github.com/node-saml/xml-crypto/commit/21201723d2ca9bc11288f62cf72552b7d659b000",
+            "https://github.com/node-saml/xml-crypto/commit/c2b83f984049edb68ad1d7c6ad0739ec92af11ca",
+            "https://www.w3.org/TR/2008/REC-xmldsig-core-20080610/#sec-CoreValidation"
+        ],
+        "summary": "xml-crypto is an xml digital signature and encryption library for Node.js. In affected versions the default configuration does not check authorization of the signer, it only checks the validity of the signature per section 3.2.2 of the w3 xmldsig-core-20080610 spec. As such, without additional validation steps, the default configuration allows a malicious actor to re-sign an XML document, place the certificate in a `<KeyInfo />` element, and pass `xml-crypto` default validation checks. As a result `xml-crypto` trusts by default any certificate provided via digitally signed XML document's `<KeyInfo />`. `xml-crypto` prefers to use any certificate provided via digitally signed XML document's `<KeyInfo />` even if library was configured to use specific certificate (`publicCert`) for signature verification purposes.  An attacker can spoof signature verification by modifying XML document and replacing existing signature with signature generated with malicious private key (created by attacker) and by attaching that private key's certificate to `<KeyInfo />` element. This vulnerability is combination of changes introduced to `4.0.0` on pull request 301 / commit `c2b83f98` and has been addressed in version 6.0.0 with pull request 445 / commit `21201723d`. Users are advised to upgrade. Users unable to upgrade may either check the certificate extracted via `getCertFromKeyInfo` against trusted certificates before accepting the results of the validation or set `xml-crypto's getCertFromKeyInfo` to `() => undefined` forcing `xml-crypto` to use an explicitly configured `publicCert` or `privateKey` for signature verification."
+    },
+    {
+        "Modified": "2024-05-02T07:15:00",
+        "Published": "2024-05-02T07:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32882",
+        "impact": {},
+        "last-modified": "2024-05-02T07:15:00",
+        "references": [
+            "https://github.com/wagtail/wagtail/security/advisories/GHSA-w2v8-php4-p8hc",
+            "https://github.com/wagtail/wagtail/commit/ab2a5d82b4ee3c909d2456704388ccf90e367c9b",
+            "https://docs.wagtail.org/en/stable/extending/generic_views.html#modelviewset",
+            "https://docs.wagtail.org/en/stable/reference/contrib/settings.html",
+            "https://docs.wagtail.org/en/stable/reference/pages/panels.html#wagtail.admin.panels.FieldPanel.permission"
+        ],
+        "summary": "Wagtail is an open source content management system built on Django. In affected versions if a model has been made available for editing through the `wagtail.contrib.settings` module or `ModelViewSet`, and the `permission` argument on `FieldPanel` has been used to further restrict access to one or more fields of the model, a user with edit permission over the model but not the specific field can craft an HTTP POST request that bypasses the permission check on the individual field, allowing them to update its value. This vulnerability is not exploitable by an ordinary site visitor without access to the Wagtail admin, or by a user who has not been granted edit access to the model in question. The editing interfaces for pages and snippets are also unaffected. Patched versions have been released as Wagtail 6.0.3 and 6.1. Wagtail releases prior to 6.0 are unaffected. Users are advised to upgrade. Site owners who are unable to upgrade to a patched version can avoid the vulnerability as follows: 1.For models registered through `ModelViewSet`, register the model as a snippet instead; 2. For settings models, place the restricted fields in a separate settings model, and configure permission at the model level."
+    },
+    {
+        "Modified": "2024-05-02T07:15:00",
+        "Published": "2024-05-02T07:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32971",
+        "impact": {},
+        "last-modified": "2024-05-02T07:15:00",
+        "references": [
+            "https://github.com/apollographql/router/security/advisories/GHSA-q9p4-hw9m-fj2v",
+            "https://github.com/apollographql/router/commit/ff9f666598cd17661880fe7fc6e9c9611316e529",
+            "https://github.com/apollographql/router/releases/tag/v1.45.1",
+            "https://www.apollographql.com/docs/router/configuration/distributed-caching/#distributed-query-plan-caching"
+        ],
+        "summary": "Apollo Router is a configurable, graph router written in Rust to run a federated supergraph that uses Apollo Federation 2. The affected versions of Apollo Router contain a bug that in limited circumstances, could lead to unexpected operations being executed which can result in unintended data or effects. This only affects Router instances configured to use distributed query plan caching. The root cause of this defect is a bug in Apollo Router\u2019s cache retrieval logic: When this defect is present and distributed query planning caching is enabled, asking the Router to execute an operation (whether it is a query, a mutation, or a subscription) may result in an unexpected variation of that operation being executed or the generation of unexpected errors. The issue stems from inadvertently executing a modified version of a previously executed operation, whose query plan is stored in the underlying cache (specifically, Redis). Depending on the type of the operation, the result may vary. For a query, results may be fetched that don\u2019t match what was requested (e.g., rather than running `fetchUsers(type: ENTERPRISE)` the Router may run `fetchUsers(type: TRIAL)`. For a mutation, this may result in incorrect mutations being sent to underlying subgraph servers (e.g., rather than sending `deleteUser(id: 10)` to a subgraph, the Router may run `deleteUser(id: 12)`. Users who are using distributed query plan caching, are advised to either upgrade to version 1.45.1 or above or downgrade to version 1.43.2 of the Apollo Router. Apollo Router versions 1.44.0 or 1.45.0 are not recommended for use and have been withdrawn. Users unable to upgrade can disable distributed query plan caching to mitigate this issue."
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3477",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/ca5e59e6-c500-4129-997b-391cdf9aa9c7/"
+        ],
+        "summary": "The Popup Box  WordPress plugin before 2.2.7 does not have CSRF checks in some bulk actions, which could allow attackers to make logged in admins perform unwanted actions, such as deleting popups via CSRF attacks"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3472",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/d42f74dd-520f-40aa-9cf0-3544db9562c7/"
+        ],
+        "summary": "The Modal Window  WordPress plugin before 5.3.10 does not have CSRF check in place when bulk deleting modals, which could allow attackers to make a logged in admin delete them via a CSRF attack"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2405",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/c42ffa15-6ebe-4c70-9e51-b95bd05ea04d/"
+        ],
+        "summary": "The Float menu  WordPress plugin before 6.0.1 does not have CSRF check in its bulk actions, which could allow attackers to make logged in admin delete arbitrary menu via a CSRF attack."
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3471",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/a3c282fb-81b8-48bf-8c18-8366ea8ad9af/"
+        ],
+        "summary": "The Button Generator  WordPress plugin before 3.0 does not have CSRF check in place when bulk deleting, which could allow attackers to make a logged in admin delete buttons via a CSRF attack"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3474",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/e5c3e145-6738-4d85-8507-43ca1b1d5877/"
+        ],
+        "summary": "The Wow Skype Buttons WordPress plugin before 4.0.4 does not have CSRF checks in some bulk actions, which could allow attackers to make logged in admins perform unwanted actions, such as deleting buttons via CSRF attacks"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3476",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/46f74493-9082-48b2-90bc-2c1d1db64ccd/"
+        ],
+        "summary": "The Side Menu Lite  WordPress plugin before 4.2.1 does not have CSRF checks in some bulk actions, which could allow attackers to make logged in admins perform unwanted actions, such as deleting buttons via CSRF attacks"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3475",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/bf540242-5306-4c94-ad50-782d0d5b127f/"
+        ],
+        "summary": "The Sticky Buttons  WordPress plugin before 3.2.4 does not have CSRF checks in some bulk actions, which could allow attackers to make logged in admins perform unwanted actions, such as deleting buttons via CSRF attacks"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3481",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/0c441293-e7f9-4634-8f3a-09925cd2b696/"
+        ],
+        "summary": "The Counter Box  WordPress plugin before 1.2.4 does not have CSRF checks in some bulk actions, which could allow attackers to make logged in admins perform unwanted actions, such deleting counters via CSRF attacks"
+    },
+    {
+        "Modified": "2024-05-02T06:15:00",
+        "Published": "2024-05-02T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3478",
+        "impact": {},
+        "last-modified": "2024-05-02T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/09f1a696-86ee-47cc-99de-57cfd2a3219d/"
+        ],
+        "summary": "The Herd Effects  WordPress plugin before 5.2.7 does not have CSRF checks in some bulk actions, which could allow attackers to make logged in admins perform unwanted actions, such as deleting effects via CSRF attacks"
+    },
+    {
         "Modified": "2024-05-02T03:15:00",
         "Published": "2024-05-01T00:15:00",
         "access": {},
@@ -1382,299 +1637,5 @@
             "https://git.kernel.org/stable/c/4b09715f1504f1b6e8dff0e9643630610bc05141"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Fix a potential buffer overflow in 'dp_dsc_clock_en_read()'\n\nTell snprintf() to store at most 10 bytes in the output buffer\ninstead of 30.\n\nFixes the below:\ndrivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_debugfs.c:1508 dp_dsc_clock_en_read() error: snprintf() is printing too much 30 vs 10"
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27047",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/06dd21045a7e8bc8701b0ebedcd9a30a6325878b",
-            "https://git.kernel.org/stable/c/0e939a002c8a7d66e60bd0ea6b281fb39d713c1a",
-            "https://git.kernel.org/stable/c/2a2ff709511617de9c6c072eeee82bcbbdfecaf8",
-            "https://git.kernel.org/stable/c/589ec16174dd9378953b8232ae76fad0a96e1563",
-            "https://git.kernel.org/stable/c/c0691de7df1d51482a52cac93b7fe82fd9dd296b",
-            "https://git.kernel.org/stable/c/0307cf443308ecc6be9b2ca312bb31bae5e5a7ad",
-            "https://git.kernel.org/stable/c/4469c0c5b14a0919f5965c7ceac96b523eb57b79"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: phy: fix phy_get_internal_delay accessing an empty array\n\nThe phy_get_internal_delay function could try to access to an empty\narray in the case that the driver is calling phy_get_internal_delay\nwithout defining delay_values and rx-internal-delay-ps or\ntx-internal-delay-ps is defined to 0 in the device-tree.\nThis will lead to \"unable to handle kernel NULL pointer dereference at\nvirtual address 0\". To avoid this kernel oops, the test should be delay\n>= 0. As there is already delay < 0 test just before, the test could\nonly be size == 0."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27050",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/fa5bef5e80c6a3321b2b1a7070436f3bc5daf07c",
-            "https://git.kernel.org/stable/c/682ddd62abd4bdcee7584246903e7a2df005fe0d",
-            "https://git.kernel.org/stable/c/cd3be9843247edb8fc6fcd8d8237cbce2bc19f5e",
-            "https://git.kernel.org/stable/c/92a871ab9fa59a74d013bc04f321026a057618e7"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nlibbpf: Use OPTS_SET() macro in bpf_xdp_query()\n\nWhen the feature_flags and xdp_zc_max_segs fields were added to the libbpf\nbpf_xdp_query_opts, the code writing them did not use the OPTS_SET() macro.\nThis causes libbpf to write to those fields unconditionally, which means\nthat programs compiled against an older version of libbpf (with a smaller\nsize of the bpf_xdp_query_opts struct) will have its stack corrupted by\nlibbpf writing out of bounds.\n\nThe patch adding the feature_flags field has an early bail out if the\nfeature_flags field is not part of the opts struct (via the OPTS_HAS)\nmacro, but the patch adding xdp_zc_max_segs does not. For consistency, this\nfix just changes the assignments to both fields to use the OPTS_SET()\nmacro."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27061",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/dc60b25540c82fc4baa95d1458ae96ead21859e0",
-            "https://git.kernel.org/stable/c/51a7d338c212e0640b1aca52ba6590d5bea49879",
-            "https://git.kernel.org/stable/c/183420038444547c149a0fc5f58e792c2752860c"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: sun8i-ce - Fix use after free in unprepare\n\nsun8i_ce_cipher_unprepare should be called before\ncrypto_finalize_skcipher_request, because client callbacks may\nimmediately free memory, that isn't needed anymore. But it will be\nused by unprepare after free. Before removing prepare/unprepare\ncallbacks it was handled by crypto engine in crypto_finalize_request.\n\nUsually that results in a pointer dereference problem during a in\ncrypto selftest.\n Unable to handle kernel NULL pointer dereference at\n                                      virtual address 0000000000000030\n Mem abort info:\n   ESR = 0x0000000096000004\n   EC = 0x25: DABT (current EL), IL = 32 bits\n   SET = 0, FnV = 0\n   EA = 0, S1PTW = 0\n   FSC = 0x04: level 0 translation fault\n Data abort info:\n   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000\n   CM = 0, WnR = 0, TnD = 0, TagAccess = 0\n   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0\n user pgtable: 4k pages, 48-bit VAs, pgdp=000000004716d000\n [0000000000000030] pgd=0000000000000000, p4d=0000000000000000\n Internal error: Oops: 0000000096000004 [#1] SMP\n\nThis problem is detected by KASAN as well.\n ==================================================================\n BUG: KASAN: slab-use-after-free in sun8i_ce_cipher_do_one+0x6e8/0xf80 [sun8i_ce]\n Read of size 8 at addr ffff00000dcdc040 by task 1c15000.crypto-/373\n\n Hardware name: Pine64 PinePhone (1.2) (DT)\n Call trace:\n  dump_backtrace+0x9c/0x128\n  show_stack+0x20/0x38\n  dump_stack_lvl+0x48/0x60\n  print_report+0xf8/0x5d8\n  kasan_report+0x90/0xd0\n  __asan_load8+0x9c/0xc0\n  sun8i_ce_cipher_do_one+0x6e8/0xf80 [sun8i_ce]\n  crypto_pump_work+0x354/0x620 [crypto_engine]\n  kthread_worker_fn+0x244/0x498\n  kthread+0x168/0x178\n  ret_from_fork+0x10/0x20\n\n Allocated by task 379:\n  kasan_save_stack+0x3c/0x68\n  kasan_set_track+0x2c/0x40\n  kasan_save_alloc_info+0x24/0x38\n  __kasan_kmalloc+0xd4/0xd8\n  __kmalloc+0x74/0x1d0\n  alg_test_skcipher+0x90/0x1f0\n  alg_test+0x24c/0x830\n  cryptomgr_test+0x38/0x60\n  kthread+0x168/0x178\n  ret_from_fork+0x10/0x20\n\n Freed by task 379:\n  kasan_save_stack+0x3c/0x68\n  kasan_set_track+0x2c/0x40\n  kasan_save_free_info+0x38/0x60\n  __kasan_slab_free+0x100/0x170\n  slab_free_freelist_hook+0xd4/0x1e8\n  __kmem_cache_free+0x15c/0x290\n  kfree+0x74/0x100\n  kfree_sensitive+0x80/0xb0\n  alg_test_skcipher+0x12c/0x1f0\n  alg_test+0x24c/0x830\n  cryptomgr_test+0x38/0x60\n  kthread+0x168/0x178\n  ret_from_fork+0x10/0x20\n\n The buggy address belongs to the object at ffff00000dcdc000\n  which belongs to the cache kmalloc-256 of size 256\n The buggy address is located 64 bytes inside of\n  freed 256-byte region [ffff00000dcdc000, ffff00000dcdc100)"
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27052",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/dddedfa3b29a63c2ca4336663806a6128b8545b4",
-            "https://git.kernel.org/stable/c/ac512507ac89c01ed6cd4ca53032f52cdb23ea59",
-            "https://git.kernel.org/stable/c/3518cea837de4d106efa84ddac18a07b6de1384e",
-            "https://git.kernel.org/stable/c/156012667b85ca7305cb363790d3ae8519a6f41e",
-            "https://git.kernel.org/stable/c/7059cdb69f8e1a2707dd1e2f363348b507ed7707",
-            "https://git.kernel.org/stable/c/58fe3bbddfec10c6b216096d8c0e517cd8463e3a",
-            "https://git.kernel.org/stable/c/1213acb478a7181cd73eeaf00db430f1e45b1361"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: rtl8xxxu: add cancel_work_sync() for c2hcmd_work\n\nThe workqueue might still be running, when the driver is stopped. To\navoid a use-after-free, call cancel_work_sync() in rtl8xxxu_stop()."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27055",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/7df62b8cca38aa452b508b477b16544cba615084",
-            "https://git.kernel.org/stable/c/a75ac2693d734d20724f0e10e039ca85f1fcfc4e",
-            "https://git.kernel.org/stable/c/38c19c44cc05ec1e84d2e31a9a289b83b6c7ec85",
-            "https://git.kernel.org/stable/c/9fc557d489f8163c1aabcb89114b8eba960f4097",
-            "https://git.kernel.org/stable/c/adc646d2126988a64234502f579e4bc2b080d7cf",
-            "https://git.kernel.org/stable/c/15930da42f8981dc42c19038042947b475b19f47"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nworkqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()\n\nFor wq_update_node_max_active(), @off_cpu of -1 indicates that no CPU is\ngoing down. The function was incorrectly calling cpumask_test_cpu() with -1\nCPU leading to oopses like the following on some archs:\n\n  Unable to handle kernel paging request at virtual address ffff0002100296e0\n  ..\n  pc : wq_update_node_max_active+0x50/0x1fc\n  lr : wq_update_node_max_active+0x1f0/0x1fc\n  ...\n  Call trace:\n    wq_update_node_max_active+0x50/0x1fc\n    apply_wqattrs_commit+0xf0/0x114\n    apply_workqueue_attrs_locked+0x58/0xa0\n    alloc_workqueue+0x5ac/0x774\n    workqueue_init_early+0x460/0x540\n    start_kernel+0x258/0x684\n    __primary_switched+0xb8/0xc0\n  Code: 9100a273 35000d01 53067f00 d0016dc1 (f8607a60)\n  ---[ end trace 0000000000000000 ]---\n  Kernel panic - not syncing: Attempted to kill the idle task!\n  ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---\n\nFix it."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27056",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/ed35a509390ef4011ea2226da5dd6f62b73873b5",
-            "https://git.kernel.org/stable/c/78f65fbf421a61894c14a1b91fe2fb4437b3fe5f"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: iwlwifi: mvm: ensure offloading TID queue exists\n\nThe resume code path assumes that the TX queue for the offloading TID\nhas been configured. At resume time it then tries to sync the write\npointer as it may have been updated by the firmware.\n\nIn the unusual event that no packets have been send on TID 0, the queue\nwill not have been allocated and this causes a crash. Fix this by\nensuring the queue exist at suspend time."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27059",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/9968c701cba7eda42e5f0052b040349d6222ae34",
-            "https://git.kernel.org/stable/c/eb7b01ca778170654e1c76950024270ba74b121f",
-            "https://git.kernel.org/stable/c/284fb1003d5da111019b9e0bf99b084fd71ac133",
-            "https://git.kernel.org/stable/c/6c1f36d92c0a8799569055012665d2bb066fb964",
-            "https://git.kernel.org/stable/c/f42ba916689f5c7b1642092266d2f53cf527aaaa",
-            "https://git.kernel.org/stable/c/871fd7b10b56d280990b7e754f43d888382ca325",
-            "https://git.kernel.org/stable/c/3a67d4ab9e730361d183086dfb0ddd8c61f01636",
-            "https://git.kernel.org/stable/c/014bcf41d946b36a8f0b8e9b5d9529efbb822f49"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nUSB: usb-storage: Prevent divide-by-0 error in isd200_ata_command\n\nThe isd200 sub-driver in usb-storage uses the HEADS and SECTORS values\nin the ATA ID information to calculate cylinder and head values when\ncreating a CDB for READ or WRITE commands.  The calculation involves\ndivision and modulus operations, which will cause a crash if either of\nthese values is 0.  While this never happens with a genuine device, it\ncould happen with a flawed or subversive emulation, as reported by the\nsyzbot fuzzer.\n\nProtect against this possibility by refusing to bind to the device if\neither the ATA_ID_HEADS or ATA_ID_SECTORS value in the device's ID\ninformation is 0.  This requires isd200_Initialization() to return a\nnegative error code when initialization fails; currently it always\nreturns 0 (even when there is an error)."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27062",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/6887314f5356389fc219b8152e951ac084a10ef7",
-            "https://git.kernel.org/stable/c/96c8751844171af4b3898fee3857ee180586f589",
-            "https://git.kernel.org/stable/c/b7cc4ff787a572edf2c55caeffaa88cd801eb135"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnouveau: lock the client object tree.\n\nIt appears the client object tree has no locking unless I've missed\nsomething else. Fix races around adding/removing client objects,\nmostly vram bar mappings.\n\n 4562.099306] general protection fault, probably for non-canonical address 0x6677ed422bceb80c: 0000 [#1] PREEMPT SMP PTI\n[ 4562.099314] CPU: 2 PID: 23171 Comm: deqp-vk Not tainted 6.8.0-rc6+ #27\n[ 4562.099324] Hardware name: Gigabyte Technology Co., Ltd. Z390 I AORUS PRO WIFI/Z390 I AORUS PRO WIFI-CF, BIOS F8 11/05/2021\n[ 4562.099330] RIP: 0010:nvkm_object_search+0x1d/0x70 [nouveau]\n[ 4562.099503] Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 0f 1f 44 00 00 48 89 f8 48 85 f6 74 39 48 8b 87 a0 00 00 00 48 85 c0 74 12 <48> 8b 48 f8 48 39 ce 73 15 48 8b 40 10 48 85 c0 75 ee 48 c7 c0 fe\n[ 4562.099506] RSP: 0000:ffffa94cc420bbf8 EFLAGS: 00010206\n[ 4562.099512] RAX: 6677ed422bceb814 RBX: ffff98108791f400 RCX: ffff9810f26b8f58\n[ 4562.099517] RDX: 0000000000000000 RSI: ffff9810f26b9158 RDI: ffff98108791f400\n[ 4562.099519] RBP: ffff9810f26b9158 R08: 0000000000000000 R09: 0000000000000000\n[ 4562.099521] R10: ffffa94cc420bc48 R11: 0000000000000001 R12: ffff9810f02a7cc0\n[ 4562.099526] R13: 0000000000000000 R14: 00000000000000ff R15: 0000000000000007\n[ 4562.099528] FS:  00007f629c5017c0(0000) GS:ffff98142c700000(0000) knlGS:0000000000000000\n[ 4562.099534] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[ 4562.099536] CR2: 00007f629a882000 CR3: 000000017019e004 CR4: 00000000003706f0\n[ 4562.099541] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[ 4562.099542] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[ 4562.099544] Call Trace:\n[ 4562.099555]  <TASK>\n[ 4562.099573]  ? die_addr+0x36/0x90\n[ 4562.099583]  ? exc_general_protection+0x246/0x4a0\n[ 4562.099593]  ? asm_exc_general_protection+0x26/0x30\n[ 4562.099600]  ? nvkm_object_search+0x1d/0x70 [nouveau]\n[ 4562.099730]  nvkm_ioctl+0xa1/0x250 [nouveau]\n[ 4562.099861]  nvif_object_map_handle+0xc8/0x180 [nouveau]\n[ 4562.099986]  nouveau_ttm_io_mem_reserve+0x122/0x270 [nouveau]\n[ 4562.100156]  ? dma_resv_test_signaled+0x26/0xb0\n[ 4562.100163]  ttm_bo_vm_fault_reserved+0x97/0x3c0 [ttm]\n[ 4562.100182]  ? __mutex_unlock_slowpath+0x2a/0x270\n[ 4562.100189]  nouveau_ttm_fault+0x69/0xb0 [nouveau]\n[ 4562.100356]  __do_fault+0x32/0x150\n[ 4562.100362]  do_fault+0x7c/0x560\n[ 4562.100369]  __handle_mm_fault+0x800/0xc10\n[ 4562.100382]  handle_mm_fault+0x17c/0x3e0\n[ 4562.100388]  do_user_addr_fault+0x208/0x860\n[ 4562.100395]  exc_page_fault+0x7f/0x200\n[ 4562.100402]  asm_exc_page_fault+0x26/0x30\n[ 4562.100412] RIP: 0033:0x9b9870\n[ 4562.100419] Code: 85 a8 f7 ff ff 8b 8d 80 f7 ff ff 89 08 e9 18 f2 ff ff 0f 1f 84 00 00 00 00 00 44 89 32 e9 90 fa ff ff 0f 1f 84 00 00 00 00 00 <44> 89 32 e9 f8 f1 ff ff 0f 1f 84 00 00 00 00 00 66 44 89 32 e9 e7\n[ 4562.100422] RSP: 002b:00007fff9ba2dc70 EFLAGS: 00010246\n[ 4562.100426] RAX: 0000000000000004 RBX: 000000000dd65e10 RCX: 000000fff0000000\n[ 4562.100428] RDX: 00007f629a882000 RSI: 00007f629a882000 RDI: 0000000000000066\n[ 4562.100432] RBP: 00007fff9ba2e570 R08: 0000000000000000 R09: 0000000123ddf000\n[ 4562.100434] R10: 0000000000000001 R11: 0000000000000246 R12: 000000007fffffff\n[ 4562.100436] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000\n[ 4562.100446]  </TASK>\n[ 4562.100448] Modules linked in: nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables libcrc32c nfnetlink cmac bnep sunrpc iwlmvm intel_rapl_msr intel_rapl_common snd_sof_pci_intel_cnl x86_pkg_temp_thermal intel_powerclamp snd_sof_intel_hda_common mac80211 coretemp snd_soc_acpi_intel_match kvm_intel snd_soc_acpi snd_soc_hdac_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof_intel_hda_mlink \n---truncated---"
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27060",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/ce64ba1f6ec3439e4b4d880b4db99673f4507228",
-            "https://git.kernel.org/stable/c/d3d17e23d1a0d1f959b4fa55b35f1802d9c584fa"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nthunderbolt: Fix NULL pointer dereference in tb_port_update_credits()\n\nOlliver reported that his system crashes when plugging in Thunderbolt 1\ndevice:\n\n BUG: kernel NULL pointer dereference, address: 0000000000000020\n #PF: supervisor read access in kernel mode\n #PF: error_code(0x0000) - not-present page\n PGD 0 P4D 0\n Oops: 0000 [#1] PREEMPT SMP NOPTI\n RIP: 0010:tb_port_do_update_credits+0x1b/0x130 [thunderbolt]\n Call Trace:\n  <TASK>\n  ? __die+0x23/0x70\n  ? page_fault_oops+0x171/0x4e0\n  ? exc_page_fault+0x7f/0x180\n  ? asm_exc_page_fault+0x26/0x30\n  ? tb_port_do_update_credits+0x1b/0x130\n  ? tb_switch_update_link_attributes+0x83/0xd0\n  tb_switch_add+0x7a2/0xfe0\n  tb_scan_port+0x236/0x6f0\n  tb_handle_hotplug+0x6db/0x900\n  process_one_work+0x171/0x340\n  worker_thread+0x27b/0x3a0\n  ? __pfx_worker_thread+0x10/0x10\n  kthread+0xe5/0x120\n  ? __pfx_kthread+0x10/0x10\n  ret_from_fork+0x31/0x50\n  ? __pfx_kthread+0x10/0x10\n  ret_from_fork_asm+0x1b/0x30\n  </TASK>\n\nThis is due the fact that some Thunderbolt 1 devices only have one lane\nadapter. Fix this by checking for the lane 1 before we read its credits."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27065",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/2531f907d3e40a6173090f10670ae76d117ab27b",
-            "https://git.kernel.org/stable/c/fcf32a5bfcb8a57ac0ce717fcfa4d688c91f1005",
-            "https://git.kernel.org/stable/c/640dbf688ba955e83e03de84fbdda8e570b7cce4",
-            "https://git.kernel.org/stable/c/9683cb6c2c6c0f45537bf0b8868b5d38fcb63fc7",
-            "https://git.kernel.org/stable/c/4d37f12707ee965d338028732575f0b85f6d9e4f",
-            "https://git.kernel.org/stable/c/3443e57654f90c9a843ab6a6040c10709fd033aa",
-            "https://git.kernel.org/stable/c/df257c435e51651c43b86326d112ddadda76350e",
-            "https://git.kernel.org/stable/c/4a0e7f2decbf9bd72461226f1f5f7dcc4b08f139"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: do not compare internal table flags on updates\n\nRestore skipping transaction if table update does not modify flags."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27064",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/79846fdcc548d617b0b321addc6a3821d3b75b20",
-            "https://git.kernel.org/stable/c/4e4623a4f6e133e671f65f9ac493bddaaf63e250",
-            "https://git.kernel.org/stable/c/e77a6b53a3a547b6dedfc40c37cee4f310701090",
-            "https://git.kernel.org/stable/c/7eaf837a4eb5f74561e2486972e7f5184b613f6e"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: Fix a memory leak in nf_tables_updchain\n\nIf nft_netdev_register_hooks() fails, the memory associated with\nnft_stats is not freed, causing a memory leak.\n\nThis patch fixes it by moving nft_stats_alloc() down after\nnft_netdev_register_hooks() succeeds."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27066",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/e142169aca5546ae6619c39a575cda8105362100",
-            "https://git.kernel.org/stable/c/75450ff8c6fe8755bf5b139b238eaf9739cfd64e",
-            "https://git.kernel.org/stable/c/51bacd9d29bf98c3ebc65e4a0477bb86306b4140",
-            "https://git.kernel.org/stable/c/d5c0ed17fea60cca9bc3bf1278b49ba79242bbcd"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvirtio: packed: fix unmap leak for indirect desc table\n\nWhen use_dma_api and premapped are true, then the do_unmap is false.\n\nBecause the do_unmap is false, vring_unmap_extra_packed is not called by\ndetach_buf_packed.\n\n  if (unlikely(vq->do_unmap)) {\n                curr = id;\n                for (i = 0; i < state->num; i++) {\n                        vring_unmap_extra_packed(vq,\n                                                 &vq->packed.desc_extra[curr]);\n                        curr = vq->packed.desc_extra[curr].next;\n                }\n  }\n\nSo the indirect desc table is not unmapped. This causes the unmap leak.\n\nSo here, we check vq->use_dma_api instead. Synchronously, dma info is\nupdated based on use_dma_api judgment\n\nThis bug does not occur, because no driver use the premapped with\nindirect."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27068",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/2db869da91afd48e5b9ec76814709be49662b07d",
-            "https://git.kernel.org/stable/c/a37f3652bee468f879d35fe2da9ede3f1dcbb7be",
-            "https://git.kernel.org/stable/c/9b02197596671800dd934609384b1aca7c6ad218",
-            "https://git.kernel.org/stable/c/ca93bf607a44c1f009283dac4af7df0d9ae5e357"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nthermal/drivers/mediatek/lvts_thermal: Fix a memory leak in an error handling path\n\nIf devm_krealloc() fails, then 'efuse' is leaking.\nSo free it to avoid a leak."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27067",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/99e425032c6ec13584d3cd33846e0c7307501b47",
-            "https://git.kernel.org/stable/c/35485dad6e28f9b17884764d4692b1655cb848d0",
-            "https://git.kernel.org/stable/c/9e2d4b58c1da48a32905802aaeadba7084b46895",
-            "https://git.kernel.org/stable/c/51c23bd691c0f1fb95b29731c356c6fd69925d17"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nxen/evtchn: avoid WARN() when unbinding an event channel\n\nWhen unbinding a user event channel, the related handler might be\ncalled a last time in case the kernel was built with\nCONFIG_DEBUG_SHIRQ. This might cause a WARN() in the handler.\n\nAvoid that by adding an \"unbinding\" flag to struct user_event which\nwill short circuit the handler."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27069",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c3c85aefc0da1e5074a06c682542a54ccc99bdca",
-            "https://git.kernel.org/stable/c/77a28aa476873048024ad56daf8f4f17d58ee48e"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\novl: relax WARN_ON in ovl_verify_area()\n\nsyzbot hit an assertion in copy up data loop which looks like it is\nthe result of a lower file whose size is being changed underneath\noverlayfs.\n\nThis type of use case is documented to cause undefined behavior, so\nreturning EIO error for the copy up makes sense, but it should not be\ncausing a WARN_ON assertion."
-    },
-    {
-        "Modified": "2024-05-01T19:50:00",
-        "Published": "2024-05-01T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27070",
-        "impact": {},
-        "last-modified": "2024-05-01T19:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/8186e16a766d709a08f188d2f4e84098f364bea1",
-            "https://git.kernel.org/stable/c/eb70d5a6c932d9d23f4bb3e7b83782c21ac4b064"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nf2fs: fix to avoid use-after-free issue in f2fs_filemap_fault\n\nsyzbot reports a f2fs bug as below:\n\nBUG: KASAN: slab-use-after-free in f2fs_filemap_fault+0xd1/0x2c0 fs/f2fs/file.c:49\nRead of size 8 at addr ffff88807bb22680 by task syz-executor184/5058\n\nCPU: 0 PID: 5058 Comm: syz-executor184 Not tainted 6.7.0-syzkaller-09928-g052d534373b7 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106\n print_address_description mm/kasan/report.c:377 [inline]\n print_report+0x163/0x540 mm/kasan/report.c:488\n kasan_report+0x142/0x170 mm/kasan/report.c:601\n f2fs_filemap_fault+0xd1/0x2c0 fs/f2fs/file.c:49\n __do_fault+0x131/0x450 mm/memory.c:4376\n do_shared_fault mm/memory.c:4798 [inline]\n do_fault mm/memory.c:4872 [inline]\n do_pte_missing mm/memory.c:3745 [inline]\n handle_pte_fault mm/memory.c:5144 [inline]\n __handle_mm_fault+0x23b7/0x72b0 mm/memory.c:5285\n handle_mm_fault+0x27e/0x770 mm/memory.c:5450\n do_user_addr_fault arch/x86/mm/fault.c:1364 [inline]\n handle_page_fault arch/x86/mm/fault.c:1507 [inline]\n exc_page_fault+0x456/0x870 arch/x86/mm/fault.c:1563\n asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570\n\nThe root cause is: in f2fs_filemap_fault(), vmf->vma may be not alive after\nfilemap_fault(), so it may cause use-after-free issue when accessing\nvmf->vma->vm_flags in trace_f2fs_filemap_fault(). So it needs to keep vm_flags\nin separated temporary variable for tracepoint use."
     }
 ]
