@@ -1,5 +1,93 @@
 [
     {
+        "Modified": "2024-05-04T16:15:00",
+        "Published": "2024-03-14T17:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-22655",
+        "impact": {},
+        "last-modified": "2024-05-04T16:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00960.html",
+            "https://security.netapp.com/advisory/ntap-20240405-0006/",
+            "https://lists.debian.org/debian-lts-announce/2024/05/msg00003.html"
+        ],
+        "summary": "Protection mechanism failure in some 3rd and 4th Generation Intel(R) Xeon(R) Processors when using Intel(R) SGX or Intel(R) TDX may allow a privileged user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-04T16:15:00",
+        "Published": "2024-03-14T17:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-28746",
+        "impact": {},
+        "last-modified": "2024-05-04T16:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00898.html",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/ZON4TLXG7TG4A2XZG563JMVTGQW4SF3A/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/H63LGAQXPEVJOES73U4XK65I6DASOAAG/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/EIUICU6CVJUIB6BPJ7P5QTPQR5VOBHFK/",
+            "http://www.openwall.com/lists/oss-security/2024/03/12/13",
+            "https://lists.debian.org/debian-lts-announce/2024/05/msg00003.html"
+        ],
+        "summary": "Information exposure through microarchitectural state after transient execution from some register files for some Intel(R) Atom(R) Processors may allow an authenticated user to potentially enable information disclosure via local access."
+    },
+    {
+        "Modified": "2024-05-04T16:15:00",
+        "Published": "2024-03-14T17:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-38575",
+        "impact": {},
+        "last-modified": "2024-05-04T16:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00982.html",
+            "https://security.netapp.com/advisory/ntap-20240405-0008/",
+            "https://lists.debian.org/debian-lts-announce/2024/05/msg00003.html"
+        ],
+        "summary": "Non-transparent sharing of return predictor targets between contexts in some Intel(R) Processors may allow an authorized user to potentially enable information disclosure via local access."
+    },
+    {
+        "Modified": "2024-05-04T16:15:00",
+        "Published": "2024-03-14T17:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-39368",
+        "impact": {},
+        "last-modified": "2024-05-04T16:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00972.html",
+            "https://security.netapp.com/advisory/ntap-20240405-0007/",
+            "https://lists.debian.org/debian-lts-announce/2024/05/msg00003.html"
+        ],
+        "summary": "Protection mechanism failure of bus lock regulator for some Intel(R) Processors may allow an unauthenticated user to potentially enable denial of service via network access."
+    },
+    {
+        "Modified": "2024-05-04T16:15:00",
+        "Published": "2024-03-14T17:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43490",
+        "impact": {},
+        "last-modified": "2024-05-04T16:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01045.html",
+            "https://security.netapp.com/advisory/ntap-20240405-0009/",
+            "https://lists.debian.org/debian-lts-announce/2024/05/msg00003.html"
+        ],
+        "summary": "Incorrect calculation in microcode keying mechanism for some Intel(R) Xeon(R) D Processors with Intel(R) SGX may allow a privileged user to potentially enable information disclosure via local access."
+    },
+    {
         "Modified": "2024-05-04T14:16:00",
         "Published": "2024-05-04T14:16:00",
         "access": {},
@@ -1670,100 +1758,5 @@
             "https://git.kernel.org/stable/c/85eaeb5058f0f04dffb124c97c86b4f18db0b833"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nIB/core: Fix a nested dead lock as part of ODP flow\n\nFix a nested dead lock as part of ODP flow by using mmput_async().\n\nFrom the below call trace [1] can see that calling mmput() once we have\nthe umem_odp->umem_mutex locked as required by\nib_umem_odp_map_dma_and_lock() might trigger in the same task the\nexit_mmap()->__mmu_notifier_release()->mlx5_ib_invalidate_range() which\nmay dead lock when trying to lock the same mutex.\n\nMoving to use mmput_async() will solve the problem as the above\nexit_mmap() flow will be called in other task and will be executed once\nthe lock will be available.\n\n[1]\n[64843.077665] task:kworker/u133:2  state:D stack:    0 pid:80906 ppid:\n2 flags:0x00004000\n[64843.077672] Workqueue: mlx5_ib_page_fault mlx5_ib_eqe_pf_action [mlx5_ib]\n[64843.077719] Call Trace:\n[64843.077722]  <TASK>\n[64843.077724]  __schedule+0x23d/0x590\n[64843.077729]  schedule+0x4e/0xb0\n[64843.077735]  schedule_preempt_disabled+0xe/0x10\n[64843.077740]  __mutex_lock.constprop.0+0x263/0x490\n[64843.077747]  __mutex_lock_slowpath+0x13/0x20\n[64843.077752]  mutex_lock+0x34/0x40\n[64843.077758]  mlx5_ib_invalidate_range+0x48/0x270 [mlx5_ib]\n[64843.077808]  __mmu_notifier_release+0x1a4/0x200\n[64843.077816]  exit_mmap+0x1bc/0x200\n[64843.077822]  ? walk_page_range+0x9c/0x120\n[64843.077828]  ? __cond_resched+0x1a/0x50\n[64843.077833]  ? mutex_lock+0x13/0x40\n[64843.077839]  ? uprobe_clear_state+0xac/0x120\n[64843.077860]  mmput+0x5f/0x140\n[64843.077867]  ib_umem_odp_map_dma_and_lock+0x21b/0x580 [ib_core]\n[64843.077931]  pagefault_real_mr+0x9a/0x140 [mlx5_ib]\n[64843.077962]  pagefault_mr+0xb4/0x550 [mlx5_ib]\n[64843.077992]  pagefault_single_data_segment.constprop.0+0x2ac/0x560\n[mlx5_ib]\n[64843.078022]  mlx5_ib_eqe_pf_action+0x528/0x780 [mlx5_ib]\n[64843.078051]  process_one_work+0x22b/0x3d0\n[64843.078059]  worker_thread+0x53/0x410\n[64843.078065]  ? process_one_work+0x3d0/0x3d0\n[64843.078073]  kthread+0x12a/0x150\n[64843.078079]  ? set_kthread_struct+0x50/0x50\n[64843.078085]  ret_from_fork+0x22/0x30\n[64843.078093]  </TASK>"
-    },
-    {
-        "Modified": "2024-05-03T15:32:00",
-        "Published": "2024-05-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48686",
-        "impact": {},
-        "last-modified": "2024-05-03T15:32:00",
-        "references": [
-            "https://git.kernel.org/stable/c/19816a0214684f70b49b25075ff8c402fdd611d3",
-            "https://git.kernel.org/stable/c/5914fa32ef1b7766fea933f9eed94ac5c00aa7ff",
-            "https://git.kernel.org/stable/c/13c80a6c112467bab5e44d090767930555fc17a5",
-            "https://git.kernel.org/stable/c/c3eb461aa56e6fa94fb80442ba2586bd223a8886",
-            "https://git.kernel.org/stable/c/160f3549a907a50e51a8518678ba2dcf2541abea"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnvme-tcp: fix UAF when detecting digest errors\n\nWe should also bail from the io_work loop when we set rd_enabled to true,\nso we don't attempt to read data from the socket when the TCP stream is\nalready out-of-sync or corrupted."
-    },
-    {
-        "Modified": "2024-05-03T15:32:00",
-        "Published": "2024-05-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48687",
-        "impact": {},
-        "last-modified": "2024-05-03T15:32:00",
-        "references": [
-            "https://git.kernel.org/stable/c/dc9dbd65c803af1607484fed5da50d41dc8dd864",
-            "https://git.kernel.org/stable/c/f684c16971ed5e77dfa25a9ad25b5297e1f58eab",
-            "https://git.kernel.org/stable/c/3df71e11a4773d775c3633c44319f7acdb89011c",
-            "https://git.kernel.org/stable/c/076f2479fc5a15c4a970ca3b5e57d42ba09a31fa",
-            "https://git.kernel.org/stable/c/55195563ec29f80f984237b743de0e2b6ba4d093",
-            "https://git.kernel.org/stable/c/56ad3f475482bca55b0ae544031333018eb145b3",
-            "https://git.kernel.org/stable/c/84a53580c5d2138c7361c7c3eea5b31827e63b35"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: sr: fix out-of-bounds read when setting HMAC data.\n\nThe SRv6 layer allows defining HMAC data that can later be used to sign IPv6\nSegment Routing Headers. This configuration is realised via netlink through\nfour attributes: SEG6_ATTR_HMACKEYID, SEG6_ATTR_SECRET, SEG6_ATTR_SECRETLEN and\nSEG6_ATTR_ALGID. Because the SECRETLEN attribute is decoupled from the actual\nlength of the SECRET attribute, it is possible to provide invalid combinations\n(e.g., secret = \"\", secretlen = 64). This case is not checked in the code and\nwith an appropriately crafted netlink message, an out-of-bounds read of up\nto 64 bytes (max secret length) can occur past the skb end pointer and into\nskb_shared_info:\n\nBreakpoint 1, seg6_genl_sethmac (skb=<optimized out>, info=<optimized out>) at net/ipv6/seg6.c:208\n208\t\tmemcpy(hinfo->secret, secret, slen);\n(gdb) bt\n #0  seg6_genl_sethmac (skb=<optimized out>, info=<optimized out>) at net/ipv6/seg6.c:208\n #1  0xffffffff81e012e9 in genl_family_rcv_msg_doit (skb=skb@entry=0xffff88800b1f9f00, nlh=nlh@entry=0xffff88800b1b7600,\n    extack=extack@entry=0xffffc90000ba7af0, ops=ops@entry=0xffffc90000ba7a80, hdrlen=4, net=0xffffffff84237580 <init_net>, family=<optimized out>,\n    family=<optimized out>) at net/netlink/genetlink.c:731\n #2  0xffffffff81e01435 in genl_family_rcv_msg (extack=0xffffc90000ba7af0, nlh=0xffff88800b1b7600, skb=0xffff88800b1f9f00,\n    family=0xffffffff82fef6c0 <seg6_genl_family>) at net/netlink/genetlink.c:775\n #3  genl_rcv_msg (skb=0xffff88800b1f9f00, nlh=0xffff88800b1b7600, extack=0xffffc90000ba7af0) at net/netlink/genetlink.c:792\n #4  0xffffffff81dfffc3 in netlink_rcv_skb (skb=skb@entry=0xffff88800b1f9f00, cb=cb@entry=0xffffffff81e01350 <genl_rcv_msg>)\n    at net/netlink/af_netlink.c:2501\n #5  0xffffffff81e00919 in genl_rcv (skb=0xffff88800b1f9f00) at net/netlink/genetlink.c:803\n #6  0xffffffff81dff6ae in netlink_unicast_kernel (ssk=0xffff888010eec800, skb=0xffff88800b1f9f00, sk=0xffff888004aed000)\n    at net/netlink/af_netlink.c:1319\n #7  netlink_unicast (ssk=ssk@entry=0xffff888010eec800, skb=skb@entry=0xffff88800b1f9f00, portid=portid@entry=0, nonblock=<optimized out>)\n    at net/netlink/af_netlink.c:1345\n #8  0xffffffff81dff9a4 in netlink_sendmsg (sock=<optimized out>, msg=0xffffc90000ba7e48, len=<optimized out>) at net/netlink/af_netlink.c:1921\n...\n(gdb) p/x ((struct sk_buff *)0xffff88800b1f9f00)->head + ((struct sk_buff *)0xffff88800b1f9f00)->end\n$1 = 0xffff88800b1b76c0\n(gdb) p/x secret\n$2 = 0xffff88800b1b76c0\n(gdb) p slen\n$3 = 64 '@'\n\nThe OOB data can then be read back from userspace by dumping HMAC state. This\ncommit fixes this by ensuring SECRETLEN cannot exceed the actual length of\nSECRET."
-    },
-    {
-        "Modified": "2024-05-03T15:32:00",
-        "Published": "2024-05-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48688",
-        "impact": {},
-        "last-modified": "2024-05-03T15:32:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c49f320e2492738d478bc427dcd54ccfe0cba746",
-            "https://git.kernel.org/stable/c/5332a094514852d5e58c278cf4193adb937337fc",
-            "https://git.kernel.org/stable/c/342d77769a6cceb3df7720a1e18baa4339eee3fc",
-            "https://git.kernel.org/stable/c/2ed94383f3a2693dbf5bc47c514b42524bd8f9ae",
-            "https://git.kernel.org/stable/c/38af35bec59a8431a1eb29da994a0a45cba275d9",
-            "https://git.kernel.org/stable/c/fb8396aeda5872369a8ed6d2301e2c86e303c520"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ni40e: Fix kernel crash during module removal\n\nThe driver incorrectly frees client instance and subsequent\ni40e module removal leads to kernel crash.\n\nReproducer:\n1. Do ethtool offline test followed immediately by another one\nhost# ethtool -t eth0 offline; ethtool -t eth0 offline\n2. Remove recursively irdma module that also removes i40e module\nhost# modprobe -r irdma\n\nResult:\n[ 8675.035651] i40e 0000:3d:00.0 eno1: offline testing starting\n[ 8675.193774] i40e 0000:3d:00.0 eno1: testing finished\n[ 8675.201316] i40e 0000:3d:00.0 eno1: offline testing starting\n[ 8675.358921] i40e 0000:3d:00.0 eno1: testing finished\n[ 8675.496921] i40e 0000:3d:00.0: IRDMA hardware initialization FAILED init_state=2 status=-110\n[ 8686.188955] i40e 0000:3d:00.1: i40e_ptp_stop: removed PHC on eno2\n[ 8686.943890] i40e 0000:3d:00.1: Deleted LAN device PF1 bus=0x3d dev=0x00 func=0x01\n[ 8686.952669] i40e 0000:3d:00.0: i40e_ptp_stop: removed PHC on eno1\n[ 8687.761787] BUG: kernel NULL pointer dereference, address: 0000000000000030\n[ 8687.768755] #PF: supervisor read access in kernel mode\n[ 8687.773895] #PF: error_code(0x0000) - not-present page\n[ 8687.779034] PGD 0 P4D 0\n[ 8687.781575] Oops: 0000 [#1] PREEMPT SMP NOPTI\n[ 8687.785935] CPU: 51 PID: 172891 Comm: rmmod Kdump: loaded Tainted: G        W I        5.19.0+ #2\n[ 8687.794800] Hardware name: Intel Corporation S2600WFD/S2600WFD, BIOS SE5C620.86B.0X.02.0001.051420190324 05/14/2019\n[ 8687.805222] RIP: 0010:i40e_lan_del_device+0x13/0xb0 [i40e]\n[ 8687.810719] Code: d4 84 c0 0f 84 b8 25 01 00 e9 9c 25 01 00 41 bc f4 ff ff ff eb 91 90 0f 1f 44 00 00 41 54 55 53 48 8b 87 58 08 00 00 48 89 fb <48> 8b 68 30 48 89 ef e8 21 8a 0f d5 48 89 ef e8 a9 78 0f d5 48 8b\n[ 8687.829462] RSP: 0018:ffffa604072efce0 EFLAGS: 00010202\n[ 8687.834689] RAX: 0000000000000000 RBX: ffff8f43833b2000 RCX: 0000000000000000\n[ 8687.841821] RDX: 0000000000000000 RSI: ffff8f4b0545b298 RDI: ffff8f43833b2000\n[ 8687.848955] RBP: ffff8f43833b2000 R08: 0000000000000001 R09: 0000000000000000\n[ 8687.856086] R10: 0000000000000000 R11: 000ffffffffff000 R12: ffff8f43833b2ef0\n[ 8687.863218] R13: ffff8f43833b2ef0 R14: ffff915103966000 R15: ffff8f43833b2008\n[ 8687.870342] FS:  00007f79501c3740(0000) GS:ffff8f4adffc0000(0000) knlGS:0000000000000000\n[ 8687.878427] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[ 8687.884174] CR2: 0000000000000030 CR3: 000000014276e004 CR4: 00000000007706e0\n[ 8687.891306] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[ 8687.898441] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[ 8687.905572] PKRU: 55555554\n[ 8687.908286] Call Trace:\n[ 8687.910737]  <TASK>\n[ 8687.912843]  i40e_remove+0x2c0/0x330 [i40e]\n[ 8687.917040]  pci_device_remove+0x33/0xa0\n[ 8687.920962]  device_release_driver_internal+0x1aa/0x230\n[ 8687.926188]  driver_detach+0x44/0x90\n[ 8687.929770]  bus_remove_driver+0x55/0xe0\n[ 8687.933693]  pci_unregister_driver+0x2a/0xb0\n[ 8687.937967]  i40e_exit_module+0xc/0xf48 [i40e]\n\nTwo offline tests cause IRDMA driver failure (ETIMEDOUT) and this\nfailure is indicated back to i40e_client_subtask() that calls\ni40e_client_del_instance() to free client instance referenced\nby pf->cinst and sets this pointer to NULL. During the module\nremoval i40e_remove() calls i40e_lan_del_device() that dereferences\npf->cinst that is NULL -> crash.\nDo not remove client instance when client open callbacks fails and\njust clear __I40E_CLIENT_INSTANCE_OPENED bit. The driver also needs\nto take care about this situation (when netdev is up and client\nis NOT opened) in i40e_notify_client_of_netdev_close() and\ncalls client close callback only when __I40E_CLIENT_INSTANCE_OPENED\nis set."
-    },
-    {
-        "Modified": "2024-05-03T15:32:00",
-        "Published": "2024-05-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48689",
-        "impact": {},
-        "last-modified": "2024-05-03T15:32:00",
-        "references": [
-            "https://git.kernel.org/stable/c/8527c9a6bf8e54fef0a8d3d7d8874a48c725c915",
-            "https://git.kernel.org/stable/c/6730c48ed6b0cd939fc9b30b2d621ce0b89bea83",
-            "https://git.kernel.org/stable/c/3261400639463a853ba2b3be8bd009c2a8089775"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntcp: TX zerocopy should not sense pfmemalloc status\n\nWe got a recent syzbot report [1] showing a possible misuse\nof pfmemalloc page status in TCP zerocopy paths.\n\nIndeed, for pages coming from user space or other layers,\nusing page_is_pfmemalloc() is moot, and possibly could give\nfalse positives.\n\nThere has been attempts to make page_is_pfmemalloc() more robust,\nbut not using it in the first place in this context is probably better,\nremoving cpu cycles.\n\nNote to stable teams :\n\nYou need to backport 84ce071e38a6 (\"net: introduce\n__skb_fill_page_desc_noacc\") as a prereq.\n\nRace is more probable after commit c07aea3ef4d4\n(\"mm: add a signature in struct page\") because page_is_pfmemalloc()\nis now using low order bit from page->lru.next, which can change\nmore often than page->index.\n\nLow order bit should never be set for lru.next (when used as an anchor\nin LRU list), so KCSAN report is mostly a false positive.\n\nBackporting to older kernel versions seems not necessary.\n\n[1]\nBUG: KCSAN: data-race in lru_add_fn / tcp_build_frag\n\nwrite to 0xffffea0004a1d2c8 of 8 bytes by task 18600 on cpu 0:\n__list_add include/linux/list.h:73 [inline]\nlist_add include/linux/list.h:88 [inline]\nlruvec_add_folio include/linux/mm_inline.h:105 [inline]\nlru_add_fn+0x440/0x520 mm/swap.c:228\nfolio_batch_move_lru+0x1e1/0x2a0 mm/swap.c:246\nfolio_batch_add_and_move mm/swap.c:263 [inline]\nfolio_add_lru+0xf1/0x140 mm/swap.c:490\nfilemap_add_folio+0xf8/0x150 mm/filemap.c:948\n__filemap_get_folio+0x510/0x6d0 mm/filemap.c:1981\npagecache_get_page+0x26/0x190 mm/folio-compat.c:104\ngrab_cache_page_write_begin+0x2a/0x30 mm/folio-compat.c:116\next4_da_write_begin+0x2dd/0x5f0 fs/ext4/inode.c:2988\ngeneric_perform_write+0x1d4/0x3f0 mm/filemap.c:3738\next4_buffered_write_iter+0x235/0x3e0 fs/ext4/file.c:270\next4_file_write_iter+0x2e3/0x1210\ncall_write_iter include/linux/fs.h:2187 [inline]\nnew_sync_write fs/read_write.c:491 [inline]\nvfs_write+0x468/0x760 fs/read_write.c:578\nksys_write+0xe8/0x1a0 fs/read_write.c:631\n__do_sys_write fs/read_write.c:643 [inline]\n__se_sys_write fs/read_write.c:640 [inline]\n__x64_sys_write+0x3e/0x50 fs/read_write.c:640\ndo_syscall_x64 arch/x86/entry/common.c:50 [inline]\ndo_syscall_64+0x2b/0x70 arch/x86/entry/common.c:80\nentry_SYSCALL_64_after_hwframe+0x63/0xcd\n\nread to 0xffffea0004a1d2c8 of 8 bytes by task 18611 on cpu 1:\npage_is_pfmemalloc include/linux/mm.h:1740 [inline]\n__skb_fill_page_desc include/linux/skbuff.h:2422 [inline]\nskb_fill_page_desc include/linux/skbuff.h:2443 [inline]\ntcp_build_frag+0x613/0xb20 net/ipv4/tcp.c:1018\ndo_tcp_sendpages+0x3e8/0xaf0 net/ipv4/tcp.c:1075\ntcp_sendpage_locked net/ipv4/tcp.c:1140 [inline]\ntcp_sendpage+0x89/0xb0 net/ipv4/tcp.c:1150\ninet_sendpage+0x7f/0xc0 net/ipv4/af_inet.c:833\nkernel_sendpage+0x184/0x300 net/socket.c:3561\nsock_sendpage+0x5a/0x70 net/socket.c:1054\npipe_to_sendpage+0x128/0x160 fs/splice.c:361\nsplice_from_pipe_feed fs/splice.c:415 [inline]\n__splice_from_pipe+0x222/0x4d0 fs/splice.c:559\nsplice_from_pipe fs/splice.c:594 [inline]\ngeneric_splice_sendpage+0x89/0xc0 fs/splice.c:743\ndo_splice_from fs/splice.c:764 [inline]\ndirect_splice_actor+0x80/0xa0 fs/splice.c:931\nsplice_direct_to_actor+0x305/0x620 fs/splice.c:886\ndo_splice_direct+0xfb/0x180 fs/splice.c:974\ndo_sendfile+0x3bf/0x910 fs/read_write.c:1249\n__do_sys_sendfile64 fs/read_write.c:1317 [inline]\n__se_sys_sendfile64 fs/read_write.c:1303 [inline]\n__x64_sys_sendfile64+0x10c/0x150 fs/read_write.c:1303\ndo_syscall_x64 arch/x86/entry/common.c:50 [inline]\ndo_syscall_64+0x2b/0x70 arch/x86/entry/common.c:80\nentry_SYSCALL_64_after_hwframe+0x63/0xcd\n\nvalue changed: 0x0000000000000000 -> 0xffffea0004a1d288\n\nReported by Kernel Concurrency Sanitizer on:\nCPU: 1 PID: 18611 Comm: syz-executor.4 Not tainted 6.0.0-rc2-syzkaller-00248-ge022620b5d05-dirty #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/22/2022"
-    },
-    {
-        "Modified": "2024-05-03T15:32:00",
-        "Published": "2024-05-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48691",
-        "impact": {},
-        "last-modified": "2024-05-03T15:32:00",
-        "references": [
-            "https://git.kernel.org/stable/c/910891a2a44cdc49efcc4fe7459c1085ba00d0f4",
-            "https://git.kernel.org/stable/c/1ce55ec5cb7c573c983dffbe290b8d17caf1f157",
-            "https://git.kernel.org/stable/c/94ed8eeb8d9aeb00e4f4e19b83a2e28b6442fbc5",
-            "https://git.kernel.org/stable/c/77972a36ecc4db7fc7c68f0e80714263c5f03f65"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: clean up hook list when offload flags check fails\n\nsplice back the hook list so nft_chain_release_hook() has a chance to\nrelease the hooks.\n\nBUG: memory leak\nunreferenced object 0xffff88810180b100 (size 96):\n  comm \"syz-executor133\", pid 3619, jiffies 4294945714 (age 12.690s)\n  hex dump (first 32 bytes):\n    28 64 23 02 81 88 ff ff 28 64 23 02 81 88 ff ff  (d#.....(d#.....\n    90 a8 aa 83 ff ff ff ff 00 00 b5 0f 81 88 ff ff  ................\n  backtrace:\n    [<ffffffff83a8c59b>] kmalloc include/linux/slab.h:600 [inline]\n    [<ffffffff83a8c59b>] nft_netdev_hook_alloc+0x3b/0xc0 net/netfilter/nf_tables_api.c:1901\n    [<ffffffff83a9239a>] nft_chain_parse_netdev net/netfilter/nf_tables_api.c:1998 [inline]\n    [<ffffffff83a9239a>] nft_chain_parse_hook+0x33a/0x530 net/netfilter/nf_tables_api.c:2073\n    [<ffffffff83a9b14b>] nf_tables_addchain.constprop.0+0x10b/0x950 net/netfilter/nf_tables_api.c:2218\n    [<ffffffff83a9c41b>] nf_tables_newchain+0xa8b/0xc60 net/netfilter/nf_tables_api.c:2593\n    [<ffffffff83a3d6a6>] nfnetlink_rcv_batch+0xa46/0xd20 net/netfilter/nfnetlink.c:517\n    [<ffffffff83a3db79>] nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:638 [inline]\n    [<ffffffff83a3db79>] nfnetlink_rcv+0x1f9/0x220 net/netfilter/nfnetlink.c:656\n    [<ffffffff83a13b17>] netlink_unicast_kernel net/netlink/af_netlink.c:1319 [inline]\n    [<ffffffff83a13b17>] netlink_unicast+0x397/0x4c0 net/netlink/af_netlink.c:1345\n    [<ffffffff83a13fd6>] netlink_sendmsg+0x396/0x710 net/netlink/af_netlink.c:1921\n    [<ffffffff83865ab6>] sock_sendmsg_nosec net/socket.c:714 [inline]\n    [<ffffffff83865ab6>] sock_sendmsg+0x56/0x80 net/socket.c:734\n    [<ffffffff8386601c>] ____sys_sendmsg+0x36c/0x390 net/socket.c:2482\n    [<ffffffff8386a918>] ___sys_sendmsg+0xa8/0x110 net/socket.c:2536\n    [<ffffffff8386aaa8>] __sys_sendmsg+0x88/0x100 net/socket.c:2565\n    [<ffffffff845e5955>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]\n    [<ffffffff845e5955>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80\n    [<ffffffff84800087>] entry_SYSCALL_64_after_hwframe+0x63/0xcd"
     }
 ]
