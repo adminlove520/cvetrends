@@ -1,1573 +1,1541 @@
 [
     {
-        "Modified": "2024-05-16T19:15:00",
-        "Published": "2024-05-16T18:15:00",
+        "Modified": "2024-05-16T21:20:00",
+        "Published": "2024-03-25T10:15:00",
         "access": {},
-        "assigner": "security-report@netflix.com",
+        "assigner": "cve@kernel.org",
         "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-5023",
+        "cwe": "CWE-476",
+        "id": "CVE-2021-47179",
         "impact": {},
-        "last-modified": "2024-05-16T19:15:00",
+        "last-modified": "2024-05-16T21:20:00",
         "references": [
-            "https://github.com/Netflix/security-bulletins/blob/master/advisories/nflx-2024-002.md"
+            "https://git.kernel.org/stable/c/4e1ba532dbc1a0e19fc2458d74ab8d98680c4e42",
+            "https://git.kernel.org/stable/c/42637ca25c7d7b5a92804a679af5192e8c1a9f48",
+            "https://git.kernel.org/stable/c/39785761feadf261bc5101372b0b0bbaf6a94494",
+            "https://git.kernel.org/stable/c/aba3c7795f51717ae316f3566442dee7cc3eeccb",
+            "https://git.kernel.org/stable/c/f9890652185b72b8de9ebeb4406037640b6e1b53",
+            "https://git.kernel.org/stable/c/b090d110e66636bca473fd8b98d5c97b555a965a",
+            "https://git.kernel.org/stable/c/a421d218603ffa822a0b8045055c03eae394a7eb"
         ],
-        "summary": "Improper Neutralization of Special Elements used in a Command ('Command Injection') vulnerability in Netflix ConsoleMe allows Command Injection.This issue affects ConsoleMe: before 1.4.0."
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nNFSv4: Fix a NULL pointer dereference in pnfs_mark_matching_lsegs_return()\n\nCommit de144ff4234f changes _pnfs_return_layout() to call\npnfs_mark_matching_lsegs_return() passing NULL as the struct\npnfs_layout_range argument. Unfortunately,\npnfs_mark_matching_lsegs_return() doesn't check if we have a value here\nbefore dereferencing it, causing an oops.\n\nI'm able to hit this crash consistently when running connectathon basic\ntests on NFS v4.1/v4.2 against Ontap."
     },
     {
-        "Modified": "2024-05-16T19:15:00",
-        "Published": "2024-05-16T19:15:00",
+        "Modified": "2024-05-16T21:19:00",
+        "Published": "2024-03-25T10:15:00",
         "access": {},
-        "assigner": "security-advisories@github.com",
+        "assigner": "cve@kernel.org",
         "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31226",
+        "cwe": "CWE-401",
+        "id": "CVE-2021-47173",
         "impact": {},
-        "last-modified": "2024-05-16T19:15:00",
+        "last-modified": "2024-05-16T21:19:00",
         "references": [
-            "https://github.com/LizardByte/Sunshine/security/advisories/GHSA-r3rw-mx4q-7vfp",
-            "https://github.com/LizardByte/Sunshine/pull/2379",
-            "https://github.com/LizardByte/Sunshine/commit/93e622342c4f3e9b34f5f265039b6775b8e33a7a"
+            "https://git.kernel.org/stable/c/5f46b2410db2c8f26b8bb91b40deebf4ec184391",
+            "https://git.kernel.org/stable/c/7889c70e6173ef358f3cd7578db127a489035a42",
+            "https://git.kernel.org/stable/c/bcb30cc8f8befcbdbcf7a016e4dfd4747c54a364",
+            "https://git.kernel.org/stable/c/386918878ce4cd676e4607233866e03c9399a46a",
+            "https://git.kernel.org/stable/c/36b5ff1db1a4ef4fdbc2bae364344279f033ad88",
+            "https://git.kernel.org/stable/c/5394ae9d8c7961dd93807fdf1b12a1dde96b0a55",
+            "https://git.kernel.org/stable/c/a3c3face38cb49932c62adcc1289914f1c742096",
+            "https://git.kernel.org/stable/c/dcb4b8ad6a448532d8b681b5d1a7036210b622de"
         ],
-        "summary": "Sunshine is a self-hosted game stream host for Moonlight. Users who ran Sunshine versions 0.17.0 through 0.22.2 as a service on Windows may be impacted when terminating the service if an attacked placed a file named `C:\\Program.exe`, `C:\\Program.bat`, or `C:\\Program.cmd` on the user's computer. This attack vector isn't exploitable unless the user has manually loosened ACLs on the system drive. If the user's system locale is not English, then the name of the executable will likely vary. Version 0.23.0 contains a patch for the issue. Some workarounds are available. One may identify and block potentially malicious software executed path interception by using application control tools, like Windows Defender Application Control, AppLocker, or Software Restriction Policies where appropriate. Alternatively, ensure that proper permissions and directory access control are set to deny users the ability to write files to the top-level directory `C:`. Require that all executables be placed in write-protected directories."
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmisc/uss720: fix memory leak in uss720_probe\n\nuss720_probe forgets to decrease the refcount of usbdev in uss720_probe.\nFix this by decreasing the refcount of usbdev by usb_put_dev.\n\nBUG: memory leak\nunreferenced object 0xffff888101113800 (size 2048):\n  comm \"kworker/0:1\", pid 7, jiffies 4294956777 (age 28.870s)\n  hex dump (first 32 bytes):\n    ff ff ff ff 31 00 00 00 00 00 00 00 00 00 00 00  ....1...........\n    00 00 00 00 00 00 00 00 00 00 00 00 03 00 00 00  ................\n  backtrace:\n    [<ffffffff82b8e822>] kmalloc include/linux/slab.h:554 [inline]\n    [<ffffffff82b8e822>] kzalloc include/linux/slab.h:684 [inline]\n    [<ffffffff82b8e822>] usb_alloc_dev+0x32/0x450 drivers/usb/core/usb.c:582\n    [<ffffffff82b98441>] hub_port_connect drivers/usb/core/hub.c:5129 [inline]\n    [<ffffffff82b98441>] hub_port_connect_change drivers/usb/core/hub.c:5363 [inline]\n    [<ffffffff82b98441>] port_event drivers/usb/core/hub.c:5509 [inline]\n    [<ffffffff82b98441>] hub_event+0x1171/0x20c0 drivers/usb/core/hub.c:5591\n    [<ffffffff81259229>] process_one_work+0x2c9/0x600 kernel/workqueue.c:2275\n    [<ffffffff81259b19>] worker_thread+0x59/0x5d0 kernel/workqueue.c:2421\n    [<ffffffff81261228>] kthread+0x178/0x1b0 kernel/kthread.c:292\n    [<ffffffff8100227f>] ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294"
     },
     {
-        "Modified": "2024-05-16T18:15:00",
-        "Published": "2024-05-16T18:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
         "access": {},
-        "assigner": "psirt@us.ibm.com",
+        "assigner": "secure@intel.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2023-47717",
+        "id": "CVE-2023-47169",
         "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://www.ibm.com/support/pages/node/7152469",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/271690"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00935.html"
         ],
-        "summary": "IBM Security Guardium 12.0 could allow a privileged user to perform unauthorized actions that could lead to a denial of service.  IBM X-Force ID:  271690."
+        "summary": "Improper buffer restrictions in Intel(R) Media SDK software all versions may allow an authenticated user to potentially enable denial of service via local access."
     },
     {
-        "Modified": "2024-05-16T18:15:00",
-        "Published": "2024-05-16T18:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
         "access": {},
-        "assigner": "security@watchguard.com",
+        "assigner": "secure@intel.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-1417",
+        "id": "CVE-2023-47210",
         "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://www.watchguard.com/wgrd-psirt/advisory/wgsa-2024-00006"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01039.html"
         ],
-        "summary": "Improper Neutralization of Special Elements used in a Command ('Command Injection') vulnerability in WatchGuard AuthPoint Password Manager on MacOS allows an a adversary with local access to execute code under the context of the AuthPoint Password Manager application.\nThis issue affects AuthPoint Password Manager for MacOS versions before 1.0.6.\n\n"
+        "summary": "Improper input validation for some Intel(R) PROSet/Wireless WiFi software for linux before version 23.20 may allow an unauthenticated user to potentially enable denial of service via adjacent access."
     },
     {
-        "Modified": "2024-05-16T18:15:00",
-        "Published": "2024-05-16T18:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
         "access": {},
-        "assigner": "psirt@lenovo.com",
+        "assigner": "secure@intel.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-3286",
+        "id": "CVE-2023-47282",
         "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://iknow.lenovo.com.cn/detail/421500",
-            "https://www.lenovoimage.com/psirt/notice/158605.html"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00935.html"
         ],
-        "summary": "\nA buffer overflow vulnerability was identified in some Lenovo printers that could allow an unauthenticated user to trigger a device restart by sending a specially crafted web request.\n\n\n\n\n\n\n\n\n\n"
+        "summary": "Out-of-bounds write in Intel(R) Media SDK all versions and some Intel(R) oneVPL software before version 23.3.5 may allow an authenticated user to potentially enable escalation of privilege via local access."
     },
     {
-        "Modified": "2024-05-16T18:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-47855",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01036.html"
+        ],
+        "summary": "Improper input validation in some Intel(R) TDX module software before version 1.5.05.46.698 may allow a privileged user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-47859",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01039.html"
+        ],
+        "summary": "Improper access control for some Intel(R) Wireless Bluetooth products for Windows before version 23.20 may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-48368",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00935.html"
+        ],
+        "summary": "Improper input validation in Intel(R) Media SDK software all versions may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-48727",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00935.html"
+        ],
+        "summary": "NULL pointer dereference in some Intel(R) oneVPL software before version 23.3.5 may allow an authenticated user to potentially enable information disclosure via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-49614",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01050.html"
+        ],
+        "summary": "Out of bounds write in firmware for some Intel(R) FPGA products before version 2.9.0 may allow escalation of privilege and information disclosure."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21772",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01047.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Advisor software before version 2024.0 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21774",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01054.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Processor Identification Utility software before versions 6.10.34.1129, 7.1.6 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21777",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01055.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Quartus(R) Prime Pro Edition Design software before version 23.4 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21788",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01067.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) GPA software before version 2023.4 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21792",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01109.html"
+        ],
+        "summary": "Time-of-check Time-of-use race condition in Intel(R) Neural Compressor software before version 2.5.0 may allow an authenticated user to potentially enable information disclosure via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21809",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01055.html"
+        ],
+        "summary": "Improper conditions check for some Intel(R) Quartus(R) Prime Lite Edition Design software before version 23.1 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21813",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00984.html"
+        ],
+        "summary": "Exposure of resource to wrong sphere in some Intel(R) DTT software installers may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21814",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01032.html"
+        ],
+        "summary": "Uncontrolled search path for some Intel(R) Chipset Device Software before version 10.1.19444.8378 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21818",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01035.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) PCM software before version 202311 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21823",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01084.html"
+        ],
+        "summary": "Hardware logic with insecure de-synchronization in Intel(R) DSA and Intel(R) IAA for some Intel(R) 4th or 5th generation Xeon(R) processors may allow an authorized user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21828",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01056.html"
+        ],
+        "summary": "Improper access control in some Intel(R) Ethernet Controller Administrative Tools software before version 28.3 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21831",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01069.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Processor Diagnostic Tool software before version 4.1.9.41 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21835",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01066.html"
+        ],
+        "summary": "Insecure inherited permissions in some Intel(R) XTU software before version 7.14.0.15 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21837",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01055.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Quartus(R) Prime Lite Edition Design software before version 23.1 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21841",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01042.html"
+        ],
+        "summary": "Uncontrolled search path for some Intel(R) Distribution for GDB software before version 2024.0 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21843",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01059.html"
+        ],
+        "summary": "Uncontrolled search path for some Intel(R) Computing Improvement Program software before version 2.4.0.10654 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21861",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01067.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) GPA Framework software before version 2023.4 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21862",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01055.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Quartus(R) Prime Standard Edition Design software before version 23.1 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21864",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01053.html"
+        ],
+        "summary": "Improper neutralization in some Intel(R) Arc(TM) & Iris(R) Xe Graphics software before version 31.0.101.5081 may allow an unauthenticated user to potentially enable escalation of privilege via adjacent network access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22015",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00996.html"
+        ],
+        "summary": "Improper input validation for some Intel(R) DLB driver software before version 8.5.0 may allow an authenticated user to potentially denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22095",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01080.html"
+        ],
+        "summary": "Improper input validation in PlatformVariableInitDxe driver in UEFI firmware for some Intel(R) Server D50DNP Family products may allow a privileged user to enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22379",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01043.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) Inspector software before version 2024.0 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22382",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01080.html"
+        ],
+        "summary": "Improper input validation in PprRequestLog module in UEFI firmware for some Intel(R) Server D50DNP Family products may allow a privileged user to enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22384",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00983.html"
+        ],
+        "summary": "Out-of-bounds read for some Intel(R) Trace Analyzer and Collector software before version 2022.0.0 published Nov 2023 may allow an authenticated user to potentially enable information disclosure via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22390",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01050.html"
+        ],
+        "summary": "Improper input validation in firmware for some Intel(R) FPGA products before version 2.9.1 may allow denial of service."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22476",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01109.html"
+        ],
+        "summary": "Improper input validation in some Intel(R) Neural Compressor software before version 2.5.0 may allow an unauthenticated user to potentially enable escalation of privilege via remote access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-23487",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01080.html"
+        ],
+        "summary": "Improper input validation in UserAuthenticationSmm driver in UEFI firmware for some Intel(R) Server D50DNP Family products may allow a privileged user to enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-23980",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01080.html"
+        ],
+        "summary": "Improper buffer restrictions in PlatformPfrDxe driver in UEFI firmware for some Intel(R) Server D50FCP Family products may allow a privileged user to enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24981",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01080.html"
+        ],
+        "summary": "Improper input validation in PfrSmiUpdateFw driver in UEFI firmware for some Intel(R) Server M50FCP Family products may allow a privileged user to enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-2619",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/689eb95b-2f72-4aa4-9f21-6ae186346061?source=cve",
+            "https://plugins.trac.wordpress.org/browser/header-footer-elementor/tags/1.6.25/admin/class-hfe-admin.php#L74",
+            "https://plugins.trac.wordpress.org/browser/header-footer-elementor/tags/1.6.25/admin/class-hfe-admin.php#L220",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=3070659%40header-footer-elementor%2Ftrunk&old=3053177%40header-footer-elementor%2Ftrunk&sfp_email=&sfph_mail="
+        ],
+        "summary": "The Elementor Header & Footer Builder for WordPress is vulnerable to HTML Injection in all versions up to, and including, 1.6.26 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with author-level permissions and above, to inject arbitrary HTML in pages that will be shown whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3609",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/f8152adf-1ca9-4a19-b539-39e257ab94c8?source=cve",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=3086273%40reviewx%2Ftrunk&old=3054184%40reviewx%2Ftrunk&sfp_email=&sfph_mail="
+        ],
+        "summary": "The ReviewX \u2013 Multi-criteria Rating & Reviews for WooCommerce plugin for WordPress is vulnerable to unauthorized deletion of data due to a missing capability check on the reviewx_remove_guest_image function in all versions up to, and including, 1.6.27. This makes it possible for authenticated attackers, with subscriber access and above, to delete attachments."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-05-16T21:16:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-4204",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/34b39462-32c5-4f7d-b54f-d95f40b6ed92?source=cve",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=3085134%40ithemeland-bulk-posts-editing-lite%2Ftrunk&old=2946926%40ithemeland-bulk-posts-editing-lite%2Ftrunk&sfp_email=&sfph_mail=#file51"
+        ],
+        "summary": "The Bulk Posts Editing For WordPress plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 4.2.3. This is due to missing or incorrect nonce validation on the plugin's AJAX actions.. This makes it possible for unauthenticated attackers to create and duplicate posts, retrieve post content, and modify post taxonomy among other things via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
+        "access": {},
+        "assigner": "sirt@juniper.net",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30386",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "http://supportportal.juniper.net/JSA79184",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
+        ],
+        "summary": "A Use-After-Free vulnerability in the\u00a0Layer 2 Address Learning Daemon (l2ald)\n\n of Juniper Networks Junos OS and Junos OS Evolved allows an unauthenticated, adjacent attacker to cause l2ald to crash leading to a Denial-of-Service (DoS).\n\nIn an EVPN-VXLAN scenario,\u00a0when \n\nstate updates are received and processed by the affected system, the correct order of some processing steps is not ensured, which can lead to an l2ald crash and restart. Whether the crash occurs depends on system internal timing which is outside the attackers control.\nThis issue affects:\n\nJunos OS:\u00a0\n\n\n\n  *  All versions before 20.4R3-S8,\n  *  21.2 versions before 21.2R3-S6,\n  *  21.3 versions before 21.3R3-S5,\n  *  21.4 versions before 21.4R3-S4,\n  *  22.1 versions before 22.1R3-S3,\n  *  22.2 versions before 22.2R3-S1,\n  *  22.3 versions before 22.3R3,,\n  *  22.4 versions before 22.4R2;\n\n\n\n\nJunos OS Evolved:\u00a0\n\n\n\n  *  All versions before 20.4R3-S8-EVO,\n  *  21.2-EVO versions before 21.2R3-S6-EVO,\u00a0\n  *  21.3-EVO\n\n versions before 21.3R3-S5-EVO,\n  *  21.4-EVO\n\n versions before 21.4R3-S4-EVO,\n  *  22.1-EVO\n\n versions before 22.1R3-S3-EVO,\n  *  22.2-EVO\n\n versions before 22.2R3-S1-EVO,\n  *  22.3-EVO\n\n versions before 22.3R3-EVO,\n  *  22.4-EVO\n\n versions before 22.4R2-EVO."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
+        "access": {},
+        "assigner": "sirt@juniper.net",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30388",
+        "impact": {},
+        "last-modified": "2024-05-16T21:16:00",
+        "references": [
+            "http://supportportal.juniper.net/JSA79089",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
+        ],
+        "summary": "An Improper Isolation or Compartmentalization vulnerability in the Packet Forwarding Engine (pfe) of Juniper Networks Junos OS on QFX5000 Series and EX Series allows an unauthenticated, adjacent attacker to cause a Denial of Service (DoS).\n\nIf a specific malformed LACP packet is received by a QFX5000 Series, or an EX4400, EX4100 or EX4650 Series device, an LACP flap will occur resulting in traffic loss.\nThis issue affects Junos OS on QFX5000 Series, and on EX4400, EX4100 or EX4650 Series:\n\n\n\n  *  20.4 versions from \n\n20.4R3-S4\n\nbefore 20.4R3-S8,\n  *  21.2 versions from \n\n21.2R3-S2\n\nbefore 21.2R3-S6,\n  *  21.4 versions from \n\n21.4R2\n\nbefore 21.4R3-S4,\n\n  *  22.1 versions from\n\n22.1R2\n\n before 22.1R3-S3,\n  *  22.2 versions before 22.2R3-S1,\n  *  22.3 versions before 22.3R2-S2, 22.3R3,\n  *  22.4 versions before 22.4R2-S1, 22.4R3."
+    },
+    {
+        "Modified": "2024-05-16T21:16:00",
         "Published": "2024-04-12T15:15:00",
         "access": {},
         "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-30381",
+        "id": "CVE-2024-30405",
         "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://supportportal.juniper.net/JSA79173",
-            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:H/UI:N/VC:H/VI:N/VA:N/SC:H/SI:H/SA:H"
-        ],
-        "summary": "An Exposure of Sensitive Information to an Unauthorized Actor vulnerability in Juniper Networks Paragon Active Assurance Control Center allows a network-adjacent attacker with root access to a Test Agent Appliance the ability to access sensitive information about downstream devices.\n\nThe \"netrounds-probe-login\" daemon (also called probe_serviced) exposes functions where the Test Agent (TA) Appliance pushes interface state/config, unregister itself, etc.  The remote service accidentally exposes an internal database object that can be used for direct database access on the Paragon Active Assurance Control Center.\n\n\n\n\nThis issue affects Paragon Active Assurance: 4.1.0, 4.2.0."
-    },
-    {
-        "Modified": "2024-05-16T18:15:00",
-        "Published": "2024-04-12T16:15:00",
-        "access": {},
-        "assigner": "sirt@juniper.net",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30382",
-        "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
-        "references": [
-            "https://supportportal.juniper.net/JSA79174",
+            "https://supportportal.juniper.net/JSA79105",
             "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "An Improper Handling of Exceptional Conditions vulnerability in the routing protocol daemon (rpd) of Juniper Networks Junos OS and Junos OS Evolved allows a network-based, unauthenticated attacker to send a specific routing update, causing an rpd core due to memory corruption, leading to a Denial of Service (DoS).\n\nThis issue can only be triggered when the system is configured for CoS-based forwarding (CBF) with a policy map containing a cos-next-hop-map action (see below).\nThis issue affects:\nJunos OS: \n\n\n  *  all versions before 20.4R3-S10, \n  *  from 21.2 before 21.2R3-S8,\n  *  from 21.3 before 21.3R3, \n  *  from 21.4 before 21.4R3, \n  *  from 22.1 before 22.1R2;\n\n\n\n\nJunos OS Evolved: \n\n\n  *  all versions before 21.2R3-S8-EVO,\n  *  from 21.3 before 21.3R3-EVO, \n  *  from 21.4 before 21.4R3-EVO, \n  *  from 22.1 before 22.1R2-EVO."
+        "summary": "An Incorrect Calculation of Buffer Size vulnerability in Juniper Networks Junos OS SRX 5000 Series devices using SPC2 line cards while ALGs are enabled allows an attacker sending specific crafted packets to cause a transit traffic Denial of Service (DoS).\n\nContinued receipt and processing of these specific packets will sustain the Denial of Service condition.\n\nThis issue affects:\nJuniper Networks Junos OS SRX 5000 Series with SPC2 with ALGs enabled.\n  *  All versions earlier than 21.2R3-S7;\n  *  21.4 versions earlier than 21.4R3-S6;\n  *  22.1 versions earlier than 22.1R3-S5;\n  *  22.2 versions earlier than 22.2R3-S3;\n  *  22.3 versions earlier than 22.3R3-S2;\n  *  22.4 versions earlier than 22.4R3;\n  *  23.2 versions earlier than 23.2R2."
     },
     {
-        "Modified": "2024-05-16T18:15:00",
-        "Published": "2024-04-16T20:15:00",
-        "access": {},
-        "assigner": "sirt@juniper.net",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30378",
-        "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
-        "references": [
-            "https://supportportal.juniper.net/JSA79109",
-            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
-        ],
-        "summary": "A Use After Free vulnerability in command processing of Juniper Networks Junos OS on MX Series allows a local, authenticated attacker to cause the broadband edge service manager daemon (bbe-smgd) to crash upon execution of specific CLI commands, creating a Denial of Service (DoS) condition.\u00a0 The process crashes and restarts automatically.\n\nWhen specific CLI commands are executed, the bbe-smgd daemon attempts to write into an area of memory (mgd socket) that was already closed, causing the process to crash.\u00a0 This process manages and controls the configuration of broadband subscriber sessions and services.\u00a0 While the process is unavailable, additional subscribers will not be able to connect to the device, causing a temporary Denial of Service condition.\n\nThis issue only occurs if\u00a0Graceful Routing Engine Switchover (GRES) and Subscriber Management are enabled.\nThis issue affects Junos OS:\n\n\n  *  All versions before 20.4R3-S5, \n  *  from 21.1 before 21.1R3-S4, \n  *  from 21.2 before 21.2R3-S3, \n  *  from 21.3 before 21.3R3-S5, \n  *  from 21.4 before 21.4R3-S5, \n  *  from 22.1 before 22.1R3, \n  *  from 22.2 before 22.2R3, \n  *  from 22.3 before 22.3R2;"
-    },
-    {
-        "Modified": "2024-05-16T18:15:00",
-        "Published": "2024-04-16T20:15:00",
-        "access": {},
-        "assigner": "sirt@juniper.net",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30380",
-        "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
-        "references": [
-            "https://supportportal.juniper.net/JSA79171",
-            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
-        ],
-        "summary": "An Improper Handling of Exceptional Conditions vulnerability in Juniper Networks Junos OS and Junos OS Evolved allows an adjacent unauthenticated attacker to cause a Denial of Service (DoS), which causes the l2cpd process to crash by sending a specific TLV.\n\nThe l2cpd process is responsible for layer 2 control protocols, such as STP, RSTP, MSTP, VSTP, ERP, and LLDP.\u00a0 The impact of the l2cpd crash is reinitialization of STP protocols (RSTP, MSTP or VSTP), and MVRP and ERP, leading to a Denial of Service.\u00a0\u00a0Continued receipt and processing of this specific TLV will create a sustained Denial of Service (DoS) condition.\nThis issue affects:\n\nJunos OS: \nall versions before 20.4R3-S9, \nfrom 21.2 before 21.2R3-S7, \nfrom 21.3 before 21.3R3-S5, \nfrom 21.4 before 21.4R3-S4, \nfrom 22.1 before 22.1R3-S4, \nfrom 22.2 before 22.2R3-S2, \nfrom 22.3 before 22.3R2-S2, 22.3R3-S1, \nfrom 22.4 before 22.4R2-S2, 22.4R3, \nfrom 23.2 before 23.2R1-S1, 23.2R2;\n\nJunos OS Evolved: \nall versions before 21.2R3-S7,\n\n \nfrom 21.3 before 21.3R3-S5-EVO, \nfrom 21.4 before 21.4R3-S5-EVO, \nfrom 22.1 before 22.1R3-S4-EVO, \nfrom 22.2 before 22.2R3-S2-EVO, \nfrom 22.3 before 22.3R2-S2-EVO, 22.3R3-S1-EVO, \nfrom 22.4 before 22.4R2-S2-EVO, 22.4R3-EVO, \nfrom 23.2 before 23.2R1-S1-EVO, 23.2R2-EVO."
-    },
-    {
-        "Modified": "2024-05-16T18:15:00",
+        "Modified": "2024-05-16T21:16:00",
         "Published": "2024-04-12T16:15:00",
         "access": {},
         "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-30401",
+        "id": "CVE-2024-30389",
         "impact": {},
-        "last-modified": "2024-05-16T18:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://supportportal.juniper.net/JSA79110",
-            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N"
+            "http://supportportal.juniper.net/JSA79185",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N"
         ],
-        "summary": "An Out-of-bounds Read vulnerability in the advanced forwarding management process aftman of Juniper Networks Junos OS on MX Series with MPC10E, MPC11, MX10K-LC9600 line cards, MX304, and EX9200-15C, may allow an attacker to exploit a stack-based buffer overflow, leading to a reboot of the FPC.\n\nThrough code review, it was determined that the interface definition code for aftman could read beyond a buffer boundary, leading to a stack-based buffer overflow.\nThis issue affects Junos OS on MX Series and EX9200-15C:\n\n\n  *  from 21.2 before 21.2R3-S1, \n  *  from 21.4 before 21.4R3, \n  *  from 22.1 before 22.1R2, \n  *  from 22.2 before 22.2R2;\u00a0\n\n\n\n\nThis issue does not affect:\n\n\n\n  *  versions of Junos OS prior to\u00a020.3R1;\n  *  any version of Junos OS 20.4."
+        "summary": "An Incorrect Behavior Order vulnerability in the Packet Forwarding Engine (PFE) of Juniper Networks Junos OS on EX4300 Series allows an unauthenticated, network-based attacker to cause an integrity impact to networks downstream of the vulnerable device.\n\nWhen an output firewall filter is applied to an interface it doesn't recognize matching packets but permits any traffic.\nThis issue affects Junos OS 21.4 releases from 21.4R1 earlier than 21.4R3-S6.\nThis issue does not affect Junos OS releases earlier than 21.4R1."
     },
     {
-        "Modified": "2024-05-16T18:01:00",
-        "Published": "2024-05-14T17:17:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "secure@microsoft.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-30040",
-        "impact": {},
-        "last-modified": "2024-05-16T18:01:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-30040"
-        ],
-        "summary": "Windows MSHTML Platform Security Feature Bypass Vulnerability"
-    },
-    {
-        "Modified": "2024-05-16T17:16:00",
-        "Published": "2024-05-16T17:16:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-250",
-        "id": "CVE-2024-27260",
-        "impact": {},
-        "last-modified": "2024-05-16T17:16:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7152543",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/283985"
-        ],
-        "summary": "IBM AIX could 7.2, 7.3, VIOS 3.1, and VIOS 4.1 allow a non-privileged local user to exploit a vulnerability in the invscout command to execute arbitrary commands.  IBM X-Force ID:  283985."
-    },
-    {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2023-48643",
+        "id": "CVE-2024-30390",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://github.com/takeshixx/tac_plus-pre-auth-rce"
+            "http://supportportal.juniper.net/JSA79183",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N"
         ],
-        "summary": "Shrubbery tac_plus 2.x, 3.x. and 4.x through F4.0.4.28 allows unauthenticated Remote Command Execution. The product allows users to configure authorization checks as shell commands through the tac_plus.cfg configuration file. These are executed when a client sends an authorization request with a username that has pre-authorization directives configured. However, it is possible to inject additional commands into these checks because strings from TACACS+ packets are used as command-line arguments. If the installation lacks a a pre-shared secret (there is no pre-shared secret by default), then the injection can be triggered without authentication. (The attacker needs to know a username configured to use a pre-authorization command.) NOTE: this is related to CVE-2023-45239 but the issue is in the original Shrubbery product, not Meta's fork."
+        "summary": "An Improper Restriction of Excessive Authentication Attempts vulnerability in Juniper Networks Junos OS Evolved allows an unauthenticated, network-based attacker to cause a limited\u00a0Denial of Service (DoS) to the management plane.\n\nWhen an incoming connection was blocked because it exceeded the connections-per-second rate-limit, the system doesn't consider existing connections anymore for subsequent connection attempts so that the connection\u00a0limit can be exceeded.\nThis issue affects Junos OS Evolved:\n\n\n\n  *  All versions before 21.4R3-S4-EVO,\n  *  22.1-EVO versions before 22.1R3-S3-EVO,\n  *  22.2-EVO versions before 22.2R3-S2-EVO,\u00a0\n  *  22.3-EVO versions before 22.3R2-S1-EVO, 22.3R3-EVO."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "cve@mitre.org",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-34273",
+        "id": "CVE-2024-30387",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://github.com/chrisandoryan/vuln-advisory/blob/main/nJwt/CVE-2024-34273.md"
+            "http://supportportal.juniper.net/JSA79187",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "njwt up to v0.4.0 was discovered to contain a prototype pollution in the Parser.prototype.parse method."
+        "summary": "A\u00a0Missing Synchronization vulnerability in the Packet Forwarding Engine (PFE) of Juniper Networks Junos OS on ACX5448 and ACX710 allows an unauthenticated, adjacent attacker to cause a Denial-of-Service (DoS).\n\nIf an interface flaps while the system gathers statistics on that interface, two processes simultaneously access a shared resource which leads to a PFE crash and restart.\n\nThis issue affects Junos OS:\n\n\n\n  *  All versions before 20.4R3-S9,\n  *  21.2 versions before 21.2R3-S5,\u00a0\n  *  21.3 versions before 21.3R3-S5,\u00a0\n  *  21.4 versions before 21.4R3-S4,\n  *  22.1 versions before 22.1R3-S2,\n  *  22.2 versions before 22.2R3-S2,\n  *  22.3 versions before 22.3R2-S2, 22.3R3,\n  *  22.4 versions before 22.4R2."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2024-34751",
-        "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/order-import-export-for-woocommerce/wordpress-order-export-order-import-for-woocommerce-plugin-2-4-9-php-object-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Deserialization of Untrusted Data vulnerability in WebToffee Order Export & Order Import for WooCommerce.This issue affects Order Export & Order Import for WooCommerce: from n/a through 2.4.9."
-    },
-    {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-34760",
-        "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/magazine-blocks/wordpress-magazine-blocks-plugin-1-3-6-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in WPBlockart Magazine Blocks allows Stored XSS.This issue affects Magazine Blocks: from n/a through 1.3.6."
-    },
-    {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-34805",
-        "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/iframe/wordpress-iframe-plugin-5-0-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Webvitaly iFrame allows Stored XSS.This issue affects iFrame: from n/a through 5.0."
-    },
-    {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-34808",
-        "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/jch-optimize/wordpress-jch-optimize-plugin-4-2-0-path-traversal-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Samuel Marshall JCH Optimize.This issue affects JCH Optimize: from n/a through 4.2.0."
-    },
-    {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-35176",
+        "id": "CVE-2024-30384",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://github.com/ruby/rexml/security/advisories/GHSA-vg3r-rm7w-2xgh",
-            "https://github.com/ruby/rexml/commit/4325835f92f3f142ebd91a3fdba4e1f1ab7f1cfb",
-            "https://www.ruby-lang.org/en/news/2024/05/16/dos-rexml-cve-2024-35176"
+            "http://supportportal.juniper.net/JSA79186",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": " REXML is an XML toolkit for Ruby. The REXML gem before 3.2.6 has a denial of service vulnerability when it parses an XML that has many `<`s in an attribute value. Those who need to parse untrusted XMLs may be impacted to this vulnerability. The REXML gem 3.2.7 or later include the patch to fix this vulnerability. As a workaround, don't parse untrusted XMLs."
+        "summary": "An Improper Check for Unusual or Exceptional Conditions vulnerability in the Packet Forwarding Engine (PFE) of Juniper Networks Junos OS on EX4300 Series allows a locally authenticated attacker with low privileges to cause a\u00a0Denial-of-Service (Dos).\n\nIf a specific CLI\u00a0command is issued, a\u00a0PFE crash will occur. This will cause traffic forwarding to be interrupted until the system self-recovers.\u00a0\n\nThis issue affects Junos OS:\u00a0\n\nAll versions before 20.4R3-S10,\n\n21.2 versions before 21.2R3-S7,\n\n21.4 versions before 21.4R3-S6."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T15:15:00",
         "access": {},
-        "assigner": "security-advisories@github.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-35185",
+        "id": "CVE-2024-21618",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://github.com/stacklok/minder/security/advisories/GHSA-fjw8-3gp8-4cvx",
-            "https://github.com/stacklok/minder/commit/065049336aac0621ee00a0bb2211f8051d47c14b"
+            "https://supportportal.juniper.net/JSA75759",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "Minder is a software supply chain security platform. Prior to version 0.0.49, the Minder REST ingester is vulnerable to a denial of service attack via an attacker-controlled REST endpoint that can crash the Minder server. The REST ingester allows users to interact with REST endpoints to fetch data for rule evaluation. When fetching data with the REST ingester, Minder sends a request to an endpoint and will use the data from the body of the response as the data to evaluate against a certain rule. If the response is sufficiently large, it can drain memory on the machine and crash the Minder server. The attacker can control the remote REST endpoints that Minder sends requests to, and they can configure the remote REST endpoints to return responses with large bodies. They would then instruct Minder to send a request to their configured endpoint that would return the large response which would crash the Minder server. Version 0.0.49 fixes this issue."
+        "summary": "An Access of Memory Location After End of Buffer vulnerability in the Layer-2 Control Protocols Daemon (l2cpd) of Juniper Networks Junos OS and Junos OS Evolved allows an adjacent, unauthenticated attacker to cause Denial of Service (DoS).\n\nOn all Junos OS and Junos OS Evolved platforms, when LLDP is enabled on a specific interface, and a malformed LLDP packet is received, l2cpd crashes and restarts. The impact of the l2cpd crash is reinitialization of STP protocols (RSTP, MSTP or VSTP), and MVRP and ERP. Also, if any services depend on LLDP state (like PoE or VoIP device recognition), then these will also be affected.\n\nThis issue affects:\n\nJunos OS:\n  *  from 21.4 before 21.4R3-S4,\u00a0\n\n  *  from 22.1 before 22.1R3-S4,\u00a0\n\n  *  from 22.2 before 22.2R3-S2,\u00a0\n\n  *  from 22.3 before 22.3R2-S2, 22.3R3-S1,\u00a0\n\n  *  from 22.4 before 22.4R3,\u00a0\n\n  *  from 23.2 before 23.2R2.\n\n\n\n\n Junos OS Evolved:\n  *  from 21.4-EVO before 21.4R3-S5-EVO,\u00a0\n\n  *  from 22.1-EVO before 22.1R3-S4-EVO,\u00a0\n\n  *  from 22.2-EVO before 22.2R3-S2-EVO,\u00a0\n\n  *  from 22.3-EVO before 22.3R2-S2-EVO, 22.3R3-S1-EVO,\u00a0\n\n  *  from 22.4-EVO before 22.4R3-EVO,\u00a0\n\n  *  from 23.2-EVO before 23.2R2-EVO.\n\n\n\n\nThis issue does not affect:\n  *  Junos OS versions prior to 21.4R1;\n\n  *  Junos OS Evolved versions prior to 21.4R1-EVO."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "security-advisories@github.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-35187",
+        "id": "CVE-2024-30402",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://github.com/stalwartlabs/mail-server/security/advisories/GHSA-rwp5-f854-ppg6"
+            "https://supportportal.juniper.net/JSA79180",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "Stalwart Mail Server is an open-source mail server. Prior to version 0.8.0, attackers who achieved Arbitrary Code Execution as the stalwart-mail user (including web interface admins) can gain complete root access to the system. Usually, system services are run as a separate user (not as root) to isolate an attacker with Arbitrary Code Execution to the current service. Therefore, other system services and the system itself remains protected in case of a successful attack. stalwart-mail runs as a separate user, but it can give itself full privileges again in a simple way, so this protection is practically ineffective. Server admins who handed out the admin credentials to the mail server, but didn't want to hand out complete root access to the system, as well as any attacked user when the attackers gained Arbitrary Code Execution using another vulnerability, may be vulnerable. Version 0.8.0 contains a patch for the issue."
+        "summary": "An Improper Check for Unusual or Exceptional Conditions vulnerability in the Layer 2 Address Learning Daemon\u00a0(l2ald) of Juniper Networks Junos OS and Junos OS Evolved allows an unauthenticated, adjacent attacker to cause a Denial of Service (DoS).\n\nWhen telemetry requests are sent to the device,\u00a0and the Dynamic Rendering Daemon (drend) is suspended, the l2ald crashes and restarts due to factors outside the attackers control. Repeated occurrences of these events causes a sustained DoS condition.\n\n\nThis issue affects:\nJunos OS:\n  *  All versions earlier than\u00a020.4R3-S10;\n  *  21.2 versions earlier than\u00a021.2R3-S7;\n  *  21.4 versions earlier than\u00a021.4R3-S5;\n  *  22.1 versions earlier than\u00a022.1R3-S4;\n  *  22.2 versions earlier than\u00a022.2R3-S3;\n  *  22.3 versions earlier than\u00a022.3R3-S1;\n  *  22.4 versions earlier than\u00a022.4R3;\n  *  23.2 versions earlier than\u00a023.2R1-S2, 23.2R2.\n\n\n\nJunos OS Evolved:\n\n  *  All versions earlier than\u00a021.4R3-S5-EVO;\n  *  22.1-EVO versions earlier than\u00a022.1R3-S4-EVO;\n  *  22.2-EVO versions earlier than\u00a022.2R3-S3-EVO;\n  *  22.3-EVO versions earlier than\u00a022.3R3-S1-EVO;\n  *  22.4-EVO versions earlier than\u00a022.4R3-EVO;\n  *  23.2-EVO versions earlier than\u00a023.2R2-EVO."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T15:15:00",
         "access": {},
-        "assigner": "PSIRT@rockwellautomation.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-3640",
+        "id": "CVE-2024-30407",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://www.rockwellautomation.com/en-us/support/advisory.SD1671.html"
+            "https://supportportal.juniper.net/JSA79106",
+            "https://supportportal.juniper.net/JSA79107",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
         ],
-        "summary": "An unquoted executable path exists in the Rockwell Automation\u00a0FactoryTalk\u00ae Remote Access\u2122 possibly resulting in remote code execution if exploited. While running the FTRA installer package, the executable path is not properly quoted, which could allow a threat actor to enter a malicious executable and run it as a System user. A threat actor needs admin privileges to exploit this vulnerability."
+        "summary": "The Use of a Hard-coded Cryptographic Key vulnerability in Juniper Networks\u00a0Juniper Cloud Native Router (JCNR)\u00a0and\u00a0containerized routing Protocol Deamon (cRPD) products allows an attacker to perform Person-in-the-Middle (PitM) attacks which results in complete compromise of the container. \n\nDue to hardcoded SSH host keys being present on the container, a PitM attacker can intercept SSH traffic without being detected.\u00a0\n\nThis issue affects Juniper Networks JCNR:\n  *  All versions before 23.4.\n\n\nThis issue affects Juniper Networks cRPD:\n  *  All versions before 23.4R1."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "openssl-security@openssl.org",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-4603",
+        "id": "CVE-2024-30391",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://www.openssl.org/news/secadv/20240516.txt",
-            "https://github.com/openssl/openssl/commit/3559e868e58005d15c6013a0c1fd832e51c73397",
-            "https://github.com/openssl/openssl/commit/9c39b3858091c152f52513c066ff2c5a47969f0d",
-            "https://github.com/openssl/openssl/commit/da343d0605c826ef197aceedc67e8e04f065f740",
-            "https://github.com/openssl/openssl/commit/53ea06486d296b890d565fb971b2764fcd826e7e"
+            "http://supportportal.juniper.net/JSA79188",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:L/VA:L/SC:N/SI:N/SA:N"
         ],
-        "summary": "Issue summary: Checking excessively long DSA keys or parameters may be very\nslow.\n\nImpact summary: Applications that use the functions EVP_PKEY_param_check()\nor EVP_PKEY_public_check() to check a DSA public key or DSA parameters may\nexperience long delays. Where the key or parameters that are being checked\nhave been obtained from an untrusted source this may lead to a Denial of\nService.\n\nThe functions EVP_PKEY_param_check() or EVP_PKEY_public_check() perform\nvarious checks on DSA parameters. Some of those computations take a long time\nif the modulus (`p` parameter) is too large.\n\nTrying to use a very large modulus is slow and OpenSSL will not allow using\npublic keys with a modulus which is over 10,000 bits in length for signature\nverification. However the key and parameter check functions do not limit\nthe modulus size when performing the checks.\n\nAn application that calls EVP_PKEY_param_check() or EVP_PKEY_public_check()\nand supplies a key or parameters obtained from an untrusted source could be\nvulnerable to a Denial of Service attack.\n\nThese functions are not called by OpenSSL itself on untrusted DSA keys so\nonly applications that directly call these functions may be vulnerable.\n\nAlso vulnerable are the OpenSSL pkey and pkeyparam command line applications\nwhen using the `-check` option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are affected by this issue."
+        "summary": "A Missing Authentication for Critical Function vulnerability in the Packet Forwarding Engine (pfe) of Juniper Networks Junos OS on MX Series with SPC3, and\u00a0SRX Series\u00a0allows an unauthenticated network-based attacker to cause limited impact to the integrity or availability of the device.\n\nIf a device is configured with IPsec authentication algorithm hmac-sha-384 or hmac-sha-512, tunnels are established normally but for traffic traversing the tunnel no authentication information is sent with the encrypted data on egress, and no authentication information is expected on ingress. So if the peer is an unaffected device transit traffic is going to fail in both directions. If the peer is an also affected device transit traffic works, but without authentication, and configuration and CLI operational commands indicate authentication is performed.\nThis issue affects Junos OS:\n\n\n\n  *  All versions before 20.4R3-S7,\n  *  21.1 versions before 21.1R3,\u00a0\n  *  21.2 versions before 21.2R2-S1, 21.2R3,\u00a0\n  *  21.3 versions before 21.3R1-S2, 21.3R2."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "PSIRT@rockwellautomation.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-4609",
+        "id": "CVE-2024-30397",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://www.rockwellautomation.com/en-us/support/advisory.SD1670.html"
+            "https://supportportal.juniper.net/JSA79179",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "A vulnerability exists in the Rockwell Automation FactoryTalk\u00ae View SE Datalog function that could allow a threat actor to inject a malicious SQL statement if the SQL database has no authentication in place or if legitimate credentials were stolen. If exploited, the attack could result in information exposure, revealing sensitive information. Additionally, a threat actor could potentially modify and delete the data in a remote database. An attack would only affect the HMI design time, not runtime."
+        "summary": "An Improper Check for Unusual or Exceptional Conditions vulnerability in the the\u00a0Public Key Infrastructure daemon (pkid) of Juniper Networks Junos OS allows an unauthenticated networked attacker to cause Denial of Service (DoS).\n\nThe pkid is responsible for the certificate verification. Upon a failed verification, the pkid uses all CPU resources and becomes unresponsive to future verification attempts. This means that all subsequent VPN negotiations depending on certificate verification will fail.\n\nThis CPU utilization of pkid can be checked using this command: \n\u00a0 root@srx> show system processes extensive | match pkid\n\u00a0 xxxxx  root  103  0  846M  136M  CPU1  1\u00a0569:00 100.00% pkid\n\nThis issue affects:\nJuniper Networks Junos OS\n  *  All\u00a0versions prior to 20.4R3-S10;\n  *  21.2 versions prior to 21.2R3-S7;\n  *  21.4 versions prior to 21.4R3-S5;\n  *  22.1 versions prior to 22.1R3-S4;\n  *  22.2 versions prior to\u00a022.2R3-S3;\n  *  22.3 versions prior to\u00a022.3R3-S1;\n  *  22.4 versions prior to\u00a022.4R3;\n  *  23.2 versions prior to\u00a023.2R1-S2, 23.2R2."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T16:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "security@sonatype.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-4956",
+        "id": "CVE-2024-30392",
         "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://support.sonatype.com/hc/en-us/articles/29416509323923"
+            "https://supportportal.juniper.net/JSA79092",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "Path Traversal in Sonatype Nexus Repository 3 allows an unauthenticated attacker to read system files. Fixed in version 3.68.1."
+        "summary": "A Stack-based Buffer Overflow vulnerability in Flow Processing Daemon (flowd) of Juniper Networks Junos OS allows an unauthenticated, network-based attacker to cause Denial of Service (DoS).\n\nOn all Junos OS MX Series platforms with SPC3 and MS-MPC/-MIC, when URL filtering is enabled and a specific URL request is received and processed, flowd will crash and restart. Continuous reception of the specific URL request will lead to a sustained Denial of Service (DoS) condition.\n\nThis issue affects:\nJunos OS:\n\n\n\n  *  all versions before 21.2R3-S6,\n\n  *  from 21.3 before 21.3R3-S5,\n\n  *  from 21.4 before 21.4R3-S5,\n\n  *  from 22.1 before 22.1R3-S3,\n\n  *  from 22.2 before 22.2R3-S1,\n\n  *  from 22.3 before 22.3R2-S2, 22.3R3,\n\n  *  from 22.4 before 22.4R2-S1, 22.4R3."
     },
     {
-        "Modified": "2024-05-16T16:15:00",
-        "Published": "2024-05-16T08:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-4966",
-        "impact": {},
-        "last-modified": "2024-05-16T16:15:00",
-        "references": [
-            "https://vuldb.com/?id.264534",
-            "https://vuldb.com/?ctiid.264534",
-            "https://vuldb.com/?submit.334216",
-            "https://github.com/CveSecLook/cve/issues/30"
-        ],
-        "summary": "A vulnerability was found in SourceCodester SchoolWebTech 1.0. It has been classified as critical. Affected is an unknown function of the file /improve/home.php. The manipulation of the argument image leads to unrestricted upload. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-264534 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T14:15:00",
-        "access": {},
-        "assigner": "security@xen.org",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2023-46842",
+        "id": "CVE-2024-30398",
         "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://xenbits.xenproject.org/xsa/advisory-454.html"
+            "https://supportportal.juniper.net/JSA79176",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "Unlike 32-bit PV guests, HVM guests may switch freely between 64-bit and\nother modes.  This in particular means that they may set registers used\nto pass 32-bit-mode hypercall arguments to values outside of the range\n32-bit code would be able to set them to.\n\nWhen processing of hypercalls takes a considerable amount of time,\nthe hypervisor may choose to invoke a hypercall continuation.  Doing so\ninvolves putting (perhaps updated) hypercall arguments in respective\nregisters.  For guests not running in 64-bit mode this further involves\na certain amount of translation of the values.\n\nUnfortunately internal sanity checking of these translated values\nassumes high halves of registers to always be clear when invoking a\nhypercall.  When this is found not to be the case, it triggers a\nconsistency check in the hypervisor and causes a crash.\n"
+        "summary": "An Improper Restriction of Operations within the Bounds of a Memory Buffer vulnerability in the Packet Forwarding Engine (PFE) of Juniper Networks Junos OS allows an unauthenticated, network-based attacker to cause a Denial of Service (DoS).\n\nWhen a high amount of specific traffic is received on a SRX4600 device, due to an error in internal packet handling, a consistent rise in CPU memory utilization occurs. This results in packet drops in the traffic and eventually the PFE crashes. A manual reboot of the PFE will be required to restore the device to original state.\n\nThis issue affects Junos OS:\u00a0\u00a0\n\n\n  *  21.2 before\u00a021.2R3-S7,\n  *  21.4 before 21.4R3-S6,\u00a0\n  *  22.1 before 22.1R3-S5, \n  *  22.2 before 22.2R3-S3,\n  *  22.3 before 22.3R3-S2,\n  *  22.4 before 22.4R3,\n\n  *  23.2 before\u00a023.2R1-S2, 23.2R2."
     },
     {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T14:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T16:15:00",
         "access": {},
-        "assigner": "psirt@cisco.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-20326",
+        "id": "CVE-2024-30403",
         "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-nso-rwpesc-qrQGnh3f",
-            "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-cnfd-rwpesc-ZAOufyx8"
+            "https://supportportal.juniper.net/JSA79181",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "A vulnerability in the ConfD CLI and the Cisco  Crosswork Network Services Orchestrator CLI could allow an authenticated, low-privileged, local attacker to read and write arbitrary files as root on the underlying operating system.\n\n\nThis vulnerability is due to improper authorization enforcement when specific CLI commands are used. An attacker could exploit this vulnerability by executing an affected CLI command with crafted arguments. A successful exploit could allow the attacker to read or write arbitrary files on the underlying operating system with the privileges of the root user."
+        "summary": "A NULL Pointer Dereference vulnerability in the Packet Forwarding Engine (PFE) of Juniper Networks Junos OS Evolved allows an unauthenticated, adjacent attacker to cause a Denial of Service (DoS).\n\nWhen Layer 2 traffic is sent through a logical interface, MAC learning happens. If during this process, the interface flaps,\u00a0an\u00a0Advanced Forwarding Toolkit manager (evo-aftmand-bt) core is observed. This leads to a PFE restart. The crash reoccurs if the same sequence of events happens, which will lead to a sustained DoS condition.\n\nThis issue affects Juniper Networks Junos OS Evolved\u00a023.2-EVO versions earlier than 23.2R1-S1-EVO, 23.2R2-EVO."
     },
     {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T14:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T15:15:00",
         "access": {},
-        "assigner": "psirt@cisco.com",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-20389",
+        "id": "CVE-2024-30394",
         "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-nso-rwpesc-qrQGnh3f",
-            "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-cnfd-rwpesc-ZAOufyx8"
+            "https://supportportal.juniper.net/JSA79094",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:L"
         ],
-        "summary": "A vulnerability in the ConfD CLI and the Cisco  Crosswork Network Services Orchestrator CLI could allow an authenticated, low-privileged, local attacker to read and write arbitrary files as root on the underlying operating system.\n\n\nThis vulnerability is due to improper authorization enforcement when specific CLI commands are used. An attacker could exploit this vulnerability by executing an affected CLI command with crafted arguments. A successful exploit could allow the attacker to read or write arbitrary files on the underlying operating system with the privileges of the root user."
+        "summary": "A\u00a0Stack-based Buffer Overflow vulnerability in the Routing Protocol Daemon (RPD) component of Junos OS and Junos OS Evolved allows an unauthenticated, network-based attacker to cause an rpd crash, leading to Denial of Service (DoS).\n\nOn all Junos OS and Junos OS Evolved platforms, when EVPN is configured, and a specific EVPN type-5 route is received via BGP, rpd crashes and restarts. Continuous receipt of this specific route will lead to a sustained Denial of Service (DoS) condition.\n\nThis issue affects:\nJunos OS:\n\n\n\n  *  all versions before 21.2R3-S7,\n\n  *  from 21.4 before 21.4R3-S5,\n\n  *  from 22.1 before 22.1R3-S4,\n\n  *  from 22.2 before 22.2R3-S2,\n\n  *  from 22.3 before 22.3R3-S1,\n\n  *  from 22.4 before 22.4R3,\n\n  *  from 23.2 before 23.2R2.\n\n\n\n\n\nJunos OS Evolved:\n\n\n\n  *  all versions before 21.4R3-S5-EVO,\n\n  *  from 22.1-EVO before 22.1R3-S4-EVO,\n\n  *  from 22.2-EVO before 22.2R3-S2-EVO,\n\n  *  from 22.3-EVO before 22.3R3-S1-EVO,\n\n  *  from 22.4-EVO before 22.4R3-EVO,\n\n  *  from 23.2-EVO before 23.2R2-EVO."
     },
     {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T14:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T15:15:00",
         "access": {},
-        "assigner": "security@xen.org",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-31142",
+        "id": "CVE-2024-30410",
         "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://xenbits.xenproject.org/xsa/advisory-455.html"
+            "https://supportportal.juniper.net/JSA79100",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:N/SC:N/SI:L/SA:N"
         ],
-        "summary": "Because of a logical error in XSA-407 (Branch Type Confusion), the\nmitigation is not applied properly when it is intended to be used.\nXSA-434 (Speculative Return Stack Overflow) uses the same\ninfrastructure, so is equally impacted.\n\nFor more details, see:\n  https://xenbits.xen.org/xsa/advisory-407.html\n  https://xenbits.xen.org/xsa/advisory-434.html\n"
+        "summary": "An Incorrect Behavior Order in the routing engine (RE) of Juniper Networks Junos OS on EX4300 Series allows traffic intended to the device to reach the RE\u00a0instead of being discarded when the\u00a0discard term is set in loopback (lo0) interface. The intended function is that the lo0 firewall filter takes precedence over the revenue interface firewall filter.\u00a0\n\nThis issue affects only IPv6 firewall filter.\n\nThis issue only affects the EX4300 switch.  No other products or platforms are affected by this vulnerability.\u00a0\n\nThis issue affects Juniper Networks Junos OS:\n\n  *  All versions before 20.4R3-S10,\n  *  from 21.2 before 21.2R3-S7,\n  *  from 21.4 before 21.4R3-S6."
     },
     {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T15:15:00",
+        "Modified": "2024-05-16T21:16:00",
+        "Published": "2024-04-12T15:15:00",
         "access": {},
-        "assigner": "cve@mitre.org",
+        "assigner": "sirt@juniper.net",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-34582",
+        "id": "CVE-2024-30406",
         "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
+        "last-modified": "2024-05-16T21:16:00",
         "references": [
-            "https://github.com/silent6trinity/CVE-2024-34582"
+            "https://supportportal.juniper.net/JSA79104",
+            "https://www.juniper.net/documentation/us/en/software/junos/junos-install-upgrade-evo/topics/topic-map/paa-test-agent-install.html",
+            "https://www.juniper.net/documentation/us/en/software/junos/cli-reference/topics/ref/statement/services-paa-test-agent.html",
+            "https://www.first.org/cvss/calculator/4.0#CVSS:4.0/AV:L/AC:L/AT:N/PR:H/UI:P/VC:H/VI:N/VA:N/SC:H/SI:N/SA:N"
         ],
-        "summary": "Sunhillo SureLine through 8.10.0 on RICI 5000 devices allows cgi/usrPasswd.cgi userid_change XSS within the Forgot Password feature."
+        "summary": "A Cleartext Storage in a File on Disk vulnerability in Juniper Networks Junos OS Evolved ACX Series devices\u00a0using the Paragon Active Assurance Test Agent software installed on network devices allows a local, authenticated attacker with high privileges to read all other users login credentials.\n\nThis issue affects only Juniper Networks Junos OS Evolved ACX Series devices using\u00a0the Paragon Active Assurance Test Agent software installed on these devices from 23.1R1-EVO through 23.2R2-EVO.\u00a0\n\nThis issue does not affect releases before 23.1R1-EVO."
     },
     {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T15:15:00",
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2023-11-14T19:15:00",
         "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-34905",
-        "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
-        "references": [
-            "https://github.com/CloudWise-OpenSource/FlyFish/issues/191"
-        ],
-        "summary": "FlyFish v3.0.0 was discovered to contain a buffer overflow via the password parameter on the login page. This vulnerability allows attackers to cause a Denial of Service (DoS) via a crafted input."
-    },
-    {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-34957",
-        "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
-        "references": [
-            "https://github.com/Gr-1m/cms/blob/main/1.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component admin/sysImages_deal.php?mudi=infoSet."
-    },
-    {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-34958",
-        "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
-        "references": [
-            "https://github.com/Gr-1m/cms/blob/main/2.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component admin/banner_deal.php?mudi=add"
-    },
-    {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35039",
-        "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
-        "references": [
-            "https://github.com/ywf7678/cms/blob/main/1.md"
-        ],
-        "summary": "idccms V1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via admin/tplSys_deal.php?mudi=area."
-    },
-    {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T13:15:00",
-        "access": {},
-        "assigner": "",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4760",
-        "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
-        "references": [
-            "https://www.0x01team.com/hw_security/bypassing-microchip-atmel-sam-e70-s70-v70-v71-security/"
-        ],
-        "summary": "A voltage glitch during the startup of EEFC NVM controllers on Microchip SAM E70/S70/V70/V71 microcontrollers allows access to the memory bus via the debug interface even if the security bit is set."
-    },
-    {
-        "Modified": "2024-05-16T15:44:00",
-        "Published": "2024-05-16T13:15:00",
-        "access": {},
-        "assigner": "research@onekey.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4999",
-        "impact": {},
-        "last-modified": "2024-05-16T15:44:00",
-        "references": [
-            "https://onekey.com/blog/security-advisory-remote-code-execution-in-ligowave-devices/"
-        ],
-        "summary": "A vulnerability in the web-based management interface of multiple Ligowave devices could allow an authenticated remote\u00a0attacker to execute arbitrary commands with elevated privileges.This issue affects UNITY: through 6.95-2; PRO: through 6.95-1.Rt3883; MIMO: through 6.95-1.Rt2880; APC Propeller: through 2-5.95-4.Rt3352."
-    },
-    {
-        "Modified": "2024-05-16T14:15:00",
-        "Published": "2024-05-14T15:44:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4542",
-        "impact": {},
-        "last-modified": "2024-05-16T14:15:00",
-        "references": [],
-        "summary": "Rejected reason: ** REJECT ** DO NOT USE THIS CANDIDATE NUMBER. ConsultIDs: CVE-2024-3548. Reason: This candidate was issued in error. Please use CVE-2024-3548 instead."
-    },
-    {
-        "Modified": "2024-05-16T13:15:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-4826",
-        "impact": {},
-        "last-modified": "2024-05-16T13:15:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-simple-php-shopping-cart"
-        ],
-        "summary": "SQL injection vulnerability in Simple PHP Shopping Cart affecting version 0.9. This vulnerability could allow an attacker to retrieve all the information stored in the database by sending a specially crafted SQL query, due to the lack of proper sanitisation of the category_id parameter in the category.php file."
-    },
-    {
-        "Modified": "2024-05-16T13:15:00",
-        "Published": "2024-04-17T10:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26821",
-        "impact": {},
-        "last-modified": "2024-05-16T13:15:00",
-        "references": [],
-        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30283",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-30286",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-30287",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30288",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier are affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-30289",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier are affected by a Stack-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30290",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30291",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30292",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/framemaker/apsb24-37.html"
-        ],
-        "summary": "Adobe Framemaker versions 2020.5, 2022.3 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-30314",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/dreamweaver/apsb24-39.html"
-        ],
-        "summary": "Dreamweaver Desktop versions 21.3 and earlier are affected by an Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability that could lead in arbitrary code execution by an attacker. Exploitation of this issue does require user interaction."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4580",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/e3e3ac84-dd82-42b0-80b9-c876731170d5?source=cve",
-            "https://plugins.trac.wordpress.org/browser/master-addons/trunk/addons/ma-image-hover-effects/ma-image-hover-effects.php#L1546",
-            "https://plugins.trac.wordpress.org/browser/master-addons/trunk/addons/ma-tabs/ma-tabs.php#L1068",
-            "https://plugins.trac.wordpress.org/changeset/3087193/"
-        ],
-        "summary": "The Master Addons \u2013 Free Widgets, Hover Effects, Toggle, Conditions, Animations for Elementor plugin for WordPress is vulnerable to Stored Cross-Site Scripting via several parameters in versions up to, and including, 2.0.6.0 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-4991",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-siadmin"
-        ],
-        "summary": "Vulnerability in SiAdmin 1.1 that allows SQL injection via the /modul/mod_pass/aksi_pass.php parameter in nama_lengkap. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the system and retrieve all the information stored in it."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-4992",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-siadmin"
-        ],
-        "summary": "Vulnerability in SiAdmin 1.1 that allows SQL injection via the /modul/mod_kuliah/aksi_kuliah.php parameter in nim. This vulnerability could allow a remote attacker to send a specially crafted SQL query to the system and retrieve all the information stored in it."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T12:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4993",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-siadmin"
-        ],
-        "summary": "Vulnerability in SiAdmin 1.1 that allows XSS via the /show.php query parameter. This vulnerability could allow a remote attacker to send a specially crafted URL to an authenticated user and thereby steal their cookie session credentials."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T10:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4222",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/942fffb6-2719-4b70-9759-21b2d50002c5?source=cve",
-            "https://www.themeum.com/product/tutor-lms/"
-        ],
-        "summary": "The Tutor LMS Pro plugin for WordPress is vulnerable to unauthorized access of data, modification of data, loss of data due to a missing capability check on multiple functions in all versions up to, and including, 2.7.0. This makes it possible for unauthenticated attackers to add, modify, or delete user meta and plugin options."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T10:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4351",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/59859583-49e5-4a80-8659-b9ca7ddc089d?source=cve",
-            "https://www.themeum.com/product/tutor-lms/"
-        ],
-        "summary": "The Tutor LMS Pro plugin for WordPress is vulnerable to unauthorized access of data, modification of data, loss of data due to a missing capability check on the 'authenticate' function in all versions up to, and including, 2.7.0. This makes it possible for authenticated attackers, with subscriber-level permissions and above, to gain control of an existing administrator account."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T10:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4352",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/c647beda-cf73-4372-975f-a8c8ed05217f?source=cve",
-            "https://www.themeum.com/product/tutor-lms/"
-        ],
-        "summary": "The Tutor LMS Pro plugin for WordPress is vulnerable to unauthorized access of data, modification of data, loss of data due to a missing capability check on the 'get_calendar_materials' function. The plugin is also vulnerable to SQL Injection via the \u2018year\u2019 parameter of that function due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with subscriber-level permissions and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T10:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4973",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264538",
-            "https://vuldb.com/?ctiid.264538",
-            "https://vuldb.com/?submit.335200",
-            "https://github.com/BurakSevben/CVEs/blob/main/Simple%20Chat%20App/Simple%20Chat%20App%20-%20SQL%20Injection%20-%202.md"
-        ],
-        "summary": "A vulnerability classified as critical was found in code-projects Simple Chat System 1.0. This vulnerability affects unknown code of the file /register.php. The manipulation of the argument name/number/address leads to sql injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-264538 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T10:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-4974",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264540",
-            "https://vuldb.com/?ctiid.264540",
-            "https://vuldb.com/?submit.335205",
-            "https://github.com/BurakSevben/CVEs/blob/main/Simple%20Chat%20App/Simple%20Chat%20App%20-%20Cross-Site-Scripting-1.md"
-        ],
-        "summary": "A vulnerability, which was classified as problematic, was found in code-projects Simple Chat System 1.0. Affected is an unknown function of the file /register.php. The manipulation of the argument name leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-264540."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T10:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-4975",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264539",
-            "https://vuldb.com/?ctiid.264539",
-            "https://vuldb.com/?submit.335206",
-            "https://github.com/BurakSevben/CVEs/blob/main/Simple%20Chat%20App/Simple%20Chat%20App%20-%20Cross-Site-Scripting-2.md"
-        ],
-        "summary": "A vulnerability, which was classified as problematic, has been found in code-projects Simple Chat System 1.0. This issue affects some unknown processing of the component Message Handler. The manipulation leads to cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-264539."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "security@jetbrains.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35299",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.jetbrains.com/privacy-security/issues-fixed/"
-        ],
-        "summary": "In JetBrains YouTrack before 2024.1.29548 the SMTPS protocol communication lacked proper certificate hostname validation"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "security@jetbrains.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35300",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.jetbrains.com/privacy-security/issues-fixed/"
-        ],
-        "summary": "In JetBrains TeamCity between 2024.03 and 2024.03.1 several stored XSS in the available updates page were possible"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "security@jetbrains.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35301",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.jetbrains.com/privacy-security/issues-fixed/"
-        ],
-        "summary": "In JetBrains TeamCity before 2024.03.1 commit status publisher didn't check project scope of the GitHub App token"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "security@jetbrains.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35302",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.jetbrains.com/privacy-security/issues-fixed/"
-        ],
-        "summary": "In JetBrains TeamCity before 2023.11 stored XSS during restore from backup was possible"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4288",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/84262b4a-a662-4aaf-9eae-f5cca8f6cd06?source=cve",
-            "https://plugins.trac.wordpress.org/browser/simply-schedule-appointments/trunk/includes/class-shortcodes.php#L677",
-            "https://plugins.trac.wordpress.org/changeset/3087297/"
-        ],
-        "summary": "The Appointment Booking Calendar \u2014 Simply Schedule Appointments Booking Plugin plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the \u2018link\u2019 parameter in versions up to, and including, 1.6.7.14 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4385",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/83d78ff7-bd59-431e-b579-156e23ede053?source=cve",
-            "https://plugins.trac.wordpress.org/browser/envo-extra/trunk/lib/elementor/widgets/counter/counter.php#L754",
-            "https://plugins.trac.wordpress.org/browser/envo-extra/trunk/lib/elementor/widgets/button/button.php#L679",
-            "https://plugins.trac.wordpress.org/browser/envo-extra/trunk/lib/elementor/widgets/icon-box/icon-box.php#L909",
-            "https://plugins.trac.wordpress.org/browser/envo-extra/trunk/lib/elementor/widgets/team/team.php#L1189",
-            "https://plugins.trac.wordpress.org/browser/envo-extra/trunk/lib/elementor/widgets/testimonial/testimonial.php#L899",
-            "https://plugins.trac.wordpress.org/changeset/3080715/"
-        ],
-        "summary": "The Envo Extra plugin for WordPress is vulnerable to Stored Cross-Site Scripting via multiple parameters in versions up to, and including, 1.8.16 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4400",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/9bb6683a-b8e6-4776-880f-5b48966fc5c6?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3087230/"
-        ],
-        "summary": "The Post and Page Builder by BoldGrid \u2013 Visual Drag and Drop Editor plguin for WordPress is vulnerable to Stored Cross-Site Scripting via an unknown parameter in versions up to, and including, 1.26.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4617",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/474fdbcb-fe3c-4a79-a847-363f81b300c2?source=cve",
-            "https://plugins.trac.wordpress.org/browser/seo-by-rank-math/trunk/includes/modules/schema/blocks/class-block-faq.php#L183",
-            "https://plugins.trac.wordpress.org/changeset/3084351/"
-        ],
-        "summary": "The Rank Math SEO with AI Best SEO Tools plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the \u2018id\u2019 parameter in versions up to, and including, 1.0.218 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4634",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/f44bb823-bbf3-413b-82b5-a351609270bf?source=cve",
-            "https://plugins.trac.wordpress.org/browser/header-footer-elementor/tags/1.6.28/inc/widgets-manager/class-widgets-loader.php#L156",
-            "https://plugins.trac.wordpress.org/changeset/3086402/"
-        ],
-        "summary": "The Elementor Header & Footer Builder plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the \u2018hfe_svg_mime_types\u2019 function in versions up to, and including, 1.6.28 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T11:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4838",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/16f5a104-dce0-4249-91b9-67f99cce16d3?source=cve",
-            "https://www.convertplug.com/plus/"
-        ],
-        "summary": "The ConvertPlus plugin for WordPress is vulnerable to PHP Object Injection in all versions up to, and including, 3.5.26 via deserialization of untrusted input from the 'settings_encoded' attribute of the 'smile_modal' shortcode. This makes it possible for authenticated attackers, with contributor-level access and above, to inject a PHP Object. No POP chain is present in the vulnerable plugin. If a POP chain is present via an additional plugin or theme installed on the target system, it could allow the attacker to delete arbitrary files, retrieve sensitive data, or execute code."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T05:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-4931",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264467",
-            "https://vuldb.com/?ctiid.264467",
-            "https://vuldb.com/?submit.335365",
-            "https://github.com/rockersiyuan/CVE/blob/main/SourceCodester%20Simple%20Online%20Bidding%20System%20Sql%20Inject-2.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in SourceCodester Simple Online Bidding System 1.0. This issue affects some unknown processing of the file /simple-online-bidding-system/admin/index.php?page=view_udet. The manipulation of the argument id leads to sql injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-264467."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T05:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-4932",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264468",
-            "https://vuldb.com/?ctiid.264468",
-            "https://vuldb.com/?submit.335366",
-            "https://github.com/rockersiyuan/CVE/blob/main/SourceCodester%20Simple%20Online%20Bidding%20System%20Sql%20Inject-3.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in SourceCodester Simple Online Bidding System 1.0. Affected is an unknown function of the file /simple-online-bidding-system/admin/index.php?page=manage_user. The manipulation of the argument id leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-264468."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T06:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3641",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://wpscan.com/vulnerability/f4047f1e-d5ea-425f-8def-76dd5e6a497e/"
-        ],
-        "summary": "The Newsletter Popup WordPress plugin through 1.2 does not sanitise and escape some parameters, which could allow unauthenticated visitors to perform Cross-Site Scripting attacks against admins"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T06:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3642",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://wpscan.com/vulnerability/dc44d85f-afe8-4824-95b0-11b9abfb04d8/"
-        ],
-        "summary": "The Newsletter Popup WordPress plugin through 1.2 does not have CSRF check when deleting subscriber, which could allow attackers to make logged in admins perform such action via a CSRF attack"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T06:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3643",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://wpscan.com/vulnerability/698277e6-56f9-4688-9a84-c2fa3ea9f7dc/"
-        ],
-        "summary": "The Newsletter Popup WordPress plugin through 1.2 does not have CSRF check when deleting list, which could allow attackers to make logged in admins perform such action via a CSRF attack"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T06:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3644",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://wpscan.com/vulnerability/10eb712a-d9c3-46c9-be6a-02811396fae8/"
-        ],
-        "summary": "The Newsletter Popup WordPress plugin through 1.2 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T06:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4318",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/9bbb3c65-f02c-4d6d-bd4e-b3232af5e21b?source=cve",
-            "https://plugins.trac.wordpress.org/browser/tutor/tags/2.7.0/classes/Utils.php#L4456",
-            "https://plugins.trac.wordpress.org/browser/tutor/tags/2.7.0/classes/Utils.php#L4575",
-            "https://plugins.trac.wordpress.org/changeset/3086489/"
-        ],
-        "summary": "The Tutor LMS plugin for WordPress is vulnerable to time-based SQL Injection via the \u2018question_id\u2019 parameter in versions up to, and including, 2.7.0 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with Instructor-level permissions and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T08:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-4965",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264533",
-            "https://vuldb.com/?ctiid.264533",
-            "https://vuldb.com/?submit.333784",
-            "https://github.com/h0e4a0r1t/h0e4a0r1t.github.io/blob/master/2024/%3CWHB%7Cj%5CIbSU0m4%3A_/D-LINK-DAR-7000_RCE_%20resmanage.php.pdf",
-            "https://supportannouncement.us.dlink.com/security/publication.aspx?name=SAP10354"
-        ],
-        "summary": "** UNSUPPORTED WHEN ASSIGNED ** A vulnerability was found in D-Link DAR-7000-40 V31R02B1413C and classified as critical. This issue affects some unknown processing of the file /useratte/resmanage.php. The manipulation of the argument load leads to os command injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-264533 was assigned to this vulnerability. NOTE: This vulnerability only affects products that are no longer supported by the maintainer. NOTE: Vendor was contacted early and confirmed immediately that the product is end-of-life. It should be retired and replaced."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20793",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/illustrator/apsb24-30.html"
-        ],
-        "summary": "Illustrator versions 28.4, 27.9.3 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2024-2366",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://huntr.com/bounties/63266c77-408b-45ff-962c-8163db50a864"
-        ],
-        "summary": "A remote code execution vulnerability exists in the parisneo/lollms-webui application, specifically within the reinstall_binding functionality in lollms_core/lollms/server/endpoints/lollms_binding_infos.py of the latest version. The vulnerability arises due to insufficient path sanitization, allowing an attacker to exploit path traversal to navigate to arbitrary directories. By manipulating the binding_path to point to a controlled directory and uploading a malicious __init__.py file, an attacker can execute arbitrary code on the server."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30274",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/substance3d_painter/apsb24-31.html"
-        ],
-        "summary": "Substance3D - Painter versions 9.1.2 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2024-30275",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/aero/apsb24-33.html"
-        ],
-        "summary": "Adobe Aero Desktop versions 23.4 and earlier are affected by a Use After Free vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-30281",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/substance3d_designer/apsb24-35.html"
-        ],
-        "summary": "Substance3D - Designer versions 13.1.1 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30282",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
-        ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-30293",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
-        ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier are affected by a Stack-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-122",
-        "id": "CVE-2024-30294",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
-        ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier are affected by a Heap-based Buffer Overflow vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
+        "assigner": "secure@intel.com",
         "cvss": null,
         "cwe": "CWE-476",
-        "id": "CVE-2024-30295",
+        "id": "CVE-2022-42879",
         "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
+        "last-modified": "2024-05-16T21:15:00",
         "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01020.html"
         ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier are affected by a NULL Pointer Dereference vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+        "summary": "NULL pointer dereference in some Intel(R) Arc(TM) Control software before version 1.73.5335.2 may allow an authenticated user to potentially enable denial of service via local access."
     },
     {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2023-11-14T19:15:00",
         "access": {},
-        "assigner": "psirt@adobe.com",
+        "assigner": "secure@intel.com",
         "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30296",
+        "cwe": "CWE-276",
+        "id": "CVE-2023-27305",
         "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
+        "last-modified": "2024-05-16T21:15:00",
         "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01020.html"
         ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
+        "summary": "Incorrect default permissions in some Intel(R) Arc(TM) Control software before version 1.73.5335.2 may allow an authenticated user to potentially enable escalation of privilege via local access."
     },
     {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
         "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30297",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
-        ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-30298",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/animate/apsb24-36.html"
-        ],
-        "summary": "Animate versions 24.0.2, 23.0.5 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-30307",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/substance3d_painter/apsb24-31.html"
-        ],
-        "summary": "Substance3D - Painter versions 9.1.2 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-30308",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/substance3d_painter/apsb24-31.html"
-        ],
-        "summary": "Substance3D - Painter versions 9.1.2 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-30309",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/substance3d_painter/apsb24-31.html"
-        ],
-        "summary": "Substance3D - Painter versions 9.1.2 and earlier Answer: are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-3126",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://huntr.com/bounties/0e2bec70-826e-4c24-8015-31921e23fd12",
-            "https://github.com/parisneo/lollms-webui/commit/41dbb1b3f2e78ea276e5269544e50514252c0c25"
-        ],
-        "summary": "A command injection vulnerability exists in the 'run_xtts_api_server' function of the parisneo/lollms-webui application, specifically within the 'lollms_xtts.py' script. The vulnerability arises due to the improper neutralization of special elements used in an OS command. The affected function utilizes 'subprocess.Popen' to execute a command constructed with a Python f-string, without adequately sanitizing the 'xtts_base_url' input. This flaw allows attackers to execute arbitrary commands remotely by manipulating the 'xtts_base_url' parameter. The vulnerability affects versions up to and including the latest version before 9.5. Successful exploitation could lead to arbitrary remote code execution (RCE) on the system where the application is deployed."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-3403",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://huntr.com/bounties/7431d1dd-f014-4d4f-acb6-f97369ef3688"
-        ],
-        "summary": "imartinez/privategpt version 0.2.0 is vulnerable to a local file inclusion vulnerability that allows attackers to read arbitrary files from the filesystem. By manipulating file upload functionality to ingest arbitrary local files, attackers can exploit the 'Search in Docs' feature or query the AI to retrieve or disclose the contents of any file on the system. This vulnerability could lead to various impacts, including but not limited to remote code execution by obtaining private SSH keys, unauthorized access to private files, source code disclosure facilitating further attacks, and exposure of configuration files."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-29",
-        "id": "CVE-2024-3435",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://huntr.com/bounties/494f349a-8650-4d30-a0bd-4742fda44ce5",
-            "https://github.com/parisneo/lollms-webui/commit/bb99b59e710d00c4f2598faa5e183fa30fbd3bc2"
-        ],
-        "summary": "A path traversal vulnerability exists in the 'save_settings' endpoint of the parisneo/lollms-webui application, affecting versions up to the latest release before 9.5. The vulnerability arises due to insufficient sanitization of the 'config' parameter in the 'apply_settings' function, allowing an attacker to manipulate the application's configuration by sending specially crafted JSON payloads. This could lead to remote code execution (RCE) by bypassing existing patches designed to mitigate such vulnerabilities."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T06:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
+        "assigner": "secure@intel.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-4279",
+        "id": "CVE-2023-38420",
         "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
+        "last-modified": "2024-05-16T21:15:00",
         "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/45d04643-e43a-4732-91bf-e4af7b622e33?source=cve",
-            "https://plugins.trac.wordpress.org/browser/tutor/trunk/classes/Course_List.php#L357",
-            "https://plugins.trac.wordpress.org/changeset/3086489/"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
         ],
-        "summary": "The Tutor LMS \u2013 eLearning and online course solution plugin for WordPress is vulnerable to Insecure Direct Object Reference to Arbitrary Course Deletion in versions up to, and including, 2.7.0 via the 'tutor_course_delete' function due to missing validation on a user controlled key. This can allow authenticated attackers, with Instructor-level permissions and above, to delete any course."
+        "summary": "Improper conditions check in Intel(R) Power Gadget software for macOS all versions may allow an authenticated user to potentially enable information disclosure via local access."
     },
     {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T05:15:00",
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
         "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-4933",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264469",
-            "https://vuldb.com/?ctiid.264469",
-            "https://vuldb.com/?submit.335367",
-            "https://github.com/rockersiyuan/CVE/blob/main/SourceCodester%20Simple%20Online%20Bidding%20System%20Sql%20Inject-4.md"
-        ],
-        "summary": "A vulnerability has been found in SourceCodester Simple Online Bidding System 1.0 and classified as critical. Affected by this vulnerability is an unknown functionality of the file /simple-online-bidding-system/admin/index.php?page=manage_product. The manipulation of the argument id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-264469 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
-        "cvss": null,
-        "cwe": "CWE-29",
-        "id": "CVE-2024-3848",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://huntr.com/bounties/8d5aadaa-522f-4839-b41b-d7da362dd610",
-            "https://github.com/mlflow/mlflow/commit/f8d51e21523238280ebcfdb378612afd7844eca8"
-        ],
-        "summary": "A path traversal vulnerability exists in mlflow/mlflow version 2.11.0, identified as a bypass for the previously addressed CVE-2023-6909. The vulnerability arises from the application's handling of artifact URLs, where a '#' character can be used to insert a path into the fragment, effectively skipping validation. This allows an attacker to construct a URL that, when processed, ignores the protocol scheme and uses the provided path for filesystem access. As a result, an attacker can read arbitrary files, including sensitive information such as SSH and cloud keys, by exploiting the way the application converts the URL into a filesystem path. The issue stems from insufficient validation of the fragment portion of the URL, leading to arbitrary file read through path traversal."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T05:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-4945",
-        "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
-        "references": [
-            "https://vuldb.com/?id.264480",
-            "https://vuldb.com/?ctiid.264480",
-            "https://vuldb.com/?submit.333960",
-            "https://github.com/CveSecLook/cve/issues/28"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Best Courier Management System 1.0. It has been classified as problematic. Affected is an unknown function of the file view_parcel.php. The manipulation of the argument id leads to unrestricted upload. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-264480."
-    },
-    {
-        "Modified": "2024-05-16T13:03:00",
-        "Published": "2024-05-16T09:15:00",
-        "access": {},
-        "assigner": "security@huntr.dev",
+        "assigner": "secure@intel.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-3851",
+        "id": "CVE-2023-41082",
         "impact": {},
-        "last-modified": "2024-05-16T13:03:00",
+        "last-modified": "2024-05-16T21:15:00",
         "references": [
-            "https://huntr.com/bounties/cae1a492-4e09-4d56-8e11-17703bdfe653"
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01021.html"
         ],
-        "summary": "A stored Cross-Site Scripting (XSS) vulnerability exists in the 'imartinez/privategpt' repository due to improper validation of file uploads. Attackers can exploit this vulnerability by uploading malicious HTML files, such as those containing JavaScript payloads, which are then executed in the context of the victim's session when accessed. This could lead to the execution of arbitrary JavaScript code in the context of the user's browser session, potentially resulting in phishing attacks or other malicious actions. The vulnerability affects the latest version of the repository."
+        "summary": "Null pointer dereference for some Intel(R) CST software before version 2.1.10300 may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-41234",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "NULL pointer dereference in Intel(R) Power Gadget software for Windows all versions may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-41961",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00831.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) GPA software before version 2023.3 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-42433",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00965.html"
+        ],
+        "summary": "Incorrect default permissions in some Endurance Gaming Mode software installers before version 1.3.937.0 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-42668",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00962.html"
+        ],
+        "summary": "Incorrect default permissions in some onboard video driver software before version 1.14 for Intel(R) Server Boards based on Intel(R) 62X Chipset may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-42773",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Improper neutralization in Intel(R) Power Gadget software for Windows all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43487",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01021.html"
+        ],
+        "summary": "Improper access control in some Intel(R) CST before version 2.1.10300 may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43629",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00831.html"
+        ],
+        "summary": "Incorrect default permissions in some Intel(R) GPA software installers before version 2023.3 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43745",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01013.html"
+        ],
+        "summary": "Improper input validation in some Intel(R) CBI software before version 1.1.0 may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43748",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00831.html"
+        ],
+        "summary": "Improper access control in some Intel(R) GPA Framework software installers before version 2023.3 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-43751",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00937.html"
+        ],
+        "summary": "Uncontrolled search path in Intel(R) Graphics Command Center Service bundled in some Intel(R) Graphics Windows DCH driver software before versions 31.0.101.3790/31.0.101.2114 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45217",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Improper access control in Intel(R) Power Gadget software for Windows all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45221",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00935.html"
+        ],
+        "summary": "Improper buffer restrictions in Intel(R) Media SDK all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-22662",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01080.html"
+        ],
+        "summary": "Improper input validation of EpsdSrMgmtConfig in UEFI firmware for some Intel(R) Server Board S2600BP products may allow a privileged user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45315",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Improper initialization in some Intel(R) Power Gadget software for Windwos all versions may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-37410",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00916.html"
+        ],
+        "summary": "Improper access control for some Intel(R) Thunderbolt driver software before version 89 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45320",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01034.html"
+        ],
+        "summary": "Uncontrolled search path element in some Intel(R) VTune(TM) Profiler software before version 2024.0 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-28383",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00814.html"
+        ],
+        "summary": "Improper conditions check in some Intel(R) BIOS PPAM firmware may allow a privileged user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-38417",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01039.html"
+        ],
+        "summary": "Improper input validation for some Intel(R) PROSet/Wireless WiFi software before version 23.20 may allow an unauthenticated user to potentially enable denial of service via adjacent access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45733",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01051.html"
+        ],
+        "summary": "Hardware logic contains race conditions in some Intel(R) Processors may allow an authenticated user to potentially enable partial information disclosure via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-40070",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Improper access control in some Intel(R) Power Gadget software for macOS all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45736",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Insecure inherited permissions in Intel(R) Power Gadget software for Windows all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-41092",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01007.html"
+        ],
+        "summary": "Unchecked return value in SDM firmware for Intel(R) Stratix 10 and Intel(R) Agilex 7 FPGAs before version 23.3 may allow an authenticated user to potentially enable denial of service via adjacent access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45743",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01031.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) DSA software uninstallers before version 23.4.39.10 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45745",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01036.html"
+        ],
+        "summary": "Improper input validation in some Intel(R) TDX module software before version 1.5.05.46.698 may allow a privileged user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45845",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01039.html"
+        ],
+        "summary": "Improper conditions check for some Intel(R) Wireless Bluetooth(R) products for Windows before version 23.20 may allow a privileged user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2023-11-14T19:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-25952",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01020.html"
+        ],
+        "summary": "Out-of-bounds write in some Intel(R) Arc(TM) Control software before version 1.73.5335.2 may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-45846",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Incomplete cleanup in Intel(R) Power Gadget software for macOS all versions may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-46103",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01052.html"
+        ],
+        "summary": "Sequence of processor instructions leads to unexpected behavior in Intel(R) Core(TM) Ultra Processors may allow an authenticated user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-46689",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Improper neutralization in Intel(R) Power Gadget software for macOS all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-46691",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01037.html"
+        ],
+        "summary": "Use after free in Intel(R) Power Gadget software for Windows all versions may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-22656",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00935.html"
+        ],
+        "summary": "Out-of-bounds read in Intel(R) Media SDK and some Intel(R) oneVPL software before version 23.3.5 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-47165",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01041.html"
+        ],
+        "summary": "Improper conditions check in the Intel(R) Data Center GPU Max Series 1100 and 1550 products may allow an privileged user to potentially enable denial of service via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-35192",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00831.html"
+        ],
+        "summary": "Uncontrolled search path in some Intel(R) GPA Framework software before version 2023.3 may allow an authenticated user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-37341",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00756.html"
+        ],
+        "summary": "Improper access control in some Intel(R) Ethernet Adapters and Intel(R) Ethernet Controller I225 Manageability firmware may allow a privileged user to potentially enable escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-38654",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01039.html"
+        ],
+        "summary": "Improper input validation for some some Intel(R) PROSet/Wireless WiFi software for Windows before version 23.20 may allow an unauthenticated user to potentially enable denial of service via adjacent access."
+    },
+    {
+        "Modified": "2024-05-16T21:15:00",
+        "Published": "2024-05-16T21:15:00",
+        "access": {},
+        "assigner": "secure@intel.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-24460",
+        "impact": {},
+        "last-modified": "2024-05-16T21:15:00",
+        "references": [
+            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-00831.html"
+        ],
+        "summary": "Incorrect default permissions in some Intel(R) GPA software installers before version 2023.3 may allow an authenticated user to potentially enable escalation of privilege via local access."
     }
 ]
