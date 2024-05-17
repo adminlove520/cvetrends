@@ -1,5 +1,485 @@
 [
     {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-17T11:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-35173",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/wc-serial-numbers/wordpress-wc-serial-numbers-plugin-1-7-2-broken-access-control-vulnerability?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in PluginEver Serial Numbers for WooCommerce \u2013 License Manager.This issue affects Serial Numbers for WooCommerce \u2013 License Manager: from n/a through 1.7.3."
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-17T11:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-35174",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/flo-forms/wordpress-flo-forms-plugin-1-0-42-broken-access-control-vulnerability?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in Flothemes Flo Forms.This issue affects Flo Forms: from n/a through 1.0.42."
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-14T15:12:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27400",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d3a9331a6591e9df64791e076f6591f440af51c3",
+            "https://git.kernel.org/stable/c/5c25b169f9a0b34ee410891a96bc9d7b9ed6f9be",
+            "https://git.kernel.org/stable/c/0c7ed3ed35eec9138b88d42217b5a6b9a62bda4d",
+            "https://git.kernel.org/stable/c/9a4f6e138720b6e9adf7b82a71d0292f3f276480"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdgpu: once more fix the call oder in amdgpu_ttm_move() v2\n\nThis reverts drm/amdgpu: fix ftrace event amdgpu_bo_move always move\non same heap. The basic problem here is that after the move the old\nlocation is simply not available any more.\n\nSome fixes were suggested, but essentially we should call the move\nnotification before actually moving things because only this way we have\nthe correct order for DMA-buf and VM move notifications as well.\n\nAlso rework the statistic handling so that we don't update the eviction\ncounter before the move.\n\nv2: add missing NULL check"
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-14T15:12:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27399",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/adf0398cee86643b8eacde95f17d073d022f782c",
+            "https://git.kernel.org/stable/c/e137e2ba96e51902dc2878131823a96bf8e638ae",
+            "https://git.kernel.org/stable/c/6466ee65e5b27161c846c73ef407f49dfa1bd1d9",
+            "https://git.kernel.org/stable/c/06acb75e7ed600d0bbf7bff5628aa8f24a97978c",
+            "https://git.kernel.org/stable/c/e97e16433eb4533083b096a3824b93a5ca3aee79",
+            "https://git.kernel.org/stable/c/8960ff650aec70485b40771cd8e6e8c4cb467d33",
+            "https://git.kernel.org/stable/c/955b5b6c54d95b5e7444dfc81c95c8e013f27ac0",
+            "https://git.kernel.org/stable/c/eb86f955488c39526534211f2610e48a5cf8ead4"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: l2cap: fix null-ptr-deref in l2cap_chan_timeout\n\nThere is a race condition between l2cap_chan_timeout() and\nl2cap_chan_del(). When we use l2cap_chan_del() to delete the\nchannel, the chan->conn will be set to null. But the conn could\nbe dereferenced again in the mutex_lock() of l2cap_chan_timeout().\nAs a result the null pointer dereference bug will happen. The\nKASAN report triggered by POC is shown below:\n\n[  472.074580] ==================================================================\n[  472.075284] BUG: KASAN: null-ptr-deref in mutex_lock+0x68/0xc0\n[  472.075308] Write of size 8 at addr 0000000000000158 by task kworker/0:0/7\n[  472.075308]\n[  472.075308] CPU: 0 PID: 7 Comm: kworker/0:0 Not tainted 6.9.0-rc5-00356-g78c0094a146b #36\n[  472.075308] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu4\n[  472.075308] Workqueue: events l2cap_chan_timeout\n[  472.075308] Call Trace:\n[  472.075308]  <TASK>\n[  472.075308]  dump_stack_lvl+0x137/0x1a0\n[  472.075308]  print_report+0x101/0x250\n[  472.075308]  ? __virt_addr_valid+0x77/0x160\n[  472.075308]  ? mutex_lock+0x68/0xc0\n[  472.075308]  kasan_report+0x139/0x170\n[  472.075308]  ? mutex_lock+0x68/0xc0\n[  472.075308]  kasan_check_range+0x2c3/0x2e0\n[  472.075308]  mutex_lock+0x68/0xc0\n[  472.075308]  l2cap_chan_timeout+0x181/0x300\n[  472.075308]  process_one_work+0x5d2/0xe00\n[  472.075308]  worker_thread+0xe1d/0x1660\n[  472.075308]  ? pr_cont_work+0x5e0/0x5e0\n[  472.075308]  kthread+0x2b7/0x350\n[  472.075308]  ? pr_cont_work+0x5e0/0x5e0\n[  472.075308]  ? kthread_blkcg+0xd0/0xd0\n[  472.075308]  ret_from_fork+0x4d/0x80\n[  472.075308]  ? kthread_blkcg+0xd0/0xd0\n[  472.075308]  ret_from_fork_asm+0x11/0x20\n[  472.075308]  </TASK>\n[  472.075308] ==================================================================\n[  472.094860] Disabling lock debugging due to kernel taint\n[  472.096136] BUG: kernel NULL pointer dereference, address: 0000000000000158\n[  472.096136] #PF: supervisor write access in kernel mode\n[  472.096136] #PF: error_code(0x0002) - not-present page\n[  472.096136] PGD 0 P4D 0\n[  472.096136] Oops: 0002 [#1] PREEMPT SMP KASAN NOPTI\n[  472.096136] CPU: 0 PID: 7 Comm: kworker/0:0 Tainted: G    B              6.9.0-rc5-00356-g78c0094a146b #36\n[  472.096136] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu4\n[  472.096136] Workqueue: events l2cap_chan_timeout\n[  472.096136] RIP: 0010:mutex_lock+0x88/0xc0\n[  472.096136] Code: be 08 00 00 00 e8 f8 23 1f fd 4c 89 f7 be 08 00 00 00 e8 eb 23 1f fd 42 80 3c 23 00 74 08 48 88\n[  472.096136] RSP: 0018:ffff88800744fc78 EFLAGS: 00000246\n[  472.096136] RAX: 0000000000000000 RBX: 1ffff11000e89f8f RCX: ffffffff8457c865\n[  472.096136] RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffff88800744fc78\n[  472.096136] RBP: 0000000000000158 R08: ffff88800744fc7f R09: 1ffff11000e89f8f\n[  472.096136] R10: dffffc0000000000 R11: ffffed1000e89f90 R12: dffffc0000000000\n[  472.096136] R13: 0000000000000158 R14: ffff88800744fc78 R15: ffff888007405a00\n[  472.096136] FS:  0000000000000000(0000) GS:ffff88806d200000(0000) knlGS:0000000000000000\n[  472.096136] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  472.096136] CR2: 0000000000000158 CR3: 000000000da32000 CR4: 00000000000006f0\n[  472.096136] Call Trace:\n[  472.096136]  <TASK>\n[  472.096136]  ? __die_body+0x8d/0xe0\n[  472.096136]  ? page_fault_oops+0x6b8/0x9a0\n[  472.096136]  ? kernelmode_fixup_or_oops+0x20c/0x2a0\n[  472.096136]  ? do_user_addr_fault+0x1027/0x1340\n[  472.096136]  ? _printk+0x7a/0xa0\n[  472.096136]  ? mutex_lock+0x68/0xc0\n[  472.096136]  ? add_taint+0x42/0xd0\n[  472.096136]  ? exc_page_fault+0x6a/0x1b0\n[  472.096136]  ? asm_exc_page_fault+0x26/0x30\n[  472.096136]  ? mutex_lock+0x75/0xc0\n[  472.096136]  ? mutex_lock+0x88/0xc0\n[  472.096136]  ? mutex_lock+0x75/0xc0\n[  472.096136]  l2cap_chan_timeo\n---truncated---"
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-14T15:12:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27401",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/38762a0763c10c24a4915feee722d7aa6e73eb98",
+            "https://git.kernel.org/stable/c/67f34f093c0f7bf33f5b4ae64d3d695a3b978285",
+            "https://git.kernel.org/stable/c/7b8c7bd2296e95b38a6ff346242356a2e7190239",
+            "https://git.kernel.org/stable/c/cca330c59c54207567a648357835f59df9a286bb",
+            "https://git.kernel.org/stable/c/79f988d3ffc1aa778fc5181bdfab312e57956c6b",
+            "https://git.kernel.org/stable/c/4ee0941da10e8fdcdb34756b877efd3282594c1f",
+            "https://git.kernel.org/stable/c/1fe60ee709436550f8cfbab01295936b868d5baa",
+            "https://git.kernel.org/stable/c/539d51ac48bcfcfa1b3d4a85f8df92fa22c1d41c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfirewire: nosy: ensure user_length is taken into account when fetching packet contents\n\nEnsure that packet_buffer_get respects the user_length provided. If\nthe length of the head packet exceeds the user_length, packet_buffer_get\nwill now return 0 to signify to the user that no data were read\nand a larger buffer size is required. Helps prevent user space overflows."
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-14T15:12:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27398",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/483bc08181827fc475643272ffb69c533007e546",
+            "https://git.kernel.org/stable/c/1b33d55fb7355e27f8c82cd4ecd560f162469249",
+            "https://git.kernel.org/stable/c/3212afd00e3cda790fd0583cb3eaef8f9575a014",
+            "https://git.kernel.org/stable/c/33a6e92161a78c1073d90e27abe28d746feb0a53",
+            "https://git.kernel.org/stable/c/6a18eeb1b3bbc67c20d9609c31dca6a69b4bcde5",
+            "https://git.kernel.org/stable/c/bfab2c1f7940a232cd519e82fff137e308abfd93",
+            "https://git.kernel.org/stable/c/012363cb1bec5f33a7b94629ab2c1086f30280f2",
+            "https://git.kernel.org/stable/c/50c2037fc28df870ef29d9728c770c8955d32178"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: Fix use-after-free bugs caused by sco_sock_timeout\n\nWhen the sco connection is established and then, the sco socket\nis releasing, timeout_work will be scheduled to judge whether\nthe sco disconnection is timeout. The sock will be deallocated\nlater, but it is dereferenced again in sco_sock_timeout. As a\nresult, the use-after-free bugs will happen. The root cause is\nshown below:\n\n    Cleanup Thread               |      Worker Thread\nsco_sock_release                 |\n  sco_sock_close                 |\n    __sco_sock_close             |\n      sco_sock_set_timer         |\n        schedule_delayed_work    |\n  sco_sock_kill                  |    (wait a time)\n    sock_put(sk) //FREE          |  sco_sock_timeout\n                                 |    sock_hold(sk) //USE\n\nThe KASAN report triggered by POC is shown below:\n\n[   95.890016] ==================================================================\n[   95.890496] BUG: KASAN: slab-use-after-free in sco_sock_timeout+0x5e/0x1c0\n[   95.890755] Write of size 4 at addr ffff88800c388080 by task kworker/0:0/7\n...\n[   95.890755] Workqueue: events sco_sock_timeout\n[   95.890755] Call Trace:\n[   95.890755]  <TASK>\n[   95.890755]  dump_stack_lvl+0x45/0x110\n[   95.890755]  print_address_description+0x78/0x390\n[   95.890755]  print_report+0x11b/0x250\n[   95.890755]  ? __virt_addr_valid+0xbe/0xf0\n[   95.890755]  ? sco_sock_timeout+0x5e/0x1c0\n[   95.890755]  kasan_report+0x139/0x170\n[   95.890755]  ? update_load_avg+0xe5/0x9f0\n[   95.890755]  ? sco_sock_timeout+0x5e/0x1c0\n[   95.890755]  kasan_check_range+0x2c3/0x2e0\n[   95.890755]  sco_sock_timeout+0x5e/0x1c0\n[   95.890755]  process_one_work+0x561/0xc50\n[   95.890755]  worker_thread+0xab2/0x13c0\n[   95.890755]  ? pr_cont_work+0x490/0x490\n[   95.890755]  kthread+0x279/0x300\n[   95.890755]  ? pr_cont_work+0x490/0x490\n[   95.890755]  ? kthread_blkcg+0xa0/0xa0\n[   95.890755]  ret_from_fork+0x34/0x60\n[   95.890755]  ? kthread_blkcg+0xa0/0xa0\n[   95.890755]  ret_from_fork_asm+0x11/0x20\n[   95.890755]  </TASK>\n[   95.890755]\n[   95.890755] Allocated by task 506:\n[   95.890755]  kasan_save_track+0x3f/0x70\n[   95.890755]  __kasan_kmalloc+0x86/0x90\n[   95.890755]  __kmalloc+0x17f/0x360\n[   95.890755]  sk_prot_alloc+0xe1/0x1a0\n[   95.890755]  sk_alloc+0x31/0x4e0\n[   95.890755]  bt_sock_alloc+0x2b/0x2a0\n[   95.890755]  sco_sock_create+0xad/0x320\n[   95.890755]  bt_sock_create+0x145/0x320\n[   95.890755]  __sock_create+0x2e1/0x650\n[   95.890755]  __sys_socket+0xd0/0x280\n[   95.890755]  __x64_sys_socket+0x75/0x80\n[   95.890755]  do_syscall_64+0xc4/0x1b0\n[   95.890755]  entry_SYSCALL_64_after_hwframe+0x67/0x6f\n[   95.890755]\n[   95.890755] Freed by task 506:\n[   95.890755]  kasan_save_track+0x3f/0x70\n[   95.890755]  kasan_save_free_info+0x40/0x50\n[   95.890755]  poison_slab_object+0x118/0x180\n[   95.890755]  __kasan_slab_free+0x12/0x30\n[   95.890755]  kfree+0xb2/0x240\n[   95.890755]  __sk_destruct+0x317/0x410\n[   95.890755]  sco_sock_release+0x232/0x280\n[   95.890755]  sock_close+0xb2/0x210\n[   95.890755]  __fput+0x37f/0x770\n[   95.890755]  task_work_run+0x1ae/0x210\n[   95.890755]  get_signal+0xe17/0xf70\n[   95.890755]  arch_do_signal_or_restart+0x3f/0x520\n[   95.890755]  syscall_exit_to_user_mode+0x55/0x120\n[   95.890755]  do_syscall_64+0xd1/0x1b0\n[   95.890755]  entry_SYSCALL_64_after_hwframe+0x67/0x6f\n[   95.890755]\n[   95.890755] The buggy address belongs to the object at ffff88800c388000\n[   95.890755]  which belongs to the cache kmalloc-1k of size 1024\n[   95.890755] The buggy address is located 128 bytes inside of\n[   95.890755]  freed 1024-byte region [ffff88800c388000, ffff88800c388400)\n[   95.890755]\n[   95.890755] The buggy address belongs to the physical page:\n[   95.890755] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88800c38a800 pfn:0xc388\n[   95.890755] head: order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0\n[   95.890755] ano\n---truncated---"
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-01T06:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26936",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/21ff9d7d223c5c19cb4334009e4c0c83a2f4d674",
+            "https://git.kernel.org/stable/c/5c20b242d4fed73a93591e48bfd9772e2322fb11",
+            "https://git.kernel.org/stable/c/2c27a64a2bc47d9bfc7c3cf8be14be53b1ee7cb6",
+            "https://git.kernel.org/stable/c/17cf0c2794bdb6f39671265aa18aea5c22ee8c4a",
+            "https://git.kernel.org/stable/c/8f3d0bf1d0c62b539d54c5b9108a845cff619b99"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: validate request buffer size in smb2_allocate_rsp_buf()\n\nThe response buffer should be allocated in smb2_allocate_rsp_buf\nbefore validating request. But the fields in payload as well as smb2 header\nis used in smb2_allocate_rsp_buf(). This patch add simple buffer size\nvalidation to avoid potencial out-of-bounds in request buffer."
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-05-01T06:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26980",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b80ba648714e6d790d69610cf14656be222d0248",
+            "https://git.kernel.org/stable/c/3160d9734453a40db248487f8204830879c207f1",
+            "https://git.kernel.org/stable/c/0977f89722eceba165700ea384f075143f012085",
+            "https://git.kernel.org/stable/c/c119f4ede3fa90a9463f50831761c28f989bfb20",
+            "https://git.kernel.org/stable/c/da21401372607c49972ea87a6edaafb36a17c325"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: fix slab-out-of-bounds in smb2_allocate_rsp_buf\n\nIf ->ProtocolId is SMB2_TRANSFORM_PROTO_NUM, smb2 request size\nvalidation could be skipped. if request size is smaller than\nsizeof(struct smb2_query_info_req), slab-out-of-bounds read can happen in\nsmb2_allocate_rsp_buf(). This patch allocate response buffer after\ndecrypting transform request. smb3_decrypt_req() will validate transform\nrequest size and avoid slab-out-of-bound in smb2_allocate_rsp_buf()."
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-04-25T06:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26923",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e76c2678228f6aec74b305ae30c9374cc2f28a51",
+            "https://git.kernel.org/stable/c/b75722be422c276b699200de90527d01c602ea7c",
+            "https://git.kernel.org/stable/c/507cc232ffe53a352847893f8177d276c3b532a9",
+            "https://git.kernel.org/stable/c/dbdf7bec5c920200077d693193f989cb1513f009",
+            "https://git.kernel.org/stable/c/47d8ac011fe1c9251070e1bd64cb10b48193ec51",
+            "https://git.kernel.org/stable/c/343c5372d5e17b306db5f8f3c895539b06e3177f",
+            "https://git.kernel.org/stable/c/2e2a03787f4f0abc0072350654ab0ef3324d9db3",
+            "https://git.kernel.org/stable/c/a36ae0ec2353015f0f6762e59f4c2dbc0c906423"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\naf_unix: Fix garbage collector racing against connect()\n\nGarbage collector does not take into account the risk of embryo getting\nenqueued during the garbage collection. If such embryo has a peer that\ncarries SCM_RIGHTS, two consecutive passes of scan_children() may see a\ndifferent set of children. Leading to an incorrectly elevated inflight\ncount, and then a dangling pointer within the gc_inflight_list.\n\nsockets are AF_UNIX/SOCK_STREAM\nS is an unconnected socket\nL is a listening in-flight socket bound to addr, not in fdtable\nV's fd will be passed via sendmsg(), gets inflight count bumped\n\nconnect(S, addr)\tsendmsg(S, [V]); close(V)\t__unix_gc()\n----------------\t-------------------------\t-----------\n\nNS = unix_create1()\nskb1 = sock_wmalloc(NS)\nL = unix_find_other(addr)\nunix_state_lock(L)\nunix_peer(S) = NS\n\t\t\t// V count=1 inflight=0\n\n \t\t\tNS = unix_peer(S)\n \t\t\tskb2 = sock_alloc()\n\t\t\tskb_queue_tail(NS, skb2[V])\n\n\t\t\t// V became in-flight\n\t\t\t// V count=2 inflight=1\n\n\t\t\tclose(V)\n\n\t\t\t// V count=1 inflight=1\n\t\t\t// GC candidate condition met\n\n\t\t\t\t\t\tfor u in gc_inflight_list:\n\t\t\t\t\t\t  if (total_refs == inflight_refs)\n\t\t\t\t\t\t    add u to gc_candidates\n\n\t\t\t\t\t\t// gc_candidates={L, V}\n\n\t\t\t\t\t\tfor u in gc_candidates:\n\t\t\t\t\t\t  scan_children(u, dec_inflight)\n\n\t\t\t\t\t\t// embryo (skb1) was not\n\t\t\t\t\t\t// reachable from L yet, so V's\n\t\t\t\t\t\t// inflight remains unchanged\n__skb_queue_tail(L, skb1)\nunix_state_unlock(L)\n\t\t\t\t\t\tfor u in gc_candidates:\n\t\t\t\t\t\t  if (u.inflight)\n\t\t\t\t\t\t    scan_children(u, inc_inflight_move_tail)\n\n\t\t\t\t\t\t// V count=1 inflight=2 (!)\n\nIf there is a GC-candidate listening socket, lock/unlock its state. This\nmakes GC wait until the end of any ongoing connect() to that socket. After\nflipping the lock, a possibly SCM-laden embryo is already enqueued. And if\nthere is another embryo coming, it can not possibly carry SCM_RIGHTS. At\nthis point, unix_inflight() can not happen because unix_gc_lock is already\ntaken. Inflight graph remains unaffected."
+    },
+    {
+        "Modified": "2024-05-17T11:15:00",
+        "Published": "2024-04-17T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-401",
+        "id": "CVE-2024-26900",
+        "impact": {},
+        "last-modified": "2024-05-17T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/6d32c832a88513f65c2c2c9c75954ee8b387adea",
+            "https://git.kernel.org/stable/c/4c1021ce46fc2fb6115f7e79d353941e6dcad366",
+            "https://git.kernel.org/stable/c/6cf350658736681b9d6b0b6e58c5c76b235bb4c4",
+            "https://git.kernel.org/stable/c/fb5b347efd1bda989846ffc74679d181222fb123",
+            "https://git.kernel.org/stable/c/f3a1787dc48213f6caea5ba7d47e0222e7fa34a9",
+            "https://git.kernel.org/stable/c/beaf11969fd5cbe6f09cefaa34df1ce8578e8dd9",
+            "https://git.kernel.org/stable/c/9fd0198f7ef06ae0d6636fb0578560857dead995"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmd: fix kmemleak of rdev->serial\n\nIf kobject_add() is fail in bind_rdev_to_array(), 'rdev->serial' will be\nalloc not be freed, and kmemleak occurs.\n\nunreferenced object 0xffff88815a350000 (size 49152):\n  comm \"mdadm\", pid 789, jiffies 4294716910\n  hex dump (first 32 bytes):\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace (crc f773277a):\n    [<0000000058b0a453>] kmemleak_alloc+0x61/0xe0\n    [<00000000366adf14>] __kmalloc_large_node+0x15e/0x270\n    [<000000002e82961b>] __kmalloc_node.cold+0x11/0x7f\n    [<00000000f206d60a>] kvmalloc_node+0x74/0x150\n    [<0000000034bf3363>] rdev_init_serial+0x67/0x170\n    [<0000000010e08fe9>] mddev_create_serial_pool+0x62/0x220\n    [<00000000c3837bf0>] bind_rdev_to_array+0x2af/0x630\n    [<0000000073c28560>] md_add_new_disk+0x400/0x9f0\n    [<00000000770e30ff>] md_ioctl+0x15bf/0x1c10\n    [<000000006cfab718>] blkdev_ioctl+0x191/0x3f0\n    [<0000000085086a11>] vfs_ioctl+0x22/0x60\n    [<0000000018b656fe>] __x64_sys_ioctl+0xba/0xe0\n    [<00000000e54e675e>] do_syscall_64+0x71/0x150\n    [<000000008b0ad622>] entry_SYSCALL_64_after_hwframe+0x6c/0x74"
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "security@zabbix.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-22120",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://support.zabbix.com/browse/ZBX-24505"
+        ],
+        "summary": "Zabbix server can perform command execution for configured scripts. After command is executed, audit entry is added to \"Audit Log\". Due to \"clientip\" field is not sanitized, it is possible to injection SQL into \"clientip\" and exploit time based blind SQL injection."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-32692",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/chauffeur-booking-system/wordpress-chauffeur-taxi-booking-system-for-wordpress-plugin-6-9-broken-authentication-vulnerability?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in QuanticaLabs Chauffeur Taxi Booking System for WordPress allows Accessing Functionality Not Properly Constrained by ACLs.This issue affects Chauffeur Taxi Booking System for WordPress: from n/a through 6.9."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-290",
+        "id": "CVE-2024-32708",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/hkdev-maintenance-mode/wordpress-maintenance-mode-plugin-3-0-1-ip-bypass-vulnerability?_s_id=cve"
+        ],
+        "summary": "Authentication Bypass by Spoofing vulnerability in helderk Maintenance Mode allows Functionality Bypass.This issue affects Maintenance Mode: from n/a through 3.0.1."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32720",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/appointment-hour-booking/wordpress-appointment-hour-booking-plugin-1-4-56-captcha-bypass-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Restriction of Excessive Authentication Attempts vulnerability in CodePeople Appointment Hour Booking allows Removing Important Client Functionality.This issue affects Appointment Hour Booking: from n/a through 1.4.56."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-307",
+        "id": "CVE-2024-32774",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/profilegrid-user-profiles-groups-and-communities/wordpress-profilegrid-plugin-5-8-2-group-members-limit-bypass-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Restriction of Excessive Authentication Attempts vulnerability in Metagauss ProfileGrid allows Removing Important Client Functionality.This issue affects ProfileGrid : from n/a through 5.8.2."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-290",
+        "id": "CVE-2024-32786",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/royal-elementor-addons/wordpress-royal-elementor-addons-and-templates-plugin-1-3-93-ip-bypass-vulnerability?_s_id=cve"
+        ],
+        "summary": "Authentication Bypass by Spoofing vulnerability in WP Royal Royal Elementor Addons allows Functionality Bypass.This issue affects Royal Elementor Addons: from n/a through 1.3.93."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-32802",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/bp-better-messages/wordpress-better-messages-plugin-2-4-32-broken-authentication-vulnerability?_s_id=cve"
+        ],
+        "summary": "Missing Authorization vulnerability in WordPlus BP Better Messages allows Accessing Functionality Not Properly Constrained by ACLs.This issue affects BP Better Messages: from n/a through 2.4.32."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-32809",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/activedemand/wordpress-activedemand-plugin-0-2-41-arbitrary-file-upload-vulnerability?_s_id=cve"
+        ],
+        "summary": "Unrestricted Upload of File with Dangerous Type vulnerability in JumpDEMAND Inc. ActiveDEMAND allows Using Malicious Files.This issue affects ActiveDEMAND: from n/a through 0.2.41."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-290",
+        "id": "CVE-2024-32827",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/rafflepress/wordpress-giveaways-and-contests-by-rafflepress-plugin-1-12-7-ip-restriction-bypass-vulnerability?_s_id=cve"
+        ],
+        "summary": "Authentication Bypass by Spoofing vulnerability in RafflePress Giveaways and Contests allows Functionality Bypass.This issue affects Giveaways and Contests: from n/a through 1.12.7."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-32830",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/buddyforms/wordpress-buddyforms-plugin-2-8-8-arbitrary-file-read-and-ssrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in ThemeKraft BuddyForms allows Server Side Request Forgery, Relative Path Traversal.This issue affects BuddyForms: from n/a through 2.8.8."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-269",
+        "id": "CVE-2024-32959",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/sirv/wordpress-sirv-plugin-7-2-2-arbitrary-option-update-to-privilege-escalation-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Privilege Management vulnerability in Sirv allows Privilege Escalation.This issue affects Sirv: from n/a through 7.2.2."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-269",
+        "id": "CVE-2024-32960",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/booking-ultra-pro/wordpress-booking-ultra-pro-plugin-1-1-12-privilege-escalation-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Privilege Management vulnerability in Booking Ultra Pro allows Privilege Escalation.This issue affects Booking Ultra Pro: from n/a through 1.1.12."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2024-34755",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/cf7-salesforce/wordpress-integration-for-salesforce-and-contact-form-7-wpforms-elementor-formidable-ninja-forms-plugin-1-3-9-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in CRM Perks Integration for Contact Form 7 and Salesforce.This issue affects Integration for Contact Form 7 and Salesforce: from n/a through 1.3.9."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2024-34756",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/cf7-hubspot/wordpress-integration-for-hubspot-and-contact-form-7-plugin-1-3-1-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in CRM Perks Integration for Contact Form 7 HubSpot.This issue affects Integration for Contact Form 7 HubSpot: from n/a through 1.3.1."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-34806",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/clearfy/wordpress-clearfy-cache-plugin-2-2-1-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Creative Motion Clearfy Cache.This issue affects Clearfy Cache: from n/a through 2.2.1."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2024-34807",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/fast-custom-social-share-by-codebard/wordpress-fast-custom-social-share-by-codebard-plugin-1-1-2-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in CodeBard Fast Custom Social Share by CodeBard.This issue affects Fast Custom Social Share by CodeBard: from n/a through 1.1.2."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-352",
+        "id": "CVE-2024-34809",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/empowerwp/wordpress-empowerwp-theme-1-0-21-cross-site-request-forgery-csrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in Extend Themes EmpowerWP.This issue affects EmpowerWP: from n/a through 1.0.21."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-17T10:15:00",
+        "access": {},
+        "assigner": "cve-coordination@incibe.es",
+        "cvss": null,
+        "cwe": "CWE-400",
+        "id": "CVE-2024-5052",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://www.incibe.es/en/incibe-cert/notices/aviso/resource-consumption-vulnerability-cerberus-ftp-enterprise"
+        ],
+        "summary": "Denial of Service (DoS) vulnerability for Cerberus Enterprise 8.0.10.3 web administration. The vulnerability exists when the web server, default port 10001, attempts to process a large number of incomplete HTTP requests."
+    },
+    {
+        "Modified": "2024-05-17T10:15:00",
+        "Published": "2024-05-06T18:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-32807",
+        "impact": {},
+        "last-modified": "2024-05-17T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/woocommerce-sendinblue-newsletter-subscription/wordpress-brevo-for-woocommerce-plugin-4-0-17-arbitrary-file-download-and-deletion-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Brevo Sendinblue for WooCommerce allows Relative Path Traversal, Manipulating Web Input to File System Calls.This issue affects Sendinblue for WooCommerce: from n/a through 4.0.17."
+    },
+    {
         "Modified": "2024-05-17T09:15:00",
         "Published": "2024-05-17T09:15:00",
         "access": {},
@@ -1063,441 +1543,5 @@
             "https://patchstack.com/database/vulnerability/cardealer/wordpress-cardealer-plugin-4-15-content-injection-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS vulnerability in Bill Minozzi Car Dealer allows Code Injection.This issue affects Car Dealer: from n/a through 4.15."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-22139",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-manutencao/wordpress-wordpress-manutencao-plugin-1-0-6-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in Filipe Seabra WordPress Manuten\u00e7\u00e3o allows Functionality Bypass.This issue affects WordPress Manuten\u00e7\u00e3o: from n/a through 1.0.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22145",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/instawp-connect/wordpress-instawp-connect-plugin-0-1-0-8-arbitrary-option-update-to-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in InstaWP Team InstaWP Connect allows Privilege Escalation.This issue affects InstaWP Connect: from n/a through 0.1.0.8."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4789",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/c6840350-7ff4-4ec2-bf2b-94ce6f782537?source=cve",
-            "https://stylemixthemes.com/cost-calculator-plugin/"
-        ],
-        "summary": "Cost Calculator Builder Pro plugin for WordPress is vulnerable to Server-Side Request Forgery in all versions up to 3.1.72, via the send_demo_webhook() function. This makes it possible for authenticated attackers, with subscriber-level access and above, to make web requests to arbitrary locations originating from the web application and can be used to query and modify information from internal services."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-22157",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/salesking/wordpress-salesking-plugin-1-6-15-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in WebWizards SalesKing allows Privilege Escalation.This issue affects SalesKing: from n/a through 1.6.15."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-80",
-        "id": "CVE-2024-24874",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/cp-polls/wordpress-polls-cp-plugin-1-0-71-content-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS) vulnerability in CodePeople CP Polls allows Code Injection.This issue affects CP Polls: from n/a through 1.0.71."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-14T15:36:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-32700",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/chatbot-chatgpt/wordpress-kognetiks-chatbot-for-wordpress-plugin-2-0-0-arbitrary-file-upload-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unrestricted Upload of File with Dangerous Type vulnerability in Kognetiks Kognetiks Chatbot for WordPress.This issue affects Kognetiks Chatbot for WordPress: from n/a through 2.0.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-04-25T11:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-307",
-        "id": "CVE-2024-32676",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/loginpress-pro/wordpress-loginpress-pro-plugin-2-5-3-captcha-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Restriction of Excessive Authentication Attempts vulnerability in LoginPress LoginPress Pro allows Removing Important Client Functionality.This issue affects LoginPress Pro: from n/a before 3.0.0."
-    },
-    {
-        "Modified": "2024-05-17T08:15:00",
-        "Published": "2024-05-17T08:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35110",
-        "impact": {},
-        "last-modified": "2024-05-17T08:15:00",
-        "references": [
-            "https://github.com/yzmcms/yzmcms/issues/68"
-        ],
-        "summary": "A reflected XSS vulnerability has been found in YzmCMS 7.1. The vulnerability exists in yzmphp/core/class/application.class.php: when logged-in users access a malicious link, their cookies can be captured by an attacker."
-    },
-    {
-        "Modified": "2024-05-17T07:16:00",
-        "Published": "2024-05-17T07:16:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2023-41956",
-        "impact": {},
-        "last-modified": "2024-05-17T07:16:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/simple-membership/wordpress-simple-membership-plugin-4-3-4-authenticated-account-takeover-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Authentication vulnerability in smp7, wp.Insider Simple Membership.This issue affects Simple Membership: from n/a through 4.3.4."
-    },
-    {
-        "Modified": "2024-05-17T07:16:00",
-        "Published": "2024-05-17T07:16:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-41957",
-        "impact": {},
-        "last-modified": "2024-05-17T07:16:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/simple-membership/wordpress-simple-membership-plugin-4-3-4-unauthenticated-membership-role-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in smp7, wp.Insider Simple Membership allows Privilege Escalation.This issue affects Simple Membership: from n/a through 4.3.4."
-    },
-    {
-        "Modified": "2024-05-17T07:16:00",
-        "Published": "2024-05-17T07:16:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-31351",
-        "impact": {},
-        "last-modified": "2024-05-17T07:16:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/copymatic/wordpress-copymatic-plugin-1-6-unauthenticated-arbitrary-file-upload-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unrestricted Upload of File with Dangerous Type vulnerability in Copymatic Copymatic \u2013 AI Content Writer & Generator.This issue affects Copymatic \u2013 AI Content Writer & Generator: from n/a through 1.6."
-    },
-    {
-        "Modified": "2024-05-17T07:16:00",
-        "Published": "2024-05-17T07:16:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-33556",
-        "impact": {},
-        "last-modified": "2024-05-17T07:16:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/et-core-plugin/wordpress-xstore-core-plugin-5-3-5-limited-arbitrary-file-upload-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unrestricted Upload of File with Dangerous Type vulnerability in 8theme XStore Core.This issue affects XStore Core: from n/a through 5.3.8."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-922",
-        "id": "CVE-2022-44581",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/defender-security/wordpress-defender-security-plugin-3-3-2-broken-authentication-vulnerability?_s_id=cve"
-        ],
-        "summary": "Insecure Storage of Sensitive Information vulnerability in WPMU DEV Defender Security allows : Screen Temporary Files for Sensitive Information.This issue affects Defender Security: from n/a through 3.3.2."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-23888",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/seo-by-rank-math/wordpress-rank-math-seo-plugin-1-0-107-2-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Rank Math Rank Math SEO allows Path Traversal.This issue affects Rank Math SEO: from n/a through 1.0.107.2."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-23988",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/my-tickets/wordpress-my-tickets-plugin-1-9-11-payment-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in Joseph C Dolson My Tickets.This issue affects My Tickets: from n/a through 1.9.11."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-24379",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ultimate-landing-page/wordpress-landing-page-builder-free-landing-page-templates-plugin-3-1-9-8-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Web-Settler Landing Page Builder \u2013 Free Landing Page Templates allows Path Traversal.This issue affects Landing Page Builder \u2013 Free Landing Page Templates: from n/a through 3.1.9.9."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-32297",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/lws-affiliation/wordpress-lws-affiliation-plugin-2-2-6-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in LWS LWS Affiliation allows PHP Local File Inclusion.This issue affects LWS Affiliation: from n/a through 2.2.6."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-37866",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/jetformbuilder/wordpress-jetformbuilder-plugin-3-0-8-authenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Crocoblock JetFormBuilder allows Privilege Escalation.This issue affects JetFormBuilder: from n/a through 3.0.8."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-37999",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ht-mega-for-elementor/wordpress-ht-mega-absolute-addons-for-elementor-plugin-2-2-0-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in HasThemes HT Mega allows Privilege Escalation.This issue affects HT Mega: from n/a through 2.2.0."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2022-45070",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/conditional-checkout-fields-for-woocommerce/wordpress-conditional-checkout-fields-for-woocommerce-plugin-1-2-1-broken-authentication-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in FmeAddons Conditional Checkout Fields for WooCommerce.This issue affects Conditional Checkout Fields for WooCommerce: from n/a through 1.2.3."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2022-45368",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/1003-mortgage-application/wordpress-1003-mortgage-application-plugin-1-73-local-file-inclusion?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Lenderd 1003 Mortgage Application allows Relative Path Traversal.This issue affects 1003 Mortgage Application: from n/a through 1.75."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2022-45374",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/yet-another-related-posts-plugin/wordpress-yet-another-related-posts-plugin-yarpp-plugin-5-30-2-local-file-inclusion?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in YARPP allows PHP Local File Inclusion.This issue affects YARPP: from n/a through 5.30.4."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2023-23645",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/mainwp-code-snippets-extension/wordpress-mainwp-code-snippets-extension-plugin-4-0-2-subscriber-arbitrary-php-code-injection-execution-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Control of Generation of Code ('Code Injection') vulnerability in MainWP MainWP Code Snippets Extension allows Code Injection.This issue affects MainWP Code Snippets Extension: from n/a through 4.0.2."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-23700",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/oceanwp/wordpress-oceanwp-theme-3-4-1-authenticated-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in OceanWP allows PHP Local File Inclusion.This issue affects OceanWP: from n/a through 3.4.1."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-23872",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/gmace/wordpress-gmace-plugin-1-5-2-arbitrary-file-download-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in German Mesky GMAce allows Path Traversal.This issue affects GMAce: from n/a through 1.5.2."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-25050",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/shortcodes-ultimate/wordpress-shortcodes-ultimate-plugin-5-12-6-arbitrary-file-download-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Vova Anokhin Shortcodes Ultimate allows Absolute Path Traversal.This issue affects Shortcodes Ultimate: from n/a through 5.12.6."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-23990",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wpcf7-redirect/wordpress-redirection-for-contact-form-7-plugin-2-7-0-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Qube One Ltd. Redirection for Contact Form 7 wpcf7-redirect allows Privilege Escalation.This issue affects Redirection for Contact Form 7: from n/a through 2.7.0."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-26009",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/houzez-login-register/wordpress-houzez-login-register-plugin-2-6-3-privilege-escalation?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in favethemes Houzez Login Register allows Privilege Escalation.This issue affects Houzez Login Register: from n/a through 2.6.3."
-    },
-    {
-        "Modified": "2024-05-17T07:15:00",
-        "Published": "2024-05-17T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2023-25444",
-        "impact": {},
-        "last-modified": "2024-05-17T07:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/js-support-ticket/wordpress-js-help-desk-best-help-desk-support-plugin-plugin-2-7-7-arbitrary-file-upload-vulnerability?_s_id=cve"
-        ],
-        "summary": "Unrestricted Upload of File with Dangerous Type vulnerability in JS Help Desk JS Help Desk \u2013 Best Help Desk & Support Plugin allows Using Malicious Files.This issue affects JS Help Desk \u2013 Best Help Desk & Support Plugin: from n/a through 2.7.7."
     }
 ]
