@@ -1,5 +1,1320 @@
 [
     {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52660",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/abd34206f396d3ae50cddbd5aa840b8cd7f68c63",
+            "https://git.kernel.org/stable/c/b39b4d207d4f236a74e20d291f6356f2231fd9ee",
+            "https://git.kernel.org/stable/c/edcf92bc66d8361c51dff953a55210e5cfd95587",
+            "https://git.kernel.org/stable/c/ffb635bb398fc07cb38f8a7b4a82cbe5f412f08e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: rkisp1: Fix IRQ handling due to shared interrupts\n\nThe driver requests the interrupts as IRQF_SHARED, so the interrupt\nhandlers can be called at any time. If such a call happens while the ISP\nis powered down, the SoC will hang as the driver tries to access the\nISP registers.\n\nThis can be reproduced even without the platform sharing the IRQ line:\nEnable CONFIG_DEBUG_SHIRQ and unload the driver, and the board will\nhang.\n\nFix this by adding a new field, 'irqs_enabled', which is used to bail\nout from the interrupt handler when the ISP is not operational."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52659",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/325956b0173f11e98f90462be4829a8b8b0682ce",
+            "https://git.kernel.org/stable/c/7e1471888a5e6e846e9b4d306e5327db2b58e64e",
+            "https://git.kernel.org/stable/c/814305b5c23cb815ada68d43019f39050472b25f",
+            "https://git.kernel.org/stable/c/8e5647a723c49d73b9f108a8bb38e8c29d3948ea"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nx86/mm: Ensure input to pfn_to_kaddr() is treated as a 64-bit type\n\nOn 64-bit platforms, the pfn_to_kaddr() macro requires that the input\nvalue is 64 bits in order to ensure that valid address bits don't get\nlost when shifting that input by PAGE_SHIFT to calculate the physical\naddress to provide a virtual address for.\n\nOne such example is in pvalidate_pages() (used by SEV-SNP guests), where\nthe GFN in the struct used for page-state change requests is a 40-bit\nbit-field, so attempts to pass this GFN field directly into\npfn_to_kaddr() ends up causing guest crashes when dealing with addresses\nabove the 1TB range due to the above.\n\nFix this issue with SEV-SNP guests, as well as any similar cases that\nmight cause issues in current/future code, by using an inline function,\ninstead of a macro, so that the input is implicitly cast to the\nexpected 64-bit input type prior to performing the shift operation.\n\nWhile it might be argued that the issue is on the caller side, other\narchs/macros have taken similar approaches to deal with instances like\nthis, such as ARM explicitly casting the input to phys_addr_t:\n\n  e48866647b48 (\"ARM: 8396/1: use phys_addr_t in pfn_to_kaddr()\")\n\nA C inline function is even better though.\n\n[ mingo: Refined the changelog some more & added __always_inline. ]"
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27434",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b4f1b0b3b91762edd19bf9d3b2e4c3a0740501f8",
+            "https://git.kernel.org/stable/c/40405cbb20eb6541c603e7b3d54ade0a7be9d715",
+            "https://git.kernel.org/stable/c/60f6d5fc84a9fd26528a24d8a267fc6a6698b628",
+            "https://git.kernel.org/stable/c/e35f316bce9e5733c9826120c1838f4c447b2c4c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: iwlwifi: mvm: don't set the MFP flag for the GTK\n\nThe firmware doesn't need the MFP flag for the GTK, it can even make the\nfirmware crash. in case the AP is configured with: group cipher TKIP and\nMFPC. We would send the GTK with cipher = TKIP and MFP which is of course\nnot possible."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27435",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/149afee5c7418ec5db9d7387b9c9a5c1eb7ea2a8",
+            "https://git.kernel.org/stable/c/ff2f90f88d78559802466ad1c84ac5bda4416b3a",
+            "https://git.kernel.org/stable/c/6851778504cdb49431809b4ba061903d5f592c96",
+            "https://git.kernel.org/stable/c/262da920896e2f2ab0e3947d9dbee0aa09045818",
+            "https://git.kernel.org/stable/c/de105068fead55ed5c07ade75e9c8e7f86a00d1d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnvme: fix reconnection fail due to reserved tag allocation\n\nWe found a issue on production environment while using NVMe over RDMA,\nadmin_q reconnect failed forever while remote target and network is ok.\nAfter dig into it, we found it may caused by a ABBA deadlock due to tag\nallocation. In my case, the tag was hold by a keep alive request\nwaiting inside admin_q, as we quiesced admin_q while reset ctrl, so the\nrequest maked as idle and will not process before reset success. As\nfabric_q shares tagset with admin_q, while reconnect remote target, we\nneed a tag for connect command, but the only one reserved tag was held\nby keep alive command which waiting inside admin_q. As a result, we\nfailed to reconnect admin_q forever. In order to fix this issue, I\nthink we should keep two reserved tags for admin queue."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27436",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7e2c1b0f6dd9abde9e60f0f9730026714468770f",
+            "https://git.kernel.org/stable/c/6d5dc96b154be371df0d62ecb07efe400701ed8a",
+            "https://git.kernel.org/stable/c/5cd466673b34bac369334f66cbe14bb77b7d7827",
+            "https://git.kernel.org/stable/c/9af1658ba293458ca6a13f70637b9654fa4be064",
+            "https://git.kernel.org/stable/c/629af0d5fe94a35f498ba2c3f19bd78bfa591be6",
+            "https://git.kernel.org/stable/c/22cad1b841a63635a38273b799b4791f202ade72",
+            "https://git.kernel.org/stable/c/c8a24fd281dcdf3c926413dafbafcf35cde517a9",
+            "https://git.kernel.org/stable/c/6d88b289fb0a8d055cb79d1c46a56aba7809d96d",
+            "https://git.kernel.org/stable/c/a39d51ff1f52cd0b6fe7d379ac93bd8b4237d1b7"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nALSA: usb-audio: Stop parsing channels bits when all channels are found.\n\nIf a usb audio device sets more bits than the amount of channels\nit could write outside of the map array."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27432",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9fcadd125044007351905d40c405fadc2d3bb6d6",
+            "https://git.kernel.org/stable/c/f78807362828ad01db2a9ed005bf79501b620f27",
+            "https://git.kernel.org/stable/c/943c14ece95eb1cf98d477462aebcbfdfd714633",
+            "https://git.kernel.org/stable/c/49202a8256fc50517ef06fd5e2084c4febde6369",
+            "https://git.kernel.org/stable/c/09a1907433865b7c8ee6777e507f5126bdd38c0f",
+            "https://git.kernel.org/stable/c/ea80e3ed09ab2c2b75724faf5484721753e92c31"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: ethernet: mtk_eth_soc: fix PPE hanging issue\n\nA patch to resolve an issue was found in MediaTek's GPL-licensed SDK:\nIn the mtk_ppe_stop() function, the PPE scan mode is not disabled before\ndisabling the PPE. This can potentially lead to a hang during the process\nof disabling the PPE.\n\nWithout this patch, the PPE may experience a hang during the reboot test."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27433",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/de3340533bd68a7b3d6be1841b8eb3fa6c762fe6",
+            "https://git.kernel.org/stable/c/f3633fed984f1db106ff737a0bb52fadb2d89ac7",
+            "https://git.kernel.org/stable/c/fa761ce7a1d15cca1a306b3635f81a22b15fee5b",
+            "https://git.kernel.org/stable/c/a32e88f2b20259f5fe4f8eed598bbc85dc4879ed"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nclk: mediatek: mt7622-apmixedsys: Fix an error handling path in clk_mt8135_apmixed_probe()\n\n'clk_data' is allocated with mtk_devm_alloc_clk_data(). So calling\nmtk_free_clk_data() explicitly in the remove function would lead to a\ndouble-free.\n\nRemove the redundant call."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35785",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/bc40ded92af55760d12bec8222d4108de725dbe4",
+            "https://git.kernel.org/stable/c/4b12ff5edd141926d49c9ace4791adf3a4902fe7",
+            "https://git.kernel.org/stable/c/e5b5948c769aa1ebf962dddfb972f87d8f166f95",
+            "https://git.kernel.org/stable/c/520f79c110ff712b391b3d87fcacf03c74bc56ee",
+            "https://git.kernel.org/stable/c/bfa344afbe472a9be08f78551fa2190c1a07d7d3",
+            "https://git.kernel.org/stable/c/95915ba4b987cf2b222b0f251280228a1ff977ac"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntee: optee: Fix kernel panic caused by incorrect error handling\n\nThe error path while failing to register devices on the TEE bus has a\nbug leading to kernel panic as follows:\n\n[   15.398930] Unable to handle kernel paging request at virtual address ffff07ed00626d7c\n[   15.406913] Mem abort info:\n[   15.409722]   ESR = 0x0000000096000005\n[   15.413490]   EC = 0x25: DABT (current EL), IL = 32 bits\n[   15.418814]   SET = 0, FnV = 0\n[   15.421878]   EA = 0, S1PTW = 0\n[   15.425031]   FSC = 0x05: level 1 translation fault\n[   15.429922] Data abort info:\n[   15.432813]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000\n[   15.438310]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0\n[   15.443372]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0\n[   15.448697] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000d9e3e000\n[   15.455413] [ffff07ed00626d7c] pgd=1800000bffdf9003, p4d=1800000bffdf9003, pud=0000000000000000\n[   15.464146] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP\n\nCommit 7269cba53d90 (\"tee: optee: Fix supplicant based device enumeration\")\nlead to the introduction of this bug. So fix it appropriately."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35786",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c288a61a48ddb77ec097e11ab81b81027cd4e197",
+            "https://git.kernel.org/stable/c/b466416bdd6ecbde15ce987226ea633a0268fbb1",
+            "https://git.kernel.org/stable/c/daf8739c3322a762ce84f240f50e0c39181a41ab"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/nouveau: fix stale locked mutex in nouveau_gem_ioctl_pushbuf\n\nIf VM_BIND is enabled on the client the legacy submission ioctl can't be\nused, however if a client tries to do so regardless it will return an\nerror. In this case the clients mutex remained unlocked leading to a\ndeadlock inside nouveau_drm_postclose or any other nouveau ioctl call."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35784",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ded566b4637f1b6b4c9ba74e7d0b8493e93f19cf",
+            "https://git.kernel.org/stable/c/89bca7fe6382d61e88c67a0b0e7bce315986fb8b",
+            "https://git.kernel.org/stable/c/b0ad381fa7690244802aed119b478b4bdafc31dd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: fix deadlock with fiemap and extent locking\n\nWhile working on the patchset to remove extent locking I got a lockdep\nsplat with fiemap and pagefaulting with my new extent lock replacement\nlock.\n\nThis deadlock exists with our normal code, we just don't have lockdep\nannotations with the extent locking so we've never noticed it.\n\nSince we're copying the fiemap extent to user space on every iteration\nwe have the chance of pagefaulting.  Because we hold the extent lock for\nthe entire range we could mkwrite into a range in the file that we have\nmmap'ed.  This would deadlock with the following stack trace\n\n[<0>] lock_extent+0x28d/0x2f0\n[<0>] btrfs_page_mkwrite+0x273/0x8a0\n[<0>] do_page_mkwrite+0x50/0xb0\n[<0>] do_fault+0xc1/0x7b0\n[<0>] __handle_mm_fault+0x2fa/0x460\n[<0>] handle_mm_fault+0xa4/0x330\n[<0>] do_user_addr_fault+0x1f4/0x800\n[<0>] exc_page_fault+0x7c/0x1e0\n[<0>] asm_exc_page_fault+0x26/0x30\n[<0>] rep_movs_alternative+0x33/0x70\n[<0>] _copy_to_user+0x49/0x70\n[<0>] fiemap_fill_next_extent+0xc8/0x120\n[<0>] emit_fiemap_extent+0x4d/0xa0\n[<0>] extent_fiemap+0x7f8/0xad0\n[<0>] btrfs_fiemap+0x49/0x80\n[<0>] __x64_sys_ioctl+0x3e1/0xb50\n[<0>] do_syscall_64+0x94/0x1a0\n[<0>] entry_SYSCALL_64_after_hwframe+0x6e/0x76\n\nI wrote an fstest to reproduce this deadlock without my replacement lock\nand verified that the deadlock exists with our existing locking.\n\nTo fix this simply don't take the extent lock for the entire duration of\nthe fiemap.  This is safe in general because we keep track of where we\nare when we're searching the tree, so if an ordered extent updates in\nthe middle of our fiemap call we'll still emit the correct extents\nbecause we know what offset we were on before.\n\nThe only place we maintain the lock is searching delalloc.  Since the\ndelalloc stuff can change during writeback we want to lock the extent\nrange so we have a consistent view of delalloc at the time we're\nchecking to see if we need to set the delalloc flag.\n\nWith this patch applied we no longer deadlock with my testcase."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35788",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c373f233dab44a13752daec13788e2ad3bf86410",
+            "https://git.kernel.org/stable/c/f6e163e9c3d50cd167ab9d411ed01b7718177387",
+            "https://git.kernel.org/stable/c/2f10d4a51bbcd938f1f02f16c304ad1d54717b96"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Fix bounds check for dcn35 DcfClocks\n\n[Why]\nNumFclkLevelsEnabled is used for DcfClocks bounds check\ninstead of designated NumDcfClkLevelsEnabled.\nThat can cause array index out-of-bounds access.\n\n[How]\nUse designated variable for dcn35 DcfClocks bounds check."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35787",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/736ad6c577a367834118f57417038d45bb5e0a31",
+            "https://git.kernel.org/stable/c/55e55eb65fd5e09faf5a0e49ffcdd37905aaf4da",
+            "https://git.kernel.org/stable/c/5a95815b17428ce2f56ec18da5e0d1b2a1a15240",
+            "https://git.kernel.org/stable/c/ecbd8ebb51bf7e4939d83b9e6022a55cac44ef06"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmd/md-bitmap: fix incorrect usage for sb_index\n\nCommit d7038f951828 (\"md-bitmap: don't use ->index for pages backing the\nbitmap file\") removed page->index from bitmap code, but left wrong code\nlogic for clustered-md. current code never set slot offset for cluster\nnodes, will sometimes cause crash in clustered env.\n\nCall trace (partly):\n md_bitmap_file_set_bit+0x110/0x1d8 [md_mod]\n md_bitmap_startwrite+0x13c/0x240 [md_mod]\n raid1_make_request+0x6b0/0x1c08 [raid1]\n md_handle_request+0x1dc/0x368 [md_mod]\n md_submit_bio+0x80/0xf8 [md_mod]\n __submit_bio+0x178/0x300\n submit_bio_noacct_nocheck+0x11c/0x338\n submit_bio_noacct+0x134/0x614\n submit_bio+0x28/0xdc\n submit_bh_wbc+0x130/0x1cc\n submit_bh+0x1c/0x28"
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35789",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ea9a0cfc07a7d3601cc680718d9cff0d6927a921",
+            "https://git.kernel.org/stable/c/be1dd9254fc115321d6fbee042026d42afc8d931",
+            "https://git.kernel.org/stable/c/e8b067c4058c0121ac8ca71559df8e2e08ff1a7e",
+            "https://git.kernel.org/stable/c/c8bddbd91bc8e42c961a5e2cec20ab879f21100f",
+            "https://git.kernel.org/stable/c/7eeabcea79b67cc29563e6a9a5c81f9e2c664d5b",
+            "https://git.kernel.org/stable/c/6b948b54c8bd620725e0c906e44b10c0b13087a7",
+            "https://git.kernel.org/stable/c/2884a50f52313a7a911de3afcad065ddbb3d78fc",
+            "https://git.kernel.org/stable/c/e8678551c0243f799b4859448781cbec1bd6f1cb",
+            "https://git.kernel.org/stable/c/4f2bdb3c5e3189297e156b3ff84b140423d64685"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: mac80211: check/clear fast rx for non-4addr sta VLAN changes\n\nWhen moving a station out of a VLAN and deleting the VLAN afterwards, the\nfast_rx entry still holds a pointer to the VLAN's netdev, which can cause\nuse-after-free bugs. Fix this by immediately calling ieee80211_check_fast_rx\nafter the VLAN change."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35790",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/4a22aeac24d0d5f26ba741408e8b5a4be6dc5dc0",
+            "https://git.kernel.org/stable/c/0ad011776c057ce881b7fd6d8c79ecd459c087e9",
+            "https://git.kernel.org/stable/c/165376f6b23e9a779850e750fb2eb06622e5a531"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: typec: altmodes/displayport: create sysfs nodes as driver's default device attribute group\n\nThe DisplayPort driver's sysfs nodes may be present to the userspace before\ntypec_altmode_set_drvdata() completes in dp_altmode_probe. This means that\na sysfs read can trigger a NULL pointer error by deferencing dp->hpd in\nhpd_show or dp->lock in pin_assignment_show, as dev_get_drvdata() returns\nNULL in those cases.\n\nRemove manual sysfs node creation in favor of adding attribute group as\ndefault for devices bound to the driver. The ATTRIBUTE_GROUPS() macro is\nnot used here otherwise the path to the sysfs nodes is no longer compliant\nwith the ABI."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35791",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2d13b79640b147bd77c34a5998533b2021a4122d",
+            "https://git.kernel.org/stable/c/e126b508ed2e616d679d85fca2fbe77bb48bbdd7",
+            "https://git.kernel.org/stable/c/4868c0ecdb6cfde7c70cf478c46e06bb9c7e5865",
+            "https://git.kernel.org/stable/c/12f8e32a5a389a5d58afc67728c76e61beee1ad4",
+            "https://git.kernel.org/stable/c/f6d53d8a2617dd58c89171a6b9610c470ebda38a",
+            "https://git.kernel.org/stable/c/5ef1d8c1ddbf696e47b226e11888eaf8d9e8e807"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: SVM: Flush pages under kvm->lock to fix UAF in svm_register_enc_region()\n\nDo the cache flush of converted pages in svm_register_enc_region() before\ndropping kvm->lock to fix use-after-free issues where region and/or its\narray of pages could be freed by a different task, e.g. if userspace has\n__unregister_enc_region_locked() already queued up for the region.\n\nNote, the \"obvious\" alternative of using local variables doesn't fully\nresolve the bug, as region->pages is also dynamically allocated.  I.e. the\nregion structure itself would be fine, but region->pages could be freed.\n\nFlushing multiple pages under kvm->lock is unfortunate, but the entire\nflow is a rare slow path, and the manual flush is only needed on CPUs that\nlack coherency for encrypted memory."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35792",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/48dd260fdb728eda4a246f635d1325e82f0d3555",
+            "https://git.kernel.org/stable/c/eb2a41a8ae8c8c4f68aef3bd94665c0cf23e04be",
+            "https://git.kernel.org/stable/c/c0afb6b88fbbc177fa322a835f874be217bffe45"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: rk3288 - Fix use after free in unprepare\n\nThe unprepare call must be carried out before the finalize call\nas the latter can free the request."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35793",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e88b5ae01901c4a655a53158397746334778a57b",
+            "https://git.kernel.org/stable/c/3d08cca5fd0aabb62b7015067ab40913b33da906",
+            "https://git.kernel.org/stable/c/952c3fce297f12c7ff59380adb66b564e2bc9b64"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndebugfs: fix wait/cancellation handling during remove\n\nBen Greear further reports deadlocks during concurrent debugfs\nremove while files are being accessed, even though the code in\nquestion now uses debugfs cancellations. Turns out that despite\nall the review on the locking, we missed completely that the\nlogic is wrong: if the refcount hits zero we can finish (and\nneed not wait for the completion), but if it doesn't we have\nto trigger all the cancellations. As written, we can _never_\nget into the loop triggering the cancellations. Fix this, and\nexplain it better while at it."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35794",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/af916cb66a80597f3523bc85812e790bcdcfd62b",
+            "https://git.kernel.org/stable/c/eaa8fc9b092837cf2c754bde1a15d784ce9a85ab",
+            "https://git.kernel.org/stable/c/16c4770c75b1223998adbeb7286f9a15c65fba73"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndm-raid: really frozen sync_thread during suspend\n\n1) commit f52f5c71f3d4 (\"md: fix stopping sync thread\") remove\n   MD_RECOVERY_FROZEN from __md_stop_writes() and doesn't realize that\n   dm-raid relies on __md_stop_writes() to frozen sync_thread\n   indirectly. Fix this problem by adding MD_RECOVERY_FROZEN in\n   md_stop_writes(), and since stop_sync_thread() is only used for\n   dm-raid in this case, also move stop_sync_thread() to\n   md_stop_writes().\n2) The flag MD_RECOVERY_FROZEN doesn't mean that sync thread is frozen,\n   it only prevent new sync_thread to start, and it can't stop the\n   running sync thread; In order to frozen sync_thread, after seting the\n   flag, stop_sync_thread() should be used.\n3) The flag MD_RECOVERY_FROZEN doesn't mean that writes are stopped, use\n   it as condition for md_stop_writes() in raid_postsuspend() doesn't\n   look correct. Consider that reentrant stop_sync_thread() do nothing,\n   always call md_stop_writes() in raid_postsuspend().\n4) raid_message can set/clear the flag MD_RECOVERY_FROZEN at anytime,\n   and if MD_RECOVERY_FROZEN is cleared while the array is suspended,\n   new sync_thread can start unexpected. Fix this by disallow\n   raid_message() to change sync_thread status during suspend.\n\nNote that after commit f52f5c71f3d4 (\"md: fix stopping sync thread\"), the\ntest shell/lvconvert-raid-reshape.sh start to hang in stop_sync_thread(),\nand with previous fixes, the test won't hang there anymore, however, the\ntest will still fail and complain that ext4 is corrupted. And with this\npatch, the test won't hang due to stop_sync_thread() or fail due to ext4\nis corrupted anymore. However, there is still a deadlock related to\ndm-raid456 that will be fixed in following patches."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-552",
+        "id": "CVE-2024-5045",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://vuldb.com/?id.264742",
+            "https://vuldb.com/?ctiid.264742",
+            "https://vuldb.com/?submit.335384",
+            "https://github.com/HuoMingZ/aoligei/blob/main/yuzu.md"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Online Birth Certificate Management System 1.0. It has been declared as problematic. This vulnerability affects unknown code of the file /admin. The manipulation leads to files or directories accessible. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-264742 is the identifier assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-05-17T13:15:00",
+        "Published": "2024-05-17T13:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-5046",
+        "impact": {},
+        "last-modified": "2024-05-17T13:15:00",
+        "references": [
+            "https://vuldb.com/?id.264743",
+            "https://vuldb.com/?ctiid.264743",
+            "https://vuldb.com/?submit.335527",
+            "https://github.com/CveSecLook/cve/issues/32"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Online Examination System 1.0. It has been rated as critical. This issue affects some unknown processing of the file registeracc.php. The manipulation of the argument email leads to sql injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-264743."
+    },
+    {
+        "Modified": "2024-05-17T12:41:00",
+        "Published": "2024-04-24T05:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-2404",
+        "impact": {},
+        "last-modified": "2024-05-17T12:41:00",
+        "references": [
+            "https://wpscan.com/vulnerability/a2cb7167-9edc-4640-87eb-4c511639e5b7/"
+        ],
+        "summary": "The Better Comments WordPress plugin before 1.5.6 does not sanitise and escape some of its settings, which could allow low privilege users such as Subscribers to perform Stored Cross-Site Scripting attacks."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52657",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2e443ed55fe3ffb08327b331a9f45e9382413c94",
+            "https://git.kernel.org/stable/c/baac292852c0e347626fb5436916947188e5838f",
+            "https://git.kernel.org/stable/c/c51468ac328d3922747be55507c117e47da813e6",
+            "https://git.kernel.org/stable/c/955558030954b9637b41c97b730f9b38c92ac488"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"drm/amd/pm: resolve reboot exception for si oland\"\n\nThis reverts commit e490d60a2f76bff636c68ce4fe34c1b6c34bbd86.\n\nThis causes hangs on SI when DC is enabled and errors on driver\nreboot and power off cycles."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52658",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3fba8eab2cfc7334e0f132d29dfd2552f2f2a579",
+            "https://git.kernel.org/stable/c/1bcdd66d33edb446903132456c948f0b764ef2f9",
+            "https://git.kernel.org/stable/c/8deeefb24786ea7950b37bde4516b286c877db00"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"net/mlx5: Block entering switchdev mode with ns inconsistency\"\n\nThis reverts commit 662404b24a4c4d839839ed25e3097571f5938b9b.\nThe revert is required due to the suspicion it is not good for anything\nand cause crash."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52658",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3fba8eab2cfc7334e0f132d29dfd2552f2f2a579",
+            "https://git.kernel.org/stable/c/1bcdd66d33edb446903132456c948f0b764ef2f9",
+            "https://git.kernel.org/stable/c/8deeefb24786ea7950b37bde4516b286c877db00"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"net/mlx5: Block entering switchdev mode with ns inconsistency\"\n\nThis reverts commit 662404b24a4c4d839839ed25e3097571f5938b9b.\nThe revert is required due to the suspicion it is not good for anything\nand cause crash."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27402",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9d5523e065b568e79dfaa2ea1085a5bcf74baf78",
+            "https://git.kernel.org/stable/c/0a9f558c72c47472c38c05fcb72c70abb9104277",
+            "https://git.kernel.org/stable/c/8ef4fcc7014b9f93619851d6b78d6cc2789a4c88",
+            "https://git.kernel.org/stable/c/7d2a894d7f487dcb894df023e9d3014cf5b93fe5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nphonet/pep: fix racy skb_queue_empty() use\n\nThe receive queues are protected by their respective spin-lock, not\nthe socket lock. This could lead to skb_peek() unexpectedly\nreturning NULL or a pointer to an already dequeued socket buffer."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27402",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9d5523e065b568e79dfaa2ea1085a5bcf74baf78",
+            "https://git.kernel.org/stable/c/0a9f558c72c47472c38c05fcb72c70abb9104277",
+            "https://git.kernel.org/stable/c/8ef4fcc7014b9f93619851d6b78d6cc2789a4c88",
+            "https://git.kernel.org/stable/c/7d2a894d7f487dcb894df023e9d3014cf5b93fe5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nphonet/pep: fix racy skb_queue_empty() use\n\nThe receive queues are protected by their respective spin-lock, not\nthe socket lock. This could lead to skb_peek() unexpectedly\nreturning NULL or a pointer to an already dequeued socket buffer."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27403",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/4c167af9f6b5ae4a5dbc243d5983c295ccc2e43c",
+            "https://git.kernel.org/stable/c/012df10717da02367aaf92c65f9c89db206c15f4",
+            "https://git.kernel.org/stable/c/558b00a30e05753a62ecc7e05e939ca8f0241148",
+            "https://git.kernel.org/stable/c/670548c8db44d76e40e1dfc06812bca36a61e9ae",
+            "https://git.kernel.org/stable/c/9e0f0430389be7696396c62f037be4bf72cf93e3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_flow_offload: reset dst in route object after setting up flow\n\ndst is transferred to the flow object, route object does not own it\nanymore.  Reset dst in route object, otherwise if flow_offload_add()\nfails, error path releases dst twice, leading to a refcount underflow."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27404",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e64148635509bf13eea851986f5a0b150e5bd066",
+            "https://git.kernel.org/stable/c/2dba5774e8ed326a78ad4339d921a4291281ea6e",
+            "https://git.kernel.org/stable/c/987c3ed7297e5661bc7f448f06fc366e497ac9b2",
+            "https://git.kernel.org/stable/c/967d3c27127e71a10ff5c083583a038606431b61"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: fix data races on remote_id\n\nSimilar to the previous patch, address the data race on\nremote_id, adding the suitable ONCE annotations."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27404",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e64148635509bf13eea851986f5a0b150e5bd066",
+            "https://git.kernel.org/stable/c/2dba5774e8ed326a78ad4339d921a4291281ea6e",
+            "https://git.kernel.org/stable/c/987c3ed7297e5661bc7f448f06fc366e497ac9b2",
+            "https://git.kernel.org/stable/c/967d3c27127e71a10ff5c083583a038606431b61"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: fix data races on remote_id\n\nSimilar to the previous patch, address the data race on\nremote_id, adding the suitable ONCE annotations."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27407",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8c77398c72618101d66480b94b34fe9087ee3d08",
+            "https://git.kernel.org/stable/c/1c0a95d99b1b2b5d842e5abc7ef7eed1193b60d7",
+            "https://git.kernel.org/stable/c/652cfeb43d6b9aba5c7c4902bed7a7340df131fb"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfs/ntfs3: Fixed overflow check in mi_enum_attr()"
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27407",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8c77398c72618101d66480b94b34fe9087ee3d08",
+            "https://git.kernel.org/stable/c/1c0a95d99b1b2b5d842e5abc7ef7eed1193b60d7",
+            "https://git.kernel.org/stable/c/652cfeb43d6b9aba5c7c4902bed7a7340df131fb"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfs/ntfs3: Fixed overflow check in mi_enum_attr()"
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27408",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d24fe6d5a1cfdddb7a9ef56736ec501c4d0a5fd3",
+            "https://git.kernel.org/stable/c/f396b4df27cfe01a99f4b41f584c49e56477be3a",
+            "https://git.kernel.org/stable/c/bbcc1c83f343e580c3aa1f2a8593343bf7b55bba"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndmaengine: dw-edma: eDMA: Add sync read before starting the DMA transfer in remote setup\n\nThe Linked list element and pointer are not stored in the same memory as\nthe eDMA controller register. If the doorbell register is toggled before\nthe full write of the linked list a race condition error will occur.\nIn remote setup we can only use a readl to the memory to assure the full\nwrite has occurred."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27409",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/227ef58a9b0c372efba422e8886a8015a1509eba",
+            "https://git.kernel.org/stable/c/17be6f5cb223f22e4733ed8fe8b2247cbb677716",
+            "https://git.kernel.org/stable/c/712a92a48158e02155b4b6b21e03a817f78c9b7e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndmaengine: dw-edma: HDMA: Add sync read before starting the DMA transfer in remote setup\n\nThe Linked list element and pointer are not stored in the same memory as\nthe HDMA controller register. If the doorbell register is toggled before\nthe full write of the linked list a race condition error will occur.\nIn remote setup we can only use a readl to the memory to assure the full\nwrite has occurred."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27409",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/227ef58a9b0c372efba422e8886a8015a1509eba",
+            "https://git.kernel.org/stable/c/17be6f5cb223f22e4733ed8fe8b2247cbb677716",
+            "https://git.kernel.org/stable/c/712a92a48158e02155b4b6b21e03a817f78c9b7e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndmaengine: dw-edma: HDMA: Add sync read before starting the DMA transfer in remote setup\n\nThe Linked list element and pointer are not stored in the same memory as\nthe HDMA controller register. If the doorbell register is toggled before\nthe full write of the linked list a race condition error will occur.\nIn remote setup we can only use a readl to the memory to assure the full\nwrite has occurred."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27410",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d38d31bbbb9dc0d4d71a45431eafba03d0bc150d",
+            "https://git.kernel.org/stable/c/0cfbb26ee5e7b3d6483a73883f9f6157bca22ec9",
+            "https://git.kernel.org/stable/c/99eb2159680af8786104dac80528acd5acd45980",
+            "https://git.kernel.org/stable/c/063715c33b4c37587aeca2c83cf08ead0c542995",
+            "https://git.kernel.org/stable/c/930e826962d9f01dcd2220176134427358d112f2",
+            "https://git.kernel.org/stable/c/177d574be4b58f832354ab1ef5a297aa0c9aa2df",
+            "https://git.kernel.org/stable/c/a2add961a5ed25cfd6a74f9ffb9e7ab6d6ded838",
+            "https://git.kernel.org/stable/c/f78c1375339a291cba492a70eaf12ec501d28a8e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: nl80211: reject iftype change with mesh ID change\n\nIt's currently possible to change the mesh ID when the\ninterface isn't yet in mesh mode, at the same time as\nchanging it into mesh mode. This leads to an overwrite\nof data in the wdev->u union for the interface type it\ncurrently has, causing cfg80211_change_iface() to do\nwrong things when switching.\n\nWe could probably allow setting an interface to mesh\nwhile setting the mesh ID at the same time by doing a\ndifferent order of operations here, but realistically\nthere's no userspace that's going to do this, so just\ndisallow changes in iftype when setting mesh ID."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27410",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d38d31bbbb9dc0d4d71a45431eafba03d0bc150d",
+            "https://git.kernel.org/stable/c/0cfbb26ee5e7b3d6483a73883f9f6157bca22ec9",
+            "https://git.kernel.org/stable/c/99eb2159680af8786104dac80528acd5acd45980",
+            "https://git.kernel.org/stable/c/063715c33b4c37587aeca2c83cf08ead0c542995",
+            "https://git.kernel.org/stable/c/930e826962d9f01dcd2220176134427358d112f2",
+            "https://git.kernel.org/stable/c/177d574be4b58f832354ab1ef5a297aa0c9aa2df",
+            "https://git.kernel.org/stable/c/a2add961a5ed25cfd6a74f9ffb9e7ab6d6ded838",
+            "https://git.kernel.org/stable/c/f78c1375339a291cba492a70eaf12ec501d28a8e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: nl80211: reject iftype change with mesh ID change\n\nIt's currently possible to change the mesh ID when the\ninterface isn't yet in mesh mode, at the same time as\nchanging it into mesh mode. This leads to an overwrite\nof data in the wdev->u union for the interface type it\ncurrently has, causing cfg80211_change_iface() to do\nwrong things when switching.\n\nWe could probably allow setting an interface to mesh\nwhile setting the mesh ID at the same time by doing a\ndifferent order of operations here, but realistically\nthere's no userspace that's going to do this, so just\ndisallow changes in iftype when setting mesh ID."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27411",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/be00e15b240ed71fc30c0576af7ab670c8271661",
+            "https://git.kernel.org/stable/c/f6ecfdad359a01c7fd8a3bcfde3ef0acdf107e6e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/nouveau: keep DMA buffers required for suspend/resume\n\nNouveau deallocates a few buffers post GPU init which are required for GPU suspend/resume to function correctly.\nThis is likely not as big an issue on systems where the NVGPU is the only GPU, but on multi-GPU set ups it leads to a regression where the kernel module errors and results in a system-wide rendering freeze.\n\nThis commit addresses that regression by moving the two buffers required for suspend and resume to be deallocated at driver unload instead of post init."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27411",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/be00e15b240ed71fc30c0576af7ab670c8271661",
+            "https://git.kernel.org/stable/c/f6ecfdad359a01c7fd8a3bcfde3ef0acdf107e6e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/nouveau: keep DMA buffers required for suspend/resume\n\nNouveau deallocates a few buffers post GPU init which are required for GPU suspend/resume to function correctly.\nThis is likely not as big an issue on systems where the NVGPU is the only GPU, but on multi-GPU set ups it leads to a regression where the kernel module errors and results in a system-wide rendering freeze.\n\nThis commit addresses that regression by moving the two buffers required for suspend and resume to be deallocated at driver unload instead of post init."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27413",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/00cf21ac526011a29fc708f8912da446fac19f7b",
+            "https://git.kernel.org/stable/c/950d4d74d311a18baed6878dbfba8180d7e5dddd",
+            "https://git.kernel.org/stable/c/537e3f49dbe88881a6f0752beaa596942d9efd64",
+            "https://git.kernel.org/stable/c/4b73473c050a612fb4317831371073eda07c3050",
+            "https://git.kernel.org/stable/c/ddc547dd05a46720866c32022300f7376c40119f",
+            "https://git.kernel.org/stable/c/11aabd7487857b8e7d768fefb092f66dfde68492",
+            "https://git.kernel.org/stable/c/62a5dcd9bd3097e9813de62fa6f22815e84a0172",
+            "https://git.kernel.org/stable/c/fccfa646ef3628097d59f7d9c1a3e84d4b6bb45e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nefi/capsule-loader: fix incorrect allocation size\n\ngcc-14 notices that the allocation with sizeof(void) on 32-bit architectures\nis not enough for a 64-bit phys_addr_t:\n\ndrivers/firmware/efi/capsule-loader.c: In function 'efi_capsule_open':\ndrivers/firmware/efi/capsule-loader.c:295:24: error: allocation of insufficient size '4' for type 'phys_addr_t' {aka 'long long unsigned int'} with size '8' [-Werror=alloc-size]\n  295 |         cap_info->phys = kzalloc(sizeof(void *), GFP_KERNEL);\n      |                        ^\n\nUse the correct type instead here."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27413",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/00cf21ac526011a29fc708f8912da446fac19f7b",
+            "https://git.kernel.org/stable/c/950d4d74d311a18baed6878dbfba8180d7e5dddd",
+            "https://git.kernel.org/stable/c/537e3f49dbe88881a6f0752beaa596942d9efd64",
+            "https://git.kernel.org/stable/c/4b73473c050a612fb4317831371073eda07c3050",
+            "https://git.kernel.org/stable/c/ddc547dd05a46720866c32022300f7376c40119f",
+            "https://git.kernel.org/stable/c/11aabd7487857b8e7d768fefb092f66dfde68492",
+            "https://git.kernel.org/stable/c/62a5dcd9bd3097e9813de62fa6f22815e84a0172",
+            "https://git.kernel.org/stable/c/fccfa646ef3628097d59f7d9c1a3e84d4b6bb45e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nefi/capsule-loader: fix incorrect allocation size\n\ngcc-14 notices that the allocation with sizeof(void) on 32-bit architectures\nis not enough for a 64-bit phys_addr_t:\n\ndrivers/firmware/efi/capsule-loader.c: In function 'efi_capsule_open':\ndrivers/firmware/efi/capsule-loader.c:295:24: error: allocation of insufficient size '4' for type 'phys_addr_t' {aka 'long long unsigned int'} with size '8' [-Werror=alloc-size]\n  295 |         cap_info->phys = kzalloc(sizeof(void *), GFP_KERNEL);\n      |                        ^\n\nUse the correct type instead here."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27414",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b9fbc44159dfc3e9a7073032752d9e03f5194a6f",
+            "https://git.kernel.org/stable/c/882a51a10ecf24ce135d573afa0872aef02c5125",
+            "https://git.kernel.org/stable/c/a1227b27fcccc99dc44f912b479e01a17e2d7d31",
+            "https://git.kernel.org/stable/c/f2261eb994aa5757c1da046b78e3229a3ece0ad9",
+            "https://git.kernel.org/stable/c/167d8642daa6a44b51de17f8ff0f584e1e762db7",
+            "https://git.kernel.org/stable/c/831bc2728fb48a8957a824cba8c264b30dca1425",
+            "https://git.kernel.org/stable/c/743ad091fb46e622f1b690385bb15e3cd3daf874"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nrtnetlink: fix error logic of IFLA_BRIDGE_FLAGS writing back\n\nIn the commit d73ef2d69c0d (\"rtnetlink: let rtnl_bridge_setlink checks\nIFLA_BRIDGE_MODE length\"), an adjustment was made to the old loop logic\nin the function `rtnl_bridge_setlink` to enable the loop to also check\nthe length of the IFLA_BRIDGE_MODE attribute. However, this adjustment\nremoved the `break` statement and led to an error logic of the flags\nwriting back at the end of this function.\n\nif (have_flags)\n    memcpy(nla_data(attr), &flags, sizeof(flags));\n    // attr should point to IFLA_BRIDGE_FLAGS NLA !!!\n\nBefore the mentioned commit, the `attr` is granted to be IFLA_BRIDGE_FLAGS.\nHowever, this is not necessarily true fow now as the updated loop will let\nthe attr point to the last NLA, even an invalid NLA which could cause\noverflow writes.\n\nThis patch introduces a new variable `br_flag` to save the NLA pointer\nthat points to IFLA_BRIDGE_FLAGS and uses it to resolve the mentioned\nerror logic."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27415",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7c3f28599652acf431a2211168de4a583f30b6d5",
+            "https://git.kernel.org/stable/c/2b1414d5e94e477edff1d2c79030f1d742625ea0",
+            "https://git.kernel.org/stable/c/80cd0487f630b5382734997c3e5e3003a77db315",
+            "https://git.kernel.org/stable/c/cb734975b0ffa688ff6cc0eed463865bf07b6c01",
+            "https://git.kernel.org/stable/c/62e7151ae3eb465e0ab52a20c941ff33bb6332e9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: bridge: confirm multicast packets before passing them up the stack\n\nconntrack nf_confirm logic cannot handle cloned skbs referencing\nthe same nf_conn entry, which will happen for multicast (broadcast)\nframes on bridges.\n\n Example:\n    macvlan0\n       |\n      br0\n     /  \\\n  ethX    ethY\n\n ethX (or Y) receives a L2 multicast or broadcast packet containing\n an IP packet, flow is not yet in conntrack table.\n\n 1. skb passes through bridge and fake-ip (br_netfilter)Prerouting.\n    -> skb->_nfct now references a unconfirmed entry\n 2. skb is broad/mcast packet. bridge now passes clones out on each bridge\n    interface.\n 3. skb gets passed up the stack.\n 4. In macvlan case, macvlan driver retains clone(s) of the mcast skb\n    and schedules a work queue to send them out on the lower devices.\n\n    The clone skb->_nfct is not a copy, it is the same entry as the\n    original skb.  The macvlan rx handler then returns RX_HANDLER_PASS.\n 5. Normal conntrack hooks (in NF_INET_LOCAL_IN) confirm the orig skb.\n\nThe Macvlan broadcast worker and normal confirm path will race.\n\nThis race will not happen if step 2 already confirmed a clone. In that\ncase later steps perform skb_clone() with skb->_nfct already confirmed (in\nhash table).  This works fine.\n\nBut such confirmation won't happen when eb/ip/nftables rules dropped the\npackets before they reached the nf_confirm step in postrouting.\n\nPablo points out that nf_conntrack_bridge doesn't allow use of stateful\nnat, so we can safely discard the nf_conn entry and let inet call\nconntrack again.\n\nThis doesn't work for bridge netfilter: skb could have a nat\ntransformation. Also bridge nf prevents re-invocation of inet prerouting\nvia 'sabotage_in' hook.\n\nWork around this problem by explicit confirmation of the entry at LOCAL_IN\ntime, before upper layer has a chance to clone the unconfirmed entry.\n\nThe downside is that this disables NAT and conntrack helpers.\n\nAlternative fix would be to add locking to all code parts that deal with\nunconfirmed packets, but even if that could be done in a sane way this\nopens up other problems, for example:\n\n-m physdev --physdev-out eth0 -j SNAT --snat-to 1.2.3.4\n-m physdev --physdev-out eth1 -j SNAT --snat-to 1.2.3.5\n\nFor multicast case, only one of such conflicting mappings will be\ncreated, conntrack only handles 1:1 NAT mappings.\n\nUsers should set create a setup that explicitly marks such traffic\nNOTRACK (conntrack bypass) to avoid this, but we cannot auto-bypass\nthem, ruleset might have accept rules for untracked traffic already,\nso user-visible behaviour would change."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27405",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/059285e04ebb273d32323fbad5431c5b94f77e48",
+            "https://git.kernel.org/stable/c/a31cf46d108dabce3df80b3e5c07661e24912151",
+            "https://git.kernel.org/stable/c/57ca0e16f393bb21d69734e536e383a3a4c665fd",
+            "https://git.kernel.org/stable/c/2cb66b62a5d64ccf09b0591ab86fb085fa491fc5",
+            "https://git.kernel.org/stable/c/35b604a37ec70d68b19dafd10bbacf1db505c9ca",
+            "https://git.kernel.org/stable/c/2b7ec68869d50ea998908af43b643bca7e54577e",
+            "https://git.kernel.org/stable/c/c7f43900bc723203d7554d299a2ce844054fab8e",
+            "https://git.kernel.org/stable/c/76c51146820c5dac629f21deafab0a7039bc3ccd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: gadget: ncm: Avoid dropping datagrams of properly parsed NTBs\n\nIt is observed sometimes when tethering is used over NCM with Windows 11\nas host, at some instances, the gadget_giveback has one byte appended at\nthe end of a proper NTB. When the NTB is parsed, unwrap call looks for\nany leftover bytes in SKB provided by u_ether and if there are any pending\nbytes, it treats them as a separate NTB and parses it. But in case the\nsecond NTB (as per unwrap call) is faulty/corrupt, all the datagrams that\nwere parsed properly in the first NTB and saved in rx_list are dropped.\n\nAdding a few custom traces showed the following:\n[002] d..1  7828.532866: dwc3_gadget_giveback: ep1out:\nreq 000000003868811a length 1025/16384 zsI ==> 0\n[002] d..1  7828.532867: ncm_unwrap_ntb: K: ncm_unwrap_ntb toprocess: 1025\n[002] d..1  7828.532867: ncm_unwrap_ntb: K: ncm_unwrap_ntb nth: 1751999342\n[002] d..1  7828.532868: ncm_unwrap_ntb: K: ncm_unwrap_ntb seq: 0xce67\n[002] d..1  7828.532868: ncm_unwrap_ntb: K: ncm_unwrap_ntb blk_len: 0x400\n[002] d..1  7828.532868: ncm_unwrap_ntb: K: ncm_unwrap_ntb ndp_len: 0x10\n[002] d..1  7828.532869: ncm_unwrap_ntb: K: Parsed NTB with 1 frames\n\nIn this case, the giveback is of 1025 bytes and block length is 1024.\nThe rest 1 byte (which is 0x00) won't be parsed resulting in drop of\nall datagrams in rx_list.\n\nSame is case with packets of size 2048:\n[002] d..1  7828.557948: dwc3_gadget_giveback: ep1out:\nreq 0000000011dfd96e length 2049/16384 zsI ==> 0\n[002] d..1  7828.557949: ncm_unwrap_ntb: K: ncm_unwrap_ntb nth: 1751999342\n[002] d..1  7828.557950: ncm_unwrap_ntb: K: ncm_unwrap_ntb blk_len: 0x800\n\nLecroy shows one byte coming in extra confirming that the byte is coming\nin from PC:\n\n Transfer 2959 - Bytes Transferred(1025)  Timestamp((18.524 843 590)\n - Transaction 8391 - Data(1025 bytes) Timestamp(18.524 843 590)\n --- Packet 4063861\n       Data(1024 bytes)\n       Duration(2.117us) Idle(14.700ns) Timestamp(18.524 843 590)\n --- Packet 4063863\n       Data(1 byte)\n       Duration(66.160ns) Time(282.000ns) Timestamp(18.524 845 722)\n\nAccording to Windows driver, no ZLP is needed if wBlockLength is non-zero,\nbecause the non-zero wBlockLength has already told the function side the\nsize of transfer to be expected. However, there are in-market NCM devices\nthat rely on ZLP as long as the wBlockLength is multiple of wMaxPacketSize.\nTo deal with such devices, it pads an extra 0 at end so the transfer is no\nlonger multiple of wMaxPacketSize."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27415",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7c3f28599652acf431a2211168de4a583f30b6d5",
+            "https://git.kernel.org/stable/c/2b1414d5e94e477edff1d2c79030f1d742625ea0",
+            "https://git.kernel.org/stable/c/80cd0487f630b5382734997c3e5e3003a77db315",
+            "https://git.kernel.org/stable/c/cb734975b0ffa688ff6cc0eed463865bf07b6c01",
+            "https://git.kernel.org/stable/c/62e7151ae3eb465e0ab52a20c941ff33bb6332e9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: bridge: confirm multicast packets before passing them up the stack\n\nconntrack nf_confirm logic cannot handle cloned skbs referencing\nthe same nf_conn entry, which will happen for multicast (broadcast)\nframes on bridges.\n\n Example:\n    macvlan0\n       |\n      br0\n     /  \\\n  ethX    ethY\n\n ethX (or Y) receives a L2 multicast or broadcast packet containing\n an IP packet, flow is not yet in conntrack table.\n\n 1. skb passes through bridge and fake-ip (br_netfilter)Prerouting.\n    -> skb->_nfct now references a unconfirmed entry\n 2. skb is broad/mcast packet. bridge now passes clones out on each bridge\n    interface.\n 3. skb gets passed up the stack.\n 4. In macvlan case, macvlan driver retains clone(s) of the mcast skb\n    and schedules a work queue to send them out on the lower devices.\n\n    The clone skb->_nfct is not a copy, it is the same entry as the\n    original skb.  The macvlan rx handler then returns RX_HANDLER_PASS.\n 5. Normal conntrack hooks (in NF_INET_LOCAL_IN) confirm the orig skb.\n\nThe Macvlan broadcast worker and normal confirm path will race.\n\nThis race will not happen if step 2 already confirmed a clone. In that\ncase later steps perform skb_clone() with skb->_nfct already confirmed (in\nhash table).  This works fine.\n\nBut such confirmation won't happen when eb/ip/nftables rules dropped the\npackets before they reached the nf_confirm step in postrouting.\n\nPablo points out that nf_conntrack_bridge doesn't allow use of stateful\nnat, so we can safely discard the nf_conn entry and let inet call\nconntrack again.\n\nThis doesn't work for bridge netfilter: skb could have a nat\ntransformation. Also bridge nf prevents re-invocation of inet prerouting\nvia 'sabotage_in' hook.\n\nWork around this problem by explicit confirmation of the entry at LOCAL_IN\ntime, before upper layer has a chance to clone the unconfirmed entry.\n\nThe downside is that this disables NAT and conntrack helpers.\n\nAlternative fix would be to add locking to all code parts that deal with\nunconfirmed packets, but even if that could be done in a sane way this\nopens up other problems, for example:\n\n-m physdev --physdev-out eth0 -j SNAT --snat-to 1.2.3.4\n-m physdev --physdev-out eth1 -j SNAT --snat-to 1.2.3.5\n\nFor multicast case, only one of such conflicting mappings will be\ncreated, conntrack only handles 1:1 NAT mappings.\n\nUsers should set create a setup that explicitly marks such traffic\nNOTRACK (conntrack bypass) to avoid this, but we cannot auto-bypass\nthem, ruleset might have accept rules for untracked traffic already,\nso user-visible behaviour would change."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27416",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/afec8f772296dd8e5a2a6f83bbf99db1b9ca877f",
+            "https://git.kernel.org/stable/c/79820a7e1e057120c49be07cbe10643d0706b259",
+            "https://git.kernel.org/stable/c/df193568d61234c81de7ed4d540c01975de60277",
+            "https://git.kernel.org/stable/c/c3df637266df29edee85e94cab5fd7041e5753ba",
+            "https://git.kernel.org/stable/c/30a5e812f78e3d1cced90e1ed750bf027599205f",
+            "https://git.kernel.org/stable/c/fba268ac36ab19f9763ff90d276cde0ce6cd5f31",
+            "https://git.kernel.org/stable/c/8e2758cc25891d2b76717aaf89b40ed215de188c",
+            "https://git.kernel.org/stable/c/7e74aa53a68bf60f6019bd5d9a9a1406ec4d4865"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: hci_event: Fix handling of HCI_EV_IO_CAPA_REQUEST\n\nIf we received HCI_EV_IO_CAPA_REQUEST while\nHCI_OP_READ_REMOTE_EXT_FEATURES is yet to be responded assume the remote\ndoes support SSP since otherwise this event shouldn't be generated."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27406",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e6316749d603fe9c4c91f6ec3694e06e4de632a3",
+            "https://git.kernel.org/stable/c/9e6e541b97762d5b1143070067f7c68f39a408f8",
+            "https://git.kernel.org/stable/c/1eb1e984379e2da04361763f66eec90dd75cf63e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nlib/Kconfig.debug: TEST_IOV_ITER depends on MMU\n\nTrying to run the iov_iter unit test on a nommu system such as the qemu\nkc705-nommu emulation results in a crash.\n\n    KTAP version 1\n    # Subtest: iov_iter\n    # module: kunit_iov_iter\n    1..9\nBUG: failure at mm/nommu.c:318/vmap()!\nKernel panic - not syncing: BUG!\n\nThe test calls vmap() directly, but vmap() is not supported on nommu\nsystems, causing the crash.  TEST_IOV_ITER therefore needs to depend on\nMMU."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27420",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/97a4d8b9f67cc7efe9a0c137e12f6d9e40795bf1",
+            "https://git.kernel.org/stable/c/07bbccd1adb56b39eef982b8960d59e3c005c6a1",
+            "https://git.kernel.org/stable/c/cfe0f73fb38a01bce86fe15ef5f750f850f7d3fe",
+            "https://git.kernel.org/stable/c/c558e54f7712b086fbcb611723272a0a4b0d451c",
+            "https://git.kernel.org/stable/c/cfedde3058bf976f2f292c0a236edd43afcdab57",
+            "https://git.kernel.org/stable/c/db364859ce68fb3a52d42cd87a54da3dc42dc1c8",
+            "https://git.kernel.org/stable/c/0b8eb369c182814d817b9449bc9e86bfae4310f9",
+            "https://git.kernel.org/stable/c/bc76645ebdd01be9b9994dac39685a3d0f6f7985"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_link_fails_count\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27420",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/97a4d8b9f67cc7efe9a0c137e12f6d9e40795bf1",
+            "https://git.kernel.org/stable/c/07bbccd1adb56b39eef982b8960d59e3c005c6a1",
+            "https://git.kernel.org/stable/c/cfe0f73fb38a01bce86fe15ef5f750f850f7d3fe",
+            "https://git.kernel.org/stable/c/c558e54f7712b086fbcb611723272a0a4b0d451c",
+            "https://git.kernel.org/stable/c/cfedde3058bf976f2f292c0a236edd43afcdab57",
+            "https://git.kernel.org/stable/c/db364859ce68fb3a52d42cd87a54da3dc42dc1c8",
+            "https://git.kernel.org/stable/c/0b8eb369c182814d817b9449bc9e86bfae4310f9",
+            "https://git.kernel.org/stable/c/bc76645ebdd01be9b9994dac39685a3d0f6f7985"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_link_fails_count\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27421",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c13fbb5902bce848759385986d4833f5b90782c1",
+            "https://git.kernel.org/stable/c/c4309e5f8e80584715c814e1d012dbc3eee5a500",
+            "https://git.kernel.org/stable/c/b7d33e083f9d5d39445c0a91e7ad4f3e2c47fcb5",
+            "https://git.kernel.org/stable/c/f9c4d42464173b826190fae2283ed1a4bbae0c8b",
+            "https://git.kernel.org/stable/c/4c02b9ccbb11862ee39850b2b285664cd579b039",
+            "https://git.kernel.org/stable/c/d732b83251322ecd3b503e03442247745d6052ce",
+            "https://git.kernel.org/stable/c/859175d4bc11af829e2fdd261a7effdaba9b5d8f",
+            "https://git.kernel.org/stable/c/b5dffcb8f71bdd02a4e5799985b51b12f4eeaf76"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_routing_control\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27421",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c13fbb5902bce848759385986d4833f5b90782c1",
+            "https://git.kernel.org/stable/c/c4309e5f8e80584715c814e1d012dbc3eee5a500",
+            "https://git.kernel.org/stable/c/b7d33e083f9d5d39445c0a91e7ad4f3e2c47fcb5",
+            "https://git.kernel.org/stable/c/f9c4d42464173b826190fae2283ed1a4bbae0c8b",
+            "https://git.kernel.org/stable/c/4c02b9ccbb11862ee39850b2b285664cd579b039",
+            "https://git.kernel.org/stable/c/d732b83251322ecd3b503e03442247745d6052ce",
+            "https://git.kernel.org/stable/c/859175d4bc11af829e2fdd261a7effdaba9b5d8f",
+            "https://git.kernel.org/stable/c/b5dffcb8f71bdd02a4e5799985b51b12f4eeaf76"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_routing_control\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27422",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/73426c32e259c767d40613b956d5b80d0c28a9a9",
+            "https://git.kernel.org/stable/c/cbba77abb4a553c1f5afac1ba2a0861aa1f13549",
+            "https://git.kernel.org/stable/c/01d4e3afe257768cd2a45f15a0e57bacf932b140",
+            "https://git.kernel.org/stable/c/4eacb242e22e31385a50a393681d0fe4b55ed1e9",
+            "https://git.kernel.org/stable/c/498f1d6da11ed6d736d655a2db14ee2d9569eecb",
+            "https://git.kernel.org/stable/c/2309b369fae2d9cdc3c945cd3eaec84eb1958ca3",
+            "https://git.kernel.org/stable/c/6f254abae02abd4a0aca062c1b3812d7e2d8ea94",
+            "https://git.kernel.org/stable/c/f99b494b40431f0ca416859f2345746199398e2b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_no_activity_timeout\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27422",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/73426c32e259c767d40613b956d5b80d0c28a9a9",
+            "https://git.kernel.org/stable/c/cbba77abb4a553c1f5afac1ba2a0861aa1f13549",
+            "https://git.kernel.org/stable/c/01d4e3afe257768cd2a45f15a0e57bacf932b140",
+            "https://git.kernel.org/stable/c/4eacb242e22e31385a50a393681d0fe4b55ed1e9",
+            "https://git.kernel.org/stable/c/498f1d6da11ed6d736d655a2db14ee2d9569eecb",
+            "https://git.kernel.org/stable/c/2309b369fae2d9cdc3c945cd3eaec84eb1958ca3",
+            "https://git.kernel.org/stable/c/6f254abae02abd4a0aca062c1b3812d7e2d8ea94",
+            "https://git.kernel.org/stable/c/f99b494b40431f0ca416859f2345746199398e2b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_no_activity_timeout\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27423",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/4f2efa17c3ec5e4be0567b47439b9713c0dc6550",
+            "https://git.kernel.org/stable/c/89aa78a34340e9dbc3248095f44d81d0e1c23193",
+            "https://git.kernel.org/stable/c/652b0b35819610a42b8a90d21acb12f69943b397",
+            "https://git.kernel.org/stable/c/489e05c614dbeb1a1148959f02bdb788891819e6",
+            "https://git.kernel.org/stable/c/46803b776d869b0c36041828a83c4f7da2dfa03b",
+            "https://git.kernel.org/stable/c/db006d7edbf0b4800390ece3727a82f4ae764043",
+            "https://git.kernel.org/stable/c/0d43a58900e5a2bfcc9de47e16c6c501c0bef853",
+            "https://git.kernel.org/stable/c/a2e706841488f474c06e9b33f71afc947fb3bf56"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_requested_window_size\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27426",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/84b8486e9cedc93875f251ba31abcf73bd586a3a",
+            "https://git.kernel.org/stable/c/f716a68234242f95305dffb5c9426caa64b316b0",
+            "https://git.kernel.org/stable/c/34a164d2448264b62af82bc0af3d2c83d12d38ac",
+            "https://git.kernel.org/stable/c/f84f7709486d8a578ab4b7d2a556d1b1a59cfc97",
+            "https://git.kernel.org/stable/c/d28fa5f0e6c1554e2829f73a6a276c9a49689d04",
+            "https://git.kernel.org/stable/c/fa3f3ab5c399852d32a0c3cbb8c55882f7e2c61f",
+            "https://git.kernel.org/stable/c/42e71408e2c138be9ccce60920bd6cf094ba1e32",
+            "https://git.kernel.org/stable/c/e799299aafed417cc1f32adccb2a0e5268b3f6d5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_maximum_tries\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27412",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d4d813c0a14d6bf52d810a55db06a2e7e3d98eaa",
+            "https://git.kernel.org/stable/c/7394abc8926adee6a817bab10797e0adc898af77",
+            "https://git.kernel.org/stable/c/d7acc4a569f5f4513120c85ea2b9f04909b7490f",
+            "https://git.kernel.org/stable/c/e601ae81910ce6a3797876e190a2d8ef6cf828bc",
+            "https://git.kernel.org/stable/c/cefe18e9ec84f8fe3e198ccebb815cc996eb9797",
+            "https://git.kernel.org/stable/c/fbca8bae1ba79d443a58781b45e92a73a24ac8f8",
+            "https://git.kernel.org/stable/c/083686474e7c97b0f8b66df37fcb64e432e8b771",
+            "https://git.kernel.org/stable/c/2df70149e73e79783bcbc7db4fa51ecef0e2022c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npower: supply: bq27xxx-i2c: Do not free non existing IRQ\n\nThe bq27xxx i2c-client may not have an IRQ, in which case\nclient->irq will be 0. bq27xxx_battery_i2c_probe() already has\nan if (client->irq) check wrapping the request_threaded_irq().\n\nBut bq27xxx_battery_i2c_remove() unconditionally calls\nfree_irq(client->irq) leading to:\n\n[  190.310742] ------------[ cut here ]------------\n[  190.310843] Trying to free already-free IRQ 0\n[  190.310861] WARNING: CPU: 2 PID: 1304 at kernel/irq/manage.c:1893 free_irq+0x1b8/0x310\n\nFollowed by a backtrace when unbinding the driver. Add\nan if (client->irq) to bq27xxx_battery_i2c_remove() mirroring\nprobe() to fix this."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27427",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/500936692ccca8617a955652d1929f079b17a201",
+            "https://git.kernel.org/stable/c/eadec8da4451c2c0897199691184602e4ee497d1",
+            "https://git.kernel.org/stable/c/291d36d772f5ea5c68a263ee440f2c9eade371c9",
+            "https://git.kernel.org/stable/c/b8006cb0a34aaf85cdd8741f4148fd9c76b351d3",
+            "https://git.kernel.org/stable/c/fed835d415766a94fc0246dcebc3af4c03fe9941",
+            "https://git.kernel.org/stable/c/5d5c14efc987900509cec465af26608e39ac607c",
+            "https://git.kernel.org/stable/c/7d1e00fc2af3b7c30835d643a3655b7e9ff7cb20",
+            "https://git.kernel.org/stable/c/60a7a152abd494ed4f69098cf0f322e6bb140612"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_timeout\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27417",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9d4ffb5b9d879a75e4f7460e8b10e756b4dfb132",
+            "https://git.kernel.org/stable/c/810fa7d5e5202fcfb22720304b755f1bdfd4c174",
+            "https://git.kernel.org/stable/c/8a54834c03c30e549c33d5da0975f3e1454ec906",
+            "https://git.kernel.org/stable/c/1b0998fdd85776775d975d0024bca227597e836a",
+            "https://git.kernel.org/stable/c/44112bc5c74e64f28f5a9127dc34066c7a09bd0f",
+            "https://git.kernel.org/stable/c/33a1b6bfef6def2068c8703403759024ce17053e",
+            "https://git.kernel.org/stable/c/10bfd453da64a057bcfd1a49fb6b271c48653cdb"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: fix potential \"struct net\" leak in inet6_rtm_getaddr()\n\nIt seems that if userspace provides a correct IFA_TARGET_NETNSID value\nbut no IFA_ADDRESS and IFA_LOCAL attributes, inet6_rtm_getaddr()\nreturns -EINVAL with an elevated \"struct net\" refcount."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27418",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a3c8fa54e904b0ddb52a08cc2d8ac239054f61fd",
+            "https://git.kernel.org/stable/c/cbebc55ceacef1fc0651e80e0103cc184552fc68",
+            "https://git.kernel.org/stable/c/a639441c880ac479495e5ab37e3c29f21ae5771b",
+            "https://git.kernel.org/stable/c/3773d65ae5154ed7df404b050fd7387a36ab5ef3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: mctp: take ownership of skb in mctp_local_output\n\nCurrently, mctp_local_output only takes ownership of skb on success, and\nwe may leak an skb if mctp_local_output fails in specific states; the\nskb ownership isn't transferred until the actual output routing occurs.\n\nInstead, make mctp_local_output free the skb on all error paths up to\nthe route action, so it always consumes the passed skb."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27419",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d623fd5298d95b65d27ef5a618ebf39541074856",
+            "https://git.kernel.org/stable/c/f9055fa2b2931261d5f89948ee5bc315b6a22d4a",
+            "https://git.kernel.org/stable/c/bbf950a6e96a91cf8cf0c71117b94ed3fafc9dd3",
+            "https://git.kernel.org/stable/c/0866afaff19d8460308b022345ed116a12b1d0e1",
+            "https://git.kernel.org/stable/c/43464808669ba9d23996f0b6d875450191687caf",
+            "https://git.kernel.org/stable/c/34cab94f7473e7b09f5205d4583fb5096cb63b5b",
+            "https://git.kernel.org/stable/c/16d71319e29d5825ab53f263b59fdd8dc2d60ad4",
+            "https://git.kernel.org/stable/c/d380ce70058a4ccddc3e5f5c2063165dc07672c6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix data-races around sysctl_net_busy_read\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27428",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/acc653e8a3aaab1b7103f98645f2cce7be89e3d3",
+            "https://git.kernel.org/stable/c/eda02a0bed550f07a8283d3e1f25b90a38e151ed",
+            "https://git.kernel.org/stable/c/d1261bde59a3a087ab0c81181821e194278d9264",
+            "https://git.kernel.org/stable/c/775ed3549819f814a6ecef5726d2b4c23f249b77",
+            "https://git.kernel.org/stable/c/a47d68d777b41862757b7e3051f2d46d6e25f87b",
+            "https://git.kernel.org/stable/c/5731369af2de21695fe7c1c91fe134fabe5b33b8",
+            "https://git.kernel.org/stable/c/dca1d93fe42fb9c42b66f61714fbdc55c87eb002",
+            "https://git.kernel.org/stable/c/119cae5ea3f9e35cdada8e572cc067f072fa825a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix data-races around sysctl_netrom_network_ttl_initialiser\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27429",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e3a3718b1723253d4f068e88e81d880d71f1a1e9",
+            "https://git.kernel.org/stable/c/1e84b108f2a71daa8d04032e4d2096522376debb",
+            "https://git.kernel.org/stable/c/18c95d11c347a12e5c31df1325cef6b995d14ecf",
+            "https://git.kernel.org/stable/c/b3f0bc3a315cf1af03673a0163c08fe037587acd",
+            "https://git.kernel.org/stable/c/e439607291c082332e1e35baf8faf8552e6bcb4a",
+            "https://git.kernel.org/stable/c/7e1e25891f090e24a871451c9403abac63cb45dd",
+            "https://git.kernel.org/stable/c/591192c3a9fc728a0af7b9dd50bf121220062293",
+            "https://git.kernel.org/stable/c/cfd9f4a740f772298308b2e6070d2c744fb5cf79"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_obsolescence_count_initialiser\n\nWe need to protect the reader reading the sysctl value\nbecause the value can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27424",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7782e5e7047cae6b9255ee727c99fc73d77cf773",
+            "https://git.kernel.org/stable/c/1f60795dcafc97c45984240d442cdc151f825977",
+            "https://git.kernel.org/stable/c/f3315a6edaec12b461031eab8c98c78111a41f95",
+            "https://git.kernel.org/stable/c/85f34d352f4b79afd63dd13634b23dafe6b570f9",
+            "https://git.kernel.org/stable/c/5ac337138272d26d6d3d4f71bc5b1a87adf8b24d",
+            "https://git.kernel.org/stable/c/4ccad39009e7bd8a03d60a97c87b0327ae812880",
+            "https://git.kernel.org/stable/c/0a30016e892bccabea30af218782c4b6ce0970af",
+            "https://git.kernel.org/stable/c/43547d8699439a67b78d6bb39015113f7aa360fd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_busy_delay\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27425",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/6133a71c75dacea12fcc85838b4455c2055b0f14",
+            "https://git.kernel.org/stable/c/80578681ea274e0a6512bb7515718c206a7b74cf",
+            "https://git.kernel.org/stable/c/34c84e0036a60e7e50ae50b42ed194d8daef8cc9",
+            "https://git.kernel.org/stable/c/33081e0f34899d5325e7c45683dd8dc9cb18b583",
+            "https://git.kernel.org/stable/c/5deaef2bf56456c71b841e0dfde1bee2fd88c4eb",
+            "https://git.kernel.org/stable/c/7d56ffc51ebd2777ded8dca50d631ee19d97db5c",
+            "https://git.kernel.org/stable/c/a22f9194f61ad4f2b6405c7c86bee85eac1befa5",
+            "https://git.kernel.org/stable/c/806f462ba9029d41aadf8ec93f2f99c5305deada"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_transport_acknowledge_delay\n\nWe need to protect the reader reading the sysctl value because the\nvalue can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-5043",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://vuldb.com/?id.264740",
+            "https://vuldb.com/?ctiid.264740",
+            "https://vuldb.com/?submit.331854",
+            "https://github.com/ssteveez/emlog/blob/main/emlog%20pro%20version%202.3.4%20Admin%20side%20can%20upload%20arbitrary%20files%20and%20getshell.md"
+        ],
+        "summary": "A vulnerability was found in Emlog Pro 2.3.4 and classified as critical. Affected by this issue is some unknown functionality of the file admin/setting.php. The manipulation leads to unrestricted upload. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-264740. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2024-5044",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://vuldb.com/?id.264741",
+            "https://vuldb.com/?ctiid.264741",
+            "https://vuldb.com/?submit.331857",
+            "https://github.com/ssteveez/emlog/blob/main/emlog%20pro%20version%202.3.4%20has%20session(AuthCookie)%20persistence%20and%20any%20user%20login%20vulnerability.md"
+        ],
+        "summary": "A vulnerability was found in Emlog Pro 2.3.4. It has been classified as problematic. This affects an unknown part of the component Cookie Handler. The manipulation of the argument AuthCookie leads to improper authentication. It is possible to initiate the attack remotely. The complexity of an attack is rather high. The exploitability is told to be difficult. The exploit has been disclosed to the public and may be used. The identifier VDB-264741 was assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve-coordination@incibe.es",
+        "cvss": null,
+        "cwe": "CWE-400",
+        "id": "CVE-2024-5055",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://www.incibe.es/en/incibe-cert/notices/aviso/vulnerability-uncontrolled-resource-consumption-xampp"
+        ],
+        "summary": "Uncontrolled resource consumption vulnerability in XAMPP Windows, versions 7.3.2 and earlier. This vulnerability exists when XAMPP attempts to process many incomplete HTTP requests, resulting in resource consumption and system crashes."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27430",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7644df766006d4878a556e427e3ecc78c2d5606b",
+            "https://git.kernel.org/stable/c/7f615232556f3c6e3eeecef96ef2b00d0aa905bb",
+            "https://git.kernel.org/stable/c/e041df5dc9e68adffcba5499ca28e1252bed6f4b",
+            "https://git.kernel.org/stable/c/bbc21f134b89535d1cf110c5f2b33ac54e5839c4",
+            "https://git.kernel.org/stable/c/dec82a8fc45c6ce494c2cb31f001a2aadb132b57",
+            "https://git.kernel.org/stable/c/7510b08c5f5ba15983da004b021fc6154eeb4047",
+            "https://git.kernel.org/stable/c/392eb88416dcbc5f1d61b9a88d79d78dc8b27652",
+            "https://git.kernel.org/stable/c/958d6145a6d9ba9e075c921aead8753fb91c9101"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetrom: Fix a data-race around sysctl_netrom_default_path_quality\n\nWe need to protect the reader reading sysctl_netrom_default_path_quality\nbecause the value can be changed concurrently."
+    },
+    {
+        "Modified": "2024-05-17T12:15:00",
+        "Published": "2024-05-17T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27431",
+        "impact": {},
+        "last-modified": "2024-05-17T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5f4e51abfbe6eb444fa91906a5cd083044278297",
+            "https://git.kernel.org/stable/c/f0363af9619c77730764f10360e36c6445c12f7b",
+            "https://git.kernel.org/stable/c/3420b3ff1ff489c177ea1cb7bd9fbbc4e9a0be95",
+            "https://git.kernel.org/stable/c/f562e4c4aab00986dde3093c4be919c3f2b85a4a",
+            "https://git.kernel.org/stable/c/eaa7cb836659ced2d9f814ac32aa3ec193803ed6",
+            "https://git.kernel.org/stable/c/2487007aa3b9fafbd2cb14068f49791ce1d7ede5"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncpumap: Zero-initialise xdp_rxq_info struct before running XDP program\n\nWhen running an XDP program that is attached to a cpumap entry, we don't\ninitialise the xdp_rxq_info data structure being used in the xdp_buff\nthat backs the XDP program invocation. Tobias noticed that this leads to\nrandom values being returned as the xdp_md->rx_queue_index value for XDP\nprograms running in a cpumap.\n\nThis means we're basically returning the contents of the uninitialised\nmemory, which is bad. Fix this by zero-initialising the rxq data\nstructure before running the XDP program."
+    },
+    {
         "Modified": "2024-05-17T11:15:00",
         "Published": "2024-05-17T11:15:00",
         "access": {},
@@ -523,1025 +1838,5 @@
             "https://patchstack.com/database/vulnerability/ultimate-elementor/wordpress-ultimate-addons-for-elementor-plugin-1-36-20-privilege-escalation-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Privilege Management vulnerability in Brainstorm Force Ultimate Addons for Elementor allows Privilege Escalation.This issue affects Ultimate Addons for Elementor: from n/a through 1.36.20."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51356",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/armember-membership/wordpress-armember-plugin-4-0-10-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Repute Infosystems ARMember allows Privilege Escalation.This issue affects ARMember: from n/a through 4.0.10."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-51398",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/bb-ultimate-addon/wordpress-ultimate-addons-for-beaver-builder-premium-plugin-1-35-14-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Brainstorm Force Ultimate Addons for Beaver Builder allows Privilege Escalation.This issue affects Ultimate Addons for Beaver Builder: from n/a through 1.35.14."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-51401",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/bb-ultimate-addon/wordpress-ultimate-addons-for-beaver-builder-premium-plugin-1-35-13-limited-arbitrary-file-download-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Brainstorm Force Ultimate Addons for Beaver Builder allows Relative Path Traversal.This issue affects Ultimate Addons for Beaver Builder: from n/a through 1.35.13."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51546",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/print-invoices-packing-slip-labels-for-woocommerce/wordpress-woocommerce-pdf-invoices-packing-slips-delivery-notes-and-shipping-labels-plugin-4-2-1-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in WebToffee WooCommerce PDF Invoices, Packing Slips, Delivery Notes and Shipping Labels allows Privilege Escalation.This issue affects WooCommerce PDF Invoices, Packing Slips, Delivery Notes and Shipping Labels: from n/a through 4.2.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-21746",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-ultimate-review/wordpress-wp-ultimate-review-plugin-2-2-5-ip-limit-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in Wpmet Wp Ultimate Review allows Functionality Bypass.This issue affects Wp Ultimate Review: from n/a through 2.3.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-80",
-        "id": "CVE-2024-23522",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/formidable/wordpress-formidable-forms-plugin-6-7-content-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS) vulnerability in Strategy11 Form Builder Team Formidable Forms allows Code Injection.This issue affects Formidable Forms: from n/a through 6.7."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-1284",
-        "id": "CVE-2024-24715",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/bookit/wordpress-wordpress-bookit-plugin-plugin-2-4-0-price-bypass-vulnerability-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Validation of Specified Quantity in Input vulnerability in The Events Calendar BookIt allows Manipulating Hidden Fields.This issue affects BookIt: from n/a through 2.4.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-24869",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/boldgrid-backup/wordpress-total-upkeep-plugin-1-15-8-arbitrary-file-download-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in BoldGrid Total Upkeep allows Relative Path Traversal.This issue affects Total Upkeep: from n/a through 1.15.8."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-799",
-        "id": "CVE-2024-24873",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/cp-polls/wordpress-polls-cp-plugin-1-0-71-polls-limitation-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": ": Improper Control of Interaction Frequency vulnerability in CodePeople CP Polls allows Flooding.This issue affects CP Polls: from n/a through 1.0.71."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-24882",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/learning-management-system/wordpress-lms-by-masteriyo-plugin-1-7-2-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Masteriyo LMS allows Privilege Escalation.This issue affects LMS: from n/a through 1.7.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-24934",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/elementor/wordpress-elementor-plugin-3-19-0-arbitrary-file-deletion-and-phar-deserialization-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Elementor Elementor Website Builder allows Manipulating Web Input to File System Calls.This issue affects Elementor Website Builder: from n/a through 3.19.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-25595",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/defender-security/wordpress-defender-security-plugin-4-4-1-ip-restriction-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in WPMU DEV Defender Security allows Functionality Bypass.This issue affects Defender Security: from n/a through 4.4.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-25906",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/comments-like-dislike/wordpress-comments-like-dislike-plugin-1-2-1-ip-restriction-bypass-vulnerability-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in WP Happy Coders Comments Like Dislike allows Functionality Bypass.This issue affects Comments Like Dislike: from n/a through 1.2.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-27954",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-automatic/wordpress-automatic-plugin-3-92-0-unauthenticated-arbitrary-file-download-and-ssrf-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in WP Automatic Automatic allows Path Traversal, Server Side Request Forgery.This issue affects Automatic: from n/a through 3.92.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-27955",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-automatic/wordpress-automatic-plugin-3-92-0-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in WP Automatic Automatic allows Privilege Escalation.This issue affects Automatic: from n/a through 3.92.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27971",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/woo-permalink-manager/wordpress-premmerce-permalink-manager-for-woocommerce-plugin-2-3-10-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Premmerce Premmerce Permalink Manager for WooCommerce allows PHP Local File Inclusion.This issue affects Premmerce Permalink Manager for WooCommerce: from n/a through 2.3.10."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-30479",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ip-address-blocker/wordpress-lionscripts-ip-blocker-lite-plugin-11-1-1-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in LionScripts IP Blocker Lite allows Functionality Bypass.This issue affects IP Blocker Lite: from n/a through 11.1.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-30480",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/cgc-maintenance-mode/wordpress-cgc-maintenance-mode-plugin-1-2-ip-filtering-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in Pippin Williamson CGC Maintenance Mode allows Functionality Bypass.This issue affects CGC Maintenance Mode: from n/a through 1.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-30509",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/sellkit/wordpress-sellkit-plugin-1-8-1-arbitrary-file-download-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Artbees SellKit allows Relative Path Traversal.This issue affects SellKit: from n/a through 1.8.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-30522",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/newsletter/wordpress-newsletter-plugin-8-2-0-ip-blacklist-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in Stefano Lissa & The Newsletter Team Newsletter allows Functionality Bypass.This issue affects Newsletter: from n/a through 8.2.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-1284",
-        "id": "CVE-2024-30527",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-express-checkout/wordpress-wp-express-checkout-plugin-2-3-7-price-manipulation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Validation of Specified Quantity in Input vulnerability in Tips and Tricks HQ WP Express Checkout (Accept PayPal Payments) allows Manipulating Hidden Fields.This issue affects WP Express Checkout (Accept PayPal Payments): from n/a through 2.3.7."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-804",
-        "id": "CVE-2024-30540",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/very-simple-contact-form/wordpress-vs-contact-form-plugin-14-7-sum-captcha-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Guessable CAPTCHA vulnerability in Guido VS Contact Form allows Functionality Bypass.This issue affects VS Contact Form: from n/a through 14.7."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-30542",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wholesalex/wordpress-wholesalex-plugin-1-3-2-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Wholesale WholesaleX allows Privilege Escalation.This issue affects WholesaleX: from n/a through 1.3.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-31231",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/rehub-theme/wordpress-rehub-theme-19-6-1-unauthenticated-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Sizam Design Rehub allows PHP Local File Inclusion.This issue affects Rehub: from n/a through 19.6.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-31232",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/rehub-theme/wordpress-rehub-theme-19-6-1-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Sizam Design Rehub allows PHP Local File Inclusion.This issue affects Rehub: from n/a through 19.6.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-31237",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/s2member/wordpress-s2member-plugin-240315-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in WP Sharks s2Member Pro allows Privilege Escalation.This issue affects s2Member Pro: from n/a through 240315."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31281",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/church-admin/wordpress-church-admin-plugin-4-1-6-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in Andy Moyle Church Admin church-admin allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Church Admin: from n/a through 4.1.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-31290",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/demo-my-wordpress/wordpress-demo-my-wordpress-plugin-1-0-9-1-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in CodeRevolution Demo My WordPress allows Privilege Escalation.This issue affects Demo My WordPress: from n/a through 1.0.9.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-804",
-        "id": "CVE-2024-31295",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/captcha-bws/wordpress-captcha-by-bestwebsoft-plugin-5-2-0-captcha-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Guessable CAPTCHA vulnerability in BestWebSoft Captcha by BestWebSoft allows Functionality Bypass.This issue affects Captcha by BestWebSoft: from n/a through 5.2.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-31300",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/easy-social-share-buttons3/wordpress-easy-social-share-buttons-plugin-9-4-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in appscreo Easy Social Share Buttons allows PHP Local File Inclusion.This issue affects Easy Social Share Buttons: from n/a through 9.4."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-345",
-        "id": "CVE-2024-31341",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/profile-builder/wordpress-user-profile-builder-plugin-3-11-2-bypass-vulnerability-vulnerability?_s_id=cve"
-        ],
-        "summary": "Insufficient Verification of Data Authenticity vulnerability in Cozmoslabs Profile Builder allows Functionality Bypass.This issue affects Profile Builder: from n/a through 3.11.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-200",
-        "id": "CVE-2024-32131",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/download-manager/wordpress-download-manager-plugin-3-2-82-file-password-lock-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Exposure of Sensitive Information to an Unauthorized Actor vulnerability in W3 Eden Inc. Download Manager allows Functionality Bypass.This issue affects Download Manager: from n/a through 3.2.82."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-32507",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/login-with-phone-number/wordpress-login-with-phone-number-plugin-1-7-16-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Hamid Alinia \u2013 idehweb Login with phone number allows Privilege Escalation.This issue affects Login with phone number: from n/a through 1.7.16."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-46145",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/themify-ultra/wordpress-themify-ultra-theme-7-3-3-authenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Themify Themify Ultra allows Privilege Escalation.This issue affects Themify Ultra: from n/a through 7.3.5."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-32511",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/woocommerce-simple-registration/wordpress-simple-registration-for-woocommerce-plugin-1-5-6-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Astoundify Simple Registration for WooCommerce allows Privilege Escalation.This issue affects Simple Registration for WooCommerce: from n/a through 1.5.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-602",
-        "id": "CVE-2024-32512",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/weforms/wordpress-weforms-plugin-1-6-20-form-submission-restriction-bypass-vulnerability?_s_id=cve"
-        ],
-        "summary": "Client-Side Enforcement of Server-Side Security vulnerability in weForms allows Removing Important Client Functionality.This issue affects weForms: from n/a through 1.6.20."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-918",
-        "id": "CVE-2023-46784",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ics-calendar/wordpress-ics-calendar-plugin-10-12-0-2-ssrf-and-arbitrary-file-read-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'), Server-Side Request Forgery (SSRF) vulnerability in Room 34 Creative Services, LLC ICS Calendar ics-calendar allows Absolute Path Traversal, : Server Side Request Forgery.This issue affects ICS Calendar: from n/a through 10.12.0.3."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-602",
-        "id": "CVE-2024-32521",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/zero-spam/wordpress-zero-spam-for-wordpress-plugin-5-5-5-bypass-spam-protection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Client-Side Enforcement of Server-Side Security vulnerability in Highfivery LLC Zero Spam allows Removing Important Client Functionality.This issue affects Zero Spam: from n/a through 5.5.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2023-44478",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/rich-snippets-vevents/wordpress-events-rich-snippets-for-google-plugin-1-8-csrf-leading-to-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Cross-Site Request Forgery (CSRF) vulnerability in WP Hive Events Rich Snippets for Google allows Exploitation of Trusted Credentials.This issue affects Events Rich Snippets for Google: from n/a through 1.8."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32523",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/mailster/wordpress-mailster-plugin-4-0-6-unauthenticated-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in EverPress Mailster allows PHP Local File Inclusion.This issue affects Mailster: from n/a through 4.0.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-45652",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/remote-content-shortcode/wordpress-remote-content-shortcode-plugin-1-5-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Justin Silver Remote Content Shortcode allows PHP Local File Inclusion.This issue affects Remote Content Shortcode: from n/a through 1.5."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-46197",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/popup-by-supsystic/wordpress-popup-by-supsystic-plugin-1-10-19-unauthenticated-subscriber-email-addresses-disclosure?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in supsystic.Com Popup by Supsystic allows Relative Path Traversal.This issue affects Popup by Supsystic: from n/a through 1.10.19."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2024-32680",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/woocommerce-products-filter/wordpress-husky-plugin-1-3-5-2-remote-code-execution-rce-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'), Improper Control of Generation of Code ('Code Injection') vulnerability in PluginUS HUSKY \u2013 Products Filter for WooCommerce (formerly WOOF) allows Using Malicious Files, Code Inclusion.This issue affects HUSKY \u2013 Products Filter for WooCommerce (formerly WOOF): from n/a through 1.3.5.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-602",
-        "id": "CVE-2024-32685",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-ultimate-review/wordpress-wp-ultimate-review-plugin-2-2-5-review-score-manipulation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Client-Side Enforcement of Server-Side Security vulnerability in Wpmet Wp Ultimate Review allows Functionality Bypass.This issue affects Wp Ultimate Review: from n/a through 2.2.5."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2023-46205",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ultimate_vc_addons/wordpress-ultimate-addons-for-wpbakery-page-builder-plugin-3-19-14-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Brainstorm Force Ultimate Addons for WPBakery Page Builder allows PHP Local File Inclusion.This issue affects Ultimate Addons for WPBakery Page Builder: from n/a through 3.19.14."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-32790",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/pricing-table-by-supsystic/wordpress-pricing-table-by-supsystic-plugin-1-9-12-content-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS) vulnerability in Supsystic Pricing Table by Supsystic allows Code Injection.This issue affects Pricing Table by Supsystic: from n/a through 1.9.12."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-47178",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/theplus_elementor_addon/wordpress-the-plus-addons-for-elementor-pro-plugin-5-2-8-unauthenticated-local-file-inclusion-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in POSIMYTH Innovation The Plus Addons for Elementor Pro allows PHP Local File Inclusion.This issue affects The Plus Addons for Elementor Pro: from n/a through 5.2.8."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-33549",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/woozone/wordpress-wzone-plugin-14-0-10-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in AA-Team WZone allows Privilege Escalation.This issue affects WZone: from n/a through 14.0.10."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-47682",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-user-frontend/wordpress-wp-user-frontend-plugin-3-6-5-authenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in weDevs WP User Frontend allows Privilege Escalation.This issue affects WP User Frontend: from n/a through 3.6.5."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-33550",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-masquerade/wordpress-wp-masquerade-plugin-1-1-0-authenticated-account-takeover-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in JR King/Eran Schoellhorn WP Masquerade allows Privilege Escalation.This issue affects WP Masquerade: from n/a through 1.1.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-47683",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/miniorange-login-openid/wordpress-social-login-social-sharing-by-miniorange-plugin-7-6-6-authenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in miniOrange WordPress Social Login and Register (Discord, Google, Twitter, LinkedIn) allows Privilege Escalation.This issue affects WordPress Social Login and Register (Discord, Google, Twitter, LinkedIn): from n/a through 7.6.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-33552",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/et-core-plugin/wordpress-xstore-core-plugin-5-3-5-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in 8theme XStore Core allows Privilege Escalation.This issue affects XStore Core: from n/a through 5.3.8."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-47782",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/thrive-theme/wordpress-thrive-theme-builder-theme-3-20-1-authenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Thrive Themes Thrive Theme Builder allows Privilege Escalation.This issue affects Thrive Theme Builder: from n/a before 3.24.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-33567",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/barcode-scanner-lite-pos-to-manage-products-inventory-and-orders/wordpress-barcode-scanner-with-inventory-order-manager-plugin-1-5-3-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in UkrSolution Barcode Scanner with Inventory & Order Manager allows Privilege Escalation.This issue affects Barcode Scanner with Inventory & Order Manager: from n/a through 1.5.3."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-47868",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wpforo/wordpress-wpforo-plugin-2-2-3-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in wpForo wpForo Forum allows Privilege Escalation.This issue affects wpForo Forum: from n/a through 2.2.3."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-33569",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/instant-images/wordpress-instant-images-plugin-6-1-0-arbitrary-option-update-to-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Darren Cooney Instant Images allows Privilege Escalation.This issue affects Instant Images: from n/a through 6.1.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-48319",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/salon-booking-system/wordpress-salon-booking-system-plugin-8-7-editor-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Salon Booking System Salon booking system allows Privilege Escalation.This issue affects Salon booking system: from n/a through 8.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-48757",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/jet-engine/wordpress-jetengine-plugin-3-2-4-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Crocoblock JetEngine allows Privilege Escalation.This issue affects JetEngine: from n/a through 3.2.4."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2024-33644",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/customify-sites/wordpress-customify-site-library-plugin-0-0-9-remote-code-execution-rce-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Control of Generation of Code ('Code Injection') vulnerability in WPCustomify Customify Site Library allows Code Injection.This issue affects Customify Site Library: from n/a through 0.0.9."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-290",
-        "id": "CVE-2024-33917",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wti-like-post/wordpress-wti-like-post-plugin-1-4-6-ip-restriction-bypass-vulnerability-vulnerability?_s_id=cve"
-        ],
-        "summary": "Authentication Bypass by Spoofing vulnerability in webtechideas WTI Like Post allows Functionality Bypass.This issue affects WTI Like Post: from n/a through 1.4.6."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51424",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/webinar-ignition/wordpress-webinarignition-plugin-3-05-0-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Saleswonder Team WebinarIgnition allows Privilege Escalation.This issue affects WebinarIgnition: from n/a through 3.05.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51476",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-mlm/wordpress-wp-mlm-unilevel-plugin-4-0-unauthenticated-account-takeover-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in IOSS WP MLM Unilevel allows Privilege Escalation.This issue affects WP MLM Unilevel: from n/a through 4.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-34370",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ean-for-woocommerce/wordpress-ean-for-woocommerce-plugin-4-8-9-arbitrary-option-update-to-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in WPFactory EAN for WooCommerce allows Privilege Escalation.This issue affects EAN for WooCommerce: from n/a through 4.8.9."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51479",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/build-app-online/wordpress-build-app-online-plugin-1-0-19-authenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Abdul Hakeem Build App Online allows Privilege Escalation.This issue affects Build App Online: from n/a through 1.0.19."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2024-34434",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-meta-data-filter-and-taxonomy-filter/wordpress-mdtf-meta-data-and-taxonomies-filter-plugin-1-3-3-2-arbitrary-shortcode-execution-vulnerability?_s_id=cve"
-        ],
-        "summary": "Incorrect Authorization vulnerability in realmag777 WordPress Meta Data and Taxonomies Filter (MDTF) allows Code Inclusion, Functionality Misuse.This issue affects WordPress Meta Data and Taxonomies Filter (MDTF): from n/a through 1.3.3.2."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51481",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/local-delivery-drivers-for-woocommerce/wordpress-local-delivery-drivers-for-woocommerce-plugin-1-9-0-unauthenticated-account-takeover-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in powerfulwp Local Delivery Drivers for WooCommerce allows Privilege Escalation.This issue affects Local Delivery Drivers for WooCommerce: from n/a through 1.9.0."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2023-51483",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-front-end-profile/wordpress-wp-frontend-profile-plugin-1-3-1-unauthenticated-privilege-escalation-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Privilege Management vulnerability in Glowlogix WP Frontend Profile allows Privilege Escalation.This issue affects WP Frontend Profile: from n/a through 1.3.1."
-    },
-    {
-        "Modified": "2024-05-17T09:15:00",
-        "Published": "2024-05-17T09:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-80",
-        "id": "CVE-2024-4214",
-        "impact": {},
-        "last-modified": "2024-05-17T09:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/cardealer/wordpress-cardealer-plugin-4-15-content-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS vulnerability in Bill Minozzi Car Dealer allows Code Injection.This issue affects Car Dealer: from n/a through 4.15."
     }
 ]
