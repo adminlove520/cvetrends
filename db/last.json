@@ -1,5 +1,23 @@
 [
     {
+        "Modified": "2024-05-19T14:15:00",
+        "Published": "2024-05-19T14:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-5101",
+        "impact": {},
+        "last-modified": "2024-05-19T14:15:00",
+        "references": [
+            "https://vuldb.com/?id.265084",
+            "https://vuldb.com/?ctiid.265084",
+            "https://vuldb.com/?submit.337059",
+            "https://github.com/rockersiyuan/CVE/blob/main/SourceCodester%20Simple%20Inventory%20System%20Sql%20Inject-4.md"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Simple Inventory System 1.0. It has been declared as critical. This vulnerability affects unknown code of the file updateproduct.php. The manipulation of the argument ITEM leads to sql injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-265084."
+    },
+    {
         "Modified": "2024-05-19T12:15:00",
         "Published": "2024-05-19T12:15:00",
         "access": {},
@@ -1842,26 +1860,5 @@
             "https://git.kernel.org/stable/c/ed4cccef64c1d0d5b91e69f7a8a6697c3a865486"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngro: fix ownership transfer\n\nIf packets are GROed with fraglist they might be segmented later on and\ncontinue their journey in the stack. In skb_segment_list those skbs can\nbe reused as-is. This is an issue as their destructor was removed in\nskb_gro_receive_list but not the reference to their socket, and then\nthey can't be orphaned. Fix this by also removing the reference to the\nsocket.\n\nFor example this could be observed,\n\n  kernel BUG at include/linux/skbuff.h:3131!  (skb_orphan)\n  RIP: 0010:ip6_rcv_core+0x11bc/0x19a0\n  Call Trace:\n   ipv6_list_rcv+0x250/0x3f0\n   __netif_receive_skb_list_core+0x49d/0x8f0\n   netif_receive_skb_list_internal+0x634/0xd40\n   napi_complete_done+0x1d2/0x7d0\n   gro_cell_poll+0x118/0x1f0\n\nA similar construction is found in skb_gro_receive, apply the same\nchange there."
-    },
-    {
-        "Modified": "2024-05-19T09:15:00",
-        "Published": "2024-05-19T09:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35895",
-        "impact": {},
-        "last-modified": "2024-05-19T09:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/f7990498b05ac41f7d6a190dc0418ef1d21bf058",
-            "https://git.kernel.org/stable/c/dd54b48db0c822ae7b520bc80751f0a0a173ef75",
-            "https://git.kernel.org/stable/c/d1e73fb19a4c872d7a399ad3c66e8ca30e0875ec",
-            "https://git.kernel.org/stable/c/a44770fed86515eedb5a7c00b787f847ebb134a5",
-            "https://git.kernel.org/stable/c/668b3074aa14829e2ac2759799537a93b60fef86",
-            "https://git.kernel.org/stable/c/6af057ccdd8e7619960aca1f0428339f213b31cd",
-            "https://git.kernel.org/stable/c/ff91059932401894e6c86341915615c5eb0eca48"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf, sockmap: Prevent lock inversion deadlock in map delete elem\n\nsyzkaller started using corpuses where a BPF tracing program deletes\nelements from a sockmap/sockhash map. Because BPF tracing programs can be\ninvoked from any interrupt context, locks taken during a map_delete_elem\noperation must be hardirq-safe. Otherwise a deadlock due to lock inversion\nis possible, as reported by lockdep:\n\n       CPU0                    CPU1\n       ----                    ----\n  lock(&htab->buckets[i].lock);\n                               local_irq_disable();\n                               lock(&host->lock);\n                               lock(&htab->buckets[i].lock);\n  <Interrupt>\n    lock(&host->lock);\n\nLocks in sockmap are hardirq-unsafe by design. We expects elements to be\ndeleted from sockmap/sockhash only in task (normal) context with interrupts\nenabled, or in softirq context.\n\nDetect when map_delete_elem operation is invoked from a context which is\n_not_ hardirq-unsafe, that is interrupts are disabled, and bail out with an\nerror.\n\nNote that map updates are not affected by this issue. BPF verifier does not\nallow updating sockmap/sockhash from a BPF tracing program today."
     }
 ]
