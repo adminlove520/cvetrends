@@ -1,5 +1,56 @@
 [
     {
+        "Modified": "2024-05-24T21:15:00",
+        "Published": "2024-05-24T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35232",
+        "impact": {},
+        "last-modified": "2024-05-24T21:15:00",
+        "references": [
+            "https://github.com/huandu/facebook/security/advisories/GHSA-3f65-m234-9mxr",
+            "https://github.com/huandu/facebook/commit/8b34431b91b32903c8821b1d7621bf81a029d8e4",
+            "https://cs.opensource.google/go/go/+/refs/tags/go1.22.3:src/net/http/client.go;l=629-633",
+            "https://cs.opensource.google/go/go/+/refs/tags/go1.22.3:src/net/url/url.go;l=30",
+            "https://github.com/huandu/facebook/blob/1591be276561bbdb019c0279f1d33cb18a650e1b/session.go#L558-L567"
+        ],
+        "summary": "github.com/huandu/facebook is a Go package that fully supports the Facebook Graph API with file upload, batch request and marketing API. access_token can be exposed in error message on fail in HTTP request. This issue has been patched in version 2.7.2.\n"
+    },
+    {
+        "Modified": "2024-05-24T21:15:00",
+        "Published": "2024-05-24T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35373",
+        "impact": {},
+        "last-modified": "2024-05-24T21:15:00",
+        "references": [
+            "https://github.com/laowantong/mocodo/blob/11ca879060a68e06844058cd969c6379214cc2a8/web/rewrite.php#L45",
+            "https://chocapikk.com/posts/2024/mocodo-vulnerabilities/"
+        ],
+        "summary": "Mocodo Mocodo Online 4.2.6 and below is vulnerable to Remote Code Execution via /web/rewrite.php."
+    },
+    {
+        "Modified": "2024-05-24T21:15:00",
+        "Published": "2024-05-24T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35374",
+        "impact": {},
+        "last-modified": "2024-05-24T21:15:00",
+        "references": [
+            "https://github.com/laowantong/mocodo/blob/11ca879060a68e06844058cd969c6379214cc2a8/web/generate.php#L104-L158",
+            "https://chocapikk.com/posts/2024/mocodo-vulnerabilities/"
+        ],
+        "summary": "Mocodo Mocodo Online 4.2.6 and below does not properly sanitize the sql_case input field in /web/generate.php, allowing remote attackers to execute arbitrary SQL commands and potentially command injection, leading to remote code execution (RCE) under certain conditions."
+    },
+    {
         "Modified": "2024-05-24T19:15:00",
         "Published": "2024-05-24T19:15:00",
         "access": {},
@@ -1690,53 +1741,5 @@
             "https://git.kernel.org/stable/c/0f55f89d98c8b3e12b4f55f71c127a173e29557c"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nserial: liteuart: Fix NULL pointer dereference in ->remove()\n\ndrvdata has to be set in _probe() - otherwise platform_get_drvdata()\ncauses null pointer dereference BUG in _remove()."
-    },
-    {
-        "Modified": "2024-05-24T18:09:00",
-        "Published": "2024-05-24T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47533",
-        "impact": {},
-        "last-modified": "2024-05-24T18:09:00",
-        "references": [
-            "https://git.kernel.org/stable/c/2931db9a5ed219546cf2ae0546698faf78281b89",
-            "https://git.kernel.org/stable/c/d134c5ff71c7f2320fc7997f2fbbdedf0c76889a"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/vc4: kms: Clear the HVS FIFO commit pointer once done\n\nCommit 9ec03d7f1ed3 (\"drm/vc4: kms: Wait on previous FIFO users before a\ncommit\") introduced a wait on the previous commit done on a given HVS\nFIFO.\n\nHowever, we never cleared that pointer once done. Since\ndrm_crtc_commit_put can free the drm_crtc_commit structure directly if\nwe were the last user, this means that it can lead to a use-after free\nif we were to duplicate the state, and that stale pointer would even be\ncopied to the new state.\n\nSet the pointer to NULL once we're done with the wait so that we don't\ncarry over a pointer to a free'd structure."
-    },
-    {
-        "Modified": "2024-05-24T18:09:00",
-        "Published": "2024-05-24T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47558",
-        "impact": {},
-        "last-modified": "2024-05-24T18:09:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a92f0eebb8dc008b9e8c51c6f7b8c93b27a29a43",
-            "https://git.kernel.org/stable/c/b270bfe697367776eca2e6759a71d700fb8d82a2"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: stmmac: Disable Tx queues when reconfiguring the interface\n\nThe Tx queues were not disabled in situations where the driver needed to\nstop the interface to apply a new configuration. This could result in a\nkernel panic when doing any of the 3 following actions:\n* reconfiguring the number of queues (ethtool -L)\n* reconfiguring the size of the ring buffers (ethtool -G)\n* installing/removing an XDP program (ip l set dev ethX xdp)\n\nPrevent the panic by making sure netif_tx_disable is called when stopping\nan interface.\n\nWithout this patch, the following kernel panic can be observed when doing\nany of the actions above:\n\nUnable to handle kernel paging request at virtual address ffff80001238d040\n[....]\n Call trace:\n  dwmac4_set_addr+0x8/0x10\n  dev_hard_start_xmit+0xe4/0x1ac\n  sch_direct_xmit+0xe8/0x39c\n  __dev_queue_xmit+0x3ec/0xaf0\n  dev_queue_xmit+0x14/0x20\n[...]\n[ end trace 0000000000000002 ]---"
-    },
-    {
-        "Modified": "2024-05-24T18:09:00",
-        "Published": "2024-05-24T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47561",
-        "impact": {},
-        "last-modified": "2024-05-24T18:09:00",
-        "references": [
-            "https://git.kernel.org/stable/c/cc432b0727ce404cc13e8f6b5ce29f412c3f9f1f",
-            "https://git.kernel.org/stable/c/84e1d0bf1d7121759622dabf8fbef4c99ad597c5"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ni2c: virtio: disable timeout handling\n\nIf a timeout is hit, it can result is incorrect data on the I2C bus\nand/or memory corruptions in the guest since the device can still be\noperating on the buffers it was given while the guest has freed them.\n\nHere is, for example, the start of a slub_debug splat which was\ntriggered on the next transfer after one transfer was forced to timeout\nby setting a breakpoint in the backend (rust-vmm/vhost-device):\n\n BUG kmalloc-1k (Not tainted): Poison overwritten\n First byte 0x1 instead of 0x6b\n Allocated in virtio_i2c_xfer+0x65/0x35c age=350 cpu=0 pid=29\n \t__kmalloc+0xc2/0x1c9\n \tvirtio_i2c_xfer+0x65/0x35c\n \t__i2c_transfer+0x429/0x57d\n \ti2c_transfer+0x115/0x134\n \ti2cdev_ioctl_rdwr+0x16a/0x1de\n \ti2cdev_ioctl+0x247/0x2ed\n \tvfs_ioctl+0x21/0x30\n \tsys_ioctl+0xb18/0xb41\n Freed in virtio_i2c_xfer+0x32e/0x35c age=244 cpu=0 pid=29\n \tkfree+0x1bd/0x1cc\n \tvirtio_i2c_xfer+0x32e/0x35c\n \t__i2c_transfer+0x429/0x57d\n \ti2c_transfer+0x115/0x134\n \ti2cdev_ioctl_rdwr+0x16a/0x1de\n \ti2cdev_ioctl+0x247/0x2ed\n \tvfs_ioctl+0x21/0x30\n \tsys_ioctl+0xb18/0xb41\n\nThere is no simple fix for this (the driver would have to always create\nbounce buffers and hold on to them until the device eventually returns\nthe buffers), so just disable the timeout support for now."
     }
 ]
