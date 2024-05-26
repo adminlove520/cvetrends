@@ -1,5 +1,41 @@
 [
     {
+        "Modified": "2024-05-25T23:15:00",
+        "Published": "2024-05-25T23:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-5350",
+        "impact": {},
+        "last-modified": "2024-05-25T23:15:00",
+        "references": [
+            "https://vuldb.com/?id.266262",
+            "https://vuldb.com/?ctiid.266262",
+            "https://github.com/anji-plus/report/issues/34",
+            "https://github.com/anji-plus/report/files/15363269/aj-report.pdf"
+        ],
+        "summary": "A vulnerability was found in anji-plus AJ-Report up to 1.4.1. It has been classified as critical. Affected is the function pageList of the file /pageList. The manipulation of the argument p leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. VDB-266262 is the identifier assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-05-25T22:15:00",
+        "Published": "2024-05-25T22:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-78",
+        "id": "CVE-2024-5340",
+        "impact": {},
+        "last-modified": "2024-05-25T22:15:00",
+        "references": [
+            "https://vuldb.com/?id.266246",
+            "https://vuldb.com/?ctiid.266246",
+            "https://vuldb.com/?submit.336038",
+            "https://github.com/h0e4a0r1t/h0e4a0r1t.github.io/blob/master/2024/z%7CYVDv%7CHKA)*%5CdK!/Ruijie%20RG-UAC%20Unified%20Internet%20Behavior%20Management%20Audit%20System%20Backend%20RCE%20Vulnerability-autovpn%3Asub_commit.php.pdf"
+        ],
+        "summary": "A vulnerability was found in Ruijie RG-UAC up to 20240516. It has been rated as critical. Affected by this issue is some unknown functionality of the file /view/vpn/autovpn/sub_commit.php. The manipulation of the argument key leads to os command injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. VDB-266246 is the identifier assigned to this vulnerability. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
         "Modified": "2024-05-25T18:15:00",
         "Published": "2024-05-25T18:15:00",
         "access": {},
@@ -1654,38 +1690,5 @@
             "https://palm-vertebra-fe9.notion.site/formWriteFacMac_RCE-d70cf636739e4a769b1f919ffed4a2a0"
         ],
         "summary": "Tenda FH1206 V1.2.0.8(8155) was discovered to contain a command injection vulnerability via the mac parameter at ip/goform/WriteFacMac."
-    },
-    {
-        "Modified": "2024-05-24T18:09:00",
-        "Published": "2024-05-24T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35340",
-        "impact": {},
-        "last-modified": "2024-05-24T18:09:00",
-        "references": [
-            "https://palm-vertebra-fe9.notion.site/formexeCommand_RCE-91a5f12ae23a42b4a25f5d1d4de308da"
-        ],
-        "summary": "Tenda FH1206 V1.2.0.8(8155) was discovered to contain a command injection vulnerability via the cmdinput parameter at ip/goform/formexeCommand."
-    },
-    {
-        "Modified": "2024-05-24T18:09:00",
-        "Published": "2024-05-24T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2021-47546",
-        "impact": {},
-        "last-modified": "2024-05-24T18:09:00",
-        "references": [
-            "https://git.kernel.org/stable/c/ee38eb8cf9a7323884c2b8e0adbbeb2192d31e29",
-            "https://git.kernel.org/stable/c/209d35ee34e25f9668c404350a1c86d914c54ffa",
-            "https://git.kernel.org/stable/c/8ef8a76a340ebdb2c2eea3f6fb0ebbed09a16383",
-            "https://git.kernel.org/stable/c/cdef485217d30382f3bf6448c54b4401648fe3f1"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: fix memory leak in fib6_rule_suppress\n\nThe kernel leaks memory when a `fib` rule is present in IPv6 nftables\nfirewall rules and a suppress_prefix rule is present in the IPv6 routing\nrules (used by certain tools such as wg-quick). In such scenarios, every\nincoming packet will leak an allocation in `ip6_dst_cache` slab cache.\n\nAfter some hours of `bpftrace`-ing and source code reading, I tracked\ndown the issue to ca7a03c41753 (\"ipv6: do not free rt if\nFIB_LOOKUP_NOREF is set on suppress rule\").\n\nThe problem with that change is that the generic `args->flags` always have\n`FIB_LOOKUP_NOREF` set[1][2] but the IPv6-specific flag\n`RT6_LOOKUP_F_DST_NOREF` might not be, leading to `fib6_rule_suppress` not\ndecreasing the refcount when needed.\n\nHow to reproduce:\n - Add the following nftables rule to a prerouting chain:\n     meta nfproto ipv6 fib saddr . mark . iif oif missing drop\n   This can be done with:\n     sudo nft create table inet test\n     sudo nft create chain inet test test_chain '{ type filter hook prerouting priority filter + 10; policy accept; }'\n     sudo nft add rule inet test test_chain meta nfproto ipv6 fib saddr . mark . iif oif missing drop\n - Run:\n     sudo ip -6 rule add table main suppress_prefixlength 0\n - Watch `sudo slabtop -o | grep ip6_dst_cache` to see memory usage increase\n   with every incoming ipv6 packet.\n\nThis patch exposes the protocol-specific flags to the protocol\nspecific `suppress` function, and check the protocol-specific `flags`\nargument for RT6_LOOKUP_F_DST_NOREF instead of the generic\nFIB_LOOKUP_NOREF when decreasing the refcount, like this.\n\n[1]: https://github.com/torvalds/linux/blob/ca7a03c4175366a92cee0ccc4fec0038c3266e26/net/ipv6/fib6_rules.c#L71\n[2]: https://github.com/torvalds/linux/blob/ca7a03c4175366a92cee0ccc4fec0038c3266e26/net/ipv6/fib6_rules.c#L99"
     }
 ]
