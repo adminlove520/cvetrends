@@ -1,5 +1,57 @@
 [
     {
+        "Modified": "2024-05-29T11:16:00",
+        "Published": "2024-05-29T11:16:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52881",
+        "impact": {},
+        "last-modified": "2024-05-29T11:16:00",
+        "references": [
+            "https://git.kernel.org/stable/c/69eae75ca5255e876628ac5cee9eaab31f644b57",
+            "https://git.kernel.org/stable/c/458f07ffeccd17f99942311e09ef574ddf4a414a",
+            "https://git.kernel.org/stable/c/7ffff0cc929fdfc62a74b384c4903d6496c910f0",
+            "https://git.kernel.org/stable/c/b17a886ed29f3b70b78ccf632dad03e0c69e3c1a",
+            "https://git.kernel.org/stable/c/0d4e0afdd6658cd21dd5be61880411a2553fd1fc",
+            "https://git.kernel.org/stable/c/008b807fe487e0b15a3a6c39add4eb477f73e440",
+            "https://git.kernel.org/stable/c/2087d53a66e97a5eb5d1bf558d5bef9e5f891757",
+            "https://git.kernel.org/stable/c/3d501dd326fb1c73f1b8206d4c6e1d7b15c07e27"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntcp: do not accept ACK of bytes we never sent\n\nThis patch is based on a detailed report and ideas from Yepeng Pan\nand Christian Rossow.\n\nACK seq validation is currently following RFC 5961 5.2 guidelines:\n\n   The ACK value is considered acceptable only if\n   it is in the range of ((SND.UNA - MAX.SND.WND) <= SEG.ACK <=\n   SND.NXT).  All incoming segments whose ACK value doesn't satisfy the\n   above condition MUST be discarded and an ACK sent back.  It needs to\n   be noted that RFC 793 on page 72 (fifth check) says: \"If the ACK is a\n   duplicate (SEG.ACK < SND.UNA), it can be ignored.  If the ACK\n   acknowledges something not yet sent (SEG.ACK > SND.NXT) then send an\n   ACK, drop the segment, and return\".  The \"ignored\" above implies that\n   the processing of the incoming data segment continues, which means\n   the ACK value is treated as acceptable.  This mitigation makes the\n   ACK check more stringent since any ACK < SND.UNA wouldn't be\n   accepted, instead only ACKs that are in the range ((SND.UNA -\n   MAX.SND.WND) <= SEG.ACK <= SND.NXT) get through.\n\nThis can be refined for new (and possibly spoofed) flows,\nby not accepting ACK for bytes that were never sent.\n\nThis greatly improves TCP security at a little cost.\n\nI added a Fixes: tag to make sure this patch will reach stable trees,\neven if the 'blamed' patch was adhering to the RFC.\n\ntp->bytes_acked was added in linux-4.2\n\nFollowing packetdrill test (courtesy of Yepeng Pan) shows\nthe issue at hand:\n\n0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3\n+0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0\n+0 bind(3, ..., ...) = 0\n+0 listen(3, 1024) = 0\n\n// ---------------- Handshake ------------------- //\n\n// when window scale is set to 14 the window size can be extended to\n// 65535 * (2^14) = 1073725440. Linux would accept an ACK packet\n// with ack number in (Server_ISN+1-1073725440. Server_ISN+1)\n// ,though this ack number acknowledges some data never\n// sent by the server.\n\n+0 < S 0:0(0) win 65535 <mss 1400,nop,wscale 14>\n+0 > S. 0:0(0) ack 1 <...>\n+0 < . 1:1(0) ack 1 win 65535\n+0 accept(3, ..., ...) = 4\n\n// For the established connection, we send an ACK packet,\n// the ack packet uses ack number 1 - 1073725300 + 2^32,\n// where 2^32 is used to wrap around.\n// Note: we used 1073725300 instead of 1073725440 to avoid possible\n// edge cases.\n// 1 - 1073725300 + 2^32 = 3221241997\n\n// Oops, old kernels happily accept this packet.\n+0 < . 1:1001(1000) ack 3221241997 win 65535\n\n// After the kernel fix the following will be replaced by a challenge ACK,\n// and prior malicious frame would be dropped.\n+0 > . 1:1(0) ack 1001"
+    },
+    {
+        "Modified": "2024-05-29T11:16:00",
+        "Published": "2024-05-29T11:16:00",
+        "access": {},
+        "assigner": "cna@manageengine.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27313",
+        "impact": {},
+        "last-modified": "2024-05-29T11:16:00",
+        "references": [
+            "https://www.manageengine.com/privileged-access-management/advisory/cve-2024-27313.html"
+        ],
+        "summary": "Zoho ManageEngine PAM360 is vulnerable to Stored XSS vulnerability. This vulnerability is applicable only in the version 6610."
+    },
+    {
+        "Modified": "2024-05-29T10:15:00",
+        "Published": "2024-05-29T10:15:00",
+        "access": {},
+        "assigner": "security@checkmk.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-28826",
+        "impact": {},
+        "last-modified": "2024-05-29T10:15:00",
+        "references": [
+            "https://checkmk.com/werk/15200"
+        ],
+        "summary": "Improper restriction of local upload and download paths in check_sftp in Checkmk before 2.3.0p4, 2.2.0p27, 2.1.0p44, and in Checkmk 2.0.0 (EOL) allows attackers with sufficient permissions to configure the check to read and write local files on the Checkmk site server."
+    },
+    {
         "Modified": "2024-05-29T09:15:00",
         "Published": "2024-05-29T09:15:00",
         "access": {},
@@ -1480,52 +1532,5 @@
             "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-36804"
         ],
         "summary": "Windows GDI Elevation of Privilege Vulnerability"
-    },
-    {
-        "Modified": "2024-05-29T03:16:00",
-        "Published": "2023-09-12T17:15:00",
-        "access": {},
-        "assigner": "secure@microsoft.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-36805",
-        "impact": {},
-        "last-modified": "2024-05-29T03:16:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-36805"
-        ],
-        "summary": "Windows MSHTML Platform Security Feature Bypass Vulnerability"
-    },
-    {
-        "Modified": "2024-05-29T03:16:00",
-        "Published": "2023-09-12T17:15:00",
-        "access": {},
-        "assigner": "secure@microsoft.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-38140",
-        "impact": {},
-        "last-modified": "2024-05-29T03:16:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-38140",
-            "http://packetstormsecurity.com/files/175108/Microsoft-Windows-Kernel-Paged-Pool-Memory-Disclosure.html"
-        ],
-        "summary": "Windows Kernel Information Disclosure Vulnerability"
-    },
-    {
-        "Modified": "2024-05-29T03:16:00",
-        "Published": "2023-09-12T17:15:00",
-        "access": {},
-        "assigner": "secure@microsoft.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-38141",
-        "impact": {},
-        "last-modified": "2024-05-29T03:16:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-38141",
-            "http://packetstormsecurity.com/files/175096/Microsoft-Windows-Kernel-Race-Condition-Memory-Corruption.html"
-        ],
-        "summary": "Windows Kernel Elevation of Privilege Vulnerability"
     }
 ]
