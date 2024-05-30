@@ -1,5 +1,113 @@
 [
     {
+        "Modified": "2024-05-30T21:15:00",
+        "Published": "2024-05-30T21:15:00",
+        "access": {},
+        "assigner": "infosec@edk2.groups.io",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-1298",
+        "impact": {},
+        "last-modified": "2024-05-30T21:15:00",
+        "references": [
+            "https://github.com/tianocore/edk2/security/advisories/GHSA-chfw-xj8f-6m53"
+        ],
+        "summary": "EDK2 contains a vulnerability when S3 sleep is activated where an Attacker may cause a Division-By-Zero due to a UNIT32 overflow via local access. A successful exploit of this vulnerability may lead to a loss of Availability."
+    },
+    {
+        "Modified": "2024-05-30T21:15:00",
+        "Published": "2024-05-30T21:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36119",
+        "impact": {},
+        "last-modified": "2024-05-30T21:15:00",
+        "references": [
+            "https://github.com/statamic/cms/security/advisories/GHSA-qvpj-w7xj-r6w9",
+            "https://github.com/statamic/cms/commit/0b804306c96c99b81755d5bd02df87ddf392853e",
+            "https://dev.to/balogh08/cleaning-your-git-history-safely-removing-sensitive-data-10i5",
+            "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository"
+        ],
+        "summary": "Statamic is a, Laravel + Git powered CMS designed for building websites. In affected versions users registering via the `user:register_form` tag will have their password confirmation stored in plain text in their user file. This only affects sites matching **all** of the following conditions: 1. Running Statamic versions between 5.3.0 and 5.6.1. (This version range represents only one calendar week), 2. Using the `user:register_form` tag. 3. Using file-based user accounts. (Does not affect users stored in a database.), 4. Has users that have registered during that time period. (Existing users are not affected.). Additionally passwords are only visible to users that have access to read user yaml files, typically developers of the application itself. This issue has been patched in version 5.6.2, however any users registered during that time period and using the affected version range will still have the the `password_confirmation` value in their yaml files. We recommend that affected users have their password reset. System administrators are advised to upgrade their deployments. There are no known workarounds for this vulnerability. Anyone who commits their files to a public git repo, may consider clearing the sensitive data from the git history as it is likely that passwords were uploaded."
+    },
+    {
+        "Modified": "2024-05-30T20:15:00",
+        "Published": "2024-05-30T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32877",
+        "impact": {},
+        "last-modified": "2024-05-30T20:15:00",
+        "references": [
+            "https://github.com/yiisoft/yii2/security/advisories/GHSA-qg5r-95m4-mjgj",
+            "https://github.com/yiisoft/yii2/commit/f7baab16e79f2369d4838ab5653c3c07ecf26615"
+        ],
+        "summary": "Yii 2 is a PHP application framework. During internal penetration testing of a product based on Yii2, users discovered a Cross-site Scripting (XSS) vulnerability within the framework itself. This issue is relevant for the latest version of Yii2 (2.0.49.3). This issue lies in the mechanism for displaying function argument values in the stack trace. The vulnerability manifests when an argument's value exceeds 32 characters. For convenience, argument values exceeding this limit are truncated and displayed with an added \"...\". The full argument value becomes visible when hovering over it with the mouse, as it is displayed in the title attribute of a span tag. However, the use of a double quote (\") allows an attacker to break out of the title attribute's value context and inject their own attributes into the span tag, including malicious JavaScript code through event handlers such as onmousemove. This vulnerability allows an attacker to execute arbitrary JavaScript code in the security context of the victim's site via a specially crafted link. This could lead to the theft of cookies (including httpOnly cookies, which are accessible on the page), content substitution, or complete takeover of user accounts. This issue has been addressed in version 2.0.50. Users are advised to upgrade. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-05-30T20:15:00",
+        "Published": "2024-05-30T20:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-121",
+        "id": "CVE-2024-34171",
+        "impact": {},
+        "last-modified": "2024-05-30T20:15:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-151-02"
+        ],
+        "summary": "Fuji Electric Monitouch V-SFT \nis vulnerable to a stack-based buffer overflow, which could allow an attacker to execute arbitrary code."
+    },
+    {
+        "Modified": "2024-05-30T20:15:00",
+        "Published": "2024-05-30T20:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35189",
+        "impact": {},
+        "last-modified": "2024-05-30T20:15:00",
+        "references": [
+            "https://github.com/ethyca/fides/security/advisories/GHSA-rcvg-jj3g-rj7c",
+            "https://cloud.google.com/iam/docs/key-rotation"
+        ],
+        "summary": "Fides is an open-source privacy engineering platform. The Fides webserver has a number of endpoints that retrieve `ConnectionConfiguration` records and their associated `secrets` which _can_ contain sensitive data (e.g. passwords, private keys, etc.). These `secrets` are stored encrypted at rest (in the application database), and the associated endpoints are not meant to expose that sensitive data in plaintext to API clients, as it could be compromising. Fides's developers have available to them a Pydantic field-attribute (`sensitive`) that they can annotate as `True` to indicate that a given secret field should not be exposed via the API. The application has an internal function that uses `sensitive` annotations to mask the sensitive fields with a `\"**********\"` placeholder value. This vulnerability is due to a bug in that function, which prevented `sensitive` API model fields that were _nested_ below the root-level of a `secrets` object from being masked appropriately. Only the `BigQuery` connection configuration secrets meets these criteria: the secrets schema has a nested sensitive `keyfile_creds.private_key` property that is exposed in plaintext via the APIs. Connection types other than `BigQuery` with sensitive fields at the root-level that are not nested are properly masked with the placeholder and are not affected by this vulnerability. This vulnerability has been patched in Fides version 2.37.0. Users are advised to upgrade to this version or later to secure their systems against this threat. Users are also advised to rotate any Google Cloud secrets used for BigQuery integrations in their Fides deployments. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-05-30T20:15:00",
+        "Published": "2024-05-30T20:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-4842",
+        "impact": {},
+        "last-modified": "2024-05-30T20:15:00",
+        "references": [],
+        "summary": "Rejected reason: ** REJECT ** DO NOT USE THIS CANDIDATE NUMBER. Reason: Not a vulnerability"
+    },
+    {
+        "Modified": "2024-05-30T20:15:00",
+        "Published": "2024-05-30T20:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-5271",
+        "impact": {},
+        "last-modified": "2024-05-30T20:15:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-151-02"
+        ],
+        "summary": "Fuji Electric Monitouch V-SFT is vulnerable to an out-of-bounds write because of a\n type confusion, which could result in arbitrary code execution."
+    },
+    {
         "Modified": "2024-05-30T19:15:00",
         "Published": "2024-05-30T19:15:00",
         "access": {},
@@ -1637,143 +1745,5 @@
             "https://git.kernel.org/stable/c/d351eb0ab04c3e8109895fc33250cebbce9c11da"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nthermal/debugfs: Prevent use-after-free from occurring after cdev removal\n\nSince thermal_debug_cdev_remove() does not run under cdev->lock, it can\nrun in parallel with thermal_debug_cdev_state_update() and it may free\nthe struct thermal_debugfs object used by the latter after it has been\nchecked against NULL.\n\nIf that happens, thermal_debug_cdev_state_update() will access memory\nthat has been freed already causing the kernel to crash.\n\nAddress this by using cdev->lock in thermal_debug_cdev_remove() around\nthe cdev->debugfs value check (in case the same cdev is removed at the\nsame time in two different threads) and its reset to NULL.\n\nCc :6.8+ <stable@vger.kernel.org> # 6.8+"
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36948",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/e23a904dfeb5a9e3d4ec527a365e962478cccf05",
-            "https://git.kernel.org/stable/c/9cb46b31f3d08ed3fce86349e8c12f96d7c88717"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/xe/xe_migrate: Cast to output precision before multiplying operands\n\nAddressing potential overflow in result of  multiplication of two lower\nprecision (u32) operands before widening it to higher precision\n(u64).\n\n-v2\nFix commit message and description. (Rodrigo)\n\n(cherry picked from commit 34820967ae7b45411f8f4f737c2d63b0c608e0d7)"
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36950",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b3948c69d60279fce5b2eeda92a07d66296c8130",
-            "https://git.kernel.org/stable/c/31279bbca40d2f40cb3bbb6d538ec9620a645dec",
-            "https://git.kernel.org/stable/c/fa273f312334246c909475c5868e6daab889cc8c",
-            "https://git.kernel.org/stable/c/4f9cc355c328fc4f41cbd9c4cd58b235184fa420",
-            "https://git.kernel.org/stable/c/6fafe3661712b143d9c69a7322294bd53f559d5d",
-            "https://git.kernel.org/stable/c/5982887de60c1b84f9c0ca07c835814d07fd1da0",
-            "https://git.kernel.org/stable/c/8643332aac0576581cfdf01798ea3e4e0d624b61",
-            "https://git.kernel.org/stable/c/752e3c53de0fa3b7d817a83050b6699b8e9c6ec9"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfirewire: ohci: mask bus reset interrupts between ISR and bottom half\n\nIn the FireWire OHCI interrupt handler, if a bus reset interrupt has\noccurred, mask bus reset interrupts until bus_reset_work has serviced and\ncleared the interrupt.\n\nNormally, we always leave bus reset interrupts masked. We infer the bus\nreset from the self-ID interrupt that happens shortly thereafter. A\nscenario where we unmask bus reset interrupts was introduced in 2008 in\na007bb857e0b26f5d8b73c2ff90782d9c0972620: If\nOHCI_PARAM_DEBUG_BUSRESETS (8) is set in the debug parameter bitmask, we\nwill unmask bus reset interrupts so we can log them.\n\nirq_handler logs the bus reset interrupt. However, we can't clear the bus\nreset event flag in irq_handler, because we won't service the event until\nlater. irq_handler exits with the event flag still set. If the\ncorresponding interrupt is still unmasked, the first bus reset will\nusually freeze the system due to irq_handler being called again each\ntime it exits. This freeze can be reproduced by loading firewire_ohci\nwith \"modprobe firewire_ohci debug=-1\" (to enable all debugging output).\nApparently there are also some cases where bus_reset_work will get called\nsoon enough to clear the event, and operation will continue normally.\n\nThis freeze was first reported a few months after a007bb85 was committed,\nbut until now it was never fixed. The debug level could safely be set\nto -1 through sysfs after the module was loaded, but this would be\nineffectual in logging bus reset interrupts since they were only\nunmasked during initialization.\n\nirq_handler will now leave the event flag set but mask bus reset\ninterrupts, so irq_handler won't be called again and there will be no\nfreeze. If OHCI_PARAM_DEBUG_BUSRESETS is enabled, bus_reset_work will\nunmask the interrupt after servicing the event, so future interrupts\nwill be caught as desired.\n\nAs a side effect to this change, OHCI_PARAM_DEBUG_BUSRESETS can now be\nenabled through sysfs in addition to during initial module loading.\nHowever, when enabled through sysfs, logging of bus reset interrupts will\nbe effective only starting with the second bus reset, after\nbus_reset_work has executed."
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36933",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a7c2c3c1caabcb4a3d6c47284c397507aaf54fe9",
-            "https://git.kernel.org/stable/c/46134031c20fd313d03b90169d64b2e05ca6b65c",
-            "https://git.kernel.org/stable/c/bbccf0caef2fa917d6d0692385a06ce3c262a216",
-            "https://git.kernel.org/stable/c/5a4603fbc285752d19e4b415466db18ef3617e4a",
-            "https://git.kernel.org/stable/c/37ed6f244ec5bda2e90b085084e322ea55d0aaa2",
-            "https://git.kernel.org/stable/c/696d18bb59727a2e0526c0802a812620be1c9340",
-            "https://git.kernel.org/stable/c/29a07f2ee4d273760c2acbfc756e29eccd82470a",
-            "https://git.kernel.org/stable/c/4b911a9690d72641879ea6d13cce1de31d346d79"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnsh: Restore skb->{protocol,data,mac_header} for outer header in nsh_gso_segment().\n\nsyzbot triggered various splats (see [0] and links) by a crafted GSO\npacket of VIRTIO_NET_HDR_GSO_UDP layering the following protocols:\n\n  ETH_P_8021AD + ETH_P_NSH + ETH_P_IPV6 + IPPROTO_UDP\n\nNSH can encapsulate IPv4, IPv6, Ethernet, NSH, and MPLS.  As the inner\nprotocol can be Ethernet, NSH GSO handler, nsh_gso_segment(), calls\nskb_mac_gso_segment() to invoke inner protocol GSO handlers.\n\nnsh_gso_segment() does the following for the original skb before\ncalling skb_mac_gso_segment()\n\n  1. reset skb->network_header\n  2. save the original skb->{mac_heaeder,mac_len} in a local variable\n  3. pull the NSH header\n  4. resets skb->mac_header\n  5. set up skb->mac_len and skb->protocol for the inner protocol.\n\nand does the following for the segmented skb\n\n  6. set ntohs(ETH_P_NSH) to skb->protocol\n  7. push the NSH header\n  8. restore skb->mac_header\n  9. set skb->mac_header + mac_len to skb->network_header\n 10. restore skb->mac_len\n\nThere are two problems in 6-7 and 8-9.\n\n  (a)\n  After 6 & 7, skb->data points to the NSH header, so the outer header\n  (ETH_P_8021AD in this case) is stripped when skb is sent out of netdev.\n\n  Also, if NSH is encapsulated by NSH + Ethernet (so NSH-Ethernet-NSH),\n  skb_pull() in the first nsh_gso_segment() will make skb->data point\n  to the middle of the outer NSH or Ethernet header because the Ethernet\n  header is not pulled by the second nsh_gso_segment().\n\n  (b)\n  While restoring skb->{mac_header,network_header} in 8 & 9,\n  nsh_gso_segment() does not assume that the data in the linear\n  buffer is shifted.\n\n  However, udp6_ufo_fragment() could shift the data and change\n  skb->mac_header accordingly as demonstrated by syzbot.\n\n  If this happens, even the restored skb->mac_header points to\n  the middle of the outer header.\n\nIt seems nsh_gso_segment() has never worked with outer headers so far.\n\nAt the end of nsh_gso_segment(), the outer header must be restored for\nthe segmented skb, instead of the NSH header.\n\nTo do that, let's calculate the outer header position relatively from\nthe inner header and set skb->{data,mac_header,protocol} properly.\n\n[0]:\nBUG: KMSAN: uninit-value in ipvlan_process_outbound drivers/net/ipvlan/ipvlan_core.c:524 [inline]\nBUG: KMSAN: uninit-value in ipvlan_xmit_mode_l3 drivers/net/ipvlan/ipvlan_core.c:602 [inline]\nBUG: KMSAN: uninit-value in ipvlan_queue_xmit+0xf44/0x16b0 drivers/net/ipvlan/ipvlan_core.c:668\n ipvlan_process_outbound drivers/net/ipvlan/ipvlan_core.c:524 [inline]\n ipvlan_xmit_mode_l3 drivers/net/ipvlan/ipvlan_core.c:602 [inline]\n ipvlan_queue_xmit+0xf44/0x16b0 drivers/net/ipvlan/ipvlan_core.c:668\n ipvlan_start_xmit+0x5c/0x1a0 drivers/net/ipvlan/ipvlan_main.c:222\n __netdev_start_xmit include/linux/netdevice.h:4989 [inline]\n netdev_start_xmit include/linux/netdevice.h:5003 [inline]\n xmit_one net/core/dev.c:3547 [inline]\n dev_hard_start_xmit+0x244/0xa10 net/core/dev.c:3563\n __dev_queue_xmit+0x33ed/0x51c0 net/core/dev.c:4351\n dev_queue_xmit include/linux/netdevice.h:3171 [inline]\n packet_xmit+0x9c/0x6b0 net/packet/af_packet.c:276\n packet_snd net/packet/af_packet.c:3081 [inline]\n packet_sendmsg+0x8aef/0x9f10 net/packet/af_packet.c:3113\n sock_sendmsg_nosec net/socket.c:730 [inline]\n __sock_sendmsg net/socket.c:745 [inline]\n __sys_sendto+0x735/0xa10 net/socket.c:2191\n __do_sys_sendto net/socket.c:2203 [inline]\n __se_sys_sendto net/socket.c:2199 [inline]\n __x64_sys_sendto+0x125/0x1c0 net/socket.c:2199\n do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nUninit was created at:\n slab_post_alloc_hook mm/slub.c:3819 [inline]\n slab_alloc_node mm/slub.c:3860 [inline]\n __do_kmalloc_node mm/slub.c:3980 [inline]\n __kmalloc_node_track_caller+0x705/0x1000 mm/slub.c:4001\n kmalloc_reserve+0x249/0x4a0 net/core/skbuff.c:582\n __\n---truncated---"
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36936",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/781e34b736014188ba9e46a71535237313dcda81",
-            "https://git.kernel.org/stable/c/1c5a1627f48105cbab81d25ec2f72232bfaa8185"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nefi/unaccepted: touch soft lockup during memory accept\n\nCommit 50e782a86c98 (\"efi/unaccepted: Fix soft lockups caused by\nparallel memory acceptance\") has released the spinlock so other CPUs can\ndo memory acceptance in parallel and not triggers softlockup on other\nCPUs.\n\nHowever the softlock up was intermittent shown up if the memory of the\nTD guest is large, and the timeout of softlockup is set to 1 second:\n\n RIP: 0010:_raw_spin_unlock_irqrestore\n Call Trace:\n ? __hrtimer_run_queues\n <IRQ>\n ? hrtimer_interrupt\n ? watchdog_timer_fn\n ? __sysvec_apic_timer_interrupt\n ? __pfx_watchdog_timer_fn\n ? sysvec_apic_timer_interrupt\n </IRQ>\n ? __hrtimer_run_queues\n <TASK>\n ? hrtimer_interrupt\n ? asm_sysvec_apic_timer_interrupt\n ? _raw_spin_unlock_irqrestore\n ? __sysvec_apic_timer_interrupt\n ? sysvec_apic_timer_interrupt\n accept_memory\n try_to_accept_memory\n do_huge_pmd_anonymous_page\n get_page_from_freelist\n __handle_mm_fault\n __alloc_pages\n __folio_alloc\n ? __tdx_hypercall\n handle_mm_fault\n vma_alloc_folio\n do_user_addr_fault\n do_huge_pmd_anonymous_page\n exc_page_fault\n ? __do_huge_pmd_anonymous_page\n asm_exc_page_fault\n __handle_mm_fault\n\nWhen the local irq is enabled at the end of accept_memory(), the\nsoftlockup detects that the watchdog on single CPU has not been fed for\na while. That is to say, even other CPUs will not be blocked by\nspinlock, the current CPU might be stunk with local irq disabled for a\nwhile, which hurts not only nmi watchdog but also softlockup.\n\nChao Gao pointed out that the memory accept could be time costly and\nthere was similar report before. Thus to avoid any softlocup detection\nduring this stage, give the softlockup a flag to skip the timeout check\nat the end of accept_memory(), by invoking touch_softlockup_watchdog()."
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36937",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/12481f30128fbebc2eeb55eb2d56390fdfa30c5e",
-            "https://git.kernel.org/stable/c/272bfb019f3cc018f654b992115774e77b4f3ffc",
-            "https://git.kernel.org/stable/c/e22e25820fa04ea5eaac4ef7ee200e9923f466a4",
-            "https://git.kernel.org/stable/c/6fd81f9d333e7b3532036577b1beb74ba1323553",
-            "https://git.kernel.org/stable/c/5bcf0dcbf9066348058b88a510c57f70f384c92c"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nxdp: use flags field to disambiguate broadcast redirect\n\nWhen redirecting a packet using XDP, the bpf_redirect_map() helper will set\nup the redirect destination information in struct bpf_redirect_info (using\nthe __bpf_xdp_redirect_map() helper function), and the xdp_do_redirect()\nfunction will read this information after the XDP program returns and pass\nthe frame on to the right redirect destination.\n\nWhen using the BPF_F_BROADCAST flag to do multicast redirect to a whole\nmap, __bpf_xdp_redirect_map() sets the 'map' pointer in struct\nbpf_redirect_info to point to the destination map to be broadcast. And\nxdp_do_redirect() reacts to the value of this map pointer to decide whether\nit's dealing with a broadcast or a single-value redirect. However, if the\ndestination map is being destroyed before xdp_do_redirect() is called, the\nmap pointer will be cleared out (by bpf_clear_redirect_map()) without\nwaiting for any XDP programs to stop running. This causes xdp_do_redirect()\nto think that the redirect was to a single target, but the target pointer\nis also NULL (since broadcast redirects don't have a single target), so\nthis causes a crash when a NULL pointer is passed to dev_map_enqueue().\n\nTo fix this, change xdp_do_redirect() to react directly to the presence of\nthe BPF_F_BROADCAST flag in the 'flags' value in struct bpf_redirect_info\nto disambiguate between a single-target and a broadcast redirect. And only\nread the 'map' pointer if the broadcast flag is set, aborting if that has\nbeen cleared out in the meantime. This prevents the crash, while keeping\nthe atomic (cmpxchg-based) clearing of the map pointer itself, and without\nadding any more checks in the non-broadcast fast path."
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36939",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b33ca18c3a1190208dfd569c4fa8a2f93084709f",
-            "https://git.kernel.org/stable/c/d4891d817350c67392d4731536945f3809a2a0ba",
-            "https://git.kernel.org/stable/c/ea6ce93327bd2c8a0c6cf6f2f0e800f3b778f021",
-            "https://git.kernel.org/stable/c/8ae63bd858691bee0e2a92571f2fbb36a4d86d65",
-            "https://git.kernel.org/stable/c/8a1f89c98dcc542dd6d287e573523714702e0f9c",
-            "https://git.kernel.org/stable/c/9909dde2e53a19585212c32fe3eda482b5faaaa3",
-            "https://git.kernel.org/stable/c/24457f1be29f1e7042e50a7749f5c2dde8c433c8"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnfs: Handle error of rpc_proc_register() in nfs_net_init().\n\nsyzkaller reported a warning [0] triggered while destroying immature\nnetns.\n\nrpc_proc_register() was called in init_nfs_fs(), but its error\nhas been ignored since at least the initial commit 1da177e4c3f4\n(\"Linux-2.6.12-rc2\").\n\nRecently, commit d47151b79e32 (\"nfs: expose /proc/net/sunrpc/nfs\nin net namespaces\") converted the procfs to per-netns and made\nthe problem more visible.\n\nEven when rpc_proc_register() fails, nfs_net_init() could succeed,\nand thus nfs_net_exit() will be called while destroying the netns.\n\nThen, remove_proc_entry() will be called for non-existing proc\ndirectory and trigger the warning below.\n\nLet's handle the error of rpc_proc_register() properly in nfs_net_init().\n\n[0]:\nname 'nfs'\nWARNING: CPU: 1 PID: 1710 at fs/proc/generic.c:711 remove_proc_entry+0x1bb/0x2d0 fs/proc/generic.c:711\nModules linked in:\nCPU: 1 PID: 1710 Comm: syz-executor.2 Not tainted 6.8.0-12822-gcd51db110a7e #12\nHardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014\nRIP: 0010:remove_proc_entry+0x1bb/0x2d0 fs/proc/generic.c:711\nCode: 41 5d 41 5e c3 e8 85 09 b5 ff 48 c7 c7 88 58 64 86 e8 09 0e 71 02 e8 74 09 b5 ff 4c 89 e6 48 c7 c7 de 1b 80 84 e8 c5 ad 97 ff <0f> 0b eb b1 e8 5c 09 b5 ff 48 c7 c7 88 58 64 86 e8 e0 0d 71 02 eb\nRSP: 0018:ffffc9000c6d7ce0 EFLAGS: 00010286\nRAX: 0000000000000000 RBX: ffff8880422b8b00 RCX: ffffffff8110503c\nRDX: ffff888030652f00 RSI: ffffffff81105045 RDI: 0000000000000001\nRBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000\nR10: 0000000000000001 R11: ffffffff81bb62cb R12: ffffffff84807ffc\nR13: ffff88804ad6fcc0 R14: ffffffff84807ffc R15: ffffffff85741ff8\nFS:  00007f30cfba8640(0000) GS:ffff88807dd00000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00007ff51afe8000 CR3: 000000005a60a005 CR4: 0000000000770ef0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nPKRU: 55555554\nCall Trace:\n <TASK>\n rpc_proc_unregister+0x64/0x70 net/sunrpc/stats.c:310\n nfs_net_exit+0x1c/0x30 fs/nfs/inode.c:2438\n ops_exit_list+0x62/0xb0 net/core/net_namespace.c:170\n setup_net+0x46c/0x660 net/core/net_namespace.c:372\n copy_net_ns+0x244/0x590 net/core/net_namespace.c:505\n create_new_namespaces+0x2ed/0x770 kernel/nsproxy.c:110\n unshare_nsproxy_namespaces+0xae/0x160 kernel/nsproxy.c:228\n ksys_unshare+0x342/0x760 kernel/fork.c:3322\n __do_sys_unshare kernel/fork.c:3393 [inline]\n __se_sys_unshare kernel/fork.c:3391 [inline]\n __x64_sys_unshare+0x1f/0x30 kernel/fork.c:3391\n do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n do_syscall_64+0x4f/0x110 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x46/0x4e\nRIP: 0033:0x7f30d0febe5d\nCode: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 9f 1b 00 f7 d8 64 89 01 48\nRSP: 002b:00007f30cfba7cc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000110\nRAX: ffffffffffffffda RBX: 00000000004bbf80 RCX: 00007f30d0febe5d\nRDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000006c020600\nRBP: 00000000004bbf80 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002\nR13: 000000000000000b R14: 00007f30d104c530 R15: 0000000000000000\n </TASK>"
-    },
-    {
-        "Modified": "2024-05-30T18:18:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36940",
-        "impact": {},
-        "last-modified": "2024-05-30T18:18:00",
-        "references": [
-            "https://git.kernel.org/stable/c/735f4c6b6771eafe336404c157ca683ad72a040d",
-            "https://git.kernel.org/stable/c/cdaa171473d98962ae86f2a663d398fda2fbeefd",
-            "https://git.kernel.org/stable/c/288bc4aa75f150d6f1ee82dd43c6da1b438b6068",
-            "https://git.kernel.org/stable/c/41f88ef8ba387a12f4a2b8c400b6c9e8e54b2cca",
-            "https://git.kernel.org/stable/c/ac7d65795827dc0cf7662384ed27caf4066bd72e",
-            "https://git.kernel.org/stable/c/558c8039fdf596a584a92c171cbf3298919c448c",
-            "https://git.kernel.org/stable/c/f9f1e321d53e4c5b666b66e5b43da29841fb55ba",
-            "https://git.kernel.org/stable/c/5038a66dad0199de60e5671603ea6623eb9e5c79"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npinctrl: core: delete incorrect free in pinctrl_enable()\n\nThe \"pctldev\" struct is allocated in devm_pinctrl_register_and_init().\nIt's a devm_ managed pointer that is freed by devm_pinctrl_dev_release(),\nso freeing it in pinctrl_enable() will lead to a double free.\n\nThe devm_pinctrl_dev_release() function frees the pindescs and destroys\nthe mutex as well."
     }
 ]
