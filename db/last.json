@@ -1,5 +1,447 @@
 [
     {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-06-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38439",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://github.com/Netatalk/netatalk/issues/1096"
+        ],
+        "summary": "Netatalk 3.2.0 has an off-by-one error and resultant heap-based buffer overflow because of setting ibuf[PASSWDLEN] to '\\0' in FPLoginExt in login in etc/uams/uams_pam.c."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-06-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38440",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://github.com/Netatalk/netatalk/issues/1097"
+        ],
+        "summary": "Netatalk 3.2.0 has an off-by-one error and resultant heap-based buffer overflow because of incorrectly using FPLoginExt in BN_bin2bn in etc/uams/uams_dhx_pam.c."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-06-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38441",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://github.com/Netatalk/netatalk/issues/1098"
+        ],
+        "summary": "Netatalk 3.2.0 has an off-by-one error and resultant heap-based buffer overflow because of setting ibuf[len] to '\\0' in FPMapName in afp_mapname in etc/afp/directory.c."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-06-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38443",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://github.com/TheAlgorithms/C/issues/1394"
+        ],
+        "summary": "C/sorting/binary_insertion_sort.c in The Algorithms - C through e5dad3f has a segmentation fault for deep recursion, which may affect common use cases such as sorting an array of 50 elements."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-06-10T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36972",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9841991a446c87f90f66f4b9fee6fe934c1336a2",
+            "https://git.kernel.org/stable/c/4bf6964451c3cb411fbaa1ae8b214b3d97a59bf1",
+            "https://git.kernel.org/stable/c/d59ae9314b97e01c76a4171472441e55721ba636",
+            "https://git.kernel.org/stable/c/4708f49add84a57ce0ccc7bf9a6269845c631cc3",
+            "https://git.kernel.org/stable/c/518a994aa0b87d96f1bc6678a7035df5d1fcd7a1"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\naf_unix: Update unix_sk(sk)->oob_skb under sk_receive_queue lock.\n\nBilly Jheng Bing-Jhong reported a race between __unix_gc() and\nqueue_oob().\n\n__unix_gc() tries to garbage-collect close()d inflight sockets,\nand then if the socket has MSG_OOB in unix_sk(sk)->oob_skb, GC\nwill drop the reference and set NULL to it locklessly.\n\nHowever, the peer socket still can send MSG_OOB message and\nqueue_oob() can update unix_sk(sk)->oob_skb concurrently, leading\nNULL pointer dereference. [0]\n\nTo fix the issue, let's update unix_sk(sk)->oob_skb under the\nsk_receive_queue's lock and take it everywhere we touch oob_skb.\n\nNote that we defer kfree_skb() in manage_oob() to silence lockdep\nfalse-positive (See [1]).\n\n[0]:\nBUG: kernel NULL pointer dereference, address: 0000000000000008\n PF: supervisor write access in kernel mode\n PF: error_code(0x0002) - not-present page\nPGD 8000000009f5e067 P4D 8000000009f5e067 PUD 9f5d067 PMD 0\nOops: 0002 [#1] PREEMPT SMP PTI\nCPU: 3 PID: 50 Comm: kworker/3:1 Not tainted 6.9.0-rc5-00191-gd091e579b864 #110\nHardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.0-0-gd239552ce722-prebuilt.qemu.org 04/01/2014\nWorkqueue: events delayed_fput\nRIP: 0010:skb_dequeue (./include/linux/skbuff.h:2386 ./include/linux/skbuff.h:2402 net/core/skbuff.c:3847)\nCode: 39 e3 74 3e 8b 43 10 48 89 ef 83 e8 01 89 43 10 49 8b 44 24 08 49 c7 44 24 08 00 00 00 00 49 8b 14 24 49 c7 04 24 00 00 00 00 <48> 89 42 08 48 89 10 e8 e7 c5 42 00 4c 89 e0 5b 5d 41 5c c3 cc cc\nRSP: 0018:ffffc900001bfd48 EFLAGS: 00000002\nRAX: 0000000000000000 RBX: ffff8880088f5ae8 RCX: 00000000361289f9\nRDX: 0000000000000000 RSI: 0000000000000206 RDI: ffff8880088f5b00\nRBP: ffff8880088f5b00 R08: 0000000000080000 R09: 0000000000000001\nR10: 0000000000000003 R11: 0000000000000001 R12: ffff8880056b6a00\nR13: ffff8880088f5280 R14: 0000000000000001 R15: ffff8880088f5a80\nFS:  0000000000000000(0000) GS:ffff88807dd80000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 0000000000000008 CR3: 0000000006314000 CR4: 00000000007506f0\nPKRU: 55555554\nCall Trace:\n <TASK>\n unix_release_sock (net/unix/af_unix.c:654)\n unix_release (net/unix/af_unix.c:1050)\n __sock_release (net/socket.c:660)\n sock_close (net/socket.c:1423)\n __fput (fs/file_table.c:423)\n delayed_fput (fs/file_table.c:444 (discriminator 3))\n process_one_work (kernel/workqueue.c:3259)\n worker_thread (kernel/workqueue.c:3329 kernel/workqueue.c:3416)\n kthread (kernel/kthread.c:388)\n ret_from_fork (arch/x86/kernel/process.c:153)\n ret_from_fork_asm (arch/x86/entry/entry_64.S:257)\n </TASK>\nModules linked in:\nCR2: 0000000000000008"
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-06-10T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-36971",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/92f1655aa2b2294d0b49925f3b875a634bd3b59e",
+            "https://git.kernel.org/stable/c/b8af8e6118a6605f0e495a58d591ca94a85a50fc",
+            "https://git.kernel.org/stable/c/051c0bde9f0450a2ec3d62a86d2a0d2fad117f13",
+            "https://git.kernel.org/stable/c/db0082825037794c5dba9959c9de13ca34cc5e72",
+            "https://git.kernel.org/stable/c/2295a7ef5c8c49241bff769e7826ef2582e532a6",
+            "https://git.kernel.org/stable/c/eacb8b195579c174a6d3e12a9690b206eb7f28cf",
+            "https://git.kernel.org/stable/c/81dd3c82a456b0015461754be7cb2693991421b4",
+            "https://git.kernel.org/stable/c/5af198c387128a9d2ddd620b0f0803564a4d4508"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix __dst_negative_advice() race\n\n__dst_negative_advice() does not enforce proper RCU rules when\nsk->dst_cache must be cleared, leading to possible UAF.\n\nRCU rules are that we must first clear sk->sk_dst_cache,\nthen call dst_release(old_dst).\n\nNote that sk_dst_reset(sk) is implementing this protocol correctly,\nwhile __dst_negative_advice() uses the wrong order.\n\nGiven that ip6_negative_advice() has special logic\nagainst RTF_CACHE, this means each of the three ->negative_advice()\nexisting methods must perform the sk_dst_reset() themselves.\n\nNote the check against NULL dst is centralized in\n__dst_negative_advice(), there is no need to duplicate\nit in various callbacks.\n\nMany thanks to Clement Lecigne for tracking this issue.\n\nThis old bug became visible after the blamed commit, using UDP sockets."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-30T16:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-36891",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/6c9c7c1e63b198a8b979ad963eb21410f10ccb00",
+            "https://git.kernel.org/stable/c/f3956791cf526540addd3295e4c1e0f0442486cc",
+            "https://git.kernel.org/stable/c/955a923d2809803980ff574270f81510112be9cf",
+            "https://git.kernel.org/stable/c/883e5d542bbdddbddeba60250cb482baf3ae2415"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmaple_tree: fix mas_empty_area_rev() null pointer dereference\n\nCurrently the code calls mas_start() followed by mas_data_end() if the\nmaple state is MA_START, but mas_start() may return with the maple state\nnode == NULL.  This will lead to a null pointer dereference when checking\ninformation in the NULL node, which is done in mas_data_end().\n\nAvoid setting the offset if there is no node by waiting until after the\nmaple state is checked for an empty or single entry state.\n\nA user could trigger the events to cause a kernel oops by unmapping all\nvmas to produce an empty maple tree, then mapping a vma that would cause\nthe scenario described above."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-29T19:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36016",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/47388e807f85948eefc403a8a5fdc5b406a65d5a",
+            "https://git.kernel.org/stable/c/f126ce7305fe88f49cdabc6db4168b9318898ea3",
+            "https://git.kernel.org/stable/c/b890d45aaf02b564e6cae2d2a590f9649330857d",
+            "https://git.kernel.org/stable/c/46f52c89a7e7d2691b97a9728e4591d071ca8abc",
+            "https://git.kernel.org/stable/c/774d83b008eccb1c48c14dc5486e7aa255731350",
+            "https://git.kernel.org/stable/c/9513d4148950b05bc99fa7314dc883cc0e1605e5",
+            "https://git.kernel.org/stable/c/b229bc6c6ea9fe459fc3fa94fd0a27a2f32aca56",
+            "https://git.kernel.org/stable/c/0fb736c9931e02dbc7d9a75044c8e1c039e50f04",
+            "https://git.kernel.org/stable/c/4c267110fc110390704cc065edb9817fdd10ff54"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntty: n_gsm: fix possible out-of-bounds in gsm0_receive()\n\nAssuming the following:\n- side A configures the n_gsm in basic option mode\n- side B sends the header of a basic option mode frame with data length 1\n- side A switches to advanced option mode\n- side B sends 2 data bytes which exceeds gsm->len\n  Reason: gsm->len is not used in advanced option mode.\n- side A switches to basic option mode\n- side B keeps sending until gsm0_receive() writes past gsm->buf\n  Reason: Neither gsm->state nor gsm->len have been reset after\n  reconfiguration.\n\nFix this by changing gsm->count to gsm->len comparison from equal to less\nthan. Also add upper limit checks against the constant MAX_MRU in\ngsm0_receive() and gsm1_receive() to harden against memory corruption of\ngsm->len and gsm->mru.\n\nAll other checks remain as we still need to limit the data according to the\nuser configuration and actual payload size."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-29T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36014",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a1f95aede6285dba6dd036d907196f35ae3a11ea",
+            "https://git.kernel.org/stable/c/b77620730f614059db2470e8ebab3e725280fc6d",
+            "https://git.kernel.org/stable/c/93f76ec1eddce60dbb5885cbc0d7df54adee4639",
+            "https://git.kernel.org/stable/c/e4b52d49383306ef73fd1bd9102538beebb0fe07",
+            "https://git.kernel.org/stable/c/335cc45ef2b81b68be63c698b4f867a530bdf7a5",
+            "https://git.kernel.org/stable/c/b6cc5dd06336ed8bb3a7a1fc5aaf7d5e88bc0818",
+            "https://git.kernel.org/stable/c/565d9ad7e5a18eb69ed8b66a9e9bb3f45346520c",
+            "https://git.kernel.org/stable/c/a5fa5b40a278a3ca978fed64707bd27614adb1eb",
+            "https://git.kernel.org/stable/c/3e54d4e95120641216dfe91a6c49f116a9f68490"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/arm/malidp: fix a possible null pointer dereference\n\nIn malidp_mw_connector_reset, new memory is allocated with kzalloc, but\nno check is performed. In order to prevent null pointer dereferencing,\nensure that mw_state is checked before calling\n__drm_atomic_helper_connector_reset."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-29T08:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36015",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/fbf740aeb86a4fe82ad158d26d711f2f3be79b3e",
+            "https://git.kernel.org/stable/c/df9329247dbbf00f6057e002139ab3fa529ad828",
+            "https://git.kernel.org/stable/c/ec3468221efec6660ff656e9ebe51ced3520fc57",
+            "https://git.kernel.org/stable/c/5d5b24edad1107a2ffa99058f20f6aeeafeb5d39",
+            "https://git.kernel.org/stable/c/65cd017d43f4319a56747d38308b0a24cf57299e",
+            "https://git.kernel.org/stable/c/b8c6b83cc3adff3ddf403c8c7063fe6d08b2b9d9",
+            "https://git.kernel.org/stable/c/d32caf51379a4d71db03d3d4d7c22d27cdf7f68b",
+            "https://git.kernel.org/stable/c/b65d0410b879af0295d22438a4a32012786d152a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nppdev: Add an error check in register_device\n\nIn register_device, the return value of ida_simple_get is unchecked,\nin witch ida_simple_get will use an invalid index value.\n\nTo address this issue, index should be checked after ida_simple_get. When\nthe index value is abnormal, a warning message should be printed, the port\nshould be dropped, and the value should be recorded."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-20T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35976",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a82984b3c6a7e8c7937dba6e857ddf829d149417",
+            "https://git.kernel.org/stable/c/f0a068de65d5b7358e9aff792716afa9333f3922",
+            "https://git.kernel.org/stable/c/2a523f14a3f53b46ff0e1fafd215b0bc5f6783aa",
+            "https://git.kernel.org/stable/c/b143e19dc28c3211f050f7848d87d9b0a170e10c",
+            "https://git.kernel.org/stable/c/2eb979fbb2479bcd7e049f2f9978b6590dd8a0e6",
+            "https://git.kernel.org/stable/c/237f3cf13b20db183d3706d997eedc3c49eacd44",
+            "https://git.kernel.org/stable/c/0b45c25d60e38f5c2cb6823f886773a34323306d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nxsk: validate user input for XDP_{UMEM|COMPLETION}_FILL_RING\n\nsyzbot reported an illegal copy in xsk_setsockopt() [1]\n\nMake sure to validate setsockopt() @optlen parameter.\n\n[1]\n\n BUG: KASAN: slab-out-of-bounds in copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]\n BUG: KASAN: slab-out-of-bounds in copy_from_sockptr include/linux/sockptr.h:55 [inline]\n BUG: KASAN: slab-out-of-bounds in xsk_setsockopt+0x909/0xa40 net/xdp/xsk.c:1420\nRead of size 4 at addr ffff888028c6cde3 by task syz-executor.0/7549\n\nCPU: 0 PID: 7549 Comm: syz-executor.0 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024\nCall Trace:\n <TASK>\n  __dump_stack lib/dump_stack.c:88 [inline]\n  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114\n  print_address_description mm/kasan/report.c:377 [inline]\n  print_report+0x169/0x550 mm/kasan/report.c:488\n  kasan_report+0x143/0x180 mm/kasan/report.c:601\n  copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]\n  copy_from_sockptr include/linux/sockptr.h:55 [inline]\n  xsk_setsockopt+0x909/0xa40 net/xdp/xsk.c:1420\n  do_sock_setsockopt+0x3af/0x720 net/socket.c:2311\n  __sys_setsockopt+0x1ae/0x250 net/socket.c:2334\n  __do_sys_setsockopt net/socket.c:2343 [inline]\n  __se_sys_setsockopt net/socket.c:2340 [inline]\n  __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340\n do_syscall_64+0xfb/0x240\n entry_SYSCALL_64_after_hwframe+0x6d/0x75\nRIP: 0033:0x7fb40587de69\nCode: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48\nRSP: 002b:00007fb40665a0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036\nRAX: ffffffffffffffda RBX: 00007fb4059abf80 RCX: 00007fb40587de69\nRDX: 0000000000000005 RSI: 000000000000011b RDI: 0000000000000006\nRBP: 00007fb4058ca47a R08: 0000000000000002 R09: 0000000000000000\nR10: 0000000020001980 R11: 0000000000000246 R12: 0000000000000000\nR13: 000000000000000b R14: 00007fb4059abf80 R15: 00007fff57ee4d08\n </TASK>\n\nAllocated by task 7549:\n  kasan_save_stack mm/kasan/common.c:47 [inline]\n  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68\n  poison_kmalloc_redzone mm/kasan/common.c:370 [inline]\n  __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387\n  kasan_kmalloc include/linux/kasan.h:211 [inline]\n  __do_kmalloc_node mm/slub.c:3966 [inline]\n  __kmalloc+0x233/0x4a0 mm/slub.c:3979\n  kmalloc include/linux/slab.h:632 [inline]\n  __cgroup_bpf_run_filter_setsockopt+0xd2f/0x1040 kernel/bpf/cgroup.c:1869\n  do_sock_setsockopt+0x6b4/0x720 net/socket.c:2293\n  __sys_setsockopt+0x1ae/0x250 net/socket.c:2334\n  __do_sys_setsockopt net/socket.c:2343 [inline]\n  __se_sys_setsockopt net/socket.c:2340 [inline]\n  __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340\n do_syscall_64+0xfb/0x240\n entry_SYSCALL_64_after_hwframe+0x6d/0x75\n\nThe buggy address belongs to the object at ffff888028c6cde0\n which belongs to the cache kmalloc-8 of size 8\nThe buggy address is located 1 bytes to the right of\n allocated 2-byte region [ffff888028c6cde0, ffff888028c6cde2)\n\nThe buggy address belongs to the physical page:\npage:ffffea0000a31b00 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888028c6c9c0 pfn:0x28c6c\nanon flags: 0xfff00000000800(slab|node=0|zone=1|lastcpupid=0x7ff)\npage_type: 0xffffffff()\nraw: 00fff00000000800 ffff888014c41280 0000000000000000 dead000000000001\nraw: ffff888028c6c9c0 0000000080800057 00000001ffffffff 0000000000000000\npage dumped because: kasan: bad access detected\npage_owner tracks the page as allocated\npage last allocated via order 0, migratetype Unmovable, gfp_mask 0x112cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY), pid 6648, tgid 6644 (syz-executor.0), ts 133906047828, free_ts 133859922223\n  set_page_owner include/linux/page_owner.h:31 [inline]\n  post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1533\n  prep_new_page mm/page_alloc.c:\n---truncated---"
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-19T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35927",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3d1b47e3a935abd4f258a945db87e7267ff4079c",
+            "https://git.kernel.org/stable/c/18451798f4a4e7418b9fad7e7dd313fe84b1f545",
+            "https://git.kernel.org/stable/c/5abffb66d12bcac84bf7b66389c571b8bb6e82bd",
+            "https://git.kernel.org/stable/c/786c27982a39d79cc753f84229eb5977ac8ef1c1",
+            "https://git.kernel.org/stable/c/4ad8d57d902fbc7c82507cfc1b031f3a07c3de6e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm: Check output polling initialized before disabling\n\nIn drm_kms_helper_poll_disable() check if output polling\nsupport is initialized before disabling polling. If not flag\nthis as a warning.\nAdditionally in drm_mode_config_helper_suspend() and\ndrm_mode_config_helper_resume() calls, that re the callers of these\nfunctions, avoid invoking them if polling is not initialized.\nFor drivers like hyperv-drm, that do not initialize connector\npolling, if suspend is called without this check, it leads to\nsuspend failure with following stack\n[  770.719392] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.\n[  770.720592] printk: Suspending console(s) (use no_console_suspend to debug)\n[  770.948823] ------------[ cut here ]------------\n[  770.948824] WARNING: CPU: 1 PID: 17197 at kernel/workqueue.c:3162 __flush_work.isra.0+0x212/0x230\n[  770.948831] Modules linked in: rfkill nft_counter xt_conntrack xt_owner udf nft_compat crc_itu_t nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink vfat fat mlx5_ib ib_uverbs ib_core mlx5_core intel_rapl_msr intel_rapl_common kvm_amd ccp mlxfw kvm psample hyperv_drm tls drm_shmem_helper drm_kms_helper irqbypass pcspkr syscopyarea sysfillrect sysimgblt hv_balloon hv_utils joydev drm fuse xfs libcrc32c pci_hyperv pci_hyperv_intf sr_mod sd_mod cdrom t10_pi sg hv_storvsc scsi_transport_fc hv_netvsc serio_raw hyperv_keyboard hid_hyperv crct10dif_pclmul crc32_pclmul crc32c_intel hv_vmbus ghash_clmulni_intel dm_mirror dm_region_hash dm_log dm_mod\n[  770.948863] CPU: 1 PID: 17197 Comm: systemd-sleep Not tainted 5.14.0-362.2.1.el9_3.x86_64 #1\n[  770.948865] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 05/09/2022\n[  770.948866] RIP: 0010:__flush_work.isra.0+0x212/0x230\n[  770.948869] Code: 8b 4d 00 4c 8b 45 08 89 ca 48 c1 e9 04 83 e2 08 83 e1 0f 83 ca 02 89 c8 48 0f ba 6d 00 03 e9 25 ff ff ff 0f 0b e9 4e ff ff ff <0f> 0b 45 31 ed e9 44 ff ff ff e8 8f 89 b2 00 66 66 2e 0f 1f 84 00\n[  770.948870] RSP: 0018:ffffaf4ac213fb10 EFLAGS: 00010246\n[  770.948871] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8c992857\n[  770.948872] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff9aad82b00330\n[  770.948873] RBP: ffff9aad82b00330 R08: 0000000000000000 R09: ffff9aad87ee3d10\n[  770.948874] R10: 0000000000000200 R11: 0000000000000000 R12: ffff9aad82b00330\n[  770.948874] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001\n[  770.948875] FS:  00007ff1b2f6bb40(0000) GS:ffff9aaf37d00000(0000) knlGS:0000000000000000\n[  770.948878] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  770.948878] CR2: 0000555f345cb666 CR3: 00000001462dc005 CR4: 0000000000370ee0\n[  770.948879] Call Trace:\n[  770.948880]  <TASK>\n[  770.948881]  ? show_trace_log_lvl+0x1c4/0x2df\n[  770.948884]  ? show_trace_log_lvl+0x1c4/0x2df\n[  770.948886]  ? __cancel_work_timer+0x103/0x190\n[  770.948887]  ? __flush_work.isra.0+0x212/0x230\n[  770.948889]  ? __warn+0x81/0x110\n[  770.948891]  ? __flush_work.isra.0+0x212/0x230\n[  770.948892]  ? report_bug+0x10a/0x140\n[  770.948895]  ? handle_bug+0x3c/0x70\n[  770.948898]  ? exc_invalid_op+0x14/0x70\n[  770.948899]  ? asm_exc_invalid_op+0x16/0x20\n[  770.948903]  ? __flush_work.isra.0+0x212/0x230\n[  770.948905]  __cancel_work_timer+0x103/0x190\n[  770.948907]  ? _raw_spin_unlock_irqrestore+0xa/0x30\n[  770.948910]  drm_kms_helper_poll_disable+0x1e/0x40 [drm_kms_helper]\n[  770.948923]  drm_mode_config_helper_suspend+0x1c/0x80 [drm_kms_helper]\n[  770.948933]  ? __pfx_vmbus_suspend+0x10/0x10 [hv_vmbus]\n[  770.948942]  hyperv_vmbus_suspend+0x17/0x40 [hyperv_drm]\n[  770.948944]  ? __pfx_vmbus_suspend+0x10/0x10 [hv_vmbus]\n[  770.948951]  dpm_run_callback+0x4c/0x140\n[  770.948954]  __device_suspend_noir\n---truncated---"
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-19T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35897",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9a3b90904d8a072287480eed4c3ece4b99d64f78",
+            "https://git.kernel.org/stable/c/b58d0ac35f6d75ec1db8650a29dfd6f292c11362",
+            "https://git.kernel.org/stable/c/6cbbe1ba76ee7e674a86abd43009b083a45838cb",
+            "https://git.kernel.org/stable/c/2aeb805a1bcd5f27c8c0d1a9d4d653f16d1506f4",
+            "https://git.kernel.org/stable/c/9627fd0c6ea1c446741a33e67bc5709c59923827",
+            "https://git.kernel.org/stable/c/7f609f630951b624348373cef99991ce08831927",
+            "https://git.kernel.org/stable/c/1bc83a019bbe268be3526406245ec28c2458a518",
+            "https://git.kernel.org/stable/c/e75faf01e22ec7dc671640fa0e0968964fafd2fc"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: discard table flag update with pending basechain deletion\n\nHook unregistration is deferred to the commit phase, same occurs with\nhook updates triggered by the table dormant flag. When both commands are\ncombined, this results in deleting a basechain while leaving its hook\nstill registered in the core."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-19T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35900",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/41bad13c0e8a5a2b47a7472cced922555372daab",
+            "https://git.kernel.org/stable/c/7b6fba6918714afee3e17796113ccab636255c7b",
+            "https://git.kernel.org/stable/c/8ba81dca416adf82fc5a2a23abc1a8cc02ad32fb",
+            "https://git.kernel.org/stable/c/745cf6a843896cdac8766c74379300ed73c78830",
+            "https://git.kernel.org/stable/c/420132bee3d0136b7fba253a597b098fe15493a7",
+            "https://git.kernel.org/stable/c/e95bb4cba94c018be24b11f017d1c55dd6cda31a",
+            "https://git.kernel.org/stable/c/994209ddf4f430946f6247616b2e33d179243769",
+            "https://git.kernel.org/stable/c/6d12f21f8bbe23fde25b77c2bf5973c136b8bef8"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: reject new basechain after table flag update\n\nWhen dormant flag is toggled, hooks are disabled in the commit phase by\niterating over current chains in table (existing and new).\n\nThe following configuration allows for an inconsistent state:\n\n  add table x\n  add chain x y { type filter hook input priority 0; }\n  add table x { flags dormant; }\n  add chain x w { type filter hook input priority 1; }\n\nwhich triggers the following warning when trying to unregister chain w\nwhich is already unregistered.\n\n[  127.322252] WARNING: CPU: 7 PID: 1211 at net/netfilter/core.c:50                                                                     1 __nf_unregister_net_hook+0x21a/0x260\n[...]\n[  127.322519] Call Trace:\n[  127.322521]  <TASK>\n[  127.322524]  ? __warn+0x9f/0x1a0\n[  127.322531]  ? __nf_unregister_net_hook+0x21a/0x260\n[  127.322537]  ? report_bug+0x1b1/0x1e0\n[  127.322545]  ? handle_bug+0x3c/0x70\n[  127.322552]  ? exc_invalid_op+0x17/0x40\n[  127.322556]  ? asm_exc_invalid_op+0x1a/0x20\n[  127.322563]  ? kasan_save_free_info+0x3b/0x60\n[  127.322570]  ? __nf_unregister_net_hook+0x6a/0x260\n[  127.322577]  ? __nf_unregister_net_hook+0x21a/0x260\n[  127.322583]  ? __nf_unregister_net_hook+0x6a/0x260\n[  127.322590]  ? __nf_tables_unregister_hook+0x8a/0xe0 [nf_tables]\n[  127.322655]  nft_table_disable+0x75/0xf0 [nf_tables]\n[  127.322717]  nf_tables_commit+0x2571/0x2620 [nf_tables]"
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-01T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27065",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2531f907d3e40a6173090f10670ae76d117ab27b",
+            "https://git.kernel.org/stable/c/fcf32a5bfcb8a57ac0ce717fcfa4d688c91f1005",
+            "https://git.kernel.org/stable/c/640dbf688ba955e83e03de84fbdda8e570b7cce4",
+            "https://git.kernel.org/stable/c/9683cb6c2c6c0f45537bf0b8868b5d38fcb63fc7",
+            "https://git.kernel.org/stable/c/4d37f12707ee965d338028732575f0b85f6d9e4f",
+            "https://git.kernel.org/stable/c/3443e57654f90c9a843ab6a6040c10709fd033aa",
+            "https://git.kernel.org/stable/c/df257c435e51651c43b86326d112ddadda76350e",
+            "https://git.kernel.org/stable/c/4a0e7f2decbf9bd72461226f1f5f7dcc4b08f139",
+            "https://git.kernel.org/stable/c/845083249d6a392f3a88804e1669bdb936ee129f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: do not compare internal table flags on updates\n\nRestore skipping transaction if table update does not modify flags."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-05-01T06:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-362",
+        "id": "CVE-2024-27019",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/379bf7257bc5f2a1b1ca8514e08a871b7bf6d920",
+            "https://git.kernel.org/stable/c/df7c0fb8c2b9f9cac65659332581b19682a71349",
+            "https://git.kernel.org/stable/c/ad333578f736d56920e090d7db1f8dec891d815e",
+            "https://git.kernel.org/stable/c/4ca946b19caf655a08d5e2266d4d5526025ebb73",
+            "https://git.kernel.org/stable/c/d78d867dcea69c328db30df665be5be7d0148484",
+            "https://git.kernel.org/stable/c/cade34279c2249eafe528564bd2e203e4ff15f88"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: Fix potential data-race in __nft_obj_type_get()\n\nnft_unregister_obj() can concurrent with __nft_obj_type_get(),\nand there is not any protection when iterate over nf_tables_objects\nlist in __nft_obj_type_get(). Therefore, there is potential data-race\nof nf_tables_objects list entry.\n\nUse list_for_each_entry_rcu() to iterate over nf_tables_objects\nlist in __nft_obj_type_get(), and use rcu_read_lock() in the caller\nnft_obj_type_get() to protect the entire type query process."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-04-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26835",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ae4360cbd385f0d7a8a86d5723e50448cc6318f3",
+            "https://git.kernel.org/stable/c/31ea574aeca1aa488e18716459bde057217637af",
+            "https://git.kernel.org/stable/c/664264a5c55bf97a9c571c557d477b75416199be",
+            "https://git.kernel.org/stable/c/0c9302a6da262e6ab6a6c1d30f04a6130ed97376",
+            "https://git.kernel.org/stable/c/f2135bbf14949687e96cabb13d8a91ae3deb9069",
+            "https://git.kernel.org/stable/c/6f2496366426cec18ba53f1c7f6c3ac307ca6a95",
+            "https://git.kernel.org/stable/c/bccebf64701735533c8db37773eeacc6566cc8ec",
+            "https://git.kernel.org/stable/c/a6411f3c48f991c19aaf9a24fce36865fbba28d7"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: set dormant flag on hook register failure\n\nWe need to set the dormant flag again if we fail to register\nthe hooks.\n\nDuring memory pressure hook registration can fail and we end up\nwith a table marked as active but no registered hooks.\n\nOn table/base chain deletion, nf_tables will attempt to unregister\nthe hook again which yields a warn splat from the nftables core."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-03-28T08:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52628",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a7d86a77c33ba1c357a7504341172cc1507f0698",
+            "https://git.kernel.org/stable/c/1ad7b189cc1411048434e8595ffcbe7873b71082",
+            "https://git.kernel.org/stable/c/d9ebfc0f21377690837ebbd119e679243e0099cc",
+            "https://git.kernel.org/stable/c/c8f292322ff16b9a2272a67de396c09a50e09dce",
+            "https://git.kernel.org/stable/c/fd94d9dadee58e09b49075240fe83423eb1dcd36",
+            "https://git.kernel.org/stable/c/28a97c43c9e32f437ebb8d6126f9bb7f3ca9521a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nftables: exthdr: fix 4-byte stack OOB write\n\nIf priv->len is a multiple of 4, then dst[len / 4] can write past\nthe destination array which leads to stack corruption.\n\nThis construct is necessary to clean the remainder of the register\nin case ->len is NOT a multiple of the register size, so make it\nconditional just like nft_payload.c does.\n\nThe bug was added in 4.1 cycle and then copied/inherited when\ntcp/sctp and ip option support was added.\n\nBug reported by Zero Day Initiative project (ZDI-CAN-21950,\nZDI-CAN-21951, ZDI-CAN-21961)."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-03-21T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26643",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/552705a3650bbf46a22b1adedc1b04181490fc36",
+            "https://git.kernel.org/stable/c/406b0241d0eb598a0b330ab20ae325537d8d8163",
+            "https://git.kernel.org/stable/c/b2d6f9a5b1cf968f1eaa71085ceeb09c2cb276b1",
+            "https://git.kernel.org/stable/c/5224afbc30c3ca9ba23e752f0f138729b2c48dd8",
+            "https://git.kernel.org/stable/c/291cca35818bd52a407bc37ab45a15816039e363",
+            "https://git.kernel.org/stable/c/edcf1a3f182ecf8b6b805f0ce90570ea98c5f6bf",
+            "https://git.kernel.org/stable/c/e2d45f467096e931044f0ab7634499879d851a5c",
+            "https://git.kernel.org/stable/c/d75a589bb92af1abf3b779cfcd1977ca11b27033"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: mark set as dead when unbinding anonymous set with timeout\n\nWhile the rhashtable set gc runs asynchronously, a race allows it to\ncollect elements from anonymous sets with timeouts while it is being\nreleased from the commit path.\n\nMingi Cho originally reported this issue in a different path in 6.1.x\nwith a pipapo set with low timeouts which is not possible upstream since\n7395dfacfff6 (\"netfilter: nf_tables: use timestamp to check for set\nelement timeout\").\n\nFix this by setting on the dead flag for anonymous sets to skip async gc\nin this case.\n\nAccording to 08e4c8c5919f (\"netfilter: nf_tables: mark newset as dead on\ntransaction abort\"), Florian plans to accelerate abort path by releasing\nobjects via workqueue, therefore, this sets on the dead flag for abort\npath too."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-03-02T22:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52581",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/4aea243b6853d06c1d160a9955b759189aa02b14",
+            "https://git.kernel.org/stable/c/cf5000a7787cbc10341091d37245a42c119d26c5",
+            "https://git.kernel.org/stable/c/a995a68e8a3b48533e47c856865d109a1f1a9d01",
+            "https://git.kernel.org/stable/c/09c85f2d21ab6b5acba31a037985b13e8e6565b8",
+            "https://git.kernel.org/stable/c/ef99506eaf1dc31feff1adfcfd68bc5535a22171",
+            "https://git.kernel.org/stable/c/7e5d732e6902eb6a37b35480796838a145ae5f07",
+            "https://git.kernel.org/stable/c/7cf055b43756b10aa2b851c927c940f5ed652125"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: fix memleak when more than 255 elements expired\n\nWhen more than 255 elements expired we're supposed to switch to a new gc\ncontainer structure.\n\nThis never happens: u8 type will wrap before reaching the boundary\nand nft_trans_gc_space() always returns true.\n\nThis means we recycle the initial gc container structure and\nlose track of the elements that came before.\n\nWhile at it, don't deref 'gc' after we've passed it to call_rcu."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-02-20T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52433",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e3213ff99a355cda811b41e8dbb3472d13167a3a",
+            "https://git.kernel.org/stable/c/2ee52ae94baabf7ee09cf2a8d854b990dac5d0e4",
+            "https://git.kernel.org/stable/c/03caf75da1059f0460666c826e9f50e13dfd0017",
+            "https://git.kernel.org/stable/c/c323ed65f66e5387ee0a73452118d49f1dae81b8",
+            "https://git.kernel.org/stable/c/9af7dfb3c9d7985172a240f85e684c5cd33e29ce",
+            "https://git.kernel.org/stable/c/9a8c544158f68f656d1734eb5ba00c4f817b76b1",
+            "https://git.kernel.org/stable/c/9db9feb841f7449772f9393c16b9ef4536d8c127"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_set_rbtree: skip sync GC for new elements in this transaction\n\nNew elements in this transaction might expired before such transaction\nends. Skip sync GC for such elements otherwise commit path might walk\nover an already released object. Once transaction is finished, async GC\nwill collect such expired element."
+    },
+    {
+        "Modified": "2024-06-16T13:15:00",
+        "Published": "2024-02-20T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-26581",
+        "impact": {},
+        "last-modified": "2024-06-16T13:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1296c110c5a0b45a8fcf58e7d18bc5da61a565cb",
+            "https://git.kernel.org/stable/c/b734f7a47aeb32a5ba298e4ccc16bb0c52b6dbf7",
+            "https://git.kernel.org/stable/c/6eb14441f10602fa1cf691da9d685718b68b78a9",
+            "https://git.kernel.org/stable/c/60c0c230c6f046da536d3df8b39a20b9a9fd6af0",
+            "https://git.kernel.org/stable/c/10e9cb39313627f2eae4cd70c4b742074e998fd8",
+            "https://git.kernel.org/stable/c/4cee42fcf54fec46b344681e7cc4f234bb22f85a",
+            "https://git.kernel.org/stable/c/2bab493a5624444ec6e648ad0d55a362bcb4c003",
+            "https://git.kernel.org/stable/c/c60d252949caf9aba537525195edae6bbabc35eb"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nft_set_rbtree: skip end interval element from gc\n\nrbtree lazy gc on insert might collect an end interval element that has\nbeen just added in this transactions, skip end interval elements that\nare not yet active."
+    },
+    {
         "Modified": "2024-06-16T08:15:00",
         "Published": "2024-06-16T08:15:00",
         "access": {},
@@ -1302,336 +1744,6 @@
         "id": "CVE-2024-26092",
         "impact": {},
         "last-modified": "2024-06-14T19:55:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:55:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26095",
-        "impact": {},
-        "last-modified": "2024-06-14T19:55:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:52:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26113",
-        "impact": {},
-        "last-modified": "2024-06-14T19:52:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
-    },
-    {
-        "Modified": "2024-06-14T19:52:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26111",
-        "impact": {},
-        "last-modified": "2024-06-14T19:52:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
-    },
-    {
-        "Modified": "2024-06-14T19:51:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26115",
-        "impact": {},
-        "last-modified": "2024-06-14T19:51:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
-    },
-    {
-        "Modified": "2024-06-14T19:51:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26116",
-        "impact": {},
-        "last-modified": "2024-06-14T19:51:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
-    },
-    {
-        "Modified": "2024-06-14T19:51:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26114",
-        "impact": {},
-        "last-modified": "2024-06-14T19:51:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
-    },
-    {
-        "Modified": "2024-06-14T19:50:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26093",
-        "impact": {},
-        "last-modified": "2024-06-14T19:50:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a reflected Cross-Site Scripting (XSS) vulnerability. If an attacker is able to convince a victim to visit a URL referencing a vulnerable page, malicious JavaScript content may be executed within the context of the victim's browser."
-    },
-    {
-        "Modified": "2024-06-14T19:48:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26037",
-        "impact": {},
-        "last-modified": "2024-06-14T19:48:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier Answer: are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue typically requires user interaction, such as convincing a user to click on a specially crafted link or to submit a malicious form."
-    },
-    {
-        "Modified": "2024-06-14T19:47:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26039",
-        "impact": {},
-        "last-modified": "2024-06-14T19:47:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier Answer: are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue requires user interaction, such as convincing a victim to click on a specially crafted link or to submit a form that triggers the vulnerability."
-    },
-    {
-        "Modified": "2024-06-14T19:46:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26055",
-        "impact": {},
-        "last-modified": "2024-06-14T19:46:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue typically requires user interaction, such as convincing a victim to click on a specially crafted link or to submit a form that triggers the malicious script."
-    },
-    {
-        "Modified": "2024-06-14T19:46:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26057",
-        "impact": {},
-        "last-modified": "2024-06-14T19:46:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier Answer: are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue typically requires user interaction, such as convincing a user to click on a specially crafted link or to submit a form that triggers the malicious script."
-    },
-    {
-        "Modified": "2024-06-14T19:46:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26053",
-        "impact": {},
-        "last-modified": "2024-06-14T19:46:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier Answer: are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue requires user interaction, such as convincing a victim to click on a specially crafted link or to submit a form that triggers the vulnerability."
-    },
-    {
-        "Modified": "2024-06-14T19:37:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26058",
-        "impact": {},
-        "last-modified": "2024-06-14T19:37:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier Answer: are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue requires user interaction, such as convincing a victim to click on a specially crafted link."
-    },
-    {
-        "Modified": "2024-06-14T19:37:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26072",
-        "impact": {},
-        "last-modified": "2024-06-14T19:37:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a DOM-based Cross-Site Scripting (XSS) vulnerability. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the context of the victim's browser session. Exploitation of this issue typically requires user interaction, such as convincing a victim to click on a specially crafted link or to submit a form that causes the vulnerable script to execute."
-    },
-    {
-        "Modified": "2024-06-14T19:35:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26077",
-        "impact": {},
-        "last-modified": "2024-06-14T19:35:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:35:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26078",
-        "impact": {},
-        "last-modified": "2024-06-14T19:35:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:34:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26083",
-        "impact": {},
-        "last-modified": "2024-06-14T19:34:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:34:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26085",
-        "impact": {},
-        "last-modified": "2024-06-14T19:34:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:34:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26082",
-        "impact": {},
-        "last-modified": "2024-06-14T19:34:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:34:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26081",
-        "impact": {},
-        "last-modified": "2024-06-14T19:34:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:30:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-26036",
-        "impact": {},
-        "last-modified": "2024-06-14T19:30:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by an attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim\u2019s browser when they browse to the page containing the vulnerable field."
-    },
-    {
-        "Modified": "2024-06-14T19:30:00",
-        "Published": "2024-06-13T08:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-20769",
-        "impact": {},
-        "last-modified": "2024-06-14T19:30:00",
         "references": [
             "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
         ],
