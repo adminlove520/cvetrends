@@ -1,5 +1,22 @@
 [
     {
+        "Modified": "2024-06-19T17:15:00",
+        "Published": "2024-06-19T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-32030",
+        "impact": {},
+        "last-modified": "2024-06-19T17:15:00",
+        "references": [
+            "https://securitylab.github.com/advisories/GHSL-2023-229_GHSL-2023-230_kafka-ui/",
+            "https://github.com/provectus/kafka-ui/pull/4427",
+            "https://github.com/provectus/kafka-ui/commit/83b5a60cc08501b570a0c4d0b4cdfceb1b88d6b7#diff-37e769f4709c1e78c076a5949bbcead74e969725bfd89c7c4ba6d6f229a411e6R36"
+        ],
+        "summary": "Kafka UI is an Open-Source Web UI for Apache Kafka Management. Kafka UI API allows users to connect to different Kafka brokers by specifying their network address and port. As a separate feature, it also provides the ability to monitor the performance of Kafka brokers by connecting to their JMX ports. JMX is based on the RMI protocol, so it is inherently susceptible to deserialization attacks. A potential attacker can exploit this feature by connecting Kafka UI backend to its own malicious broker. This vulnerability affects the deployments where one of the following occurs: 1. dynamic.config.enabled property is set in settings. It's not enabled by default, but it's suggested to be enabled in many tutorials for Kafka UI, including its own README.md. OR  2. an attacker has access to the Kafka cluster that is being connected to Kafka UI. In this scenario the attacker can exploit this vulnerability to expand their access and execute code on Kafka UI as well. Instead of setting up a legitimate JMX port, an attacker can create an RMI listener that returns a malicious serialized object for any RMI call. In the worst case it could lead to remote code execution as Kafka UI has the required gadget chains in its classpath. This issue may lead to post-auth remote code execution. This is particularly dangerous as Kafka-UI does not have authentication enabled by default. This issue has been addressed in version 0.7.2. All users are advised to upgrade. There are no known workarounds for this vulnerability. These issues were discovered and reported by the GitHub Security lab and is also tracked as GHSL-2023-230."
+    },
+    {
         "Modified": "2024-06-19T15:16:00",
         "Published": "2024-06-16T13:15:00",
         "access": {},
@@ -1773,24 +1790,5 @@
             "https://git.kernel.org/stable/c/4efaa5acf0a1d2b5947f98abb3acf8bfd966422b"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nepoll: be better about file lifetimes\n\nepoll can call out to vfs_poll() with a file pointer that may race with\nthe last 'fput()'. That would make f_count go down to zero, and while\nthe ep->mtx locking means that the resulting file pointer tear-down will\nbe blocked until the poll returns, it means that f_count is already\ndead, and any use of it won't actually get a reference to the file any\nmore: it's dead regardless.\n\nMake sure we have a valid ref on the file pointer before we call down to\nvfs_poll() from the epoll routines."
-    },
-    {
-        "Modified": "2024-06-19T14:15:00",
-        "Published": "2024-06-19T14:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38588",
-        "impact": {},
-        "last-modified": "2024-06-19T14:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/dbff5f0bfb2416b8b55c105ddbcd4f885e98fada",
-            "https://git.kernel.org/stable/c/7b4881da5b19f65709f5c18c1a4d8caa2e496461",
-            "https://git.kernel.org/stable/c/66df065b3106964e667b37bf8f7e55ec69d0c1f6",
-            "https://git.kernel.org/stable/c/31310e373f4c8c74e029d4326b283e757edabc0b",
-            "https://git.kernel.org/stable/c/e60b613df8b6253def41215402f72986fee3fc8d"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nftrace: Fix possible use-after-free issue in ftrace_location()\n\nKASAN reports a bug:\n\n  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120\n  Read of size 8 at addr ffff888141d40010 by task insmod/424\n  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+\n  [...]\n  Call Trace:\n   <TASK>\n   dump_stack_lvl+0x68/0xa0\n   print_report+0xcf/0x610\n   kasan_report+0xb5/0xe0\n   ftrace_location+0x90/0x120\n   register_kprobe+0x14b/0xa40\n   kprobe_init+0x2d/0xff0 [kprobe_example]\n   do_one_initcall+0x8f/0x2d0\n   do_init_module+0x13a/0x3c0\n   load_module+0x3082/0x33d0\n   init_module_from_file+0xd2/0x130\n   __x64_sys_finit_module+0x306/0x440\n   do_syscall_64+0x68/0x140\n   entry_SYSCALL_64_after_hwframe+0x71/0x79\n\nThe root cause is that, in lookup_rec(), ftrace record of some address\nis being searched in ftrace pages of some module, but those ftrace pages\nat the same time is being freed in ftrace_release_mod() as the\ncorresponding module is being deleted:\n\n           CPU1                       |      CPU2\n  register_kprobes() {                | delete_module() {\n    check_kprobe_address_safe() {     |\n      arch_check_ftrace_location() {  |\n        ftrace_location() {           |\n          lookup_rec() // USE!        |   ftrace_release_mod() // Free!\n\nTo fix this issue:\n  1. Hold rcu lock as accessing ftrace pages in ftrace_location_range();\n  2. Use ftrace_location_range() instead of lookup_rec() in\n     ftrace_location();\n  3. Call synchronize_rcu() before freeing any ftrace pages both in\n     ftrace_process_locs()/ftrace_release_mod()/ftrace_free_mem()."
     }
 ]
