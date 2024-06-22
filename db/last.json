@@ -1,5 +1,21 @@
 [
     {
+        "Modified": "2024-06-22T17:15:00",
+        "Published": "2024-06-22T17:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-29",
+        "id": "CVE-2024-5443",
+        "impact": {},
+        "last-modified": "2024-06-22T17:15:00",
+        "references": [
+            "https://huntr.com/bounties/db52848a-4dbe-4110-a981-03739834bf45",
+            "https://github.com/parisneo/lollms/commit/2d0c4e76be93195836ecd0948027e791b8a2626f"
+        ],
+        "summary": "CVE-2024-4320 describes a vulnerability in the parisneo/lollms software, specifically within the `ExtensionBuilder().build_extension()` function. The vulnerability arises from the `/mount_extension` endpoint, where a path traversal issue allows attackers to navigate beyond the intended directory structure. This is facilitated by the `data.category` and `data.folder` parameters accepting empty strings (`\"\"`), which, due to inadequate input sanitization, can lead to the construction of a `package_path` that points to the root directory. Consequently, if an attacker can create a `config.yaml` file in a controllable path, this path can be appended to the `extensions` list and trigger the execution of `__init__.py` in the current directory, leading to remote code execution. The vulnerability affects versions up to 5.9.0, and has been addressed in version 9.8."
+    },
+    {
         "Modified": "2024-06-22T14:15:00",
         "Published": "2024-06-22T14:15:00",
         "access": {},
@@ -1897,28 +1913,5 @@
             "https://security.netapp.com/advisory/ntap-20240621-0007/"
         ],
         "summary": "jsonwebtoken is an implementation of JSON Web Tokens. Versions `<= 8.5.1` of `jsonwebtoken` library can be misconfigured so that passing a poorly implemented key retrieval function referring to the `secretOrPublicKey` argument from the readme link will result in incorrect verification of tokens. There is a possibility of using a different algorithm and key combination in verification, other than the one that was used to sign the tokens. Specifically, tokens signed with an asymmetric public key could be verified with a symmetric HS256 algorithm. This can lead to successful validation of  forged tokens. If your application is supporting usage of both symmetric key and asymmetric key in jwt.verify() implementation with the same key retrieval function. This issue has been patched, please update to version 9.0.0."
-    },
-    {
-        "Modified": "2024-06-21T19:15:00",
-        "Published": "2022-12-01T11:15:00",
-        "access": {},
-        "assigner": "security@google.com",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2022-1471",
-        "impact": {},
-        "last-modified": "2024-06-21T19:15:00",
-        "references": [
-            "https://github.com/google/security-research/security/advisories/GHSA-mjmj-j48q-9wg2",
-            "https://github.com/mbechler/marshalsec",
-            "https://www.github.com/mbechler/marshalsec/blob/master/marshalsec.pdf?raw=true",
-            "https://bitbucket.org/snakeyaml/snakeyaml/issues/561/cve-2022-1471-vulnerability-in#comment-64581479",
-            "https://groups.google.com/g/kubernetes-security-announce/c/mwrakFaEdnc",
-            "https://security.netapp.com/advisory/ntap-20230818-0015/",
-            "http://packetstormsecurity.com/files/175095/PyTorch-Model-Server-Registration-Deserialization-Remote-Code-Execution.html",
-            "http://www.openwall.com/lists/oss-security/2023/11/19/1",
-            "https://security.netapp.com/advisory/ntap-20240621-0006/"
-        ],
-        "summary": "SnakeYaml's Constructor() class does not restrict types which can be instantiated during deserialization.\u00a0Deserializing yaml content provided by an attacker can lead to remote code execution. We recommend using SnakeYaml's SafeConsturctor when parsing untrusted content to restrict deserialization. We recommend upgrading to version 2.0 and beyond.\n"
     }
 ]
