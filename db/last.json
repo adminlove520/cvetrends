@@ -1,5 +1,64 @@
 [
     {
+        "Modified": "2024-06-23T09:15:00",
+        "Published": "2024-06-23T06:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-6267",
+        "impact": {},
+        "last-modified": "2024-06-23T09:15:00",
+        "references": [
+            "https://vuldb.com/?id.269479",
+            "https://vuldb.com/?ctiid.269479",
+            "https://vuldb.com/?submit.362661",
+            "https://docs.google.com/document/d/1upC4101Ob9UW7fGC_valsEa45Q5xuBgcKZhs1Q-WoBM/edit?usp=sharing",
+            "https://github.com/sgr-xd/CVEs/blob/main/CVE-2024-6267.md"
+        ],
+        "summary": "A vulnerability classified as problematic was found in SourceCodester Service Provider Management System 1.0. Affected by this vulnerability is an unknown functionality of the file system_info/index.php of the component System Info Page. The manipulation of the argument System Name/System Short Name leads to cross site scripting. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-269479."
+    },
+    {
+        "Modified": "2024-06-23T09:15:00",
+        "Published": "2024-03-13T16:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-20",
+        "id": "CVE-2024-24549",
+        "impact": {},
+        "last-modified": "2024-06-23T09:15:00",
+        "references": [
+            "https://lists.apache.org/thread/4c50rmomhbbsdgfjsgwlb51xdwfjdcvg",
+            "https://security.netapp.com/advisory/ntap-20240402-0002/",
+            "https://lists.debian.org/debian-lts-announce/2024/04/msg00001.html",
+            "http://www.openwall.com/lists/oss-security/2024/03/13/3",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/736G4GPZWS2DSQO5WKXO3G6OMZKFEK55/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3UWIS5MMGYDZBLJYT674ZI5AWFHDZ46B/"
+        ],
+        "summary": "Denial of Service due to improper input validation vulnerability for HTTP/2 requests in Apache Tomcat. When processing an HTTP/2 request, if the request exceeded any of the configured limits for headers, the associated HTTP/2 stream was not reset until after all of the headers had been processed.This issue affects Apache Tomcat: from 11.0.0-M1 through 11.0.0-M16, from 10.1.0-M1 through 10.1.18, from 9.0.0-M1 through 9.0.85, from 8.5.0 through 8.5.98.\n\nUsers are recommended to upgrade to version 11.0.0-M17, 10.1.19, 9.0.86 or 8.5.99 which fix the issue.\n\n"
+    },
+    {
+        "Modified": "2024-06-23T09:15:00",
+        "Published": "2024-03-13T16:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-459",
+        "id": "CVE-2024-23672",
+        "impact": {},
+        "last-modified": "2024-06-23T09:15:00",
+        "references": [
+            "https://lists.apache.org/thread/cmpswfx6tj4s7x0nxxosvfqs11lvdx2f",
+            "https://security.netapp.com/advisory/ntap-20240402-0002/",
+            "https://lists.debian.org/debian-lts-announce/2024/04/msg00001.html",
+            "http://www.openwall.com/lists/oss-security/2024/03/13/4",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/736G4GPZWS2DSQO5WKXO3G6OMZKFEK55/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/3UWIS5MMGYDZBLJYT674ZI5AWFHDZ46B/"
+        ],
+        "summary": "Denial of Service via incomplete cleanup vulnerability in Apache Tomcat. It was possible for WebSocket clients to keep WebSocket connections open leading to increased resource consumption.This issue affects Apache Tomcat: from 11.0.0-M1 through 11.0.0-M16, from 10.1.0-M1 through 10.1.18, from 9.0.0-M1 through 9.0.85, from 8.5.0 through 8.5.98.\n\nUsers are recommended to upgrade to version 11.0.0-M17, 10.1.19, 9.0.86 or 8.5.99 which fix the issue.\n\n"
+    },
+    {
         "Modified": "2024-06-23T03:15:00",
         "Published": "2024-06-23T03:15:00",
         "access": {},
@@ -1852,64 +1911,5 @@
             "https://security.netapp.com/advisory/ntap-20240621-0006/"
         ],
         "summary": "The public API function BIO_new_NDEF is a helper function used for streaming\nASN.1 data via a BIO. It is primarily used internally to OpenSSL to support the\nSMIME, CMS and PKCS7 streaming capabilities, but may also be called directly by\nend user applications.\n\nThe function receives a BIO from the caller, prepends a new BIO_f_asn1 filter\nBIO onto the front of it to form a BIO chain, and then returns the new head of\nthe BIO chain to the caller. Under certain conditions, for example if a CMS\nrecipient public key is invalid, the new filter BIO is freed and the function\nreturns a NULL result indicating a failure. However, in this case, the BIO chain\nis not properly cleaned up and the BIO passed by the caller still retains\ninternal pointers to the previously freed filter BIO. If the caller then goes on\nto call BIO_pop() on the BIO then a use-after-free will occur. This will most\nlikely result in a crash.\n\n\n\nThis scenario occurs directly in the internal function B64_write_ASN1() which\nmay cause BIO_new_NDEF() to be called and will subsequently call BIO_pop() on\nthe BIO. This internal function is in turn called by the public API functions\nPEM_write_bio_ASN1_stream, PEM_write_bio_CMS_stream, PEM_write_bio_PKCS7_stream,\nSMIME_write_ASN1, SMIME_write_CMS and SMIME_write_PKCS7.\n\nOther public API functions that may be impacted by this include\ni2d_ASN1_bio_stream, BIO_new_CMS, BIO_new_PKCS7, i2d_CMS_bio_stream and\ni2d_PKCS7_bio_stream.\n\nThe OpenSSL cms and smime command line applications are similarly affected.\n\n\n\n"
-    },
-    {
-        "Modified": "2024-06-21T19:15:00",
-        "Published": "2023-01-29T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2022-48285",
-        "impact": {},
-        "last-modified": "2024-06-21T19:15:00",
-        "references": [
-            "https://github.com/Stuk/jszip/compare/v3.7.1...v3.8.0",
-            "https://www.mend.io/vulnerability-database/WS-2023-0004",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/244499",
-            "https://github.com/Stuk/jszip/commit/2edab366119c9ee948357c02f1206c28566cdf15",
-            "https://security.netapp.com/advisory/ntap-20240621-0005/"
-        ],
-        "summary": "loadAsync in JSZip before 3.8.0 allows Directory Traversal via a crafted ZIP archive."
-    },
-    {
-        "Modified": "2024-06-21T19:15:00",
-        "Published": "2022-12-23T00:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-327",
-        "id": "CVE-2022-23539",
-        "impact": {},
-        "last-modified": "2024-06-21T19:15:00",
-        "references": [
-            "https://github.com/auth0/node-jsonwebtoken/security/advisories/GHSA-8cf7-32gw-wr33",
-            "https://github.com/auth0/node-jsonwebtoken/commit/e1fa9dcc12054a8681db4e6373da1b30cf7016e3",
-            "https://security.netapp.com/advisory/ntap-20240621-0007/"
-        ],
-        "summary": "Versions `<=8.5.1` of `jsonwebtoken` library could be misconfigured so that legacy, insecure key types are used for signature verification. For example, DSA keys could be used with the RS256 algorithm. You are affected if you are using an algorithm and a key type other than a combination listed in the GitHub Security Advisory as unaffected. This issue has been fixed, please update to version 9.0.0. This version validates for asymmetric key type and algorithm combinations. Please refer to the above mentioned algorithm / key type combinations for the valid secure configuration. After updating to version 9.0.0, if you still intend to continue with signing or verifying tokens using invalid key type/algorithm value combinations, you\u2019ll need to set the `allowInvalidAsymmetricKeyTypes` option  to `true` in the `sign()` and/or `verify()` functions."
-    },
-    {
-        "Modified": "2024-06-21T19:15:00",
-        "Published": "2022-12-23T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-1333",
-        "id": "CVE-2022-40897",
-        "impact": {},
-        "last-modified": "2024-06-21T19:15:00",
-        "references": [
-            "https://github.com/pypa/setuptools/blob/fe8a98e696241487ba6ac9f91faa38ade939ec5d/setuptools/package_index.py#L200",
-            "https://pyup.io/posts/pyup-discovers-redos-vulnerabilities-in-top-python-packages/",
-            "https://github.com/pypa/setuptools/compare/v65.5.0...v65.5.1",
-            "https://github.com/pypa/setuptools/commit/43a9c9bfa6aa626ec2a22540bea28d2ca77964be",
-            "https://pyup.io/vulnerabilities/CVE-2022-40897/52495/",
-            "https://security.netapp.com/advisory/ntap-20230214-0001/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/YNA2BAH2ACBZ4TVJZKFLCR7L23BG5C3H/",
-            "https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/ADES3NLOE5QJKBLGNZNI2RGVOSQXA37R/",
-            "https://security.netapp.com/advisory/ntap-20240621-0006/"
-        ],
-        "summary": "Python Packaging Authority (PyPA) setuptools before 65.5.1 allows remote attackers to cause a denial of service via HTML in a crafted package or custom PackageIndex page. There is a Regular Expression Denial of Service (ReDoS) in package_index.py."
     }
 ]
