@@ -1,5 +1,685 @@
 [
     {
+        "Modified": "2024-06-27T17:29:00",
+        "Published": "2024-06-10T21:15:00",
+        "access": {},
+        "assigner": "product-security@apple.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27831",
+        "impact": {},
+        "last-modified": "2024-06-27T17:29:00",
+        "references": [
+            "https://support.apple.com/en-us/HT214101",
+            "https://support.apple.com/en-us/HT214100",
+            "https://support.apple.com/en-us/HT214107",
+            "https://support.apple.com/en-us/HT214106",
+            "https://support.apple.com/en-us/HT214105",
+            "https://support.apple.com/en-us/HT214108",
+            "https://support.apple.com/en-us/HT214102",
+            "https://support.apple.com/kb/HT214108",
+            "https://support.apple.com/kb/HT214107",
+            "https://support.apple.com/kb/HT214102",
+            "https://support.apple.com/kb/HT214105",
+            "https://support.apple.com/kb/HT214100",
+            "https://support.apple.com/kb/HT214106",
+            "https://support.apple.com/kb/HT214101",
+            "http://seclists.org/fulldisclosure/2024/Jun/5"
+        ],
+        "summary": "An out-of-bounds write issue was addressed with improved input validation. This issue is fixed in macOS Ventura 13.6.7, macOS Monterey 12.7.5, iOS 16.7.8 and iPadOS 16.7.8, tvOS 17.5, visionOS 1.2, iOS 17.5 and iPadOS 17.5, macOS Sonoma 14.5. Processing a file may lead to unexpected app termination or arbitrary code execution."
+    },
+    {
+        "Modified": "2024-06-27T17:15:00",
+        "Published": "2024-06-27T11:15:00",
+        "access": {},
+        "assigner": "openssl-security@openssl.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-5535",
+        "impact": {},
+        "last-modified": "2024-06-27T17:15:00",
+        "references": [
+            "https://www.openssl.org/news/secadv/20240627.txt",
+            "https://github.com/openssl/openssl/commit/e86ac436f0bd54d4517745483e2315650fae7b2c",
+            "https://github.com/openssl/openssl/commit/99fb785a5f85315b95288921a321a935ea29a51e",
+            "https://github.com/openssl/openssl/commit/4ada436a1946cbb24db5ab4ca082b69c1bc10f37",
+            "https://github.com/openssl/openssl/commit/cf6f91f6121f4db167405db2f0de410a456f260c",
+            "https://github.openssl.org/openssl/extended-releases/commit/b78ec0824da857223486660177d3b1f255c65d87",
+            "https://github.openssl.org/openssl/extended-releases/commit/9947251413065a05189a63c9b7a6c1d4e224c21c",
+            "http://www.openwall.com/lists/oss-security/2024/06/27/1"
+        ],
+        "summary": "Issue summary: Calling the OpenSSL API function SSL_select_next_proto with an\nempty supported client protocols buffer may cause a crash or memory contents to\nbe sent to the peer.\n\nImpact summary: A buffer overread can have a range of potential consequences\nsuch as unexpected application beahviour or a crash. In particular this issue\ncould result in up to 255 bytes of arbitrary private data from memory being sent\nto the peer leading to a loss of confidentiality. However, only applications\nthat directly call the SSL_select_next_proto function with a 0 length list of\nsupported client protocols are affected by this issue. This would normally never\nbe a valid scenario and is typically not under attacker control but may occur by\naccident in the case of a configuration or programming error in the calling\napplication.\n\nThe OpenSSL API function SSL_select_next_proto is typically used by TLS\napplications that support ALPN (Application Layer Protocol Negotiation) or NPN\n(Next Protocol Negotiation). NPN is older, was never standardised and\nis deprecated in favour of ALPN. We believe that ALPN is significantly more\nwidely deployed than NPN. The SSL_select_next_proto function accepts a list of\nprotocols from the server and a list of protocols from the client and returns\nthe first protocol that appears in the server list that also appears in the\nclient list. In the case of no overlap between the two lists it returns the\nfirst item in the client list. In either case it will signal whether an overlap\nbetween the two lists was found. In the case where SSL_select_next_proto is\ncalled with a zero length client list it fails to notice this condition and\nreturns the memory immediately following the client list pointer (and reports\nthat there was no overlap in the lists).\n\nThis function is typically called from a server side application callback for\nALPN or a client side application callback for NPN. In the case of ALPN the list\nof protocols supplied by the client is guaranteed by libssl to never be zero in\nlength. The list of server protocols comes from the application and should never\nnormally be expected to be of zero length. In this case if the\nSSL_select_next_proto function has been called as expected (with the list\nsupplied by the client passed in the client/client_len parameters), then the\napplication will not be vulnerable to this issue. If the application has\naccidentally been configured with a zero length server list, and has\naccidentally passed that zero length server list in the client/client_len\nparameters, and has additionally failed to correctly handle a \"no overlap\"\nresponse (which would normally result in a handshake failure in ALPN) then it\nwill be vulnerable to this problem.\n\nIn the case of NPN, the protocol permits the client to opportunistically select\na protocol when there is no overlap. OpenSSL returns the first client protocol\nin the no overlap case in support of this. The list of client protocols comes\nfrom the application and should never normally be expected to be of zero length.\nHowever if the SSL_select_next_proto function is accidentally called with a\nclient_len of 0 then an invalid memory pointer will be returned instead. If the\napplication uses this output as the opportunistic protocol then the loss of\nconfidentiality will occur.\n\nThis issue has been assessed as Low severity because applications are most\nlikely to be vulnerable if they are using NPN instead of ALPN - but NPN is not\nwidely used. It also requires an application configuration or programming error.\nFinally, this issue would not typically be under attacker control making active\nexploitation unlikely.\n\nThe FIPS modules in 3.3, 3.2, 3.1 and 3.0 are not affected by this issue.\n\nDue to the low severity of this issue we are not issuing new releases of\nOpenSSL at this time. The fix will be included in the next releases when they\nbecome available."
+    },
+    {
+        "Modified": "2024-06-27T17:15:00",
+        "Published": "2024-06-21T22:15:00",
+        "access": {},
+        "assigner": "psirt@esri.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-37694",
+        "impact": {},
+        "last-modified": "2024-06-27T17:15:00",
+        "references": [
+            "https://github.com/NSSCYCTFER/SRC-CVE"
+        ],
+        "summary": "ArcGIS Enterprise Server 10.8.0 allows a remote attacker to obtain sensitive information because /arcgis/rest/services does not require authentication. NOTE: the supplier disputes the vulnerability information, and also objects to the assignment process (unsupported when assigned from incorrect CNA)."
+    },
+    {
+        "Modified": "2024-06-27T17:15:00",
+        "Published": "2024-06-11T20:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-305",
+        "id": "CVE-2023-4727",
+        "impact": {},
+        "last-modified": "2024-06-27T17:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-4727",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2232218",
+            "https://access.redhat.com/errata/RHSA-2024:4051",
+            "https://access.redhat.com/errata/RHSA-2024:4070",
+            "https://access.redhat.com/errata/RHSA-2024:4164",
+            "https://access.redhat.com/errata/RHSA-2024:4165"
+        ],
+        "summary": "A flaw was found in dogtag-pki and pki-core. The token authentication scheme can be bypassed with a LDAP injection. By passing the query string parameter sessionID=*, an attacker can authenticate with an existing session saved in the LDAP directory server, which may lead to escalation of privilege."
+    },
+    {
+        "Modified": "2024-06-27T17:15:00",
+        "Published": "2024-05-14T15:42:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-354",
+        "id": "CVE-2024-3727",
+        "impact": {},
+        "last-modified": "2024-06-27T17:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-3727",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2274767",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/DLND3YDQQRWVRIUPL2G5UKXP5L3VSBBT/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/CYT3D2P3OJKISNFKOOHGY6HCUCQZYAVR/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/4HEYS34N55G7NOQZKNEXZKQVNDGEICCD/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/QFXMF3VVKIZN7ZMB7PKZCSWV6MOMTGMQ/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/6B37TXOKTKDBE2V26X2NSP7JKNMZOFVP/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/DTOMYERG5ND4QFDHC4ZSGCED3T3ESRSC/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/SFVSMR7TNLO2KPWJSW4CF64C2QMQXCIN/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FBZQ2ZRMFEUQ35235B2HWPSXGDCBZHFV/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/GD2GSBQTBLYADASUBHHZV2CZPTSLIPQJ/",
+            "https://access.redhat.com/errata/RHSA-2024:0045"
+        ],
+        "summary": "A flaw was found in the github.com/containers/image library. This flaw allows attackers to trigger unexpected authenticated registry accesses on behalf of a victim user, causing resource exhaustion, local path traversal, and other attacks."
+    },
+    {
+        "Modified": "2024-06-27T17:15:00",
+        "Published": "2024-04-25T17:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-524",
+        "id": "CVE-2024-0874",
+        "impact": {},
+        "last-modified": "2024-06-27T17:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-0874",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2219234",
+            "https://github.com/coredns/coredns/issues/6186",
+            "https://github.com/coredns/coredns/pull/6354",
+            "https://access.redhat.com/errata/RHSA-2024:0041"
+        ],
+        "summary": "A flaw was found in coredns. This issue could lead to invalid cache entries returning due to incorrectly implemented caching."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-532",
+        "id": "CVE-2023-30430",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7158789",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/252183"
+        ],
+        "summary": "IBM Security Verify Access 10.0.0 through 10.0.7.1 could allow a local user to obtain sensitive information from trace logs.  IBM X-Force ID:  252183."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-703",
+        "id": "CVE-2024-31883",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7158789",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/287615"
+        ],
+        "summary": "IBM Security Verify Access 10.0.0.0 through 10.0.7.1, under certain configurations, could allow an unauthenticated attacker to cause a denial of service due to asymmetric resource consumption.   IBM X-Force ID:  287615."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-284",
+        "id": "CVE-2024-39376",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-179-01"
+        ],
+        "summary": "TELSAT marKoni FM Transmitters are vulnerable to users gaining unauthorized access to sensitive information or performing actions beyond their designated permissions."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-28820",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/threerings/openvpn-auth-ldap/tags",
+            "https://github.com/threerings/openvpn-auth-ldap/pull/92"
+        ],
+        "summary": "Buffer overflow in the extract_openvpn_cr function in openvpn-cr.c in openvpn-auth-ldap (aka the Three Rings Auth-LDAP plugin for OpenVPN) 2.0.4 allows attackers with a valid LDAP username and who can control the challenge/response password field to pass a string with more than 14 colons into this field and cause a buffer overflow."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-703",
+        "id": "CVE-2024-31883",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7158789",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/287615"
+        ],
+        "summary": "IBM Security Verify Access 10.0.0.0 through 10.0.7.1, under certain configurations, could allow an unauthenticated attacker to cause a denial of service due to asymmetric resource consumption.   IBM X-Force ID:  287615."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2024-39373",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-179-01"
+        ],
+        "summary": "TELSAT marKoni FM Transmitters are vulnerable to a command injection vulnerability through the manipulation of settings and could allow an attacker to gain unauthorized access to the system with administrative privileges."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2024-39374",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-179-01"
+        ],
+        "summary": "TELSAT marKoni FM Transmitters are vulnerable to an attacker exploiting a hidden admin account that can be accessed through the use of hard-coded credentials."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39375",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-179-01"
+        ],
+        "summary": "TELSAT marKoni FM Transmitters are vulnerable to an attacker bypassing authentication and gaining administrator privileges."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39669",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://bookstack.soffid.com/books/security-advisories/page/cve-2024-39669"
+        ],
+        "summary": "In the Console in Soffid IAM before 3.5.39, necessary checks were not applied to some Java objects. A malicious agent could possibly execute arbitrary code in the Sync Server and compromise security."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T16:15:00",
+        "access": {},
+        "assigner": "security@ubuntu.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6388",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://bugs.launchpad.net/ubuntu/+source/ubuntu-advantage-tools/+bug/2068944",
+            "https://www.cve.org/CVERecord?id=CVE-2024-6388",
+            "https://github.com/canonical/ubuntu-advantage-desktop-daemon/pull/24"
+        ],
+        "summary": "Marco Trevisan discovered that the Ubuntu Advantage Desktop Daemon, before version 1.12, leaks the Pro token to unprivileged users by passing the token as an argument in plaintext."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-284",
+        "id": "CVE-2024-1153",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-0809"
+        ],
+        "summary": "Improper Access Control vulnerability in Talya Informatics Travel APPS allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Travel APPS: before v17.0.68."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39153",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/Thirtypenny77/cms2/blob/main/50/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/info_deal.php?mudi=del&dataType=news&dataTypeCN."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39155",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/Thirtypenny77/cms2/blob/main/56/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/ipRecord_deal.php?mudi=add."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39157",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/Thirtypenny77/cms2/blob/main/57/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/ipRecord_deal.php?mudi=del&dataType=&dataID=1."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39158",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/Thirtypenny77/cms2/blob/main/58/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/userSys_deal.php?mudi=infoSet."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39154",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/Thirtypenny77/cms2/blob/main/54/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/keyWord_deal.php?mudi=del&dataType=word&dataTypeCN."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39156",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://github.com/Thirtypenny77/cms2/blob/main/55/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/keyWord_deal.php?mudi=add."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T14:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-6374",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://vuldb.com/?id.269807",
+            "https://vuldb.com/?ctiid.269807",
+            "https://vuldb.com/?submit.364874",
+            "https://secretive-agate-23c.notion.site/School-Management-System-PHP-MySQL-stored-1-0-1-XSS-50088f0ed9e94efda9c57772ce192980",
+            "https://secretive-agate-23c.notion.site/School-Management-System-PHP-MySQL-stored-1-0-1-Stored-XSS-41c9f85f307441c5885fb0df3d3fcc08"
+        ],
+        "summary": "A vulnerability was found in lahirudanushka School Management System 1.0.0/1.0.1 and classified as problematic. This issue affects some unknown processing of the file /subject.php of the component Subject Page. The manipulation of the argument Subject Title/Sybillus Details leads to cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-269807."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T13:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-639",
+        "id": "CVE-2024-1107",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-0809"
+        ],
+        "summary": "Authorization Bypass Through User-Controlled Key vulnerability in Talya Informatics Travel APPS allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Travel APPS: before v17.0.68."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T13:16:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-6371",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://vuldb.com/?id.269804",
+            "https://vuldb.com/?ctiid.269804",
+            "https://vuldb.com/?submit.364101",
+            "https://github.com/L1OudFd8cl09/CVE/blob/main/25_06_2024_b.md"
+        ],
+        "summary": "A vulnerability, which was classified as critical, has been found in itsourcecode Pool of Bethesda Online Reservation System 1.0. Affected by this issue is some unknown functionality of the file controller.php. The manipulation of the argument rmtype_id leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-269804."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T13:16:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-6372",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://vuldb.com/?id.269805",
+            "https://vuldb.com/?ctiid.269805",
+            "https://vuldb.com/?submit.364752",
+            "https://github.com/Galaxy-lrc/cve/issues/1"
+        ],
+        "summary": "A vulnerability, which was classified as critical, was found in itsourcecode Tailoring Management System 1.0. This affects an unknown part of the file customeradd.php. The manipulation of the argument fullname/address/phonenumber/sex/email/city/comment leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-269805 was assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-06-27T17:11:00",
+        "Published": "2024-06-27T13:16:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-6373",
+        "impact": {},
+        "last-modified": "2024-06-27T17:11:00",
+        "references": [
+            "https://vuldb.com/?id.269806",
+            "https://vuldb.com/?ctiid.269806",
+            "https://vuldb.com/?submit.364646",
+            "https://github.com/Abyssun/abyssun-/issues/1"
+        ],
+        "summary": "A vulnerability has been found in itsourcecode Online Food Ordering System up to 1.0 and classified as critical. This vulnerability affects unknown code of the file /addproduct.php. The manipulation of the argument photo leads to unrestricted upload. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-269806 is the identifier assigned to this vulnerability."
+    },
+    {
+        "Modified": "2024-06-27T16:58:00",
+        "Published": "2024-06-10T21:15:00",
+        "access": {},
+        "assigner": "product-security@apple.com",
+        "cvss": null,
+        "cwe": "CWE-190",
+        "id": "CVE-2024-27833",
+        "impact": {},
+        "last-modified": "2024-06-27T16:58:00",
+        "references": [
+            "https://support.apple.com/en-us/HT214101",
+            "https://support.apple.com/en-us/HT214100",
+            "https://support.apple.com/en-us/HT214108",
+            "https://support.apple.com/en-us/HT214103",
+            "https://support.apple.com/en-us/HT214102",
+            "http://seclists.org/fulldisclosure/2024/Jun/5"
+        ],
+        "summary": "An integer overflow was addressed with improved input validation. This issue is fixed in tvOS 17.5, iOS 16.7.8 and iPadOS 16.7.8, visionOS 1.2, Safari 17.5, iOS 17.5 and iPadOS 17.5. Processing maliciously crafted web content may lead to arbitrary code execution."
+    },
+    {
+        "Modified": "2024-06-27T16:43:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-28818",
+        "impact": {},
+        "last-modified": "2024-06-27T16:43:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor, Wearable Processor, and Modem Exynos 980, Exynos 990, Exynos 1080, Exynos 2100, Exynos 2200, Exynos 1280, Exynos 1380, Exynos 1330, Exynos 2400, Exynos Modem 5123, Exynos Modem 5300. The baseband software does not properly check states specified by the RRC (Radio Resource Control) module. This can lead to disclosure of sensitive information."
+    },
+    {
+        "Modified": "2024-06-27T16:42:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-50804",
+        "impact": {},
+        "last-modified": "2024-06-27T16:42:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor, and Modem Exynos 9820, Exynos 9825, Exynos 980, Exynos 990, Exynos 850, Exynos 1080, Exynos 2100, Exynos 2200, Exynos 1280, Exynos 1380, Exynos 1330, Exynos Modem 5123, Exynos Modem 5300. The baseband software does not properly check format types specified by the NAS (Non-Access-Stratum) module. This can lead to bypass of authentication."
+    },
+    {
+        "Modified": "2024-06-27T16:42:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27370",
+        "impact": {},
+        "last-modified": "2024-06-27T16:42:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_config_get_nl_params(), there is no input validation check on hal_req->num_config_discovery_attr coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:41:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27372",
+        "impact": {},
+        "last-modified": "2024-06-27T16:41:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_config_get_nl_params(), there is no input validation check on disc_attr->infrastructure_ssid_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:41:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27373",
+        "impact": {},
+        "last-modified": "2024-06-27T16:41:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_config_get_nl_params(), there is no input validation check on disc_attr->mesh_id_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:40:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27371",
+        "impact": {},
+        "last-modified": "2024-06-27T16:40:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_followup_get_nl_params(), there is no input validation check on hal_req->service_specific_info_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:23:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27375",
+        "impact": {},
+        "last-modified": "2024-06-27T16:23:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_followup_get_nl_params(), there is no input validation check on hal_req->sdea_service_specific_info_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:22:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27374",
+        "impact": {},
+        "last-modified": "2024-06-27T16:22:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_publish_get_nl_params(), there is no input validation check on hal_req->service_specific_info_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:22:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27376",
+        "impact": {},
+        "last-modified": "2024-06-27T16:22:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_subscribe_get_nl_params(), there is no input validation check on hal_req->rx_match_filter_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:19:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27379",
+        "impact": {},
+        "last-modified": "2024-06-27T16:19:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_subscribe_get_nl_params(), there is no input validation check on hal_req->num_intf_addr_present coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:01:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-27377",
+        "impact": {},
+        "last-modified": "2024-06-27T16:01:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_nan_get_security_info_nl(), there is no input validation check on sec_info->key_info.body.pmk_info.pmk_len coming from userspace, which can lead to a heap overwrite."
+    },
+    {
+        "Modified": "2024-06-27T16:01:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2024-27378",
+        "impact": {},
+        "last-modified": "2024-06-27T16:01:00",
+        "references": [
+            "https://semiconductor.samsung.com/support/quality-support/product-security-updates/"
+        ],
+        "summary": "An issue was discovered in Samsung Mobile Processor Exynos 980, Exynos 850, Exynos 1280, Exynos 1380, and Exynos 1330. In the function slsi_send_action_frame_cert(), there is no input validation check on len coming from userspace, which can lead to a heap over-read."
+    },
+    {
         "Modified": "2024-06-27T15:54:00",
         "Published": "2024-06-05T19:15:00",
         "access": {},
@@ -262,130 +942,6 @@
             "https://supportportal.juniper.net/JSA72300"
         ],
         "summary": "A Missing Authentication for Critical Function vulnerability in Juniper Networks Junos OS on EX Series allows an unauthenticated, network-based attacker to cause limited impact to the file system integrity.\n\n\n\n\n\nWith a specific request to installAppPackage.php that doesn't require authentication an attacker is able to upload arbitrary files via J-Web, leading to a loss of \n\nintegrity\n\nfor a certain \n\npart of the file system, which may allow chaining to other vulnerabilities.\n\n\nThis issue affects Juniper Networks Junos OS on EX Series:\n\n\n\n  *  All versions prior to 20.4R3-S8;\n  *  21.1 versions 21.1R1 and later;\n  *  21.2 versions prior to 21.2R3-S6;\n  *  21.3 versions \n\nprior to \n\n 21.3R3-S5;\n  *  21.4 versions \n\nprior to \n\n21.4R3-S4;\n  *  22.1 versions \n\nprior to \n\n22.1R3-S3;\n  *  22.2 versions \n\nprior to \n\n22.2R3-S1;\n  *  22.3 versions \n\nprior to \n\n22.3R2-S2, 22.3R3;\n  *  22.4 versions \n\nprior to \n\n22.4R2-S1, 22.4R3.\n\n\n\n\n"
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@usom.gov.tr",
-        "cvss": null,
-        "cwe": "CWE-284",
-        "id": "CVE-2024-1153",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://www.usom.gov.tr/bildirim/tr-24-0809"
-        ],
-        "summary": "Improper Access Control vulnerability in Talya Informatics Travel APPS allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Travel APPS: before v17.0.68."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39153",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://github.com/Thirtypenny77/cms2/blob/main/50/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/info_deal.php?mudi=del&dataType=news&dataTypeCN."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39155",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://github.com/Thirtypenny77/cms2/blob/main/56/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/ipRecord_deal.php?mudi=add."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39157",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://github.com/Thirtypenny77/cms2/blob/main/57/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/ipRecord_deal.php?mudi=del&dataType=&dataID=1."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39158",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://github.com/Thirtypenny77/cms2/blob/main/58/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/userSys_deal.php?mudi=infoSet."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39154",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://github.com/Thirtypenny77/cms2/blob/main/54/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/keyWord_deal.php?mudi=del&dataType=word&dataTypeCN."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39156",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://github.com/Thirtypenny77/cms2/blob/main/55/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component /admin/keyWord_deal.php?mudi=add."
-    },
-    {
-        "Modified": "2024-06-27T14:15:00",
-        "Published": "2024-06-27T14:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-6374",
-        "impact": {},
-        "last-modified": "2024-06-27T14:15:00",
-        "references": [
-            "https://vuldb.com/?id.269807",
-            "https://vuldb.com/?ctiid.269807",
-            "https://vuldb.com/?submit.364874",
-            "https://secretive-agate-23c.notion.site/School-Management-System-PHP-MySQL-stored-1-0-1-XSS-50088f0ed9e94efda9c57772ce192980",
-            "https://secretive-agate-23c.notion.site/School-Management-System-PHP-MySQL-stored-1-0-1-Stored-XSS-41c9f85f307441c5885fb0df3d3fcc08"
-        ],
-        "summary": "A vulnerability was found in lahirudanushka School Management System 1.0.0/1.0.1 and classified as problematic. This issue affects some unknown processing of the file /subject.php of the component Subject Page. The manipulation of the argument Subject Title/Sybillus Details leads to cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The associated identifier of this vulnerability is VDB-269807."
     },
     {
         "Modified": "2024-06-27T14:15:00",
@@ -1090,60 +1646,6 @@
     },
     {
         "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-06-27T13:16:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-6371",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://vuldb.com/?id.269804",
-            "https://vuldb.com/?ctiid.269804",
-            "https://vuldb.com/?submit.364101",
-            "https://github.com/L1OudFd8cl09/CVE/blob/main/25_06_2024_b.md"
-        ],
-        "summary": "A vulnerability, which was classified as critical, has been found in itsourcecode Pool of Bethesda Online Reservation System 1.0. Affected by this issue is some unknown functionality of the file controller.php. The manipulation of the argument rmtype_id leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-269804."
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-06-27T13:16:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-6372",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://vuldb.com/?id.269805",
-            "https://vuldb.com/?ctiid.269805",
-            "https://vuldb.com/?submit.364752",
-            "https://github.com/Galaxy-lrc/cve/issues/1"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in itsourcecode Tailoring Management System 1.0. This affects an unknown part of the file customeradd.php. The manipulation of the argument fullname/address/phonenumber/sex/email/city/comment leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-269805 was assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-06-27T13:16:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-6373",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://vuldb.com/?id.269806",
-            "https://vuldb.com/?ctiid.269806",
-            "https://vuldb.com/?submit.364646",
-            "https://github.com/Abyssun/abyssun-/issues/1"
-        ],
-        "summary": "A vulnerability has been found in itsourcecode Online Food Ordering System up to 1.0 and classified as critical. This vulnerability affects unknown code of the file /addproduct.php. The manipulation of the argument photo leads to unrestricted upload. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. VDB-269806 is the identifier assigned to this vulnerability."
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
         "Published": "2024-06-21T11:15:00",
         "access": {},
         "assigner": "cve@kernel.org",
@@ -1495,698 +1997,5 @@
             "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nspeakup: Fix sizeof() vs ARRAY_SIZE() bug\n\nThe \"buf\" pointer is an array of u16 values.  This code should be\nusing ARRAY_SIZE() (which is 256) instead of sizeof() (which is 512),\notherwise it can the still got out of bounds."
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-06-19T14:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38601",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b50932ea673b5a089a4bb570a8a868d95c72854e",
-            "https://git.kernel.org/stable/c/c68b7a442ee61d04ca58b2b5cb5ea7cb8230f84a",
-            "https://git.kernel.org/stable/c/1e160196042cac946798ac192a0bc3398f1aa66b",
-            "https://git.kernel.org/stable/c/595363182f28786d641666a09e674b852c83b4bb",
-            "https://git.kernel.org/stable/c/54c64967ba5f8658ae7da76005024ebd3d9d8f6e",
-            "https://git.kernel.org/stable/c/af3274905b3143ea23142bbf77bd9b610c54e533",
-            "https://git.kernel.org/stable/c/5ef9e330406d3fb4f4b2c8bca2c6b8a93bae32d1",
-            "https://git.kernel.org/stable/c/79b52013429a42b8efdb0cda8bb0041386abab87",
-            "https://git.kernel.org/stable/c/c2274b908db05529980ec056359fae916939fdaa",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nring-buffer: Fix a race between readers and resize checks\n\nThe reader code in rb_get_reader_page() swaps a new reader page into the\nring buffer by doing cmpxchg on old->list.prev->next to point it to the\nnew page. Following that, if the operation is successful,\nold->list.next->prev gets updated too. This means the underlying\ndoubly-linked list is temporarily inconsistent, page->prev->next or\npage->next->prev might not be equal back to page for some page in the\nring buffer.\n\nThe resize operation in ring_buffer_resize() can be invoked in parallel.\nIt calls rb_check_pages() which can detect the described inconsistency\nand stop further tracing:\n\n[  190.271762] ------------[ cut here ]------------\n[  190.271771] WARNING: CPU: 1 PID: 6186 at kernel/trace/ring_buffer.c:1467 rb_check_pages.isra.0+0x6a/0xa0\n[  190.271789] Modules linked in: [...]\n[  190.271991] Unloaded tainted modules: intel_uncore_frequency(E):1 skx_edac(E):1\n[  190.272002] CPU: 1 PID: 6186 Comm: cmd.sh Kdump: loaded Tainted: G            E      6.9.0-rc6-default #5 158d3e1e6d0b091c34c3b96bfd99a1c58306d79f\n[  190.272011] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.0-0-gd239552c-rebuilt.opensuse.org 04/01/2014\n[  190.272015] RIP: 0010:rb_check_pages.isra.0+0x6a/0xa0\n[  190.272023] Code: [...]\n[  190.272028] RSP: 0018:ffff9c37463abb70 EFLAGS: 00010206\n[  190.272034] RAX: ffff8eba04b6cb80 RBX: 0000000000000007 RCX: ffff8eba01f13d80\n[  190.272038] RDX: ffff8eba01f130c0 RSI: ffff8eba04b6cd00 RDI: ffff8eba0004c700\n[  190.272042] RBP: ffff8eba0004c700 R08: 0000000000010002 R09: 0000000000000000\n[  190.272045] R10: 00000000ffff7f52 R11: ffff8eba7f600000 R12: ffff8eba0004c720\n[  190.272049] R13: ffff8eba00223a00 R14: 0000000000000008 R15: ffff8eba067a8000\n[  190.272053] FS:  00007f1bd64752c0(0000) GS:ffff8eba7f680000(0000) knlGS:0000000000000000\n[  190.272057] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  190.272061] CR2: 00007f1bd6662590 CR3: 000000010291e001 CR4: 0000000000370ef0\n[  190.272070] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  190.272073] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  190.272077] Call Trace:\n[  190.272098]  <TASK>\n[  190.272189]  ring_buffer_resize+0x2ab/0x460\n[  190.272199]  __tracing_resize_ring_buffer.part.0+0x23/0xa0\n[  190.272206]  tracing_resize_ring_buffer+0x65/0x90\n[  190.272216]  tracing_entries_write+0x74/0xc0\n[  190.272225]  vfs_write+0xf5/0x420\n[  190.272248]  ksys_write+0x67/0xe0\n[  190.272256]  do_syscall_64+0x82/0x170\n[  190.272363]  entry_SYSCALL_64_after_hwframe+0x76/0x7e\n[  190.272373] RIP: 0033:0x7f1bd657d263\n[  190.272381] Code: [...]\n[  190.272385] RSP: 002b:00007ffe72b643f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001\n[  190.272391] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f1bd657d263\n[  190.272395] RDX: 0000000000000002 RSI: 0000555a6eb538e0 RDI: 0000000000000001\n[  190.272398] RBP: 0000555a6eb538e0 R08: 000000000000000a R09: 0000000000000000\n[  190.272401] R10: 0000555a6eb55190 R11: 0000000000000246 R12: 00007f1bd6662500\n[  190.272404] R13: 0000000000000002 R14: 00007f1bd6667c00 R15: 0000000000000002\n[  190.272412]  </TASK>\n[  190.272414] ---[ end trace 0000000000000000 ]---\n\nNote that ring_buffer_resize() calls rb_check_pages() only if the parent\ntrace_buffer has recording disabled. Recent commit d78ab792705c\n(\"tracing: Stop current tracer when resizing buffer\") causes that it is\nnow always the case which makes it more likely to experience this issue.\n\nThe window to hit this race is nonetheless very small. To help\nreproducing it, one can add a delay loop in rb_get_reader_page():\n\n ret = rb_head_page_replace(reader, cpu_buffer->reader_page);\n if (!ret)\n \tgoto spin;\n for (unsigned i = 0; i < 1U << 26; i++)  /* inserted delay loop */\n \t__asm__ __volatile__ (\"\" : : : \"memory\");\n rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;\n\n.. \n---truncated---"
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-06-19T14:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38612",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://git.kernel.org/stable/c/10610575a3ac2a702bf5c57aa931beaf847949c7",
-            "https://git.kernel.org/stable/c/646cd236c55e2cb5f146fc41bbe4034c4af5b2a4",
-            "https://git.kernel.org/stable/c/00e6335329f23ac6cf3105931691674e28bc598c",
-            "https://git.kernel.org/stable/c/1a63730fb315bb1bab97edd69ff58ad45e04bb01",
-            "https://git.kernel.org/stable/c/e77a3ec7ada84543e75722a1283785a6544de925",
-            "https://git.kernel.org/stable/c/3398a40dccb88d3a7eef378247a023a78472db66",
-            "https://git.kernel.org/stable/c/85a70ff1e572160f1eeb096ed48d09a1c9d4d89a",
-            "https://git.kernel.org/stable/c/c04d6a914e890ccea4a9d11233009a2ee7978bf4",
-            "https://git.kernel.org/stable/c/160e9d2752181fcf18c662e74022d77d3164cd45",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: sr: fix invalid unregister error path\n\nThe error path of seg6_init() is wrong in case CONFIG_IPV6_SEG6_LWTUNNEL\nis not defined. In that case if seg6_hmac_init() fails, the\ngenl_unregister_family() isn't called.\n\nThis issue exist since commit 46738b1317e1 (\"ipv6: sr: add option to control\nlwtunnel support\"), and commit 5559cea2d5aa (\"ipv6: sr: fix possible\nuse-after-free and null-ptr-deref\") replaced unregister_pernet_subsys()\nwith genl_unregister_family() in this error path."
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36904",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://git.kernel.org/stable/c/84546cc1aeeb4df3e444b18a4293c9823f974be9",
-            "https://git.kernel.org/stable/c/1796ca9c6f5bd50554214053af5f47d112818ee3",
-            "https://git.kernel.org/stable/c/1d9cf07810c30ef7948879567d10fd1f01121d34",
-            "https://git.kernel.org/stable/c/27b0284d8be182a81feb65581ab6a724dfd596e8",
-            "https://git.kernel.org/stable/c/13ed7cdf079686ccd3618335205700c03f6fb446",
-            "https://git.kernel.org/stable/c/6e48faad92be13166184d21506e4e54c79c13adc",
-            "https://git.kernel.org/stable/c/517e32ea0a8c72202d0d8aa8df50a7cd3d6fdefc",
-            "https://git.kernel.org/stable/c/f2db7230f73a80dbb179deab78f88a7947f0ab7e",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00019.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntcp: Use refcount_inc_not_zero() in tcp_twsk_unique().\n\nAnderson Nascimento reported a use-after-free splat in tcp_twsk_unique()\nwith nice analysis.\n\nSince commit ec94c2696f0b (\"tcp/dccp: avoid one atomic operation for\ntimewait hashdance\"), inet_twsk_hashdance() sets TIME-WAIT socket's\nsk_refcnt after putting it into ehash and releasing the bucket lock.\n\nThus, there is a small race window where other threads could try to\nreuse the port during connect() and call sock_hold() in tcp_twsk_unique()\nfor the TIME-WAIT socket with zero refcnt.\n\nIf that happens, the refcnt taken by tcp_twsk_unique() is overwritten\nand sock_put() will cause underflow, triggering a real use-after-free\nsomewhere else.\n\nTo avoid the use-after-free, we need to use refcount_inc_not_zero() in\ntcp_twsk_unique() and give up on reusing the port if it returns false.\n\n[0]:\nrefcount_t: addition on 0; use-after-free.\nWARNING: CPU: 0 PID: 1039313 at lib/refcount.c:25 refcount_warn_saturate+0xe5/0x110\nCPU: 0 PID: 1039313 Comm: trigger Not tainted 6.8.6-200.fc39.x86_64 #1\nHardware name: VMware, Inc. VMware20,1/440BX Desktop Reference Platform, BIOS VMW201.00V.21805430.B64.2305221830 05/22/2023\nRIP: 0010:refcount_warn_saturate+0xe5/0x110\nCode: 42 8e ff 0f 0b c3 cc cc cc cc 80 3d aa 13 ea 01 00 0f 85 5e ff ff ff 48 c7 c7 f8 8e b7 82 c6 05 96 13 ea 01 01 e8 7b 42 8e ff <0f> 0b c3 cc cc cc cc 48 c7 c7 50 8f b7 82 c6 05 7a 13 ea 01 01 e8\nRSP: 0018:ffffc90006b43b60 EFLAGS: 00010282\nRAX: 0000000000000000 RBX: ffff888009bb3ef0 RCX: 0000000000000027\nRDX: ffff88807be218c8 RSI: 0000000000000001 RDI: ffff88807be218c0\nRBP: 0000000000069d70 R08: 0000000000000000 R09: ffffc90006b439f0\nR10: ffffc90006b439e8 R11: 0000000000000003 R12: ffff8880029ede84\nR13: 0000000000004e20 R14: ffffffff84356dc0 R15: ffff888009bb3ef0\nFS:  00007f62c10926c0(0000) GS:ffff88807be00000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 0000000020ccb000 CR3: 000000004628c005 CR4: 0000000000f70ef0\nPKRU: 55555554\nCall Trace:\n <TASK>\n ? refcount_warn_saturate+0xe5/0x110\n ? __warn+0x81/0x130\n ? refcount_warn_saturate+0xe5/0x110\n ? report_bug+0x171/0x1a0\n ? refcount_warn_saturate+0xe5/0x110\n ? handle_bug+0x3c/0x80\n ? exc_invalid_op+0x17/0x70\n ? asm_exc_invalid_op+0x1a/0x20\n ? refcount_warn_saturate+0xe5/0x110\n tcp_twsk_unique+0x186/0x190\n __inet_check_established+0x176/0x2d0\n __inet_hash_connect+0x74/0x7d0\n ? __pfx___inet_check_established+0x10/0x10\n tcp_v4_connect+0x278/0x530\n __inet_stream_connect+0x10f/0x3d0\n inet_stream_connect+0x3a/0x60\n __sys_connect+0xa8/0xd0\n __x64_sys_connect+0x18/0x20\n do_syscall_64+0x83/0x170\n entry_SYSCALL_64_after_hwframe+0x78/0x80\nRIP: 0033:0x7f62c11a885d\nCode: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a3 45 0c 00 f7 d8 64 89 01 48\nRSP: 002b:00007f62c1091e58 EFLAGS: 00000296 ORIG_RAX: 000000000000002a\nRAX: ffffffffffffffda RBX: 0000000020ccb004 RCX: 00007f62c11a885d\nRDX: 0000000000000010 RSI: 0000000020ccb000 RDI: 0000000000000003\nRBP: 00007f62c1091e90 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000296 R12: 00007f62c10926c0\nR13: ffffffffffffff88 R14: 0000000000000000 R15: 00007ffe237885b0\n </TASK>"
-    },
-    {
-        "Modified": "2024-06-27T13:16:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36934",
-        "impact": {},
-        "last-modified": "2024-06-27T13:16:00",
-        "references": [
-            "https://git.kernel.org/stable/c/bd502ba81cd1d515deddad7dbc6b812b14b97147",
-            "https://git.kernel.org/stable/c/80578ec10335bc15ac35fd1703c22aab34e39fdd",
-            "https://git.kernel.org/stable/c/6f0f19b79c085cc891c418b768f26f7004bd51a4",
-            "https://git.kernel.org/stable/c/0f560240b4cc25d3de527deb257cdf072c0102a9",
-            "https://git.kernel.org/stable/c/06cb37e2ba6441888f24566a997481d4197b4e32",
-            "https://git.kernel.org/stable/c/e19478763154674c084defc62ae0d64d79657f91",
-            "https://git.kernel.org/stable/c/1518b2b498a0109eb6b15755169d3b6607356b35",
-            "https://git.kernel.org/stable/c/8c34096c7fdf272fd4c0c37fe411cd2e3ed0ee9f",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00019.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbna: ensure the copied buf is NUL terminated\n\nCurrently, we allocate a nbytes-sized kernel buffer and copy nbytes from\nuserspace to that buffer. Later, we use sscanf on this buffer but we don't\nensure that the string is terminated inside the buffer, this can lead to\nOOB read when using sscanf. Fix this issue by using memdup_user_nul\ninstead of memdup_user."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-06-27T13:15:00",
-        "access": {},
-        "assigner": "cve@usom.gov.tr",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-1107",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://www.usom.gov.tr/bildirim/tr-24-0809"
-        ],
-        "summary": "Authorization Bypass Through User-Controlled Key vulnerability in Talya Informatics Travel APPS allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Travel APPS: before v17.0.68."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T17:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26754",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/f0ecdfa679189d26aedfe24212d4e69e42c2c861",
-            "https://git.kernel.org/stable/c/f8cbd1791900b5d96466eede8e9439a5b9ca4de7",
-            "https://git.kernel.org/stable/c/2e534fd15e5c2ca15821c897352cf0e8a3e30dca",
-            "https://git.kernel.org/stable/c/a576308800be28f2eaa099e7caad093b97d66e77",
-            "https://git.kernel.org/stable/c/3963f16cc7643b461271989b712329520374ad2a",
-            "https://git.kernel.org/stable/c/ba6b8b02a3314e62571a540efa96560888c5f03e",
-            "https://git.kernel.org/stable/c/5013bd54d283eda5262c9ae3bcc966d01daf8576",
-            "https://git.kernel.org/stable/c/136cfaca22567a03bbb3bf53a43d8cb5748b80ec",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngtp: fix use-after-free and null-ptr-deref in gtp_genl_dump_pdp()\n\nThe gtp_net_ops pernet operations structure for the subsystem must be\nregistered before registering the generic netlink family.\n\nSyzkaller hit 'general protection fault in gtp_genl_dump_pdp' bug:\n\ngeneral protection fault, probably for non-canonical address\n0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN NOPTI\nKASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]\nCPU: 1 PID: 5826 Comm: gtp Not tainted 6.8.0-rc3-std-def-alt1 #1\nHardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.0-alt1 04/01/2014\nRIP: 0010:gtp_genl_dump_pdp+0x1be/0x800 [gtp]\nCode: c6 89 c6 e8 64 e9 86 df 58 45 85 f6 0f 85 4e 04 00 00 e8 c5 ee 86\n      df 48 8b 54 24 18 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80>\n      3c 02 00 0f 85 de 05 00 00 48 8b 44 24 18 4c 8b 30 4c 39 f0 74\nRSP: 0018:ffff888014107220 EFLAGS: 00010202\nRAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000\nRDX: 0000000000000002 RSI: 0000000000000000 RDI: 0000000000000000\nRBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000\nR13: ffff88800fcda588 R14: 0000000000000001 R15: 0000000000000000\nFS:  00007f1be4eb05c0(0000) GS:ffff88806ce80000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00007f1be4e766cf CR3: 000000000c33e000 CR4: 0000000000750ef0\nPKRU: 55555554\nCall Trace:\n <TASK>\n ? show_regs+0x90/0xa0\n ? die_addr+0x50/0xd0\n ? exc_general_protection+0x148/0x220\n ? asm_exc_general_protection+0x22/0x30\n ? gtp_genl_dump_pdp+0x1be/0x800 [gtp]\n ? __alloc_skb+0x1dd/0x350\n ? __pfx___alloc_skb+0x10/0x10\n genl_dumpit+0x11d/0x230\n netlink_dump+0x5b9/0xce0\n ? lockdep_hardirqs_on_prepare+0x253/0x430\n ? __pfx_netlink_dump+0x10/0x10\n ? kasan_save_track+0x10/0x40\n ? __kasan_kmalloc+0x9b/0xa0\n ? genl_start+0x675/0x970\n __netlink_dump_start+0x6fc/0x9f0\n genl_family_rcv_msg_dumpit+0x1bb/0x2d0\n ? __pfx_genl_family_rcv_msg_dumpit+0x10/0x10\n ? genl_op_from_small+0x2a/0x440\n ? cap_capable+0x1d0/0x240\n ? __pfx_genl_start+0x10/0x10\n ? __pfx_genl_dumpit+0x10/0x10\n ? __pfx_genl_done+0x10/0x10\n ? security_capable+0x9d/0xe0"
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T17:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26772",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/5a6dcc4ad0f7f7fa8e8d127b5526e7c5f2d38a43",
-            "https://git.kernel.org/stable/c/6b92b1bc16d691c95b152c6dbf027ad64315668d",
-            "https://git.kernel.org/stable/c/ffeb72a80a82aba59a6774b0611f792e0ed3b0b7",
-            "https://git.kernel.org/stable/c/8de8305a25bfda607fc13475ebe84b978c96d7ff",
-            "https://git.kernel.org/stable/c/d639102f4cbd4cb65d1225dba3b9265596aab586",
-            "https://git.kernel.org/stable/c/d3bbe77a76bc52e9d4d0a120f1509be36e25c916",
-            "https://git.kernel.org/stable/c/21dbe20589c7f48e9c5d336ce6402bcebfa6d76a",
-            "https://git.kernel.org/stable/c/832698373a25950942c04a512daa652c18a9b513",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: avoid allocating blocks from corrupted group in ext4_mb_find_by_goal()\n\nPlaces the logic for checking if the group's block bitmap is corrupt under\nthe protection of the group lock to avoid allocating blocks from the group\nwith a corrupted block bitmap."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T17:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26777",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/84246c35ca34207114055a87552a1c4289c8fd7e",
-            "https://git.kernel.org/stable/c/6db07619d173765bd8622d63809cbfe361f04207",
-            "https://git.kernel.org/stable/c/cd36da760bd1f78c63c7078407baf01dd724f313",
-            "https://git.kernel.org/stable/c/df6e2088c6f4cad539cf67cba2d6764461e798d1",
-            "https://git.kernel.org/stable/c/f329523f6a65c3bbce913ad35473d83a319d5d99",
-            "https://git.kernel.org/stable/c/99f1abc34a6dde248d2219d64aa493c76bbdd9eb",
-            "https://git.kernel.org/stable/c/1d11dd3ea5d039c7da089f309f39c4cd363b924b",
-            "https://git.kernel.org/stable/c/e421946be7d9bf545147bea8419ef8239cb7ca52",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfbdev: sis: Error out if pixclock equals zero\n\nThe userspace program could pass any values to the driver through\nioctl() interface. If the driver doesn't check the value of pixclock,\nit may cause divide-by-zero error.\n\nIn sisfb_check_var(), var->pixclock is used as a divisor to caculate\ndrate before it is checked against zero. Fix this by checking it\nat the beginning.\n\nThis is similar to CVE-2022-3061 in i740fb which was fixed by\ncommit 15cf0b8."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T17:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26779",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/76fad1174a0cae6fc857b9f88b261a2e4f07d587",
-            "https://git.kernel.org/stable/c/85720b69aef177318f4a18efbcc4302228a340e5",
-            "https://git.kernel.org/stable/c/5ffab99e070b9f8ae0cf60c3c3602b84eee818dd",
-            "https://git.kernel.org/stable/c/88c18fd06608b3adee547102505d715f21075c9d",
-            "https://git.kernel.org/stable/c/eb39bb548bf974acad7bd6780fe11f9e6652d696",
-            "https://git.kernel.org/stable/c/54b79d8786964e2f840e8a2ec4a9f9a50f3d4954",
-            "https://git.kernel.org/stable/c/281280276b70c822f55ce15b661f6d1d3228aaa9",
-            "https://git.kernel.org/stable/c/bcbc84af1183c8cf3d1ca9b78540c2185cd85e7f",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: mac80211: fix race condition on enabling fast-xmit\n\nfast-xmit must only be enabled after the sta has been uploaded to the driver,\notherwise it could end up passing the not-yet-uploaded sta via drv_tx calls\nto the driver, leading to potential crashes because of uninitialized drv_priv\ndata.\nAdd a missing sta->uploaded check and re-check fast xmit after inserting a sta."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26722",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/3dd2d99e2352903d0e0b8769e6c9b8293c7454b2",
-            "https://git.kernel.org/stable/c/422d5243b9f780abd3d39da2b746e3915677b07d",
-            "https://git.kernel.org/stable/c/4a98bc739d0753a5810ce5630943cd7614c7717e",
-            "https://git.kernel.org/stable/c/d14b8e2005f36319df9412d42037416d64827f6b",
-            "https://git.kernel.org/stable/c/1f0d7792e9023e8658e901b7b76a555f6aa052ec",
-            "https://git.kernel.org/stable/c/050ad2ca0ac169dd9e552075d2c6af1bbb46534c",
-            "https://git.kernel.org/stable/c/ed5b8b735369b40d6c1f8ef3e62d369f74b4c491",
-            "https://git.kernel.org/stable/c/6ef5d5b92f7117b324efaac72b3db27ae8bb3082",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nASoC: rt5645: Fix deadlock in rt5645_jack_detect_work()\n\nThere is a path in rt5645_jack_detect_work(), where rt5645->jd_mutex\nis left locked forever. That may lead to deadlock\nwhen rt5645_jack_detect_work() is called for the second time.\n\nFound by Linux Verification Center (linuxtesting.org) with SVACE."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-04T09:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26801",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/e0b278650f07acf2e0932149183458468a731c03",
-            "https://git.kernel.org/stable/c/98fb98fd37e42fd4ce13ff657ea64503e24b6090",
-            "https://git.kernel.org/stable/c/6dd0a9dfa99f8990a08eb8fdd8e79bee31c7d8e2",
-            "https://git.kernel.org/stable/c/da4569d450b193e39e87119fd316c0291b585d14",
-            "https://git.kernel.org/stable/c/45085686b9559bfbe3a4f41d3d695a520668f5e1",
-            "https://git.kernel.org/stable/c/2ab9a19d896f5a0dd386e1f001c5309bc35f433b",
-            "https://git.kernel.org/stable/c/dd594cdc24f2e48dab441732e6dfcafd6b0711d1",
-            "https://git.kernel.org/stable/c/2449007d3f73b2842c9734f45f0aadb522daf592",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: Avoid potential use-after-free in hci_error_reset\n\nWhile handling the HCI_EV_HARDWARE_ERROR event, if the underlying\nBT controller is not responding, the GPIO reset mechanism would\nfree the hci_dev and lead to a use-after-free in hci_error_reset.\n\nHere's the call trace observed on a ChromeOS device with Intel AX201:\n   queue_work_on+0x3e/0x6c\n   __hci_cmd_sync_sk+0x2ee/0x4c0 [bluetooth <HASH:3b4a6>]\n   ? init_wait_entry+0x31/0x31\n   __hci_cmd_sync+0x16/0x20 [bluetooth <HASH:3b4a 6>]\n   hci_error_reset+0x4f/0xa4 [bluetooth <HASH:3b4a 6>]\n   process_one_work+0x1d8/0x33f\n   worker_thread+0x21b/0x373\n   kthread+0x13a/0x152\n   ? pr_cont_work+0x54/0x54\n   ? kthread_blkcg+0x31/0x31\n    ret_from_fork+0x1f/0x30\n\nThis patch holds the reference count on the hci_dev while processing\na HCI_EV_HARDWARE_ERROR event to avoid potential crash."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-02T07:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26671",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/9525b38180e2753f0daa1a522b7767a2aa969676",
-            "https://git.kernel.org/stable/c/ecd7744a1446eb02ccc63e493e2eb6ede4ef1e10",
-            "https://git.kernel.org/stable/c/7610ba1319253225a9ba8a9d28d472fc883b4e2f",
-            "https://git.kernel.org/stable/c/89e0e66682e1538aeeaa3109503473663cd24c8b",
-            "https://git.kernel.org/stable/c/1d9c777d3e70bdc57dddf7a14a80059d65919e56",
-            "https://git.kernel.org/stable/c/6d8b01624a2540336a32be91f25187a433af53a0",
-            "https://git.kernel.org/stable/c/f1bc0d8163f8ee84a8d5affdf624cfad657df1d2",
-            "https://git.kernel.org/stable/c/5266caaf5660529e3da53004b8b7174cab6374ed",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblk-mq: fix IO hang from sbitmap wakeup race\n\nIn blk_mq_mark_tag_wait(), __add_wait_queue() may be re-ordered\nwith the following blk_mq_get_driver_tag() in case of getting driver\ntag failure.\n\nThen in __sbitmap_queue_wake_up(), waitqueue_active() may not observe\nthe added waiter in blk_mq_mark_tag_wait() and wake up nothing, meantime\nblk_mq_mark_tag_wait() can't get driver tag successfully.\n\nThis issue can be reproduced by running the following test in loop, and\nfio hang can be observed in < 30min when running it on my test VM\nin laptop.\n\n\tmodprobe -r scsi_debug\n\tmodprobe scsi_debug delay=0 dev_size_mb=4096 max_queue=1 host_max_queue=1 submit_queues=4\n\tdev=`ls -d /sys/bus/pseudo/drivers/scsi_debug/adapter*/host*/target*/*/block/* | head -1 | xargs basename`\n\tfio --filename=/dev/\"$dev\" --direct=1 --rw=randrw --bs=4k --iodepth=1 \\\n       \t\t--runtime=100 --numjobs=40 --time_based --name=test \\\n        \t--ioengine=libaio\n\nFix the issue by adding one explicit barrier in blk_mq_mark_tag_wait(), which\nis just fine in case of running out of tag."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-02T07:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26675",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/4fdb14ba89faff6e6969a4dffdc8e54235d6e5ed",
-            "https://git.kernel.org/stable/c/56fae81633ccee307cfcb032f706bf1863a56982",
-            "https://git.kernel.org/stable/c/b06e067e93fa4b98acfd3a9f38a398ab91bbc58b",
-            "https://git.kernel.org/stable/c/58fbe665b097bf7b3144da7e7b91fb27aa8d0ae3",
-            "https://git.kernel.org/stable/c/4e2c4846b2507f6dfc9bea72b7567c2693a82a16",
-            "https://git.kernel.org/stable/c/7e5ef49670766c9742ffcd9cead7cdb018268719",
-            "https://git.kernel.org/stable/c/210d938f963dddc543b07e66a79b7d8d4bd00bd8",
-            "https://git.kernel.org/stable/c/cb88cb53badb8aeb3955ad6ce80b07b598e310b8",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nppp_async: limit MRU to 64K\n\nsyzbot triggered a warning [1] in __alloc_pages():\n\nWARN_ON_ONCE_GFP(order > MAX_PAGE_ORDER, gfp)\n\nWillem fixed a similar issue in commit c0a2a1b0d631 (\"ppp: limit MRU to 64K\")\n\nAdopt the same sanity check for ppp_async_ioctl(PPPIOCSMRU)\n\n[1]:\n\n WARNING: CPU: 1 PID: 11 at mm/page_alloc.c:4543 __alloc_pages+0x308/0x698 mm/page_alloc.c:4543\nModules linked in:\nCPU: 1 PID: 11 Comm: kworker/u4:0 Not tainted 6.8.0-rc2-syzkaller-g41bccc98fb79 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023\nWorkqueue: events_unbound flush_to_ldisc\npstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)\n pc : __alloc_pages+0x308/0x698 mm/page_alloc.c:4543\n lr : __alloc_pages+0xc8/0x698 mm/page_alloc.c:4537\nsp : ffff800093967580\nx29: ffff800093967660 x28: ffff8000939675a0 x27: dfff800000000000\nx26: ffff70001272ceb4 x25: 0000000000000000 x24: ffff8000939675c0\nx23: 0000000000000000 x22: 0000000000060820 x21: 1ffff0001272ceb8\nx20: ffff8000939675e0 x19: 0000000000000010 x18: ffff800093967120\nx17: ffff800083bded5c x16: ffff80008ac97500 x15: 0000000000000005\nx14: 1ffff0001272cebc x13: 0000000000000000 x12: 0000000000000000\nx11: ffff70001272cec1 x10: 1ffff0001272cec0 x9 : 0000000000000001\nx8 : ffff800091c91000 x7 : 0000000000000000 x6 : 000000000000003f\nx5 : 00000000ffffffff x4 : 0000000000000000 x3 : 0000000000000020\nx2 : 0000000000000008 x1 : 0000000000000000 x0 : ffff8000939675e0\nCall trace:\n  __alloc_pages+0x308/0x698 mm/page_alloc.c:4543\n  __alloc_pages_node include/linux/gfp.h:238 [inline]\n  alloc_pages_node include/linux/gfp.h:261 [inline]\n  __kmalloc_large_node+0xbc/0x1fc mm/slub.c:3926\n  __do_kmalloc_node mm/slub.c:3969 [inline]\n  __kmalloc_node_track_caller+0x418/0x620 mm/slub.c:4001\n  kmalloc_reserve+0x17c/0x23c net/core/skbuff.c:590\n  __alloc_skb+0x1c8/0x3d8 net/core/skbuff.c:651\n  __netdev_alloc_skb+0xb8/0x3e8 net/core/skbuff.c:715\n  netdev_alloc_skb include/linux/skbuff.h:3235 [inline]\n  dev_alloc_skb include/linux/skbuff.h:3248 [inline]\n  ppp_async_input drivers/net/ppp/ppp_async.c:863 [inline]\n  ppp_asynctty_receive+0x588/0x186c drivers/net/ppp/ppp_async.c:341\n  tty_ldisc_receive_buf+0x12c/0x15c drivers/tty/tty_buffer.c:390\n  tty_port_default_receive_buf+0x74/0xac drivers/tty/tty_port.c:37\n  receive_buf drivers/tty/tty_buffer.c:444 [inline]\n  flush_to_ldisc+0x284/0x6e4 drivers/tty/tty_buffer.c:494\n  process_one_work+0x694/0x1204 kernel/workqueue.c:2633\n  process_scheduled_works kernel/workqueue.c:2706 [inline]\n  worker_thread+0x938/0xef4 kernel/workqueue.c:2787\n  kthread+0x288/0x310 kernel/kthread.c:388\n  ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860"
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T15:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26696",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/228742b2ddfb99dfd71e5a307e6088ab6836272e",
-            "https://git.kernel.org/stable/c/862ee4422c38be5c249844a684b00d0dbe9d1e46",
-            "https://git.kernel.org/stable/c/98a4026b22ff440c7f47056481bcbbe442f607d6",
-            "https://git.kernel.org/stable/c/7e9b622bd0748cc104d66535b76d9b3535f9dc0f",
-            "https://git.kernel.org/stable/c/8494ba2c9ea00a54d5b50e69b22c55a8958bce32",
-            "https://git.kernel.org/stable/c/ea5ddbc11613b55e5128c85f57b08f907abd9b28",
-            "https://git.kernel.org/stable/c/e38585401d464578d30f5868ff4ca54475c34f7d",
-            "https://git.kernel.org/stable/c/38296afe3c6ee07319e01bb249aa4bb47c07b534",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix hang in nilfs_lookup_dirty_data_buffers()\n\nSyzbot reported a hang issue in migrate_pages_batch() called by mbind()\nand nilfs_lookup_dirty_data_buffers() called in the log writer of nilfs2.\n\nWhile migrate_pages_batch() locks a folio and waits for the writeback to\ncomplete, the log writer thread that should bring the writeback to\ncompletion picks up the folio being written back in\nnilfs_lookup_dirty_data_buffers() that it calls for subsequent log\ncreation and was trying to lock the folio.  Thus causing a deadlock.\n\nIn the first place, it is unexpected that folios/pages in the middle of\nwriteback will be updated and become dirty.  Nilfs2 adds a checksum to\nverify the validity of the log being written and uses it for recovery at\nmount, so data changes during writeback are suppressed.  Since this is\nbroken, an unclean shutdown could potentially cause recovery to fail.\n\nInvestigation revealed that the root cause is that the wait for writeback\ncompletion in nilfs_page_mkwrite() is conditional, and if the backing\ndevice does not require stable writes, data may be modified without\nwaiting.\n\nFix these issues by making nilfs_page_mkwrite() wait for writeback to\nfinish regardless of the stable write requirement of the backing device."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-03T17:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26773",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/21f8cfe79f776287459343e9cfa6055af61328ea",
-            "https://git.kernel.org/stable/c/260fc96283c0f594de18a1b045faf6d8fb42874d",
-            "https://git.kernel.org/stable/c/927794a02169778c9c2e7b25c768ab3ea8c1dc03",
-            "https://git.kernel.org/stable/c/4c21fa60a6f4606f6214a38f50612b17b2f738f5",
-            "https://git.kernel.org/stable/c/f97e75fa4e12b0aa0224e83fcbda8853ac2adf36",
-            "https://git.kernel.org/stable/c/0184747b552d6b5a14db3b7fcc3b792ce64dedd1",
-            "https://git.kernel.org/stable/c/a2576ae9a35c078e488f2c573e9e6821d651fbbe",
-            "https://git.kernel.org/stable/c/4530b3660d396a646aad91a787b6ab37cf604b53",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: avoid allocating blocks from corrupted group in ext4_mb_try_best_found()\n\nDetermine if the group block bitmap is corrupted before using ac_b_ex in\next4_mb_try_best_found() to avoid allocating blocks from a group with a\ncorrupted block bitmap in the following concurrency and making the\nsituation worse.\n\next4_mb_regular_allocator\n  ext4_lock_group(sb, group)\n  ext4_mb_good_group\n   // check if the group bbitmap is corrupted\n  ext4_mb_complex_scan_group\n   // Scan group gets ac_b_ex but doesn't use it\n  ext4_unlock_group(sb, group)\n                           ext4_mark_group_bitmap_corrupted(group)\n                           // The block bitmap was corrupted during\n                           // the group unlock gap.\n  ext4_mb_try_best_found\n    ext4_lock_group(ac->ac_sb, group)\n    ext4_mb_use_best_found\n      mb_mark_used\n      // Allocating blocks in block bitmap corrupted group"
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-04-04T09:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26791",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/11d7a2e429c02d51e2dc90713823ea8b8d3d3a84",
-            "https://git.kernel.org/stable/c/c6652e20d7d783d060fe5f987eac7b5cabe31311",
-            "https://git.kernel.org/stable/c/2886fe308a83968dde252302884a1e63351cf16d",
-            "https://git.kernel.org/stable/c/ab2d68655d0f04650bef09fee948ff80597c5fb9",
-            "https://git.kernel.org/stable/c/f590040ce2b712177306b03c2a63b16f7d48d3c8",
-            "https://git.kernel.org/stable/c/b1690ced4d2d8b28868811fb81cd33eee5aefee1",
-            "https://git.kernel.org/stable/c/343eecb4ff49a7b1cc1dfe86958a805cf2341cfb",
-            "https://git.kernel.org/stable/c/9845664b9ee47ce7ee7ea93caf47d39a9d4552c4",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: dev-replace: properly validate device names\n\nThere's a syzbot report that device name buffers passed to device\nreplace are not properly checked for string termination which could lead\nto a read out of bounds in getname_kernel().\n\nAdd a helper that validates both source and target device name buffers.\nFor devid as the source initialize the buffer to empty string in case\nsomething tries to read it later.\n\nThis was originally analyzed and fixed in a different way by Edward Adam\nDavis (see links)."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-06-22T05:15:00",
-        "access": {},
-        "assigner": "report@snyk.io",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-21519",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://security.snyk.io/vuln/SNYK-PHP-OPENCARTOPENCART-7266579",
-            "https://github.com/opencart/opencart/blob/4.0.2.3/upload/admin/controller/tool/upload.php%23L353"
-        ],
-        "summary": "This affects versions of the package opencart/opencart from 4.0.0.0. An Arbitrary File Creation issue was identified via the database restoration functionality. By injecting PHP code into the database, an attacker with admin privileges can create a backup file with an arbitrary filename (including the extension), within /system/storage/backup.\r\r**Note:**\r\rIt is less likely for the created file to be available within the web root, as part of the security recommendations for the application suggest moving the storage path outside of the web root."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-06-21T12:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-835",
-        "id": "CVE-2024-36288",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/57ff6c0a175930856213b2aa39f8c845a53e5b1c",
-            "https://git.kernel.org/stable/c/6ed45d20d30005bed94c8c527ce51d5ad8121018",
-            "https://git.kernel.org/stable/c/4cefcd0af7458bdeff56a9d8dfc6868ce23d128a",
-            "https://git.kernel.org/stable/c/b4878ea99f2b40ef1925720b1b4ca7f4af1ba785",
-            "https://git.kernel.org/stable/c/f9977e4e0cd98a5f06f2492b4f3547db58deabf5",
-            "https://git.kernel.org/stable/c/af628d43a822b78ad8d4a58d8259f8bf8bc71115",
-            "https://git.kernel.org/stable/c/0a1cb0c6102bb4fd310243588d39461da49497ad",
-            "https://git.kernel.org/stable/c/4a77c3dead97339478c7422eb07bf4bf63577008",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nSUNRPC: Fix loop termination condition in gss_free_in_token_pages()\n\nThe in_token->pages[] array is not NULL terminated. This results in\nthe following KASAN splat:\n\n  KASAN: maybe wild-memory-access in range [0x04a2013400000008-0x04a201340000000f]"
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-06-21T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31076",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a40209d355afe4ed6d533507838c9e5cd70a76d8",
-            "https://git.kernel.org/stable/c/f5f4675960609d8c5ee95f027fbf6ce380f98372",
-            "https://git.kernel.org/stable/c/6752dfcfff3ac3e16625ebd3f0ad9630900e7e76",
-            "https://git.kernel.org/stable/c/9eeda3e0071a329af1eba15f4e57dc39576bb420",
-            "https://git.kernel.org/stable/c/e9c96d01d520498b169ce734a8ad1142bef86a30",
-            "https://git.kernel.org/stable/c/59f86a2908380d09cdc726461c0fbb8d8579c99f",
-            "https://git.kernel.org/stable/c/ebfb16fc057a016abb46a9720a54abf0d4f6abe1",
-            "https://git.kernel.org/stable/c/a6c11c0a5235fb144a65e0cb2ffd360ddc1f6c32",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngenirq/cpuhotplug, x86/vector: Prevent vector leak during CPU offline\n\nThe absence of IRQD_MOVE_PCNTXT prevents immediate effectiveness of\ninterrupt affinity reconfiguration via procfs. Instead, the change is\ndeferred until the next instance of the interrupt being triggered on the\noriginal CPU.\n\nWhen the interrupt next triggers on the original CPU, the new affinity is\nenforced within __irq_move_irq(). A vector is allocated from the new CPU,\nbut the old vector on the original CPU remains and is not immediately\nreclaimed. Instead, apicd->move_in_progress is flagged, and the reclaiming\nprocess is delayed until the next trigger of the interrupt on the new CPU.\n\nUpon the subsequent triggering of the interrupt on the new CPU,\nirq_complete_move() adds a task to the old CPU's vector_cleanup list if it\nremains online. Subsequently, the timer on the old CPU iterates over its\nvector_cleanup list, reclaiming old vectors.\n\nHowever, a rare scenario arises if the old CPU is outgoing before the\ninterrupt triggers again on the new CPU.\n\nIn that case irq_force_complete_move() is not invoked on the outgoing CPU\nto reclaim the old apicd->prev_vector because the interrupt isn't currently\naffine to the outgoing CPU, and irq_needs_fixup() returns false. Even\nthough __vector_schedule_cleanup() is later called on the new CPU, it\ndoesn't reclaim apicd->prev_vector; instead, it simply resets both\napicd->move_in_progress and apicd->prev_vector to 0.\n\nAs a result, the vector remains unreclaimed in vector_matrix, leading to a\nCPU vector leak.\n\nTo address this issue, move the invocation of irq_force_complete_move()\nbefore the irq_needs_fixup() call to reclaim apicd->prev_vector, if the\ninterrupt is currently or used to be affine to the outgoing CPU.\n\nAdditionally, reclaim the vector in __vector_schedule_cleanup() as well,\nfollowing a warning message, although theoretically it should never see\napicd->move_in_progress with apicd->prev_cpu pointing to an offline CPU."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-06-11T15:16:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-35628",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/photo-gallery/wordpress-photo-gallery-by-10web-plugin-1-8-23-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in Photo Gallery Team Photo Gallery by 10Web.This issue affects Photo Gallery by 10Web: from n/a through 1.8.25."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-30T16:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36883",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/3cdc34d76c4f777579e28ad373979d36c030cfd3",
-            "https://git.kernel.org/stable/c/7b0e64583eab8c1d896b47e5dd0bf2e7d86ec41f",
-            "https://git.kernel.org/stable/c/0c3248bc708a7797be573214065cf908ff1f54c7",
-            "https://git.kernel.org/stable/c/9518b79bfd2fbf99fa9b7e8e36bcb1825e7ba030",
-            "https://git.kernel.org/stable/c/2d60ff5874aefd006717ca5e22ac1e25eac29c42",
-            "https://git.kernel.org/stable/c/b6dbfd5bcc267a95a0bf1bf96af46243f96ec6cd",
-            "https://git.kernel.org/stable/c/f4f94587e1bf87cb40ec33955a9d90148dd026ab",
-            "https://git.kernel.org/stable/c/a26ff37e624d12e28077e5b24d2b264f62764ad6",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00019.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: fix out-of-bounds access in ops_init\n\nnet_alloc_generic is called by net_alloc, which is called without any\nlocking. It reads max_gen_ptrs, which is changed under pernet_ops_rwsem. It\nis read twice, first to allocate an array, then to set s.len, which is\nlater used to limit the bounds of the array access.\n\nIt is possible that the array is allocated and another thread is\nregistering a new pernet ops, increments max_gen_ptrs, which is then used\nto set s.len with a larger than allocated length for the variable array.\n\nFix it by reading max_gen_ptrs only once in net_alloc_generic. If\nmax_gen_ptrs is later incremented, it will be caught in net_assign_generic."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-29T07:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36014",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/a1f95aede6285dba6dd036d907196f35ae3a11ea",
-            "https://git.kernel.org/stable/c/b77620730f614059db2470e8ebab3e725280fc6d",
-            "https://git.kernel.org/stable/c/93f76ec1eddce60dbb5885cbc0d7df54adee4639",
-            "https://git.kernel.org/stable/c/e4b52d49383306ef73fd1bd9102538beebb0fe07",
-            "https://git.kernel.org/stable/c/335cc45ef2b81b68be63c698b4f867a530bdf7a5",
-            "https://git.kernel.org/stable/c/b6cc5dd06336ed8bb3a7a1fc5aaf7d5e88bc0818",
-            "https://git.kernel.org/stable/c/565d9ad7e5a18eb69ed8b66a9e9bb3f45346520c",
-            "https://git.kernel.org/stable/c/a5fa5b40a278a3ca978fed64707bd27614adb1eb",
-            "https://git.kernel.org/stable/c/3e54d4e95120641216dfe91a6c49f116a9f68490",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/arm/malidp: fix a possible null pointer dereference\n\nIn malidp_mw_connector_reset, new memory is allocated with kzalloc, but\nno check is performed. In order to prevent null pointer dereferencing,\nensure that mw_state is checked before calling\n__drm_atomic_helper_connector_reset."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-20T10:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35955",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b5808d40093403334d939e2c3c417144d12a6f33",
-            "https://git.kernel.org/stable/c/93eb31e7c3399e326259f2caa17be1e821f5a412",
-            "https://git.kernel.org/stable/c/5062d1f4f07facbdade0f402d9a04a788f52e26d",
-            "https://git.kernel.org/stable/c/2df2dd27066cdba8041e46a64362325626bdfb2e",
-            "https://git.kernel.org/stable/c/62029bc9ff2c17a4e3a2478d83418ec575413808",
-            "https://git.kernel.org/stable/c/d15023fb407337028a654237d8968fefdcf87c2f",
-            "https://git.kernel.org/stable/c/36b57c7d2f8b7de224980f1a284432846ad71ca0",
-            "https://git.kernel.org/stable/c/325f3fb551f8cd672dbbfc4cf58b14f9ee3fc9e8",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nkprobes: Fix possible use-after-free issue on kprobe registration\n\nWhen unloading a module, its state is changing MODULE_STATE_LIVE ->\n MODULE_STATE_GOING -> MODULE_STATE_UNFORMED. Each change will take\na time. `is_module_text_address()` and `__module_text_address()`\nworks with MODULE_STATE_LIVE and MODULE_STATE_GOING.\nIf we use `is_module_text_address()` and `__module_text_address()`\nseparately, there is a chance that the first one is succeeded but the\nnext one is failed because module->state becomes MODULE_STATE_UNFORMED\nbetween those operations.\n\nIn `check_kprobe_address_safe()`, if the second `__module_text_address()`\nis failed, that is ignored because it expected a kernel_text address.\nBut it may have failed simply because module->state has been changed\nto MODULE_STATE_UNFORMED. In this case, arm_kprobe() will try to modify\nnon-exist module text address (use-after-free).\n\nTo fix this problem, we should not use separated `is_module_text_address()`\nand `__module_text_address()`, but use only `__module_text_address()`\nonce and do `try_module_get(module)` which is only available with\nMODULE_STATE_LIVE."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-20T10:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-835",
-        "id": "CVE-2024-35982",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/04720ea2e6c64459a90ca28570ea78335eccd924",
-            "https://git.kernel.org/stable/c/b3ddf6904073990492454b1dd1c10a24be8c74c6",
-            "https://git.kernel.org/stable/c/70a8be9dc2fb65d67f8c1e0c88c587e08e2e575d",
-            "https://git.kernel.org/stable/c/87b6af1a7683e021710c08fc0551fc078346032f",
-            "https://git.kernel.org/stable/c/3fe79b2c83461edbbf86ed8a6f3924820ff89259",
-            "https://git.kernel.org/stable/c/4ca2a5fb54ea2cc43edea614207fcede562d91c2",
-            "https://git.kernel.org/stable/c/ca54e2671548616ad34885f90d4f26f7adb088f0",
-            "https://git.kernel.org/stable/c/b1f532a3b1e6d2e5559c7ace49322922637a28aa",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbatman-adv: Avoid infinite loop trying to resize local TT\n\nIf the MTU of one of an attached interface becomes too small to transmit\nthe local translation table then it must be resized to fit inside all\nfragments (when enabled) or a single packet.\n\nBut if the MTU becomes too low to transmit even the header + the VLAN\nspecific part then the resizing of the local TT will never succeed. This\ncan for example happen when the usable space is 110 bytes and 11 VLANs are\non top of batman-adv. In this case, at least 116 byte would be needed.\nThere will just be an endless spam of\n\n   batman_adv: batadv0: Forced to purge local tt entries to fit new maximum fragment MTU (110)\n\nin the log but the function will never finish. Problem here is that the\ntimeout will be halved all the time and will then stagnate at 0 and\ntherefore never be able to reduce the table even more.\n\nThere are other scenarios possible with a similar result. The number of\nBATADV_TT_CLIENT_NOPURGE entries in the local TT can for example be too\nhigh to fit inside a packet. Such a scenario can therefore happen also with\nonly a single VLAN + 7 non-purgable addresses - requiring at least 120\nbytes.\n\nWhile this should be handled proactively when:\n\n* interface with too low MTU is added\n* VLAN is added\n* non-purgeable local mac is added\n* MTU of an attached interface is reduced\n* fragmentation setting gets disabled (which most likely requires dropping\n  attached interfaces)\n\nnot all of these scenarios can be prevented because batman-adv is only\nconsuming events without the the possibility to prevent these actions\n(non-purgable MAC address added, MTU of an attached interface is reduced).\nIt is therefore necessary to also make sure that the code is able to handle\nalso the situations when there were already incompatible system\nconfiguration are present."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-19T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52699",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/13b33feb2ebddc2b1aa607f553566b18a4af1d76",
-            "https://git.kernel.org/stable/c/1b4fe801b5bedec2b622ddb18e5c9bf26c63d79f",
-            "https://git.kernel.org/stable/c/674c1c4229e743070e09db63a23442950ff000d1",
-            "https://git.kernel.org/stable/c/fd203d2c671bdee9ab77090ff394d3b71b627927",
-            "https://git.kernel.org/stable/c/53cb1e52c9db618c08335984d1ca80db220ccf09",
-            "https://git.kernel.org/stable/c/89e8524135a3902e7563a5a59b7b5ec1bf4904ac",
-            "https://git.kernel.org/stable/c/a69224223746ab96d43e5db9d22d136827b7e2d3",
-            "https://git.kernel.org/stable/c/f123dc86388cb669c3d6322702dc441abc35c31e",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsysv: don't call sb_bread() with pointers_lock held\n\nsyzbot is reporting sleep in atomic context in SysV filesystem [1], for\nsb_bread() is called with rw_spinlock held.\n\nA \"write_lock(&pointers_lock) => read_lock(&pointers_lock) deadlock\" bug\nand a \"sb_bread() with write_lock(&pointers_lock)\" bug were introduced by\n\"Replace BKL for chain locking with sysvfs-private rwlock\" in Linux 2.5.12.\n\nThen, \"[PATCH] err1-40: sysvfs locking fix\" in Linux 2.6.8 fixed the\nformer bug by moving pointers_lock lock to the callers, but instead\nintroduced a \"sb_bread() with read_lock(&pointers_lock)\" bug (which made\nthis problem easier to hit).\n\nAl Viro suggested that why not to do like get_branch()/get_block()/\nfind_shared() in Minix filesystem does. And doing like that is almost a\nrevert of \"[PATCH] err1-40: sysvfs locking fix\" except that get_branch()\n from with find_shared() is called without write_lock(&pointers_lock)."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-19T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35925",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/6a55dab4ac956deb23690eedd74e70b892a378e7",
-            "https://git.kernel.org/stable/c/edd073c78d2bf48c5b8bf435bbc3d61d6e7c6c14",
-            "https://git.kernel.org/stable/c/b0cb5564c3e8e0ee0a2d28c86fa7f02e82d64c3c",
-            "https://git.kernel.org/stable/c/21e7d72d0cfcbae6042d498ea2e6f395311767f8",
-            "https://git.kernel.org/stable/c/512a01da7134bac8f8b373506011e8aaa3283854",
-            "https://git.kernel.org/stable/c/5f7fd6aa4c4877d77133ea86c14cf256f390b2fe",
-            "https://git.kernel.org/stable/c/98ddf2604ade2d954bf5ec193600d5274a43fd68",
-            "https://git.kernel.org/stable/c/93f52fbeaf4b676b21acfe42a5152620e6770d02",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nblock: prevent division by zero in blk_rq_stat_sum()\n\nThe expression dst->nr_samples + src->nr_samples may\nhave zero value on overflow. It is necessary to add\na check to avoid division by zero.\n\nFound by Linux Verification Center (linuxtesting.org) with Svace."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-19T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35933",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/ec2049fb2b8be3e108fe2ef1f1040f91e72c9990",
-            "https://git.kernel.org/stable/c/68a69bb2ecafaacdb998a87783068fb51736f43b",
-            "https://git.kernel.org/stable/c/86e9b47e8a75c74b1bd83a479979b425c5dc8bd9",
-            "https://git.kernel.org/stable/c/006936ecb4edfc3102464044f75858c714e34d28",
-            "https://git.kernel.org/stable/c/b19fe5eea619d54eea59bb8a37c0f8d00ef0e912",
-            "https://git.kernel.org/stable/c/ffdca0a62abaf8c41d8d9ea132000fd808de329b",
-            "https://git.kernel.org/stable/c/22d3053ef05f0b5045e45bd91e7473846261d65e",
-            "https://git.kernel.org/stable/c/b79e040910101b020931ba0c9a6b77e81ab7f645",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: btintel: Fix null ptr deref in btintel_read_version\n\nIf hci_cmd_sync_complete() is triggered and skb is NULL, then\nhdev->req_skb is NULL, which will cause this issue."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-17T14:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35809",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/9a87375bb586515c0af63d5dcdcd58ec4acf20a6",
-            "https://git.kernel.org/stable/c/47d8aafcfe313511a98f165a54d0adceb34e54b1",
-            "https://git.kernel.org/stable/c/bbe068b24409ef740657215605284fc7cdddd491",
-            "https://git.kernel.org/stable/c/7cc94dd36e48879e76ae7a8daea4ff322b7d9674",
-            "https://git.kernel.org/stable/c/900b81caf00c89417172afe0e7e49ac4eb110f4b",
-            "https://git.kernel.org/stable/c/d86ad8c3e152349454b82f37007ff6ba45f26989",
-            "https://git.kernel.org/stable/c/d534198311c345e4b062c4b88bb609efb8bd91d5",
-            "https://git.kernel.org/stable/c/6347348c6aba52dda0b33296684cbb627bdc6970",
-            "https://git.kernel.org/stable/c/9d5286d4e7f68beab450deddbb6a32edd5ecf4bf",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI/PM: Drain runtime-idle callbacks before driver removal\n\nA race condition between the .runtime_idle() callback and the .remove()\ncallback in the rtsx_pcr PCI driver leads to a kernel crash due to an\nunhandled page fault [1].\n\nThe problem is that rtsx_pci_runtime_idle() is not expected to be running\nafter pm_runtime_get_sync() has been called, but the latter doesn't really\nguarantee that.  It only guarantees that the suspend and resume callbacks\nwill not be running when it returns.\n\nHowever, if a .runtime_idle() callback is already running when\npm_runtime_get_sync() is called, the latter will notice that the runtime PM\nstatus of the device is RPM_ACTIVE and it will return right away without\nwaiting for the former to complete.  In fact, it cannot wait for\n.runtime_idle() to complete because it may be called from that callback (it\narguably does not make much sense to do that, but it is not strictly\nprohibited).\n\nThus in general, whoever is providing a .runtime_idle() callback needs\nto protect it from running in parallel with whatever code runs after\npm_runtime_get_sync().  [Note that .runtime_idle() will not start after\npm_runtime_get_sync() has returned, but it may continue running then if it\nhas started earlier.]\n\nOne way to address that race condition is to call pm_runtime_barrier()\nafter pm_runtime_get_sync() (not before it, because a nonzero value of the\nruntime PM usage counter is necessary to prevent runtime PM callbacks from\nbeing invoked) to wait for the .runtime_idle() callback to complete should\nit be running at that point.  A suitable place for doing that is in\npci_device_remove() which calls pm_runtime_get_sync() before removing the\ndriver, so it may as well call pm_runtime_barrier() subsequently, which\nwill prevent the race in question from occurring, not just in the rtsx_pcr\ndriver, but in any PCI drivers providing .runtime_idle() callbacks."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-17T14:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-35823",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/fc7dfe3d123f00e720be80b920da287810a1f37d",
-            "https://git.kernel.org/stable/c/ff7342090c1e8c5a37015c89822a68b275b46f8a",
-            "https://git.kernel.org/stable/c/1ce408f75ccf1e25b3fddef75cca878b55f2ac90",
-            "https://git.kernel.org/stable/c/0190d19d7651c08abc187dac3819c61b726e7e3f",
-            "https://git.kernel.org/stable/c/994a1e583c0c206c8ca7d03334a65b79f4d8bc51",
-            "https://git.kernel.org/stable/c/7529cbd8b5f6697b369803fe1533612c039cabda",
-            "https://git.kernel.org/stable/c/2933b1e4757a0a5c689cf48d80b1a2a85f237ff1",
-            "https://git.kernel.org/stable/c/1581dafaf0d34bc9c428a794a22110d7046d186d",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvt: fix unicode buffer corruption when deleting characters\n\nThis is the same issue that was fixed for the VGA text buffer in commit\n39cdb68c64d8 (\"vt: fix memory overlapping when deleting chars in the\nbuffer\"). The cure is also the same i.e. replace memcpy() with memmove()\ndue to the overlaping buffers."
-    },
-    {
-        "Modified": "2024-06-27T13:15:00",
-        "Published": "2024-05-17T14:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52670",
-        "impact": {},
-        "last-modified": "2024-06-27T13:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/229ce47cbfdc7d3a9415eb676abbfb77d676cb08",
-            "https://git.kernel.org/stable/c/dd50fe18c234bd5ff22f658f4d414e8fa8cd6a5d",
-            "https://git.kernel.org/stable/c/69ca89d80f2c8a1f5af429b955637beea7eead30",
-            "https://git.kernel.org/stable/c/2d27a7b19cb354c6d04bcdc9239e261ff29858d6",
-            "https://git.kernel.org/stable/c/f4bb1d5daf77b1a95a43277268adf0d1430c2346",
-            "https://git.kernel.org/stable/c/4e6cef3fae5c164968118a13f3fe293700adc81a",
-            "https://git.kernel.org/stable/c/9a416d624e5fb7246ea97c11fbfea7e0e27abf43",
-            "https://git.kernel.org/stable/c/d5362c37e1f8a40096452fc201c30e705750e687",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00017.html",
-            "https://lists.debian.org/debian-lts-announce/2024/06/msg00020.html"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nrpmsg: virtio: Free driver_override when rpmsg_remove()\n\nFree driver_override when rpmsg_remove(), otherwise\nthe following memory leak will occur:\n\nunreferenced object 0xffff0000d55d7080 (size 128):\n  comm \"kworker/u8:2\", pid 56, jiffies 4294893188 (age 214.272s)\n  hex dump (first 32 bytes):\n    72 70 6d 73 67 5f 6e 73 00 00 00 00 00 00 00 00  rpmsg_ns........\n    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................\n  backtrace:\n    [<000000009c94c9c1>] __kmem_cache_alloc_node+0x1f8/0x320\n    [<000000002300d89b>] __kmalloc_node_track_caller+0x44/0x70\n    [<00000000228a60c3>] kstrndup+0x4c/0x90\n    [<0000000077158695>] driver_set_override+0xd0/0x164\n    [<000000003e9c4ea5>] rpmsg_register_device_override+0x98/0x170\n    [<000000001c0c89a8>] rpmsg_ns_register_device+0x24/0x30\n    [<000000008bbf8fa2>] rpmsg_probe+0x2e0/0x3ec\n    [<00000000e65a68df>] virtio_dev_probe+0x1c0/0x280\n    [<00000000443331cc>] really_probe+0xbc/0x2dc\n    [<00000000391064b1>] __driver_probe_device+0x78/0xe0\n    [<00000000a41c9a5b>] driver_probe_device+0xd8/0x160\n    [<000000009c3bd5df>] __device_attach_driver+0xb8/0x140\n    [<0000000043cd7614>] bus_for_each_drv+0x7c/0xd4\n    [<000000003b929a36>] __device_attach+0x9c/0x19c\n    [<00000000a94e0ba8>] device_initial_probe+0x14/0x20\n    [<000000003c999637>] bus_probe_device+0xa0/0xac"
     }
 ]
