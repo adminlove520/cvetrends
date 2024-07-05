@@ -1,5 +1,612 @@
 [
     {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39482",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/934e1e4331859183a861f396d7dfaf33cb5afb02",
+            "https://git.kernel.org/stable/c/6479b9f41583b013041943c4602e1ad61cec8148",
+            "https://git.kernel.org/stable/c/0c31344e22dd8d6b1394c6e4c41d639015bdc671",
+            "https://git.kernel.org/stable/c/3a861560ccb35f2a4f0a4b8207fa7c2a35fc7f31",
+            "https://git.kernel.org/stable/c/2c3d7b03b658dc8bfa6112b194b67b92a87e081b",
+            "https://git.kernel.org/stable/c/5a1922adc5798b7ec894cd3f197afb6f9591b023"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbcache: fix variable length array abuse in btree_iter\n\nbtree_iter is used in two ways: either allocated on the stack with a\nfixed size MAX_BSETS, or from a mempool with a dynamic size based on the\nspecific cache set. Previously, the struct had a fixed-length array of\nsize MAX_BSETS which was indexed out-of-bounds for the dynamically-sized\niterators, which causes UBSAN to complain.\n\nThis patch uses the same approach as in bcachefs's sort_iter and splits\nthe iterator into a btree_iter with a flexible array member and a\nbtree_iter_stack which embeds a btree_iter as well as a fixed-length\ndata array."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39484",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5ee241f72edc6dce5051a5f100eab6cc019d873e",
+            "https://git.kernel.org/stable/c/7590da4c04dd4aa9c262da0231e978263861c6eb",
+            "https://git.kernel.org/stable/c/1d5ed0efe51d36b9ae9b64f133bf41cdbf56f584",
+            "https://git.kernel.org/stable/c/55c421b364482b61c4c45313a535e61ed5ae4ea3",
+            "https://git.kernel.org/stable/c/6ff7cfa02baabec907f6f29ea76634e6256d2ec4",
+            "https://git.kernel.org/stable/c/aea35157bb9b825faa0432bd0f7fbea37ff39aa1"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmmc: davinci: Don't strip remove function when driver is builtin\n\nUsing __exit for the remove function results in the remove callback being\ndiscarded with CONFIG_MMC_DAVINCI=y. When such a device gets unbound (e.g.\nusing sysfs or hotplug), the driver is just removed without the cleanup\nbeing performed. This results in resource leaks. Fix it by compiling in the\nremove callback unconditionally.\n\nThis also fixes a W=1 modpost warning:\n\nWARNING: modpost: drivers/mmc/host/davinci_mmc: section mismatch in\nreference: davinci_mmcsd_driver+0x10 (section: .data) ->\ndavinci_mmcsd_remove (section: .exit.text)"
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-25T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-37078",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/271dcd977ccda8c7a26e360425ae7b4db7d2ecc0",
+            "https://git.kernel.org/stable/c/614d397be0cf43412b3f94a0f6460eddced8ce92",
+            "https://git.kernel.org/stable/c/1f3bff69f1214fe03a02bc650d5bbfaa6e65ae7d",
+            "https://git.kernel.org/stable/c/a4ca369ca221bb7e06c725792ac107f0e48e82e7",
+            "https://git.kernel.org/stable/c/95f6f81e50d858a7c9aa7c795ec14a0ac3819118",
+            "https://git.kernel.org/stable/c/a75b8f493dfc48aa38c518430bd9e03b53bffebe",
+            "https://git.kernel.org/stable/c/0ecfe3a92869a59668d27228dabbd7965e83567f",
+            "https://git.kernel.org/stable/c/33900d7eae616647e179eee1c66ebe654ee39627"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix potential kernel bug due to lack of writeback flag waiting\n\nDestructive writes to a block device on which nilfs2 is mounted can cause\na kernel bug in the folio/page writeback start routine or writeback end\nroutine (__folio_start_writeback in the log below):\n\n kernel BUG at mm/page-writeback.c:3070!\n Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI\n ...\n RIP: 0010:__folio_start_writeback+0xbaa/0x10e0\n Code: 25 ff 0f 00 00 0f 84 18 01 00 00 e8 40 ca c6 ff e9 17 f6 ff ff\n  e8 36 ca c6 ff 4c 89 f7 48 c7 c6 80 c0 12 84 e8 e7 b3 0f 00 90 <0f>\n  0b e8 1f ca c6 ff 4c 89 f7 48 c7 c6 a0 c6 12 84 e8 d0 b3 0f 00\n ...\n Call Trace:\n  <TASK>\n  nilfs_segctor_do_construct+0x4654/0x69d0 [nilfs2]\n  nilfs_segctor_construct+0x181/0x6b0 [nilfs2]\n  nilfs_segctor_thread+0x548/0x11c0 [nilfs2]\n  kthread+0x2f0/0x390\n  ret_from_fork+0x4b/0x80\n  ret_from_fork_asm+0x1a/0x30\n  </TASK>\n\nThis is because when the log writer starts a writeback for segment summary\nblocks or a super root block that use the backing device's page cache, it\ndoes not wait for the ongoing folio/page writeback, resulting in an\ninconsistent writeback state.\n\nFix this issue by waiting for ongoing writebacks when putting\nfolios/pages on the backing device into writeback state."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-25T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39468",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b09b556e48968317887a11243a5331a7bc00ece5",
+            "https://git.kernel.org/stable/c/225de871ddf994f69a57f035709cad9c0ab8615a",
+            "https://git.kernel.org/stable/c/8d0f5f1ccf675454a833a573c53830a49b7d1a47",
+            "https://git.kernel.org/stable/c/02c418774f76a0a36a6195c9dbf8971eb4130a15",
+            "https://git.kernel.org/stable/c/b055752675cd1d1db4ac9c2750db3dc3e89ea261",
+            "https://git.kernel.org/stable/c/21f5dd36e655d25a7b45b61c1e537198b671f720"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsmb: client: fix deadlock in smb2_find_smb_tcon()\n\nUnlock cifs_tcp_ses_lock before calling cifs_put_smb_ses() to avoid such\ndeadlock."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-25T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39469",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/129dcd3e7d036218db3f59c82d82004b9539ed82",
+            "https://git.kernel.org/stable/c/d18b05eda7fa77f02114f15b02c009f28ee42346",
+            "https://git.kernel.org/stable/c/59f14875a96ef93f05b82ad3c980605f2cb444b5",
+            "https://git.kernel.org/stable/c/7373a51e7998b508af7136530f3a997b286ce81c",
+            "https://git.kernel.org/stable/c/2ac8a2fe22bdde9eecce2a42cf5cab79333fb428",
+            "https://git.kernel.org/stable/c/405b71f1251e5ae865f53bd27c45114e6c83bee3",
+            "https://git.kernel.org/stable/c/c77ad608df6c091fe64ecb91f41ef7cb465587f1",
+            "https://git.kernel.org/stable/c/11a2edb70356a2202dcb7c9c189c8356ab4752cd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix nilfs_empty_dir() misjudgment and long loop on I/O errors\n\nThe error handling in nilfs_empty_dir() when a directory folio/page read\nfails is incorrect, as in the old ext2 implementation, and if the\nfolio/page cannot be read or nilfs_check_folio() fails, it will falsely\ndetermine the directory as empty and corrupt the file system.\n\nIn addition, since nilfs_empty_dir() does not immediately return on a\nfailed folio/page read, but continues to loop, this can cause a long loop\nwith I/O if i_size of the directory's inode is also corrupted, causing the\nlog writer thread to wait and hang, as reported by syzbot.\n\nFix these issues by making nilfs_empty_dir() immediately return a false\nvalue (0) if it fails to get a directory folio/page."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-20T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38619",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/16637fea001ab3c8df528a8995b3211906165a30",
+            "https://git.kernel.org/stable/c/e0e2eec76920a133dd49a4fbe4656d83596a1361",
+            "https://git.kernel.org/stable/c/2cc32639ec347e3365075b130f9953ef16cb13f1",
+            "https://git.kernel.org/stable/c/24bff7f714bdff97c2a75a0ff6a368cdf8ad5af4",
+            "https://git.kernel.org/stable/c/e0aab7b07a9375337847c9d74a5ec044071e01c8",
+            "https://git.kernel.org/stable/c/51fe16c058acb22f847e69bc598066ed0bcd5c15",
+            "https://git.kernel.org/stable/c/f68820f1256b21466ff094dd97f243b7e708f9c1",
+            "https://git.kernel.org/stable/c/3eee13ab67f65606faa66e0c3c729e4f514838fd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb-storage: alauda: Check whether the media is initialized\n\nThe member \"uzonesize\" of struct alauda_info will remain 0\nif alauda_init_media() fails, potentially causing divide errors\nin alauda_read_data() and alauda_write_lba().\n- Add a member \"media_initialized\" to struct alauda_info.\n- Change a condition in alauda_check_media() to ensure the\n  first initialization.\n- Add an error check for the return value of alauda_init_media()."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38588",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dbff5f0bfb2416b8b55c105ddbcd4f885e98fada",
+            "https://git.kernel.org/stable/c/7b4881da5b19f65709f5c18c1a4d8caa2e496461",
+            "https://git.kernel.org/stable/c/66df065b3106964e667b37bf8f7e55ec69d0c1f6",
+            "https://git.kernel.org/stable/c/31310e373f4c8c74e029d4326b283e757edabc0b",
+            "https://git.kernel.org/stable/c/e60b613df8b6253def41215402f72986fee3fc8d",
+            "https://git.kernel.org/stable/c/8ea8ef5e42173560ac510e92a1cc797ffeea8831"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nftrace: Fix possible use-after-free issue in ftrace_location()\n\nKASAN reports a bug:\n\n  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120\n  Read of size 8 at addr ffff888141d40010 by task insmod/424\n  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+\n  [...]\n  Call Trace:\n   <TASK>\n   dump_stack_lvl+0x68/0xa0\n   print_report+0xcf/0x610\n   kasan_report+0xb5/0xe0\n   ftrace_location+0x90/0x120\n   register_kprobe+0x14b/0xa40\n   kprobe_init+0x2d/0xff0 [kprobe_example]\n   do_one_initcall+0x8f/0x2d0\n   do_init_module+0x13a/0x3c0\n   load_module+0x3082/0x33d0\n   init_module_from_file+0xd2/0x130\n   __x64_sys_finit_module+0x306/0x440\n   do_syscall_64+0x68/0x140\n   entry_SYSCALL_64_after_hwframe+0x71/0x79\n\nThe root cause is that, in lookup_rec(), ftrace record of some address\nis being searched in ftrace pages of some module, but those ftrace pages\nat the same time is being freed in ftrace_release_mod() as the\ncorresponding module is being deleted:\n\n           CPU1                       |      CPU2\n  register_kprobes() {                | delete_module() {\n    check_kprobe_address_safe() {     |\n      arch_check_ftrace_location() {  |\n        ftrace_location() {           |\n          lookup_rec() // USE!        |   ftrace_release_mod() // Free!\n\nTo fix this issue:\n  1. Hold rcu lock as accessing ftrace pages in ftrace_location_range();\n  2. Use ftrace_location_range() instead of lookup_rec() in\n     ftrace_location();\n  3. Call synchronize_rcu() before freeing any ftrace pages both in\n     ftrace_process_locs()/ftrace_release_mod()/ftrace_free_mem()."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-38586",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b6d21cf40de103d63ae78551098a7c06af8c98dd",
+            "https://git.kernel.org/stable/c/0c48185a95309556725f818b82120bb74e9c627d",
+            "https://git.kernel.org/stable/c/68222d7b4b72aa321135cd453dac37f00ec41fd1",
+            "https://git.kernel.org/stable/c/078d5b7500d70af2de6b38e226b03f0b932026a6",
+            "https://git.kernel.org/stable/c/54e7a0d111240c92c0f02ceba6eb8f26bf6d6479",
+            "https://git.kernel.org/stable/c/c71e3a5cffd5309d7f84444df03d5b72600cc417",
+            "https://git.kernel.org/stable/c/61c1c98e2607120ce9c3fa1bf75e6da909712b27"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nr8169: Fix possible ring buffer corruption on fragmented Tx packets.\n\nAn issue was found on the RTL8125b when transmitting small fragmented\npackets, whereby invalid entries were inserted into the transmit ring\nbuffer, subsequently leading to calls to dma_unmap_single() with a null\naddress.\n\nThis was caused by rtl8169_start_xmit() not noticing changes to nr_frags\nwhich may occur when small packets are padded (to work around hardware\nquirks) in rtl8169_tso_csum_v2().\n\nTo fix this, postpone inspecting nr_frags until after any padding has been\napplied."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-19T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36978",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/affc18fdc694190ca7575b9a86632a73b9fe043d",
+            "https://git.kernel.org/stable/c/0f208fad86631e005754606c3ec80c0d44a11882",
+            "https://git.kernel.org/stable/c/54c2c171c11a798fe887b3ff72922aa9d1411c1e",
+            "https://git.kernel.org/stable/c/d6fb5110e8722bc00748f22caeb650fe4672f129",
+            "https://git.kernel.org/stable/c/d5d9d241786f49ae7cbc08e7fc95a115e9d80f3d",
+            "https://git.kernel.org/stable/c/52b1aa07cda6a199cd6754d3798c7759023bc70f",
+            "https://git.kernel.org/stable/c/598572c64287aee0b75bbba4e2881496878860f3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: sched: sch_multiq: fix possible OOB write in multiq_tune()\n\nq->bands will be assigned to qopt->bands to execute subsequent code logic\nafter kmalloc. So the old q->bands should not be used in kmalloc.\nOtherwise, an out-of-bounds write will occur."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-06-18T20:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36974",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f921a58ae20852d188f70842431ce6519c4fdc36",
+            "https://git.kernel.org/stable/c/0bf6cc96612bd396048f57d63f1ad454a846e39c",
+            "https://git.kernel.org/stable/c/724050ae4b76e4fae05a923cb54101d792cf4404",
+            "https://git.kernel.org/stable/c/c37a27a35eadb59286c9092c49c241270c802ae2",
+            "https://git.kernel.org/stable/c/c6041e7124464ce7e896ee3f912897ce88a0c4ec",
+            "https://git.kernel.org/stable/c/6db4af09987cc5d5f0136bd46148b0e0460dae5b",
+            "https://git.kernel.org/stable/c/d3dde4c217f0c31ab0621912e682b57e677dd923"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: taprio: always validate TCA_TAPRIO_ATTR_PRIOMAP\n\nIf one TCA_TAPRIO_ATTR_PRIOMAP attribute has been provided,\ntaprio_parse_mqprio_opt() must validate it, or userspace\ncan inject arbitrary data to the kernel, the second time\ntaprio_change() is called.\n\nFirst call (with valid attributes) sets dev->num_tc\nto a non zero value.\n\nSecond call (with arbitrary mqprio attributes)\nreturns early from taprio_parse_mqprio_opt()\nand bad things can happen."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-05-30T16:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36032",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/57062aa13e87b1a78a4a8f6cb5fab6ba24f5f488",
+            "https://git.kernel.org/stable/c/6b63e0ef4d3ce0080395e5091fba2023f246c45a",
+            "https://git.kernel.org/stable/c/a571044cc0a0c944e7c12237b6768aeedd7480e1",
+            "https://git.kernel.org/stable/c/cda0d6a198e2a7ec6f176c36173a57bdd8af7af2",
+            "https://git.kernel.org/stable/c/62d5550ab62042dcceaf18844d0feadbb962cffe"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: qca: fix info leak when fetching fw build id\n\nAdd the missing sanity checks and move the 255-byte build-id buffer off\nthe stack to avoid leaking stack data through debugfs in case the\nbuild-info reply is malformed."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-05-30T16:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36033",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/bcccdc947d2ca5972b1e92d0dea10803ddc08ceb",
+            "https://git.kernel.org/stable/c/ba307abed5e09759845c735ba036f8c12f55b209",
+            "https://git.kernel.org/stable/c/f30c37cb4549baf8377434892d520fe7769bdba7",
+            "https://git.kernel.org/stable/c/0adcf6be1445ed50bfd4a451a7a782568f270197",
+            "https://git.kernel.org/stable/c/a3dff121a7f5104c4c2d47edaa2351837ef645dd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nBluetooth: qca: fix info leak when fetching board id\n\nAdd the missing sanity check when fetching the board id to avoid leaking\nslab data when later requesting the firmware."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-05-30T16:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36894",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/73c05ad46bb4fbbdb346004651576d1c8dbcffbb",
+            "https://git.kernel.org/stable/c/d7461830823242702f5d84084bcccb25159003f4",
+            "https://git.kernel.org/stable/c/24729b307eefcd7c476065cd7351c1a018082c19",
+            "https://git.kernel.org/stable/c/a0fdccb1c9e027e3195f947f61aa87d6d0d2ea14",
+            "https://git.kernel.org/stable/c/f71a53148ce34898fef099b75386a3a9f4449311",
+            "https://git.kernel.org/stable/c/9e72ef59cbe61cd1243857a6418ca92104275867",
+            "https://git.kernel.org/stable/c/e500b1c4e29ad0bd1c1332a1eaea2913627a92dd",
+            "https://git.kernel.org/stable/c/3613e5023f09b3308545e9d1acda86017ebd418a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: gadget: f_fs: Fix race between aio_cancel() and AIO request complete\n\nFFS based applications can utilize the aio_cancel() callback to dequeue\npending USB requests submitted to the UDC.  There is a scenario where the\nFFS application issues an AIO cancel call, while the UDC is handling a\nsoft disconnect.  For a DWC3 based implementation, the callstack looks\nlike the following:\n\n    DWC3 Gadget                               FFS Application\ndwc3_gadget_soft_disconnect()              ...\n  --> dwc3_stop_active_transfers()\n    --> dwc3_gadget_giveback(-ESHUTDOWN)\n      --> ffs_epfile_async_io_complete()   ffs_aio_cancel()\n        --> usb_ep_free_request()            --> usb_ep_dequeue()\n\nThere is currently no locking implemented between the AIO completion\nhandler and AIO cancel, so the issue occurs if the completion routine is\nrunning in parallel to an AIO cancel call coming from the FFS application.\nAs the completion call frees the USB request (io_data->req) the FFS\napplication is also referencing it for the usb_ep_dequeue() call.  This can\nlead to accessing a stale/hanging pointer.\n\ncommit b566d38857fc (\"usb: gadget: f_fs: use io_data->status consistently\")\nrelocated the usb_ep_free_request() into ffs_epfile_async_io_complete().\nHowever, in order to properly implement locking to mitigate this issue, the\nspinlock can't be added to ffs_epfile_async_io_complete(), as\nusb_ep_dequeue() (if successfully dequeuing a USB request) will call the\nfunction driver's completion handler in the same context.  Hence, leading\ninto a deadlock.\n\nFix this issue by moving the usb_ep_free_request() back to\nffs_user_copy_worker(), and ensuring that it explicitly sets io_data->req\nto NULL after freeing it within the ffs->eps_lock.  This resolves the race\ncondition above, as the ffs_aio_cancel() routine will not continue\nattempting to dequeue a request that has already been freed, or the\nffs_user_copy_work() not freeing the USB request until the AIO cancel is\ndone referencing it.\n\nThis fix depends on\n  commit b566d38857fc (\"usb: gadget: f_fs: use io_data->status\n  consistently\")"
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-05-21T16:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2023-52760",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/08a28272faa750d4357ea2cb48d2baefd778ea81",
+            "https://git.kernel.org/stable/c/bdcb8aa434c6d36b5c215d02a9ef07551be25a37",
+            "https://git.kernel.org/stable/c/7ad4e0a4f61c57c3ca291ee010a9d677d0199fba"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngfs2: Fix slab-use-after-free in gfs2_qd_dealloc\n\nIn gfs2_put_super(), whether withdrawn or not, the quota should\nbe cleaned up by gfs2_quota_cleanup().\n\nOtherwise, struct gfs2_sbd will be freed before gfs2_qd_dealloc (rcu\ncallback) has run for all gfs2_quota_data objects, resulting in\nuse-after-free.\n\nAlso, gfs2_destroy_threads() and gfs2_quota_cleanup() is already called\nby gfs2_make_fs_ro(), so in gfs2_put_super(), after calling\ngfs2_make_fs_ro(), there is no need to call them again."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-05-20T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-35976",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a82984b3c6a7e8c7937dba6e857ddf829d149417",
+            "https://git.kernel.org/stable/c/f0a068de65d5b7358e9aff792716afa9333f3922",
+            "https://git.kernel.org/stable/c/2a523f14a3f53b46ff0e1fafd215b0bc5f6783aa",
+            "https://git.kernel.org/stable/c/b143e19dc28c3211f050f7848d87d9b0a170e10c",
+            "https://git.kernel.org/stable/c/2eb979fbb2479bcd7e049f2f9978b6590dd8a0e6",
+            "https://git.kernel.org/stable/c/237f3cf13b20db183d3706d997eedc3c49eacd44",
+            "https://git.kernel.org/stable/c/0b45c25d60e38f5c2cb6823f886773a34323306d",
+            "https://git.kernel.org/stable/c/beb99266830520e15fbc6ca8cc5a5240d76851fd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nxsk: validate user input for XDP_{UMEM|COMPLETION}_FILL_RING\n\nsyzbot reported an illegal copy in xsk_setsockopt() [1]\n\nMake sure to validate setsockopt() @optlen parameter.\n\n[1]\n\n BUG: KASAN: slab-out-of-bounds in copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]\n BUG: KASAN: slab-out-of-bounds in copy_from_sockptr include/linux/sockptr.h:55 [inline]\n BUG: KASAN: slab-out-of-bounds in xsk_setsockopt+0x909/0xa40 net/xdp/xsk.c:1420\nRead of size 4 at addr ffff888028c6cde3 by task syz-executor.0/7549\n\nCPU: 0 PID: 7549 Comm: syz-executor.0 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024\nCall Trace:\n <TASK>\n  __dump_stack lib/dump_stack.c:88 [inline]\n  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114\n  print_address_description mm/kasan/report.c:377 [inline]\n  print_report+0x169/0x550 mm/kasan/report.c:488\n  kasan_report+0x143/0x180 mm/kasan/report.c:601\n  copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]\n  copy_from_sockptr include/linux/sockptr.h:55 [inline]\n  xsk_setsockopt+0x909/0xa40 net/xdp/xsk.c:1420\n  do_sock_setsockopt+0x3af/0x720 net/socket.c:2311\n  __sys_setsockopt+0x1ae/0x250 net/socket.c:2334\n  __do_sys_setsockopt net/socket.c:2343 [inline]\n  __se_sys_setsockopt net/socket.c:2340 [inline]\n  __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340\n do_syscall_64+0xfb/0x240\n entry_SYSCALL_64_after_hwframe+0x6d/0x75\nRIP: 0033:0x7fb40587de69\nCode: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48\nRSP: 002b:00007fb40665a0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036\nRAX: ffffffffffffffda RBX: 00007fb4059abf80 RCX: 00007fb40587de69\nRDX: 0000000000000005 RSI: 000000000000011b RDI: 0000000000000006\nRBP: 00007fb4058ca47a R08: 0000000000000002 R09: 0000000000000000\nR10: 0000000020001980 R11: 0000000000000246 R12: 0000000000000000\nR13: 000000000000000b R14: 00007fb4059abf80 R15: 00007fff57ee4d08\n </TASK>\n\nAllocated by task 7549:\n  kasan_save_stack mm/kasan/common.c:47 [inline]\n  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68\n  poison_kmalloc_redzone mm/kasan/common.c:370 [inline]\n  __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387\n  kasan_kmalloc include/linux/kasan.h:211 [inline]\n  __do_kmalloc_node mm/slub.c:3966 [inline]\n  __kmalloc+0x233/0x4a0 mm/slub.c:3979\n  kmalloc include/linux/slab.h:632 [inline]\n  __cgroup_bpf_run_filter_setsockopt+0xd2f/0x1040 kernel/bpf/cgroup.c:1869\n  do_sock_setsockopt+0x6b4/0x720 net/socket.c:2293\n  __sys_setsockopt+0x1ae/0x250 net/socket.c:2334\n  __do_sys_setsockopt net/socket.c:2343 [inline]\n  __se_sys_setsockopt net/socket.c:2340 [inline]\n  __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340\n do_syscall_64+0xfb/0x240\n entry_SYSCALL_64_after_hwframe+0x6d/0x75\n\nThe buggy address belongs to the object at ffff888028c6cde0\n which belongs to the cache kmalloc-8 of size 8\nThe buggy address is located 1 bytes to the right of\n allocated 2-byte region [ffff888028c6cde0, ffff888028c6cde2)\n\nThe buggy address belongs to the physical page:\npage:ffffea0000a31b00 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888028c6c9c0 pfn:0x28c6c\nanon flags: 0xfff00000000800(slab|node=0|zone=1|lastcpupid=0x7ff)\npage_type: 0xffffffff()\nraw: 00fff00000000800 ffff888014c41280 0000000000000000 dead000000000001\nraw: ffff888028c6c9c0 0000000080800057 00000001ffffffff 0000000000000000\npage dumped because: kasan: bad access detected\npage_owner tracks the page as allocated\npage last allocated via order 0, migratetype Unmovable, gfp_mask 0x112cc0(GFP_USER|__GFP_NOWARN|__GFP_NORETRY), pid 6648, tgid 6644 (syz-executor.0), ts 133906047828, free_ts 133859922223\n  set_page_owner include/linux/page_owner.h:31 [inline]\n  post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1533\n  prep_new_page mm/page_alloc.c:\n---truncated---"
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-05-14T15:12:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27397",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/383182db8d58c4237772ba0764cded4938a235c3",
+            "https://git.kernel.org/stable/c/7395dfacfff65e9938ac0889dafa1ab01e987d15",
+            "https://git.kernel.org/stable/c/b45176b869673417ace338b87cf9cdb66e2eeb01"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: use timestamp to check for set element timeout\n\nAdd a timestamp field at the beginning of the transaction, store it\nin the nftables per-netns area.\n\nUpdate set backend .insert, .deactivate and sync gc path to use the\ntimestamp, this avoids that an element expires while control plane\ntransaction is still unfinished.\n\n.lookup and .update, which are used from packet path, still use the\ncurrent time to check if the element has expired. And .get path and dump\nalso since this runs lockless under rcu read size lock. Then, there is\nasync gc which also needs to check the current time since it runs\nasynchronously from a workqueue."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-03-28T08:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52628",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/a7d86a77c33ba1c357a7504341172cc1507f0698",
+            "https://git.kernel.org/stable/c/1ad7b189cc1411048434e8595ffcbe7873b71082",
+            "https://git.kernel.org/stable/c/d9ebfc0f21377690837ebbd119e679243e0099cc",
+            "https://git.kernel.org/stable/c/c8f292322ff16b9a2272a67de396c09a50e09dce",
+            "https://git.kernel.org/stable/c/fd94d9dadee58e09b49075240fe83423eb1dcd36",
+            "https://git.kernel.org/stable/c/28a97c43c9e32f437ebb8d6126f9bb7f3ca9521a",
+            "https://git.kernel.org/stable/c/cf39c4f77a773a547ac2bcf30ecdd303bb0c80cb"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nftables: exthdr: fix 4-byte stack OOB write\n\nIf priv->len is a multiple of 4, then dst[len / 4] can write past\nthe destination array which leads to stack corruption.\n\nThis construct is necessary to clean the remainder of the register\nin case ->len is NOT a multiple of the register size, so make it\nconditional just like nft_payload.c does.\n\nThe bug was added in 4.1 cycle and then copied/inherited when\ntcp/sctp and ip option support was added.\n\nBug reported by Zero Day Initiative project (ZDI-CAN-21950,\nZDI-CAN-21951, ZDI-CAN-21961)."
+    },
+    {
+        "Modified": "2024-07-05T08:15:00",
+        "Published": "2024-02-28T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2021-47002",
+        "impact": {},
+        "last-modified": "2024-07-05T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1e10f58f1c9a6b667b045513c7a4e6111c24fe7c",
+            "https://git.kernel.org/stable/c/c664aaec9aee544538a78ba4893a44bc73a6d742",
+            "https://git.kernel.org/stable/c/b9f83ffaa0c096b4c832a43964fe6bff3acffe10",
+            "https://git.kernel.org/stable/c/3de81c1e84bf84803308da3272a829a7655c5336"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nSUNRPC: Fix null pointer dereference in svc_rqst_free()\n\nWhen alloc_pages_node() returns null in svc_rqst_alloc(), the\nnull rq_scratch_page pointer will be dereferenced when calling\nput_page() in svc_rqst_free(). Fix it by adding a null check.\n\nAddresses-Coverity: (\"Dereference after null check\")"
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39472",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/45cf976008ddef4a9c9a30310c9b4fb2a9a6602a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nxfs: fix log recovery buffer allocation for the legacy h_size fixup\n\nCommit a70f9fe52daa (\"xfs: detect and handle invalid iclog size set by\nmkfs\") added a fixup for incorrect h_size values used for the initial\numount record in old xfsprogs versions.  Later commit 0c771b99d6c9\n(\"xfs: clean up calculation of LR header blocks\") cleaned up the log\nreover buffer calculation, but stoped using the fixed up h_size value\nto size the log recovery buffer, which can lead to an out of bounds\naccess when the incorrect h_size does not come from the old mkfs\ntool, but a fuzzer.\n\nFix this by open coding xlog_logrec_hblks and taking the fixed h_size\ninto account for this calculation."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39475",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/be754cbd77eaf2932408a4e18532e4945274a5c7",
+            "https://git.kernel.org/stable/c/86435f39c18967cdd937d7a49ba539cdea7fb547",
+            "https://git.kernel.org/stable/c/32f92b0078ebf79dbe4827288e0acb50d89d3d5b",
+            "https://git.kernel.org/stable/c/4b2c67e30b4e1d2ae19dba8b8e8f3b5fd3cf8089",
+            "https://git.kernel.org/stable/c/edaa57480b876e8203b51df7c3d14a51ea6b09e3",
+            "https://git.kernel.org/stable/c/b8385ff814ca4cb7e63789841e6ec2a14c73e1e8",
+            "https://git.kernel.org/stable/c/5f446859bfa46df0ffb34149499f48a2c2d8cd95",
+            "https://git.kernel.org/stable/c/6ad959b6703e2c4c5d7af03b4cfd5ff608036339"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfbdev: savage: Handle err return when savagefb_check_var failed\n\nThe commit 04e5eac8f3ab(\"fbdev: savage: Error out if pixclock equals zero\")\nchecks the value of pixclock to avoid divide-by-zero error. However\nthe function savagefb_probe doesn't handle the error return of\nsavagefb_check_var. When pixclock is 0, it will cause divide-by-zero error."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39476",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b32aa95843cac6b12c2c014d40fca18aef24a347",
+            "https://git.kernel.org/stable/c/634ba3c97ec413cb10681c7b196db43ee461ecf4",
+            "https://git.kernel.org/stable/c/aa64464c8f4d2ab92f6d0b959a1e0767b829d787",
+            "https://git.kernel.org/stable/c/098d54934814dd876963abfe751c3b1cf7fbe56a",
+            "https://git.kernel.org/stable/c/3f8d5e802d4cedd445f9a89be8c3fd2d0e99024b",
+            "https://git.kernel.org/stable/c/cd2538e5af495b3c747e503db346470fc1ffc447",
+            "https://git.kernel.org/stable/c/e332a12f65d8fed8cf63bedb4e9317bb872b9ac7",
+            "https://git.kernel.org/stable/c/151f66bb618d1fd0eeb84acb61b4a9fa5d8bb0fa"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmd/raid5: fix deadlock that raid5d() wait for itself to clear MD_SB_CHANGE_PENDING\n\nXiao reported that lvm2 test lvconvert-raid-takeover.sh can hang with\nsmall possibility, the root cause is exactly the same as commit\nbed9e27baf52 (\"Revert \"md/raid5: Wait for MD_SB_CHANGE_PENDING in raid5d\"\")\n\nHowever, Dan reported another hang after that, and junxiao investigated\nthe problem and found out that this is caused by plugged bio can't issue\nfrom raid5d().\n\nCurrent implementation in raid5d() has a weird dependence:\n\n1) md_check_recovery() from raid5d() must hold 'reconfig_mutex' to clear\n   MD_SB_CHANGE_PENDING;\n2) raid5d() handles IO in a deadloop, until all IO are issued;\n3) IO from raid5d() must wait for MD_SB_CHANGE_PENDING to be cleared;\n\nThis behaviour is introduce before v2.6, and for consequence, if other\ncontext hold 'reconfig_mutex', and md_check_recovery() can't update\nsuper_block, then raid5d() will waste one cpu 100% by the deadloop, until\n'reconfig_mutex' is released.\n\nRefer to the implementation from raid1 and raid10, fix this problem by\nskipping issue IO if MD_SB_CHANGE_PENDING is still set after\nmd_check_recovery(), daemon thread will be woken up when 'reconfig_mutex'\nis released. Meanwhile, the hang problem will be fixed as well."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39478",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5944de192663f272033501dcd322b008fca72006",
+            "https://git.kernel.org/stable/c/d7f01649f4eaf1878472d3d3f480ae1e50d98f6c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: starfive - Do not free stack buffer\n\nRSA text data uses variable length buffer allocated in software stack.\nCalling kfree on it causes undefined behaviour in subsequent operations."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39479",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/cfa73607eb21a4ce1d6294a2c5733628897b48a2",
+            "https://git.kernel.org/stable/c/ce5a22d22db691d14516c3b8fdbf69139eb2ea8f",
+            "https://git.kernel.org/stable/c/5bc9de065b8bb9b8dd8799ecb4592d0403b54281"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/i915/hwmon: Get rid of devm\n\nWhen both hwmon and hwmon drvdata (on which hwmon depends) are device\nmanaged resources, the expectation, on device unbind, is that hwmon will be\nreleased before drvdata. However, in i915 there are two separate code\npaths, which both release either drvdata or hwmon and either can be\nreleased before the other. These code paths (for device unbind) are as\nfollows (see also the bug referenced below):\n\nCall Trace:\nrelease_nodes+0x11/0x70\ndevres_release_group+0xb2/0x110\ncomponent_unbind_all+0x8d/0xa0\ncomponent_del+0xa5/0x140\nintel_pxp_tee_component_fini+0x29/0x40 [i915]\nintel_pxp_fini+0x33/0x80 [i915]\ni915_driver_remove+0x4c/0x120 [i915]\ni915_pci_remove+0x19/0x30 [i915]\npci_device_remove+0x32/0xa0\ndevice_release_driver_internal+0x19c/0x200\nunbind_store+0x9c/0xb0\n\nand\n\nCall Trace:\nrelease_nodes+0x11/0x70\ndevres_release_all+0x8a/0xc0\ndevice_unbind_cleanup+0x9/0x70\ndevice_release_driver_internal+0x1c1/0x200\nunbind_store+0x9c/0xb0\n\nThis means that in i915, if use devm, we cannot gurantee that hwmon will\nalways be released before drvdata. Which means that we have a uaf if hwmon\nsysfs is accessed when drvdata has been released but hwmon hasn't.\n\nThe only way out of this seems to be do get rid of devm_ and release/free\neverything explicitly during device unbind.\n\nv2: Change commit message and other minor code changes\nv3: Cleanup from i915_hwmon_register on error (Armin Wolf)\nv4: Eliminate potential static analyzer warning (Rodrigo)\n    Eliminate fetch_and_zero (Jani)\nv5: Restore previous logic for ddat_gt->hwmon_dev error return (Andi)"
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39480",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/fb824a99e148ff272a53d71d84122728b5f00992",
+            "https://git.kernel.org/stable/c/ddd2972d8e2dee3b33e8121669d55def59f0be8a",
+            "https://git.kernel.org/stable/c/cfdc2fa4db57503bc6d3817240547c8ddc55fa96",
+            "https://git.kernel.org/stable/c/f636a40834d22e5e3fc748f060211879c056cd33",
+            "https://git.kernel.org/stable/c/33d9c814652b971461d1e30bead6792851c209e7",
+            "https://git.kernel.org/stable/c/107e825cc448b7834b31e8b1b3cf0f57426d46d5",
+            "https://git.kernel.org/stable/c/f694da720dcf795dc3eb97bf76d220213f76aaa7",
+            "https://git.kernel.org/stable/c/e9730744bf3af04cda23799029342aa3cddbc454"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nkdb: Fix buffer overflow during tab-complete\n\nCurrently, when the user attempts symbol completion with the Tab key, kdb\nwill use strncpy() to insert the completed symbol into the command buffer.\nUnfortunately it passes the size of the source buffer rather than the\ndestination to strncpy() with predictably horrible results. Most obviously\nif the command buffer is already full but cp, the cursor position, is in\nthe middle of the buffer, then we will write past the end of the supplied\nbuffer.\n\nFix this by replacing the dubious strncpy() calls with memmove()/memcpy()\ncalls plus explicit boundary checks to make sure we have enough space\nbefore we start moving characters around."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39481",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/788fd0f11e45ae8d3a8ebbd3452a6e83f92db376",
+            "https://git.kernel.org/stable/c/e80d9db99b7b6c697d8d952dfd25c3425cf61499",
+            "https://git.kernel.org/stable/c/bee9440bc0b6b3b7432f7bfde28656262a3484a2",
+            "https://git.kernel.org/stable/c/8a9d420149c477e7c97fbd6453704e4612bdd3fa"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: mc: Fix graph walk in media_pipeline_start\n\nThe graph walk tries to follow all links, even if they are not between\npads. This causes a crash with, e.g. a MEDIA_LNK_FL_ANCILLARY_LINK link.\n\nFix this by allowing the walk to proceed only for MEDIA_LNK_FL_DATA_LINK\nlinks."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39483",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f79edaf7370986d73d204b36c50cc563a4c0f356",
+            "https://git.kernel.org/stable/c/1d87cf2eba46deaff6142366127f2323de9f84d1",
+            "https://git.kernel.org/stable/c/b4bd556467477420ee3a91fbcba73c579669edc6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: SVM: WARN on vNMI + NMI window iff NMIs are outright masked\n\nWhen requesting an NMI window, WARN on vNMI support being enabled if and\nonly if NMIs are actually masked, i.e. if the vCPU is already handling an\nNMI.  KVM's ABI for NMIs that arrive simultanesouly (from KVM's point of\nview) is to inject one NMI and pend the other.  When using vNMI, KVM pends\nthe second NMI simply by setting V_NMI_PENDING, and lets the CPU do the\nrest (hardware automatically sets V_NMI_BLOCKING when an NMI is injected).\n\nHowever, if KVM can't immediately inject an NMI, e.g. because the vCPU is\nin an STI shadow or is running with GIF=0, then KVM will request an NMI\nwindow and trigger the WARN (but still function correctly).\n\nWhether or not the GIF=0 case makes sense is debatable, as the intent of\nKVM's behavior is to provide functionality that is as close to real\nhardware as possible.  E.g. if two NMIs are sent in quick succession, the\nprobability of both NMIs arriving in an STI shadow is infinitesimally low\non real hardware, but significantly larger in a virtual environment, e.g.\nif the vCPU is preempted in the STI shadow.  For GIF=0, the argument isn't\nas clear cut, because the window where two NMIs can collide is much larger\nin bare metal (though still small).\n\nThat said, KVM should not have divergent behavior for the GIF=0 case based\non whether or not vNMI support is enabled.  And KVM has allowed\nsimultaneous NMIs with GIF=0 for over a decade, since commit 7460fb4a3400\n(\"KVM: Fix simultaneous NMIs\").  I.e. KVM's GIF=0 handling shouldn't be\nmodified without a *really* good reason to do so, and if KVM's behavior\nwere to be modified, it should be done irrespective of vNMI support."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39485",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/87100b09246202a91fce4a1562955c32229173bb",
+            "https://git.kernel.org/stable/c/1aa6cd4adfc0380fa1ccc2f146848940ff882a66",
+            "https://git.kernel.org/stable/c/9537a8425a7a0222999d5839a0b394b1e8834b4a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: v4l: async: Properly re-initialise notifier entry in unregister\n\nThe notifier_entry of a notifier is not re-initialised after unregistering\nthe notifier. This leads to dangling pointers being left there so use\nlist_del_init() to return the notifier_entry an empty list."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39473",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/e3ae00ee238bce6cfa5ad935c921181c14d18fd6",
+            "https://git.kernel.org/stable/c/9e16f17a2a0e97b43538b272e7071537a3e03368",
+            "https://git.kernel.org/stable/c/ffa077b2f6ad124ec3d23fbddc5e4b0ff2647af8"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nASoC: SOF: ipc4-topology: Fix input format query of process modules without base extension\n\nIf a process module does not have base config extension then the same\nformat applies to all of it's inputs and the process->base_config_ext is\nNULL, causing NULL dereference when specifically crafted topology and\nsequences used."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39474",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/198a80833e3421d4c9820a4ae907120adf598c91",
+            "https://git.kernel.org/stable/c/c55d3564ad25ce87ab7cc6af251f9574faebd8da",
+            "https://git.kernel.org/stable/c/758678b65164b2158fc1de411092191cb3c394d4",
+            "https://git.kernel.org/stable/c/8e0545c83d672750632f46e3f9ad95c48c91a0fc"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/vmalloc: fix vmalloc which may return null if called with __GFP_NOFAIL\n\ncommit a421ef303008 (\"mm: allow !GFP_KERNEL allocations for kvmalloc\")\nincludes support for __GFP_NOFAIL, but it presents a conflict with commit\ndd544141b9eb (\"vmalloc: back off when the current task is OOM-killed\").  A\npossible scenario is as follows:\n\nprocess-a\n__vmalloc_node_range(GFP_KERNEL | __GFP_NOFAIL)\n    __vmalloc_area_node()\n        vm_area_alloc_pages()\n\t\t--> oom-killer send SIGKILL to process-a\n        if (fatal_signal_pending(current)) break;\n--> return NULL;\n\nTo fix this, do not check fatal_signal_pending() in vm_area_alloc_pages()\nif __GFP_NOFAIL set.\n\nThis issue occurred during OPLUS KASAN TEST. Below is part of the log\n-> oom-killer sends signal to process\n[65731.222840] [ T1308] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/apps/uid_10198,task=gs.intelligence,pid=32454,uid=10198\n\n[65731.259685] [T32454] Call trace:\n[65731.259698] [T32454]  dump_backtrace+0xf4/0x118\n[65731.259734] [T32454]  show_stack+0x18/0x24\n[65731.259756] [T32454]  dump_stack_lvl+0x60/0x7c\n[65731.259781] [T32454]  dump_stack+0x18/0x38\n[65731.259800] [T32454]  mrdump_common_die+0x250/0x39c [mrdump]\n[65731.259936] [T32454]  ipanic_die+0x20/0x34 [mrdump]\n[65731.260019] [T32454]  atomic_notifier_call_chain+0xb4/0xfc\n[65731.260047] [T32454]  notify_die+0x114/0x198\n[65731.260073] [T32454]  die+0xf4/0x5b4\n[65731.260098] [T32454]  die_kernel_fault+0x80/0x98\n[65731.260124] [T32454]  __do_kernel_fault+0x160/0x2a8\n[65731.260146] [T32454]  do_bad_area+0x68/0x148\n[65731.260174] [T32454]  do_mem_abort+0x151c/0x1b34\n[65731.260204] [T32454]  el1_abort+0x3c/0x5c\n[65731.260227] [T32454]  el1h_64_sync_handler+0x54/0x90\n[65731.260248] [T32454]  el1h_64_sync+0x68/0x6c\n\n[65731.260269] [T32454]  z_erofs_decompress_queue+0x7f0/0x2258\n--> be->decompressed_pages = kvcalloc(be->nr_pages, sizeof(struct page *), GFP_KERNEL | __GFP_NOFAIL);\n\tkernel panic by NULL pointer dereference.\n\terofs assume kvmalloc with __GFP_NOFAIL never return NULL.\n[65731.260293] [T32454]  z_erofs_runqueue+0xf30/0x104c\n[65731.260314] [T32454]  z_erofs_readahead+0x4f0/0x968\n[65731.260339] [T32454]  read_pages+0x170/0xadc\n[65731.260364] [T32454]  page_cache_ra_unbounded+0x874/0xf30\n[65731.260388] [T32454]  page_cache_ra_order+0x24c/0x714\n[65731.260411] [T32454]  filemap_fault+0xbf0/0x1a74\n[65731.260437] [T32454]  __do_fault+0xd0/0x33c\n[65731.260462] [T32454]  handle_mm_fault+0xf74/0x3fe0\n[65731.260486] [T32454]  do_mem_abort+0x54c/0x1b34\n[65731.260509] [T32454]  el0_da+0x44/0x94\n[65731.260531] [T32454]  el0t_64_sync_handler+0x98/0xb4\n[65731.260553] [T32454]  el0t_64_sync+0x198/0x19c"
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-07-05T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39477",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/aa998f9dcb34c28448f86e8f5490f20d5eb0eac7",
+            "https://git.kernel.org/stable/c/8daf9c702ee7f825f0de8600abff764acfedea13"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/hugetlb: do not call vma_add_reservation upon ENOMEM\n\nsysbot reported a splat [1] on __unmap_hugepage_range().  This is because\nvma_needs_reservation() can return -ENOMEM if\nallocate_file_region_entries() fails to allocate the file_region struct\nfor the reservation.\n\nCheck for that and do not call vma_add_reservation() if that is the case,\notherwise region_abort() and region_del() will see that we do not have any\nfile_regions.\n\nIf we detect that vma_needs_reservation() returned -ENOMEM, we clear the\nhugetlb_restore_reserve flag as if this reservation was still consumed, so\nfree_huge_folio() will not increment the resv count.\n\n[1] https://lore.kernel.org/linux-mm/0000000000004096100617c58d54@google.com/T/#ma5983bc1ab18a54910da83416b3f89f3c7ee43aa"
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-06-20T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-48737",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [],
+        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
+    },
+    {
+        "Modified": "2024-07-05T07:15:00",
+        "Published": "2024-06-20T12:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2022-48736",
+        "impact": {},
+        "last-modified": "2024-07-05T07:15:00",
+        "references": [],
+        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
+    },
+    {
         "Modified": "2024-07-05T02:15:00",
         "Published": "2024-07-05T02:15:00",
         "access": {},
@@ -1176,585 +1783,5 @@
             "http://seclists.org/fulldisclosure/2024/Jul/1"
         ],
         "summary": "Toshiba printers will display the password of the admin user in clear-text and additional passwords when sending 2 specific HTTP requests to the internal API. An attacker stealing the cookie of an admin or abusing a XSS vulnerability can recover this password in clear-text and compromise the printer. This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27165",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Toshiba printers contain a suidperl binary and it has a Local Privilege Escalation vulnerability. A local attacker can get root privileges. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27166",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Coredump binaries in Toshiba printers have incorrect permissions. A local attacker can steal confidential information. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27167",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Toshiba printers use Sendmail to send emails to recipients. Sendmail is used with several insecure directories. A local attacker can inject a malicious Sendmail configuration file. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27169",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Toshiba printers provides API without authentication for internal access. A local attacker can bypass authentication in applications, providing administrative access. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27170",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "It was observed that all the Toshiba printers contain credentials used for WebDAV access in the readable file. Then, it is possible to get a full access with WebDAV to the printer. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27171",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "A remote attacker using the insecure upload functionality will be able to overwrite any Python file and get Remote Code Execution. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T03:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27141",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Toshiba printers use XML communication for the API endpoint provided by the printer. For the endpoint, XML parsing library is used and it is vulnerable to a time-based blind XML External Entity (XXE) vulnerability. An attacker can DoS the printers by sending a HTTP request without authentication. An attacker can exploit the XXE to retrieve information.\u00a0As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27173",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Remote Command program allows an attacker to get Remote Code Execution by overwriting existing Python files containing executable code.\u00a0This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27174",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Remote Command program allows an attacker to get Remote Code Execution. This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27175",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Remote Command program allows an attacker to read any file using a Local File Inclusion vulnerability. An attacker can read any file on the printer. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27176",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "An attacker can get Remote Code Execution by overwriting files. Overwriting files is enable by falsifying session ID variable. This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27178",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "An attacker can get Remote Code Execution by overwriting files.  Overwriting files is enable by falsifying file name variable. This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27179",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Admin cookies are written in clear-text in logs. An attacker can retrieve them and bypass the authentication mechanism. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T03:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27152",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "The Toshiba printers are vulnerable to a Local Privilege Escalation vulnerability. An attacker can remotely compromise any Toshiba printer. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27180",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "An attacker with admin access can install rogue applications. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T03:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27146",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "The Toshiba printers do not implement privileges separation. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27160",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "All the Toshiba printers contain a shell script using the same hardcoded key to encrypt logs. An attacker can decrypt the encrypted files using the hardcoded key. This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27164",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Toshiba printers contain hardcoded credentials. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27168",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "It appears that some hardcoded keys are used for authentication to internal API. Knowing these private keys may allow attackers to bypass authentication and reach administrative interfaces. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27172",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "Remote Command program allows an attacker to get Remote Code Execution. As for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2024-06-14T04:15:00",
-        "access": {},
-        "assigner": "hdq-toshiba-psirt@ml.toshiba.co.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27177",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://www.toshibatec.com/information/20240531_01.html",
-            "https://www.toshibatec.com/information/pdf/information20240531_01.pdf",
-            "https://jvn.jp/en/vu/JVNVU97136265/index.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/1"
-        ],
-        "summary": "An attacker can get Remote Code Execution by overwriting files.  Overwriting files is enable by falsifying package name variable. This vulnerability can be executed in combination with other vulnerabilities and  difficult to execute alone. So, the CVSS score for this vulnerability alone is lower than the score listed in the \"Base Score\" of this vulnerability. For detail on related other vulnerabilities, please ask to the below contact point.\n https://www.toshibatec.com/contacts/products/ \nAs for the affected products/models/versions, see the reference URL."
-    },
-    {
-        "Modified": "2024-07-04T05:15:00",
-        "Published": "2022-12-16T16:15:00",
-        "access": {},
-        "assigner": "ART@zuso.ai",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2022-45796",
-        "impact": {},
-        "last-modified": "2024-07-04T05:15:00",
-        "references": [
-            "https://global.sharp/products/copier/info/info_security_2022-11.html",
-            "https://jvn.jp/en/vu/JVNVU96195138/index.html",
-            "https://zuso.ai/advisory/ZA-2022-01.html",
-            "http://seclists.org/fulldisclosure/2024/Jul/0"
-        ],
-        "summary": "Command injection vulnerability in nw_interface.html in SHARP multifunction printers (MFPs)'s Digital Full-color Multifunctional System 202 or earlier, 120 or earlier, 600 or earlier, 121 or earlier, 500 or earlier, 402 or earlier, 790 or earlier, and Digital Multifunctional System (Monochrome) 200 or earlier, 211 or earlier, 102 or earlier, 453 or earlier, 400 or earlier, 202 or earlier, 602 or earlier, 500 or earlier, 401 or earlier allows remote attackers to execute arbitrary commands via unspecified vectors."
-    },
-    {
-        "Modified": "2024-07-04T04:15:00",
-        "Published": "2024-07-04T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2385",
-        "impact": {},
-        "last-modified": "2024-07-04T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0aa3ec9b-80d5-4e31-8045-43c8d151cab8?source=cve",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.5/includes/helper-functions.php#L726",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.5/includes/widgets/heading.php#L267"
-        ],
-        "summary": "The Elementor Addons by Livemesh plugin for WordPress is vulnerable to Local File Inclusion in all versions up to, and including, 8.3.7 via several of the plugin's widgets through the 'style' attribute. This makes it possible for authenticated attackers, with contributor-level access and above, to include and execute arbitrary files on the server, allowing the execution of any PHP code in those files. This can be used to bypass access controls, obtain sensitive data, or achieve code execution in cases where images and other \u201csafe\u201d file types can be uploaded and included."
-    },
-    {
-        "Modified": "2024-07-04T04:15:00",
-        "Published": "2024-07-04T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2926",
-        "impact": {},
-        "last-modified": "2024-07-04T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/78e9beef-4d2b-4004-8db7-4963882e405b?source=cve",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/carousel/loop.php#L47",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/posts-slider/loop-start.php#L36",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/posts-multislider/loop-start.php#L45",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/posts-gridbox-slider/loop-start.php#L32",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/posts-carousel/loop-start.php#L44",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/device-slider/loop.php#L34",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/animated-text/loop.php#L45",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/tags/8.3.6/templates/addons/animated-text/loop.php#L40"
-        ],
-        "summary": "The Elementor Addons by Livemesh plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's widgets in all versions up to, and including, 8.3.7 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-07-04T04:15:00",
-        "Published": "2024-07-04T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3638",
-        "impact": {},
-        "last-modified": "2024-07-04T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/58dfd766-7156-4aec-b8db-76908b775ba0?source=cve",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/trunk/templates/addons/marquee-text/content.php#L24",
-            "https://plugins.trac.wordpress.org/browser/addons-for-elementor/trunk/templates/addons/marquee-text/content.php#L28"
-        ],
-        "summary": "The Elementor Addons by Livemesh plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's Marquee Text Widget, Testimonials Widget, and Testimonial Slider widgets in all versions up to, and including, 8.3.7 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-07-04T04:15:00",
-        "Published": "2024-07-04T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-3639",
-        "impact": {},
-        "last-modified": "2024-07-04T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/9729ccc9-e3f1-4096-8430-22998b386cec?source=cve",
-            "https://wordpress.org/plugins/addons-for-elementor/"
-        ],
-        "summary": "The Elementor Addons by Livemesh plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's  Posts Grid widget in all versions up to, and including, 8.3.7 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-07-04T01:15:00",
-        "Published": "2024-07-04T01:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38344",
-        "impact": {},
-        "last-modified": "2024-07-04T01:15:00",
-        "references": [
-            "https://wordpress.org/plugins/wp-tweet-walls/",
-            "https://jvn.jp/en/jp/JVN34977158/"
-        ],
-        "summary": "A cross-site request forgery vulnerability exists in WP Tweet Walls versions prior to 1.0.4. If this vulnerability is exploited, an attacker allows a user who logs in to the WordPress site where the affected plugin is enabled to access a malicious page. As a result, the user may perform unintended operations on the WordPress site."
-    },
-    {
-        "Modified": "2024-07-04T01:15:00",
-        "Published": "2024-07-04T01:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38345",
-        "impact": {},
-        "last-modified": "2024-07-04T01:15:00",
-        "references": [
-            "https://wordpress.org/plugins/sola-testimonials/",
-            "https://jvn.jp/en/jp/JVN34977158/"
-        ],
-        "summary": "A cross-site request forgery vulnerability exists in Sola Testimonials versions prior to 3.0.0. If this vulnerability is exploited, an attacker allows a user who logs in to the WordPress site where the affected plugin is enabled to access a malicious page. As a result, the user may perform unintended operations on the WordPress site."
-    },
-    {
-        "Modified": "2024-07-04T01:15:00",
-        "Published": "2024-07-04T01:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38471",
-        "impact": {},
-        "last-modified": "2024-07-04T01:15:00",
-        "references": [
-            "https://www.tp-link.com/jp/support/download/",
-            "https://www.tp-link.com/jp/support/download/archer-ax3000/#Firmware",
-            "https://www.tp-link.com/jp/support/download/archer-axe75/#Firmware",
-            "https://www.tp-link.com/jp/support/download/archer-ax5400/#Firmware",
-            "https://www.tp-link.com/jp/support/download/archer-air-r5/v1/#Firmware",
-            "https://www.tp-link.com/jp/support/download/archer-axe5400/#Firmware",
-            "https://jvn.jp/en/vu/JVNVU99784493/"
-        ],
-        "summary": "Multiple TP-LINK products allow a network-adjacent attacker with an administrative privilege to execute arbitrary OS commands by restoring a crafted backup file. The affected device, with the initial configuration, allows login only from the LAN port or Wi-Fi."
-    },
-    {
-        "Modified": "2024-07-04T00:15:00",
-        "Published": "2024-07-02T14:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38519",
-        "impact": {},
-        "last-modified": "2024-07-04T00:15:00",
-        "references": [
-            "https://github.com/yt-dlp/yt-dlp/security/advisories/GHSA-79w7-vh3h-8g4j",
-            "https://github.com/yt-dlp/yt-dlp/commit/5ce582448ececb8d9c30c8c31f58330090ced03a",
-            "https://github.com/yt-dlp/yt-dlp/releases/tag/2024.07.01",
-            "https://securitylab.github.com/advisories/GHSL-2024-090_yt-dlp",
-            "https://github.com/dirkf/youtube-dl/security/advisories/GHSA-22fp-mf44-f2mq",
-            "https://securitylab.github.com/advisories/GHSL-2024-089_youtube-dl/",
-            "https://github.com/ytdl-org/youtube-dl/pull/32830",
-            "https://github.com/ytdl-org/youtube-dl/commit/d42a222ed541b96649396ef00e19552aef0f09ec"
-        ],
-        "summary": "`yt-dlp` and `youtube-dl` are command-line audio/video downloaders. Prior to the fixed versions,\u00a0`yt-dlp` and `youtube-dl` do not limit the extensions of downloaded files, which could lead to arbitrary filenames being created in the download folder (and path traversal on Windows). Since `yt-dlp` and `youtube-dl` also read config from the working directory (and on Windows executables will be executed from the `yt-dlp` or `youtube-dl` directory), this could lead to arbitrary code being executed.\n\n\n\n\n`yt-dlp` version 2024.07.01 fixes this issue by whitelisting the allowed extensions. `youtube-dl` fixes this issue in commit `d42a222` on the `master` branch and in nightly builds tagged 2024-07-03 or later. This might mean some very uncommon extensions might not get downloaded, however it will also limit the possible exploitation surface. In addition to upgrading, have `.%(ext)s` at the end of the output template and make sure the user trusts the websites that they are downloading from. Also, make sure to never download to a directory within PATH or other sensitive locations like one's user directory, `system32`, or other binaries locations. For users who are not able to upgrade, keep the default output template (`-o \"%(title)s [%(id)s].%(ext)s`); make sure the extension of the media to download is a common video/audio/sub/... one; try to avoid the generic extractor; and/or use `--ignore-config --config-location ...` to not load config from common locations."
-    },
-    {
-        "Modified": "2024-07-03T23:15:00",
-        "Published": "2024-07-03T23:15:00",
-        "access": {},
-        "assigner": "security@google.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6284",
-        "impact": {},
-        "last-modified": "2024-07-03T23:15:00",
-        "references": [
-            "https://github.com/google/nftables/issues/225",
-            "https://github.com/crowdsecurity/cs-firewall-bouncer/issues/368",
-            "https://bugs.launchpad.net/ubuntu/+source/crowdsec-firewall-bouncer/+bug/2069596"
-        ],
-        "summary": "In  https://github.com/google/nftables \u00a0IP addresses were encoded in the wrong byte order,\u00a0resulting in an nftables configuration which does not work as intended (might block or not block the desired addresses).\n\nThis issue affects:\u00a0 https://pkg.go.dev/github.com/google/nftables@v0.1.0 \n\nThe bug was fixed in the next released version:\u00a0 https://pkg.go.dev/github.com/google/nftables@v0.2.0"
-    },
-    {
-        "Modified": "2024-07-03T23:15:00",
-        "Published": "2024-01-11T00:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-21821",
-        "impact": {},
-        "last-modified": "2024-07-03T23:15:00",
-        "references": [
-            "https://www.tp-link.com/jp/support/download/archer-ax3000/#Firmware",
-            "https://www.tp-link.com/jp/support/download/archer-ax5400/#Firmware",
-            "https://www.tp-link.com/jp/support/download/archer-axe75/#Firmware",
-            "https://jvn.jp/en/vu/JVNVU91401812/",
-            "https://www.tp-link.com/jp/support/download/archer-air-r5/v1/#Firmware"
-        ],
-        "summary": "Multiple TP-LINK products allow a network-adjacent authenticated attacker with access to the product from the LAN port or Wi-Fi to execute arbitrary OS commands."
     }
 ]
