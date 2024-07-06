@@ -1,5 +1,67 @@
 [
     {
+        "Modified": "2024-07-06T10:15:00",
+        "Published": "2024-07-06T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-918",
+        "id": "CVE-2024-37208",
+        "impact": {},
+        "last-modified": "2024-07-06T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/wp-scraper/wordpress-wp-scraper-plugin-5-7-server-side-request-forgery-ssrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Server-Side Request Forgery (SSRF) vulnerability in Robert Macchi WP Scraper.This issue affects WP Scraper: from n/a through 5.7."
+    },
+    {
+        "Modified": "2024-07-06T10:15:00",
+        "Published": "2024-07-06T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-601",
+        "id": "CVE-2024-37234",
+        "impact": {},
+        "last-modified": "2024-07-06T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/academy/wordpress-academy-lms-plugin-2-0-2-open-redirection-vulnerability?_s_id=cve"
+        ],
+        "summary": "URL Redirection to Untrusted Site ('Open Redirect') vulnerability in Kodezen Limited Academy LMS.This issue affects Academy LMS: from n/a through 2.0.4."
+    },
+    {
+        "Modified": "2024-07-06T10:15:00",
+        "Published": "2024-07-06T10:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-918",
+        "id": "CVE-2024-37260",
+        "impact": {},
+        "last-modified": "2024-07-06T10:15:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/foxiz/wordpress-foxiz-theme-theme-2-3-5-server-side-request-forgery-ssrf-vulnerability?_s_id=cve"
+        ],
+        "summary": "Server-Side Request Forgery (SSRF) vulnerability in Theme-Ruby Foxiz.This issue affects Foxiz: from n/a through 2.3.5."
+    },
+    {
+        "Modified": "2024-07-06T10:15:00",
+        "Published": "2024-07-06T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39486",
+        "impact": {},
+        "last-modified": "2024-07-06T10:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/16682588ead4a593cf1aebb33b36df4d1e9e4ffa",
+            "https://git.kernel.org/stable/c/0acce2a5c619ef1abdee783d7fea5eac78ce4844",
+            "https://git.kernel.org/stable/c/4f2a129b33a2054e62273edd5a051c34c08d96e9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/drm_file: Fix pid refcounting race\n\n\nfilp->pid is supposed to be a refcounted pointer; however, before this\npatch, drm_file_update_pid() only increments the refcount of a struct\npid after storing a pointer to it in filp->pid and dropping the\ndev->filelist_mutex, making the following race possible:\n\nprocess A               process B\n=========               =========\n                        begin drm_file_update_pid\n                        mutex_lock(&dev->filelist_mutex)\n                        rcu_replace_pointer(filp->pid, <pid B>, 1)\n                        mutex_unlock(&dev->filelist_mutex)\nbegin drm_file_update_pid\nmutex_lock(&dev->filelist_mutex)\nrcu_replace_pointer(filp->pid, <pid A>, 1)\nmutex_unlock(&dev->filelist_mutex)\nget_pid(<pid A>)\nsynchronize_rcu()\nput_pid(<pid B>)   *** pid B reaches refcount 0 and is freed here ***\n                        get_pid(<pid B>)   *** UAF ***\n                        synchronize_rcu()\n                        put_pid(<pid A>)\n\nAs far as I know, this race can only occur with CONFIG_PREEMPT_RCU=y\nbecause it requires RCU to detect a quiescent state in code that is not\nexplicitly calling into the scheduler.\n\nThis race leads to use-after-free of a \"struct pid\".\nIt is probably somewhat hard to hit because process A has to pass\nthrough a synchronize_rcu() operation while process B is between\nmutex_unlock() and get_pid().\n\nFix it by ensuring that by the time a pointer to the current task's pid\nis stored in the file, an extra reference to the pid has been taken.\n\nThis fix also removes the condition for synchronize_rcu(); I think\nthat optimization is unnecessary complexity, since in that case we\nwould usually have bailed out on the lockless check above."
+    },
+    {
         "Modified": "2024-07-06T09:15:00",
         "Published": "2024-07-06T09:15:00",
         "access": {},
@@ -1588,73 +1650,5 @@
             "https://www.cisa.gov/news-events/ics-advisories/icsa-24-135-04"
         ],
         "summary": "Improper privilege management in Jungo WinDriver before 12.5.1 allows local attackers to escalate privileges, execute arbitrary code, or cause a Denial of Service (DoS)."
-    },
-    {
-        "Modified": "2024-07-05T17:04:00",
-        "Published": "2024-07-02T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-25087",
-        "impact": {},
-        "last-modified": "2024-07-05T17:04:00",
-        "references": [
-            "https://jungo.com/windriver/versions/",
-            "https://www.mitsubishielectric.com/en/psirt/vulnerability/pdf/2024-001_en.pdf",
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-135-04"
-        ],
-        "summary": "Denial of Service (DoS) vulnerability in Jungo WinDriver before 12.7.0 allows local attackers to cause a Windows blue screen error."
-    },
-    {
-        "Modified": "2024-07-05T17:03:00",
-        "Published": "2024-07-02T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-22105",
-        "impact": {},
-        "last-modified": "2024-07-05T17:03:00",
-        "references": [
-            "https://jungo.com/windriver/versions/",
-            "https://www.mitsubishielectric.com/en/psirt/vulnerability/pdf/2024-001_en.pdf",
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-135-04"
-        ],
-        "summary": "Denial of Service (DoS) vulnerability in Jungo WinDriver before 12.5.1 allows local attackers to cause a Windows blue screen error."
-    },
-    {
-        "Modified": "2024-07-05T17:03:00",
-        "Published": "2024-07-02T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-51778",
-        "impact": {},
-        "last-modified": "2024-07-05T17:03:00",
-        "references": [
-            "https://jungo.com/windriver/versions/",
-            "https://www.mitsubishielectric.com/en/psirt/vulnerability/pdf/2024-001_en.pdf",
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-135-04"
-        ],
-        "summary": "Out-of-Bounds Write vulnerability in Jungo WinDriver before 12.1.0 allows local attackers to cause a Windows blue screen error and Denial of Service (DoS)."
-    },
-    {
-        "Modified": "2024-07-05T17:03:00",
-        "Published": "2024-07-02T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-22102",
-        "impact": {},
-        "last-modified": "2024-07-05T17:03:00",
-        "references": [
-            "https://jungo.com/windriver/versions/",
-            "https://www.mitsubishielectric.com/en/psirt/vulnerability/pdf/2024-001_en.pdf",
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-135-04"
-        ],
-        "summary": "Denial of Service (DoS) vulnerability in Jungo WinDriver before 12.6.0 allows local attackers to cause a Windows blue screen error."
     }
 ]
