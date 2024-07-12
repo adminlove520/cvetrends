@@ -1,5 +1,52 @@
 [
     {
+        "Modified": "2024-07-12T21:15:00",
+        "Published": "2024-03-02T22:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-26621",
+        "impact": {},
+        "last-modified": "2024-07-12T21:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/7432376c913381c5f24d373a87ff629bbde94b47",
+            "https://git.kernel.org/stable/c/4ef9ad19e17676b9ef071309bc62020e2373705d",
+            "https://git.kernel.org/stable/c/87632bc9ecff5ded93433bc0fca428019bdd1cfe",
+            "https://zolutal.github.io/aslrnt/",
+            "http://www.openwall.com/lists/oss-security/2024/07/08/3",
+            "http://www.openwall.com/lists/oss-security/2024/07/08/5",
+            "http://www.openwall.com/lists/oss-security/2024/07/08/4",
+            "http://www.openwall.com/lists/oss-security/2024/07/08/6",
+            "http://www.openwall.com/lists/oss-security/2024/07/08/7",
+            "http://www.openwall.com/lists/oss-security/2024/07/08/8",
+            "http://www.openwall.com/lists/oss-security/2024/07/09/1",
+            "http://www.openwall.com/lists/oss-security/2024/07/10/5",
+            "http://www.openwall.com/lists/oss-security/2024/07/10/7",
+            "http://www.openwall.com/lists/oss-security/2024/07/10/8",
+            "http://www.openwall.com/lists/oss-security/2024/07/11/4",
+            "http://www.openwall.com/lists/oss-security/2024/07/11/5",
+            "http://www.openwall.com/lists/oss-security/2024/07/11/7",
+            "http://www.openwall.com/lists/oss-security/2024/07/12/3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: huge_memory: don't force huge page alignment on 32 bit\n\ncommit efa7df3e3bb5 (\"mm: align larger anonymous mappings on THP\nboundaries\") caused two issues [1] [2] reported on 32 bit system or compat\nuserspace.\n\nIt doesn't make too much sense to force huge page alignment on 32 bit\nsystem due to the constrained virtual address space.\n\n[1] https://lore.kernel.org/linux-mm/d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org/\n[2] https://lore.kernel.org/linux-mm/CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com/"
+    },
+    {
+        "Modified": "2024-07-12T20:15:00",
+        "Published": "2024-07-12T20:15:00",
+        "access": {},
+        "assigner": "product-security@silabs.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-41093",
+        "impact": {},
+        "last-modified": "2024-07-12T20:15:00",
+        "references": [
+            "https://community.silabs.com/068Vm000007v4HP"
+        ],
+        "summary": "Use After Free vulnerability in Silicon Labs Bluetooth SDK on 32 bit, ARM may allow an attacker with precise timing capabilities to intercept a small number of packets intended for a recipient that has left the network.This issue affects Silabs Bluetooth SDK: through 8.0.0."
+    },
+    {
         "Modified": "2024-07-12T19:15:00",
         "Published": "2024-05-08T02:15:00",
         "access": {},
@@ -1520,48 +1567,5 @@
             "https://git.kernel.org/stable/c/8bb592c2eca8fd2bc06db7d80b38da18da4a2f43"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/page_table_check: fix crash on ZONE_DEVICE\n\nNot all pages may apply to pgtable check.  One example is ZONE_DEVICE\npages: they map PFNs directly, and they don't allocate page_ext at all\neven if there's struct page around.  One may reference\ndevm_memremap_pages().\n\nWhen both ZONE_DEVICE and page-table-check enabled, then try to map some\ndax memories, one can trigger kernel bug constantly now when the kernel\nwas trying to inject some pfn maps on the dax device:\n\n kernel BUG at mm/page_table_check.c:55!\n\nWhile it's pretty legal to use set_pxx_at() for ZONE_DEVICE pages for page\nfault resolutions, skip all the checks if page_ext doesn't even exist in\npgtable checker, which applies to ZONE_DEVICE but maybe more."
-    },
-    {
-        "Modified": "2024-07-12T16:34:00",
-        "Published": "2024-07-12T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-39503",
-        "impact": {},
-        "last-modified": "2024-07-12T16:34:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c0761d1f1ce1d5b85b5e82bbb714df12de1aa8c3",
-            "https://git.kernel.org/stable/c/93b53c202b51a69e42ca57f5a183f7e008e19f83",
-            "https://git.kernel.org/stable/c/0f1bb77c6d837c9513943bc7c08f04c5cc5c6568",
-            "https://git.kernel.org/stable/c/390b353d1a1da3e9c6c0fd14fe650d69063c95d6",
-            "https://git.kernel.org/stable/c/2ba35b37f780c6410bb4bba9c3072596d8576702",
-            "https://git.kernel.org/stable/c/90ae20d47de602198eb69e6cd7a3db3420abfc08",
-            "https://git.kernel.org/stable/c/4e7aaa6b82d63e8ddcbfb56b4fd3d014ca586f10"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: ipset: Fix race between namespace cleanup and gc in the list:set type\n\nLion Ackermann reported that there is a race condition between namespace cleanup\nin ipset and the garbage collection of the list:set type. The namespace\ncleanup can destroy the list:set type of sets while the gc of the set type is\nwaiting to run in rcu cleanup. The latter uses data from the destroyed set which\nthus leads use after free. The patch contains the following parts:\n\n- When destroying all sets, first remove the garbage collectors, then wait\n  if needed and then destroy the sets.\n- Fix the badly ordered \"wait then remove gc\" for the destroy a single set\n  case.\n- Fix the missing rcu locking in the list:set type in the userspace test\n  case.\n- Use proper RCU list handlings in the list:set type.\n\nThe patch depends on c1193d9bbbd3 (netfilter: ipset: Add list flush to cancel_gc)."
-    },
-    {
-        "Modified": "2024-07-12T16:34:00",
-        "Published": "2024-07-12T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40968",
-        "impact": {},
-        "last-modified": "2024-07-12T16:34:00",
-        "references": [
-            "https://git.kernel.org/stable/c/6bff05aaa32c2f7e1f6e68e890876642159db419",
-            "https://git.kernel.org/stable/c/64845ac64819683ad5e51b668b2ed56ee3386aee",
-            "https://git.kernel.org/stable/c/6c1b9fe148a4e03bbfa234267ebb89f35285814a",
-            "https://git.kernel.org/stable/c/25998f5613159fe35920dbd484fcac7ea3ad0799",
-            "https://git.kernel.org/stable/c/d996deb80398a90dd3c03590e68dad543da87d62",
-            "https://git.kernel.org/stable/c/1c33fd17383f48f679186c54df78542106deeaa0",
-            "https://git.kernel.org/stable/c/38d647d509543e9434b3cc470b914348be271fe9",
-            "https://git.kernel.org/stable/c/29b83a64df3b42c88c0338696feb6fdcd7f1f3b7"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nMIPS: Octeon: Add PCIe link status check\n\nThe standard PCIe configuration read-write interface is used to\naccess the configuration space of the peripheral PCIe devices\nof the mips processor after the PCIe link surprise down, it can\ngenerate kernel panic caused by \"Data bus error\". So it is\nnecessary to add PCIe link status check for system protection.\nWhen the PCIe link is down or in training, assigning a value\nof 0 to the configuration address can prevent read-write behavior\nto the configuration space of peripheral PCIe devices, thereby\npreventing kernel panic."
     }
 ]
