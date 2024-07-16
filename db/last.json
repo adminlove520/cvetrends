@@ -1,5 +1,93 @@
 [
     {
+        "Modified": "2024-07-16T11:15:00",
+        "Published": "2024-07-16T11:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6457",
+        "impact": {},
+        "last-modified": "2024-07-16T11:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ecfdf7b1-9bb8-4c1d-a00a-ca1e44440cab?source=cve",
+            "https://plugins.trac.wordpress.org/browser/woocommerce-products-filter/trunk/ext/by_author/index.php#L102",
+            "https://plugins.trac.wordpress.org/changeset/3116888/"
+        ],
+        "summary": "The HUSKY \u2013 Products Filter Professional for WooCommerce plugin for WordPress is vulnerable to time-based SQL Injection via the \u2018woof_author\u2019 parameter in all versions up to, and including, 1.3.6 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for unauthenticated attackers to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
+    },
+    {
+        "Modified": "2024-07-16T11:15:00",
+        "Published": "2024-07-16T11:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6621",
+        "impact": {},
+        "last-modified": "2024-07-16T11:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/8e37331b-0b75-41ee-b390-532efd674cc1?source=cve",
+            "https://plugins.trac.wordpress.org/browser/wp-rss-aggregator/trunk/includes/feed-states.php#L12",
+            "https://plugins.trac.wordpress.org/browser/wp-rss-aggregator/trunk/includes/feed-states.php#L28",
+            "https://plugins.trac.wordpress.org/browser/wp-rss-aggregator/trunk/includes/feed-states.php?rev=3118231"
+        ],
+        "summary": "The RSS Aggregator \u2013 RSS Import, News Feeds, Feed to Post, and Autoblogging plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the 'wprss_activate_feed_source' and 'wprss_pause_feed_source' functions in all versions up to, and including, 4.23.11. This makes it possible for authenticated attackers, with Subscriber-level access and above, to activate or pause existing RSS feeds."
+    },
+    {
+        "Modified": "2024-07-16T10:15:00",
+        "Published": "2024-07-16T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52886",
+        "impact": {},
+        "last-modified": "2024-07-16T10:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9d241c5d9a9b7ad95c90c6520272fe404d5ac88f",
+            "https://git.kernel.org/stable/c/7fe9d87996062f5eb0ca476ad0257f79bf43aaf5",
+            "https://git.kernel.org/stable/c/8186596a663506b1124bede9fde6f243ef9f37ee",
+            "https://git.kernel.org/stable/c/b4a074b1fb222164ed7d5c0b8c922dc4a0840848",
+            "https://git.kernel.org/stable/c/b9fbfb349eacc0820f91c797d7f0a3ac7a4935b5",
+            "https://git.kernel.org/stable/c/ff33299ec8bb80cdcc073ad9c506bd79bb2ed20b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nUSB: core: Fix race by not overwriting udev->descriptor in hub_port_init()\n\nSyzbot reported an out-of-bounds read in sysfs.c:read_descriptors():\n\nBUG: KASAN: slab-out-of-bounds in read_descriptors+0x263/0x280 drivers/usb/core/sysfs.c:883\nRead of size 8 at addr ffff88801e78b8c8 by task udevd/5011\n\nCPU: 0 PID: 5011 Comm: udevd Not tainted 6.4.0-rc6-syzkaller-00195-g40f71e7cd3c6 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/27/2023\nCall Trace:\n <TASK>\n __dump_stack lib/dump_stack.c:88 [inline]\n dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106\n print_address_description.constprop.0+0x2c/0x3c0 mm/kasan/report.c:351\n print_report mm/kasan/report.c:462 [inline]\n kasan_report+0x11c/0x130 mm/kasan/report.c:572\n read_descriptors+0x263/0x280 drivers/usb/core/sysfs.c:883\n...\nAllocated by task 758:\n...\n __do_kmalloc_node mm/slab_common.c:966 [inline]\n __kmalloc+0x5e/0x190 mm/slab_common.c:979\n kmalloc include/linux/slab.h:563 [inline]\n kzalloc include/linux/slab.h:680 [inline]\n usb_get_configuration+0x1f7/0x5170 drivers/usb/core/config.c:887\n usb_enumerate_device drivers/usb/core/hub.c:2407 [inline]\n usb_new_device+0x12b0/0x19d0 drivers/usb/core/hub.c:2545\n\nAs analyzed by Khazhy Kumykov, the cause of this bug is a race between\nread_descriptors() and hub_port_init(): The first routine uses a field\nin udev->descriptor, not expecting it to change, while the second\noverwrites it.\n\nPrior to commit 45bf39f8df7f (\"USB: core: Don't hold device lock while\nreading the \"descriptors\" sysfs file\") this race couldn't occur,\nbecause the routines were mutually exclusive thanks to the device\nlocking.  Removing that locking from read_descriptors() exposed it to\nthe race.\n\nThe best way to fix the bug is to keep hub_port_init() from changing\nudev->descriptor once udev has been initialized and registered.\nDrivers expect the descriptors stored in the kernel to be immutable;\nwe should not undermine this expectation.  In fact, this change should\nhave been made long ago.\n\nSo now hub_port_init() will take an additional argument, specifying a\nbuffer in which to store the device descriptor it reads.  (If udev has\nnot yet been initialized, the buffer pointer will be NULL and then\nhub_port_init() will store the device descriptor in udev as before.)\nThis eliminates the data race responsible for the out-of-bounds read.\n\nThe changes to hub_port_init() appear more extensive than they really\nare, because of indentation changes resulting from an attempt to avoid\nwriting to other parts of the usb_device structure after it has been\ninitialized.  Similar changes should be made to the code that reads\nthe BOS descriptor, but that can be handled in a separate patch later\non.  This patch is sufficient to fix the bug found by syzbot."
+    },
+    {
+        "Modified": "2024-07-16T10:15:00",
+        "Published": "2024-07-16T10:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39887",
+        "impact": {},
+        "last-modified": "2024-07-16T10:15:00",
+        "references": [
+            "https://lists.apache.org/thread/j55vm41jg3l0x6w49zrmvbf3k0ts5fqz"
+        ],
+        "summary": "An SQL Injection vulnerability in Apache Superset exists due to improper neutralization of special elements used in SQL commands. Specifically, certain engine-specific functions are not checked, which allows attackers to bypass Apache Superset's SQL authorization. To mitigate this, a new configuration key named DISALLOWED_SQL_FUNCTIONS has been introduced. This key disallows the use of the following PostgreSQL functions: version, query_to_xml, inet_server_addr, and inet_client_addr. Additional functions can be added to this list for increased protection.\n\nThis issue affects Apache Superset: before 4.0.2.\n\nUsers are recommended to upgrade to version 4.0.2, which fixes the issue.\n\n"
+    },
+    {
+        "Modified": "2024-07-16T10:15:00",
+        "Published": "2024-07-16T10:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6579",
+        "impact": {},
+        "last-modified": "2024-07-16T10:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/746b77c9-64f8-43e8-9c2a-ce6bc35fd24c?source=cve",
+            "https://plugins.trac.wordpress.org/browser/vc-addons-by-bit14/tags/1.4.5/bit14-vc-addons.php#L102",
+            "https://plugins.trac.wordpress.org/browser/vc-addons-by-bit14/tags/1.4.5/bit14-vc-addons.php#L114",
+            "https://plugins.trac.wordpress.org/browser/vc-addons-by-bit14/tags/1.4.5/bit14-vc-addons.php#L125"
+        ],
+        "summary": "The Web and WooCommerce Addons for WPBakery Builder plugin for WordPress is vulnerable to unauthorized plugin settings modification due to a missing capability check on several plugin functions in all versions up to, and including, 1.4.5. This makes it possible for authenticated attackers, with Subscriber-level access and above, to change some of the plugin settings."
+    },
+    {
         "Modified": "2024-07-16T09:15:00",
         "Published": "2024-07-16T09:15:00",
         "access": {},
@@ -1670,81 +1758,5 @@
             "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/24678"
         ],
         "summary": "This vulnerability allows an unauthenticated attacker to achieve remote command execution on the affected PAM system by uploading a specially crafted PAM upgrade file."
-    },
-    {
-        "Modified": "2024-07-15T14:15:00",
-        "Published": "2024-07-15T14:15:00",
-        "access": {},
-        "assigner": "secure@symantec.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38493",
-        "impact": {},
-        "last-modified": "2024-07-15T14:15:00",
-        "references": [
-            "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/24678"
-        ],
-        "summary": "A reflected cross-site scripting (XSS) vulnerability exists in the PAM UI web interface. A remote attacker able to convince a PAM user to click on a specially crafted link to the PAM UI web interface could potentially execute arbitrary client-side code in the context of PAM UI."
-    },
-    {
-        "Modified": "2024-07-15T14:15:00",
-        "Published": "2024-07-15T14:15:00",
-        "access": {},
-        "assigner": "secure@symantec.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-38494",
-        "impact": {},
-        "last-modified": "2024-07-15T14:15:00",
-        "references": [
-            "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/24678"
-        ],
-        "summary": "This vulnerability allows a high-privileged authenticated PAM user to achieve remote command execution on the affected PAM system by sending a specially crafted HTTP request."
-    },
-    {
-        "Modified": "2024-07-15T14:15:00",
-        "Published": "2024-07-15T14:15:00",
-        "access": {},
-        "assigner": "",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6689",
-        "impact": {},
-        "last-modified": "2024-07-15T14:15:00",
-        "references": [
-            "https://www.baramundi.com/en-us/security-info/s-2024-01/"
-        ],
-        "summary": "Local Privilege Escalation in MSI-Installer in baramundi Management Agent v23.1.172.0 on Windows allows a local unprivileged user to escalate privileges to SYSTEM."
-    },
-    {
-        "Modified": "2024-07-15T13:41:00",
-        "Published": "2024-07-11T06:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-5444",
-        "impact": {},
-        "last-modified": "2024-07-15T13:41:00",
-        "references": [
-            "https://wpscan.com/vulnerability/21eddf64-c71e-4aba-b1e9-fe67b4ddfb30/"
-        ],
-        "summary": "The Bible Text WordPress plugin through 0.2 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
-    },
-    {
-        "Modified": "2024-07-15T13:39:00",
-        "Published": "2024-07-09T06:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-5441",
-        "impact": {},
-        "last-modified": "2024-07-15T13:39:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0c007090-9d9b-4ee7-8f77-91abd4373051?source=cve",
-            "https://webnus.net/modern-events-calendar/"
-        ],
-        "summary": "The Modern Events Calendar plugin for WordPress is vulnerable to arbitrary file uploads due to missing file type validation in the set_featured_image function in all versions up to, and including, 7.11.0. This makes it possible for authenticated attackers, with subscriber access and above, to upload arbitrary files on the affected site's server which may make remote code execution possible. The plugin allows administrators (via its settings) to extend the ability to submit events to unauthenticated users, which would allow unauthenticated attackers to exploit this vulnerability."
     }
 ]
