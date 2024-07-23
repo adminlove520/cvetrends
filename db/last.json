@@ -1,5 +1,101 @@
 [
     {
+        "Modified": "2024-07-23T09:15:00",
+        "Published": "2024-07-23T09:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-613",
+        "id": "CVE-2024-29070",
+        "impact": {},
+        "last-modified": "2024-07-23T09:15:00",
+        "references": [
+            "https://lists.apache.org/thread/zslblrz1l0n9t67mqdv42yv75ncfn9zl"
+        ],
+        "summary": "On versions before 2.1.4,\u00a0session is not invalidated after logout. When the user logged in successfully, the Backend service returns \"Authorization\" as the front-end authentication credential. \"Authorization\" can still initiate requests and access data even after logout.\n\nMitigation:\n\nall users should upgrade to 2.1.4\n\n"
+    },
+    {
+        "Modified": "2024-07-23T09:15:00",
+        "Published": "2024-07-09T12:15:00",
+        "access": {},
+        "assigner": "cert@cert.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3596",
+        "impact": {},
+        "last-modified": "2024-07-23T09:15:00",
+        "references": [
+            "https://datatracker.ietf.org/doc/html/rfc2865",
+            "https://datatracker.ietf.org/doc/draft-ietf-radext-deprecating-radius/",
+            "https://networkradius.com/assets/pdf/radius_and_md5_collisions.pdf",
+            "https://www.blastradius.fail/",
+            "http://www.openwall.com/lists/oss-security/2024/07/09/4",
+            "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2024-0014"
+        ],
+        "summary": "RADIUS Protocol under RFC 2865 is susceptible to forgery attacks by a local attacker who can modify any valid Response (Access-Accept, Access-Reject, or Access-Challenge) to any other response using a chosen-prefix collision attack against MD5 Response Authenticator signature."
+    },
+    {
+        "Modified": "2024-07-23T08:15:00",
+        "Published": "2024-07-23T08:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-41012",
+        "impact": {},
+        "last-modified": "2024-07-23T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b6d223942c34057fdfd8f149e763fa823731b224",
+            "https://git.kernel.org/stable/c/3cad1bc010416c6dd780643476bc59ed742436b9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfilelock: Remove locks reliably when fcntl/close race is detected\n\nWhen fcntl_setlk() races with close(), it removes the created lock with\ndo_lock_file_wait().\nHowever, LSMs can allow the first do_lock_file_wait() that created the lock\nwhile denying the second do_lock_file_wait() that tries to remove the lock.\nSeparately, posix_lock_file() could also fail to\nremove a lock due to GFP_KERNEL allocation failure (when splitting a range\nin the middle).\n\nAfter the bug has been triggered, use-after-free reads will occur in\nlock_get_status() when userspace reads /proc/locks. This can likely be used\nto read arbitrary kernel memory, but can't corrupt kernel memory.\n\nFix it by calling locks_remove_posix() instead, which is designed to\nreliably get rid of POSIX locks associated with the given file and\nfiles_struct and is also used by filp_flush()."
+    },
+    {
+        "Modified": "2024-07-23T06:15:00",
+        "Published": "2024-07-23T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-4260",
+        "impact": {},
+        "last-modified": "2024-07-23T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/69f33e20-8ff4-491c-8f37-a4eadd4ea8cf/"
+        ],
+        "summary": "The Page Builder Gutenberg Blocks  WordPress plugin before 3.1.12 does not prevent users from pinging arbitrary hosts via some of its shortcodes, which could allow high privilege users such as contributors to perform SSRF attacks."
+    },
+    {
+        "Modified": "2024-07-23T06:15:00",
+        "Published": "2024-07-23T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6231",
+        "impact": {},
+        "last-modified": "2024-07-23T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/75ad1d8f-edc3-4eb3-b4c0-73832c0a4ca0/"
+        ],
+        "summary": "The Request a Quote WordPress plugin before 2.4.1 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)"
+    },
+    {
+        "Modified": "2024-07-23T06:15:00",
+        "Published": "2024-07-23T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6420",
+        "impact": {},
+        "last-modified": "2024-07-23T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/dfda6577-81aa-4397-a2d6-1d736f9ebd44/"
+        ],
+        "summary": "The Hide My WP Ghost  WordPress plugin before 5.2.02 does not prevent redirects to the login page via the auth_redirect WordPress function, allowing an unauthenticated visitor to access the hidden login page."
+    },
+    {
         "Modified": "2024-07-23T03:15:00",
         "Published": "2024-07-22T21:15:00",
         "access": {},
@@ -1506,95 +1602,5 @@
             "https://patchstack.com/database/vulnerability/vc-tabs/wordpress-tabs-plugin-4-0-6-cross-site-scripting-xss-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Biplob Adhikari Tabs allows Stored XSS.This issue affects Tabs: from n/a through 4.0.6."
-    },
-    {
-        "Modified": "2024-07-22T13:00:00",
-        "Published": "2024-07-22T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37121",
-        "impact": {},
-        "last-modified": "2024-07-22T13:00:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/shortcode-addons/wordpress-shortcode-addons-plugin-3-2-5-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in biplob018 Shortcode Addons allows Stored XSS.This issue affects Shortcode Addons: from n/a through 3.2.5."
-    },
-    {
-        "Modified": "2024-07-22T13:00:00",
-        "Published": "2024-07-22T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37122",
-        "impact": {},
-        "last-modified": "2024-07-22T13:00:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/accordions-or-faqs/wordpress-accordions-plugin-2-3-5-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Biplob Adhikari Accordions allows Stored XSS.This issue affects Accordions: from n/a through 2.3.5."
-    },
-    {
-        "Modified": "2024-07-22T13:00:00",
-        "Published": "2024-07-22T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37199",
-        "impact": {},
-        "last-modified": "2024-07-22T13:00:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/enfold/wordpress-enfold-theme-5-6-9-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Kriesi.At Enfold allows Reflected XSS.This issue affects Enfold: from n/a through 5.6.9."
-    },
-    {
-        "Modified": "2024-07-22T13:00:00",
-        "Published": "2024-07-22T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-37206",
-        "impact": {},
-        "last-modified": "2024-07-22T13:00:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/demo-awesome/wordpress-demo-awesome-plugin-1-0-1-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Theme4Press Demo Awesome allows Reflected XSS.This issue affects Demo Awesome: from n/a through 1.0.1."
-    },
-    {
-        "Modified": "2024-07-22T13:00:00",
-        "Published": "2024-07-22T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37211",
-        "impact": {},
-        "last-modified": "2024-07-22T13:00:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ali2woo-lite/wordpress-aliexpress-dropshipping-with-alinext-lite-plugin-3-3-5-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Ali2Woo Team Ali2Woo Lite allows Reflected XSS.This issue affects Ali2Woo Lite: from n/a through 3.3.5."
-    },
-    {
-        "Modified": "2024-07-22T13:00:00",
-        "Published": "2024-07-22T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37215",
-        "impact": {},
-        "last-modified": "2024-07-22T13:00:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/transition-slider-lite/wordpress-transition-slider-responsive-image-slider-and-gallery-plugin-2-20-3-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in creativeinteractivemedia Transition Slider \u2013 Responsive Image Slider and Gallery allows Stored XSS.This issue affects Transition Slider \u2013 Responsive Image Slider and Gallery: from n/a through 2.20.3."
     }
 ]
