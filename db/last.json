@@ -1,5 +1,328 @@
 [
     {
+        "Modified": "2024-07-24T09:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "cve@curl.se",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6197",
+        "impact": {},
+        "last-modified": "2024-07-24T09:15:00",
+        "references": [
+            "https://curl.se/docs/CVE-2024-6197.json",
+            "https://curl.se/docs/CVE-2024-6197.html",
+            "https://hackerone.com/reports/2559516",
+            "http://www.openwall.com/lists/oss-security/2024/07/24/1"
+        ],
+        "summary": "libcurl's ASN1 parser has this utf8asn1str() function used for parsing an ASN.1 UTF-8 string. Itcan detect an invalid field and return error. Unfortunately, when doing so it also invokes `free()` on a 4 byte localstack buffer.  Most modern malloc implementations detect this error and immediately abort. Some however accept the input pointer and add that memory to its list of available chunks. This leads to the overwriting of nearby stack memory. The content of the overwrite is decided by the `free()` implementation; likely to be memory pointers and a set of flags.  The most likely outcome of exploting this flaw is a crash, although it cannot be ruled out that more serious results can be had in special circumstances."
+    },
+    {
+        "Modified": "2024-07-24T09:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "cve@curl.se",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6874",
+        "impact": {},
+        "last-modified": "2024-07-24T09:15:00",
+        "references": [
+            "https://curl.se/docs/CVE-2024-6874.json",
+            "https://curl.se/docs/CVE-2024-6874.html",
+            "https://hackerone.com/reports/2604391",
+            "http://www.openwall.com/lists/oss-security/2024/07/24/2"
+        ],
+        "summary": "libcurl's URL API function\n[curl_url_get()](https://curl.se/libcurl/c/curl_url_get.html) offers punycode\nconversions, to and from IDN. Asking to convert a name that is exactly 256\nbytes, libcurl ends up reading outside of a stack based buffer when built to\nuse the *macidn* IDN backend. The conversion function then fills up the\nprovided buffer exactly - but does not null terminate the string.\n\nThis flaw can lead to stack contents accidently getting returned as part of\nthe converted string."
+    },
+    {
+        "Modified": "2024-07-24T08:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2023-32471",
+        "impact": {},
+        "last-modified": "2024-07-24T08:15:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000214917/dsa-2023-225-security-update-for-dell-bios-edge-gateway-5200-and-edge-gateway-3200"
+        ],
+        "summary": "Dell Edge Gateway BIOS, versions 3200 and 5200, contains an out-of-bounds read vulnerability. A local authenticated malicious user with high privileges could potentially exploit this vulnerability to read contents of stack memory and use this information for further exploits."
+    },
+    {
+        "Modified": "2024-07-24T08:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-611",
+        "id": "CVE-2023-48362",
+        "impact": {},
+        "last-modified": "2024-07-24T08:15:00",
+        "references": [
+            "https://lists.apache.org/thread/9tt0q4bdjwgw0dz0l9knqxjnpb5y6zsl"
+        ],
+        "summary": "XXE in the XML Format Plugin in Apache Drill version 1.19.0 and greater allows a user to read any file on a remote file system or execute commands via a malicious XML file.\nUsers are recommended to upgrade to version 1.21.2, which fixes this issue."
+    },
+    {
+        "Modified": "2024-07-24T08:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39676",
+        "impact": {},
+        "last-modified": "2024-07-24T08:15:00",
+        "references": [
+            "https://lists.apache.org/thread/hsm0b2w8qr0sqy4rj1mfnnw286tslpzc"
+        ],
+        "summary": "Exposure of Sensitive Information to an Unauthorized Actor vulnerability in Apache Pinot.\n\nThis issue affects Apache Pinot: from 0.1 before 1.0.0.\n\nUsers are recommended to upgrade to version 1.0.0\u00a0and configure RBAC, which fixes the issue.\n\nDetails:\u00a0\n\nWhen using a request to path \u201c/appconfigs\u201d to the controller, it can lead to the disclosure of sensitive information such as system information (e.g. arch, os version), environment information (e.g. maxHeapSize) and Pinot configurations (e.g. zookeeper path). This issue was addressed by the  Role-based Access Control https://docs.pinot.apache.org/operators/tutorials/authentication/basic-auth-access-control , so that /appConfigs` and all other APIs can be access controlled. Only authorized users have access to it. Note the user needs to add the admin role accordingly to the RBAC guide to control access to this endpoint, and in the future version of Pinot, a default admin role is planned to be added.\n\n"
+    },
+    {
+        "Modified": "2024-07-24T08:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "cve-requests@bitdefender.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-3297",
+        "impact": {},
+        "last-modified": "2024-07-24T08:15:00",
+        "references": [
+            "https://www.bitdefender.com/support/security-advisories/session-establishment-lock-up-during-replay-of-case-sigma1-messages/"
+        ],
+        "summary": "An issue in the Certificate Authenticated Session Establishment (CASE) protocol for establishing secure sessions between two devices, as implemented in the Matter protocol versions before Matter 1.1 allows an attacker to replay manipulated CASE Sigma1 messages to make the device unresponsive until\u00a0the device is power-cycled."
+    },
+    {
+        "Modified": "2024-07-24T08:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "cve-requests@bitdefender.com",
+        "cvss": null,
+        "cwe": "CWE-209",
+        "id": "CVE-2024-3454",
+        "impact": {},
+        "last-modified": "2024-07-24T08:15:00",
+        "references": [
+            "https://www.bitdefender.com/support/security-advisories/in-fabric-matter-cluster-attribute-disclosure/"
+        ],
+        "summary": "An implementation issue in the Connectivity Standards Alliance Matter 1.2 protocol as used in the connectedhomeip SDK allows a third party to disclose information about devices part of the same fabric (footprinting), even though the protocol is designed to prevent access to such information."
+    },
+    {
+        "Modified": "2024-07-24T08:15:00",
+        "Published": "2024-07-24T08:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6930",
+        "impact": {},
+        "last-modified": "2024-07-24T08:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2aaca776-03ce-43bb-9553-f455f57124a3?source=cve",
+            "https://plugins.trac.wordpress.org/browser/booking/trunk/core/lib/wpdev-booking-class.php#L849",
+            "https://wordpress.org/plugins/booking/#developers",
+            "https://plugins.trac.wordpress.org/changeset/3123628/"
+        ],
+        "summary": "The WP Booking Calendar plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'type' attribute within the plugin's bookingform shortcode in all versions up to, and including, 10.2.1 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-07-24T07:15:00",
+        "Published": "2024-07-24T07:15:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-32466",
+        "impact": {},
+        "last-modified": "2024-07-24T07:15:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000214917/dsa-2023-225-security-update-for-dell-bios-edge-gateway-5200-and-edge-gateway-3200"
+        ],
+        "summary": "Dell Edge Gateway BIOS, versions 3200 and 5200, contains an out-of-bounds write vulnerability. A local authenticated malicious user with high privileges could potentially exploit this vulnerability leading to exposure of some UEFI code, leading to arbitrary code execution or escalation of privilege."
+    },
+    {
+        "Modified": "2024-07-24T07:15:00",
+        "Published": "2024-07-24T07:15:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2023-32466",
+        "impact": {},
+        "last-modified": "2024-07-24T07:15:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000214917/dsa-2023-225-security-update-for-dell-bios-edge-gateway-5200-and-edge-gateway-3200"
+        ],
+        "summary": "Dell Edge Gateway BIOS, versions 3200 and 5200, contains an out-of-bounds write vulnerability. A local authenticated malicious user with high privileges could potentially exploit this vulnerability leading to exposure of some UEFI code, leading to arbitrary code execution or escalation of privilege."
+    },
+    {
+        "Modified": "2024-07-24T07:15:00",
+        "Published": "2024-07-24T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6553",
+        "impact": {},
+        "last-modified": "2024-07-24T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/6197c194-5a17-41da-be79-58a6f5c68a0b?source=cve",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3117899%40wp-meteor&new=3117899%40wp-meteor&sfp_email=&sfph_mail="
+        ],
+        "summary": "The WP Meteor Website Speed Optimization Addon plugin for WordPress is vulnerable to Full Path Disclosure in all versions up to, and including, 3.4.3.This is due to the plugin utilizing wpdesk and leaving test files with display_errors on. This makes it possible for unauthenticated attackers to retrieve the full path of the web application, which can be used to aid other attacks. The information displayed is not useful on its own, and requires another vulnerability to be present for damage to an affected website."
+    },
+    {
+        "Modified": "2024-07-24T07:15:00",
+        "Published": "2024-07-24T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6571",
+        "impact": {},
+        "last-modified": "2024-07-24T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/a11083dd-7a5f-483b-a854-2697ddc54262?source=cve",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3122915%40imageseo&new=3122915%40imageseo&sfp_email=&sfph_mail="
+        ],
+        "summary": "The Optimize Images ALT Text (alt tag) & names for SEO using AI plugin for WordPress is vulnerable to Full Path Disclosure in all versions up to, and including, 3.1.1. This is due the plugin utilizing cocur and not preventing direct access to the generate-default.php file. This makes it possible for unauthenticated attackers to retrieve the full path of the web application, which can be used to aid other attacks. The information displayed is not useful on its own, and requires another vulnerability to be present for damage to an affected website."
+    },
+    {
+        "Modified": "2024-07-24T07:15:00",
+        "Published": "2024-07-24T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6629",
+        "impact": {},
+        "last-modified": "2024-07-24T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/f6e6fda8-e998-4087-8a21-9edb2a0249c8?source=cve",
+            "https://plugins.trac.wordpress.org/browser/all-in-one-video-gallery/trunk/public/video.php#L74",
+            "https://wordpress.org/plugins/all-in-one-video-gallery/#developers",
+            "https://plugins.trac.wordpress.org/changeset/3123171/",
+            "https://plugins.trac.wordpress.org/changeset/3123171/all-in-one-video-gallery/trunk/public/video.php"
+        ],
+        "summary": "The All-in-One Video Gallery plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's Video shortcode in all versions up to, and including, 3.7.1 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-07-24T06:15:00",
+        "Published": "2024-07-24T06:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6836",
+        "impact": {},
+        "last-modified": "2024-07-24T06:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/d9022afe-0c79-413b-ac0a-a1d32ec09619?source=cve",
+            "https://plugins.trac.wordpress.org/browser/funnel-builder/trunk/modules/checkouts/includes/class-wfacp-ajax-controller.php",
+            "https://plugins.trac.wordpress.org/changeset/3123202/"
+        ],
+        "summary": "The Funnel Builder for WordPress by FunnelKit \u2013 Customize WooCommerce Checkout Pages, Create Sales Funnels, Order Bumps & One Click Upsells plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on multiple functions in all versions up to, and including, 3.4.6. This makes it possible for authenticated attackers, with Contributor-level access and above, to update multiple settings, including templates, designs, checkouts, and other plugin settings."
+    },
+    {
+        "Modified": "2024-07-24T06:15:00",
+        "Published": "2024-07-24T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6094",
+        "impact": {},
+        "last-modified": "2024-07-24T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/019b3f34-7b85-4728-8dd7-ca472d6b2d06/"
+        ],
+        "summary": "The WP ULike  WordPress plugin before 4.7.1 does not sanitise and escape some of its settings, which could allow high privilege users such as admin to perform Stored Cross-Site Scripting attacks even when the unfiltered_html capability is disallowed (for example in multisite setup)."
+    },
+    {
+        "Modified": "2024-07-24T05:15:00",
+        "Published": "2024-07-24T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-40767",
+        "impact": {},
+        "last-modified": "2024-07-24T05:15:00",
+        "references": [
+            "https://launchpad.net/bugs/2071734",
+            "https://security.openstack.org",
+            "https://www.openwall.com/lists/oss-security/2024/07/23/2"
+        ],
+        "summary": "In OpenStack Nova before 27.4.1, 28 before 28.2.1, and 29 before 29.1.1, by supplying a raw format image that is actually a crafted QCOW2 image with a backing file path or VMDK flat image with a descriptor file path, an authenticated user may convince systems to return a copy of the referenced file's contents from the server, resulting in unauthorized access to potentially sensitive data. All Nova deployments are affected. NOTE: this issue exists because of an incomplete fix for CVE-2022-47951 and CVE-2024-32498."
+    },
+    {
+        "Modified": "2024-07-24T05:15:00",
+        "Published": "2024-07-24T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-40767",
+        "impact": {},
+        "last-modified": "2024-07-24T05:15:00",
+        "references": [
+            "https://launchpad.net/bugs/2071734",
+            "https://security.openstack.org",
+            "https://www.openwall.com/lists/oss-security/2024/07/23/2"
+        ],
+        "summary": "In OpenStack Nova before 27.4.1, 28 before 28.2.1, and 29 before 29.1.1, by supplying a raw format image that is actually a crafted QCOW2 image with a backing file path or VMDK flat image with a descriptor file path, an authenticated user may convince systems to return a copy of the referenced file's contents from the server, resulting in unauthorized access to potentially sensitive data. All Nova deployments are affected. NOTE: this issue exists because of an incomplete fix for CVE-2022-47951 and CVE-2024-32498."
+    },
+    {
+        "Modified": "2024-07-24T05:15:00",
+        "Published": "2024-07-23T16:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39702",
+        "impact": {},
+        "last-modified": "2024-07-24T05:15:00",
+        "references": [
+            "https://openresty.org/en/ann-1025003002.html"
+        ],
+        "summary": "In lj_str_hash.c in OpenResty 1.19.3.1 through 1.25.3.1, the string hashing function (used during string interning) allows HashDoS (Hash Denial of Service) attacks. An attacker could cause excessive resource usage during proxy operations via crafted requests, potentially leading to a denial of service with relatively few incoming requests. This vulnerability only exists in the OpenResty fork in the openresty/luajit2 GitHub repository. The LuaJIT/LuaJIT repository. is unaffected."
+    },
+    {
+        "Modified": "2024-07-24T05:15:00",
+        "Published": "2024-01-12T14:15:00",
+        "access": {},
+        "assigner": "cve@gitlab.com",
+        "cvss": null,
+        "cwe": "CWE-640",
+        "id": "CVE-2023-7028",
+        "impact": {},
+        "last-modified": "2024-07-24T05:15:00",
+        "references": [
+            "https://gitlab.com/gitlab-org/gitlab/-/issues/436084",
+            "https://hackerone.com/reports/2293343"
+        ],
+        "summary": "An issue has been discovered in GitLab CE/EE affecting all versions from 16.1 prior to 16.1.6, 16.2 prior to 16.2.9, 16.3 prior to 16.3.7, 16.4 prior to 16.4.5, 16.5 prior to 16.5.6, 16.6 prior to 16.6.4, and 16.7 prior to 16.7.2 in which user account password reset emails could be delivered to an unverified email address."
+    },
+    {
+        "Modified": "2024-07-24T05:15:00",
+        "Published": "2023-08-30T08:15:00",
+        "access": {},
+        "assigner": "cve@gitlab.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-4522",
+        "impact": {},
+        "last-modified": "2024-07-24T05:15:00",
+        "references": [
+            "https://gitlab.com/gitlab-org/gitlab/-/issues/406817",
+            "https://hackerone.com/reports/1937213"
+        ],
+        "summary": "An issue has been discovered in GitLab affecting all versions before 16.2.0. Committing directories containing LF character results in 500 errors when viewing the commit."
+    },
+    {
         "Modified": "2024-07-24T04:15:00",
         "Published": "2024-07-24T04:15:00",
         "access": {},
@@ -1544,462 +1867,5 @@
             "https://github.com/Edgarloyola/CVE-2021-40906"
         ],
         "summary": "CheckMK Raw Edition software (versions 1.5.0 to 1.6.0) does not sanitise the input of a web service parameter that is in an unauthenticated zone. This Reflected XSS allows an attacker to open a backdoor on the device with HTML content and interpreted by the browser (such as JavaScript or other client-side scripts) or to steal the session cookies of a user who has previously authenticated via a man in the middle. Successful exploitation requires access to the web service resource without authentication."
-    },
-    {
-        "Modified": "2024-07-23T19:37:00",
-        "Published": "2022-02-24T15:15:00",
-        "access": {
-            "authentication": "SINGLE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 3.5,
-        "cvss-time": "2024-07-23T19:37:00",
-        "cvss-vector": "AV:N/AC:M/Au:S/C:N/I:P/A:N",
-        "cwe": "CWE-79",
-        "id": "CVE-2022-24565",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "NONE",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:37:00",
-        "references": [
-            "https://checkmk.com/werk/13716"
-        ],
-        "summary": "Checkmk <=2.0.0p19 Fixed in 2.0.0p20 and Checkmk <=1.6.0p27 Fixed in 1.6.0p28 are affected by a Cross Site Scripting (XSS) vulnerability. The Alias of a site was not properly escaped when shown as condition for notifications."
-    },
-    {
-        "Modified": "2024-07-23T19:37:00",
-        "Published": "2022-02-24T15:15:00",
-        "access": {
-            "authentication": "SINGLE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 3.5,
-        "cvss-time": "2024-07-23T19:37:00",
-        "cvss-vector": "AV:N/AC:M/Au:S/C:N/I:P/A:N",
-        "cwe": "CWE-79",
-        "id": "CVE-2022-24566",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "NONE",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:37:00",
-        "references": [
-            "https://checkmk.com/werk/13717"
-        ],
-        "summary": "In Checkmk <=2.0.0p19 fixed in 2.0.0p20 and Checkmk <=1.6.0p27 fixed in 1.6.0p28, the title of a Predefined condition is not properly escaped when shown as condition, which can result in Cross Site Scripting (XSS)."
-    },
-    {
-        "Modified": "2024-07-23T19:37:00",
-        "Published": "2022-02-21T23:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.3,
-        "cvss-time": "2024-07-23T19:37:00",
-        "cvss-vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
-        "cwe": "CWE-79",
-        "id": "CVE-2022-24564",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "NONE",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:37:00",
-        "references": [
-            "https://checkmk.com/werk/13199"
-        ],
-        "summary": "Checkmk <=2.0.0p19 contains a Cross Site Scripting (XSS) vulnerability. While creating or editing a user attribute, the Help Text is subject to HTML injection, which can be triggered for editing a user."
-    },
-    {
-        "Modified": "2024-07-23T19:37:00",
-        "Published": "2022-01-15T17:15:00",
-        "access": {
-            "authentication": "SINGLE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 3.5,
-        "cvss-time": "2024-07-23T19:37:00",
-        "cvss-vector": "AV:N/AC:M/Au:S/C:N/I:P/A:N",
-        "cwe": "CWE-79",
-        "id": "CVE-2020-28919",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "NONE",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:37:00",
-        "references": [
-            "https://checkmk.com/check_mk-werks.php?werk_id=11501",
-            "https://emacsninja.com/posts/cve-2020-28919-stored-xss-in-checkmk-160p18.html",
-            "https://github.com/tribe29/checkmk/commit/c00f450f884d8a229b7d8ab3f0452ed802a1ae04",
-            "https://github.com/tribe29/checkmk/commit/e7fd8e4c90be490e4293ec91804d00ec01af5ca6"
-        ],
-        "summary": "A stored cross site scripting (XSS) vulnerability in Checkmk 1.6.0x prior to 1.6.0p19 allows an authenticated remote attacker to inject arbitrary JavaScript via a javascript: URL in a view title."
-    },
-    {
-        "Modified": "2024-07-23T19:37:00",
-        "Published": "2021-02-19T06:15:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 7.2,
-        "cvss-time": "2024-07-23T19:37:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:C/I:C/A:C",
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2020-24908",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "COMPLETE",
-            "integrity": "COMPLETE"
-        },
-        "last-modified": "2024-07-23T19:37:00",
-        "references": [
-            "https://compass-security.com/fileadmin/Research/Advisories/2020-05_CSNC-2020-005_Checkmk_Local_Privilege_Escalation.txt"
-        ],
-        "summary": "Checkmk before 1.6.0p17 allows local users to obtain SYSTEM privileges via a Trojan horse shell script in the %PROGRAMDATA%\\checkmk\\agent\\local directory."
-    },
-    {
-        "Modified": "2024-07-23T19:37:00",
-        "Published": "2017-10-02T01:29:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 4.3,
-        "cvss-time": "2024-07-23T19:37:00",
-        "cvss-vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
-        "cwe": "CWE-362",
-        "id": "CVE-2017-14955",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "PARTIAL",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-07-23T19:37:00",
-        "references": [
-            "https://mathias-kettner.de/check_mk_werks.php?werk_id=5208&HTML=yes",
-            "http://mathias-kettner.com/check_mk_werks.php?edition_id=raw&branch=1.2.8",
-            "https://www.exploit-db.com/exploits/43021/"
-        ],
-        "summary": "Check_MK before 1.2.8p26 mishandles certain errors within the failed-login save feature because of a race condition, which allows remote attackers to obtain sensitive user information by reading a GUI crash report."
-    },
-    {
-        "Modified": "2024-07-23T19:36:00",
-        "Published": "2024-06-11T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-25799",
-        "impact": {},
-        "last-modified": "2024-07-23T19:36:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/tutor/wordpress-tutor-lms-plugin-2-1-10-multiple-student-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in Themeum Tutor LMS.This issue affects Tutor LMS: from n/a through 2.1.8."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2024-07-23T19:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-41668",
-        "impact": {},
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://github.com/cBioPortal/cbioportal/security/advisories/GHSA-9h44-r3c3-q7rm",
-            "https://github.com/cBioPortal/cbioportal/pull/10884",
-            "https://github.com/cBioPortal/cbioportal/commit/ea8642fdbda2d61d2ab34b9da7a1594680bbbcd5",
-            "https://github.com/cBioPortal/cbioportal/releases/tag/v6.0.12",
-            "https://www.wizlynxgroup.com/security-research-advisories/vuln/WLX-2024-004"
-        ],
-        "summary": "The cBioPortal for Cancer Genomics provides visualization, analysis, and download of large-scale cancer genomics data sets. When running a publicly exposed proxy endpoint without authentication, cBioPortal could allow someone to perform a Server Side Request Forgery (SSRF) attack. Logged in users could do the same on private instances. A fix has been released in version 6.0.12. As a workaround, one might be able to disable `/proxy` endpoint entirely via, for example, nginx."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2024-07-23T17:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-532",
-        "id": "CVE-2024-41178",
-        "impact": {},
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://lists.apache.org/thread/3t0povdppnt2czv6crlsqhvyko93kcrg",
-            "http://www.openwall.com/lists/oss-security/2024/07/23/3"
-        ],
-        "summary": "Exposure of temporary credentials in logs\u00a0in Apache Arrow Rust Object Store (`object_store` crate), version 0.10.1 and earlier on all platforms using AWS WebIdentityTokens.\u00a0\n\nOn certain error conditions, the logs may contain the OIDC token passed to  AssumeRoleWithWebIdentity https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html . This allows someone with access to the logs to impersonate that identity, including performing their own calls to AssumeRoleWithWebIdentity, until the OIDC token expires. Typically OIDC tokens are valid for up to an hour, although this will vary depending on the issuer.\n\nUsers are recommended to use a different AWS authentication mechanism, disable logging or upgrade to version 0.10.2, which fixes this issue.\n\nDetails:\n\nWhen using AWS WebIdentityTokens with the object_store crate, in the event of a failure and automatic retry, the underlying reqwest error, including the full URL with the credentials, potentially in the parameters, is written to the logs.\u00a0\n\nThanks to Paul\u00a0Hatcherian for reporting this vulnerability"
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2018-02-21T22:29:00",
-        "access": {
-            "authentication": "SINGLE",
-            "complexity": "LOW",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 9.0,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:N/AC:L/Au:S/C:C/I:C/A:C",
-        "cwe": "CWE-732",
-        "id": "CVE-2018-7311",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "COMPLETE",
-            "integrity": "COMPLETE"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://github.com/VerSprite/research/blob/eba22c8b506be6f7128ef5356281915d5667bfff/advisories/VS-2018-004.md",
-            "https://gist.github.com/anonymous/cfc3f3419804b22ee9e82ee8d16a661d",
-            "https://github.com/VerSprite/research/blob/master/advisories/VS-2018-004.md"
-        ],
-        "summary": "PrivateVPN 2.0.31 for macOS suffers from a root privilege escalation vulnerability. The software installs a privileged helper tool that runs as the root user. This privileged helper tool is installed as a LaunchDaemon and implements an XPC service. The XPC service is responsible for handling new VPN connection operations via the main PrivateVPN application. The privileged helper tool creates new VPN connections by executing the openvpn binary located in the /Applications/PrivateVPN.app/Contents/Resources directory. The openvpn binary can be overwritten by the default user, which allows an attacker that has already installed malicious software as the default user to replace the binary. When a new VPN connection is established, the privileged helper tool will launch this malicious binary, thus allowing an attacker to execute code as the root user. NOTE: the vendor has reportedly indicated that this behavior is \"an acceptable part of their software."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2017-06-05T19:29:00",
-        "access": {
-            "authentication": "SINGLE",
-            "complexity": "LOW",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 6.5,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
-        "cwe": "CWE-89",
-        "id": "CVE-2017-9443",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://github.com/bigtreecms/BigTree-CMS/issues/292"
-        ],
-        "summary": "BigTree CMS through 4.2.18 allows remote authenticated users to conduct SQL injection attacks via a crafted tables object in manifest.json in an uploaded package. This issue exists in core\\admin\\modules\\developer\\extensions\\install\\process.php and core\\admin\\modules\\developer\\packages\\install\\process.php. NOTE: the vendor states \"You must implicitly trust any package or extension you install as they all have the ability to write PHP files."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2017-04-04T16:59:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 1.9,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:L/AC:M/Au:N/C:P/I:N/A:N",
-        "cwe": "CWE-521",
-        "id": "CVE-2017-7306",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "PARTIAL",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://supportkb.riverbed.com/support/index?page=content&id=S30065",
-            "http://seclists.org/fulldisclosure/2017/Feb/25"
-        ],
-        "summary": "Riverbed RiOS through 9.6.0 has a weak default password for the secure vault, which makes it easier for physically proximate attackers to defeat the secure-vault protection mechanism by leveraging knowledge of the password algorithm and the appliance serial number. NOTE: the vendor believes that this does not meet the definition of a vulnerability. The product contains correct computational logic for supporting arbitrary password changes by customers; however, a password change is optional to meet different customers' needs"
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2018-01-08T05:29:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 6.1,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:P/A:C",
-        "cwe": "CWE-20",
-        "id": "CVE-2018-5270",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://github.com/ZhiyuanWang-Chengdu-Qihoo360/Malwarebytes_POC/tree/master/0x9c40e010"
-        ],
-        "summary": "In Malwarebytes Premium 3.3.1.2183, the driver file (FARFLT.SYS) allows local users to cause a denial of service (BSOD) or possibly have unspecified other impact because of not validating input values from IOCtl 0x9c40e010. NOTE: the vendor reported that they \"have not been able to reproduce the issue on any Windows operating system version (32-bit or 64-bit)."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2018-01-08T05:29:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "LOCAL"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 6.1,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:L/AC:L/Au:N/C:P/I:P/A:C",
-        "cwe": "CWE-20",
-        "id": "CVE-2018-5279",
-        "impact": {
-            "availability": "COMPLETE",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://github.com/ZhiyuanWang-Chengdu-Qihoo360/Malwarebytes_POC/tree/master/0x9c40e02c",
-            "http://www.securityfocus.com/bid/102453"
-        ],
-        "summary": "In Malwarebytes Premium 3.3.1.2183, the driver file (FARFLT.SYS) allows local users to cause a denial of service (BSOD) or possibly have unspecified other impact because of not validating input values from IOCtl 0x9c40e02c. NOTE: the vendor reported that they \"have not been able to reproduce the issue on any Windows operating system version (32-bit or 64-bit)."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2017-05-12T07:29:00",
-        "access": {
-            "authentication": "SINGLE",
-            "complexity": "LOW",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 6.5,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
-        "cwe": "CWE-94",
-        "id": "CVE-2017-8912",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://osandamalith.com/2017/05/11/cmsms-2-1-6-multiple-vulnerabilities/",
-            "https://www.exploit-db.com/exploits/41997/"
-        ],
-        "summary": "CMS Made Simple (CMSMS) 2.1.6 allows remote authenticated administrators to execute arbitrary PHP code via the code parameter to admin/editusertag.php, related to the CreateTagFunction and CallUserTag functions. NOTE: the vendor reportedly has stated this is \"a feature, not a bug."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2017-12-14T16:29:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "MEDIUM",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 6.8,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
-        "cwe": "CWE-74",
-        "id": "CVE-2017-17520",
-        "impact": {
-            "availability": "PARTIAL",
-            "confidentiality": "PARTIAL",
-            "integrity": "PARTIAL"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://security-tracker.debian.org/tracker/CVE-2017-17520"
-        ],
-        "summary": "tools/url_handler.pl in TIN 2.4.1 does not validate strings before launching the program specified by the BROWSER environment variable, which might allow remote attackers to conduct argument-injection attacks via a crafted URL. NOTE: a third party has reported that this is intentional behavior, because the documentation states \"url_handler.pl was designed to work together with tin which only issues shell escaped absolute URLs."
-    },
-    {
-        "Modified": "2024-07-23T19:15:00",
-        "Published": "2017-11-29T07:29:00",
-        "access": {
-            "authentication": "NONE",
-            "complexity": "LOW",
-            "vector": "NETWORK"
-        },
-        "assigner": "cve@mitre.org",
-        "cvss": 5.0,
-        "cvss-time": "2024-07-23T19:15:00",
-        "cvss-vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
-        "cwe": "CWE-22",
-        "id": "CVE-2017-17058",
-        "impact": {
-            "availability": "NONE",
-            "confidentiality": "PARTIAL",
-            "integrity": "NONE"
-        },
-        "last-modified": "2024-07-23T19:15:00",
-        "references": [
-            "https://www.exploit-db.com/ghdb/4613/",
-            "https://www.exploit-db.com/exploits/43196/",
-            "https://github.com/woocommerce/woocommerce/issues/17964"
-        ],
-        "summary": "The WooCommerce plugin through 3.x for WordPress has a Directory Traversal Vulnerability via a /wp-content/plugins/woocommerce/templates/emails/plain/ URI, which accesses a parent directory. NOTE: a software maintainer indicates that Directory Traversal is not possible because all of the template files have \"if (!defined('ABSPATH')) {exit;}\" code"
-    },
-    {
-        "Modified": "2024-07-23T19:13:00",
-        "Published": "2024-06-11T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-52217",
-        "impact": {},
-        "last-modified": "2024-07-23T19:13:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/woocommerce-conversion-tracking/wordpress-woocommerce-conversion-tracking-plugin-2-0-11-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in weDevs WooCommerce Conversion Tracking.This issue affects WooCommerce Conversion Tracking: from n/a through 2.0.11."
-    },
-    {
-        "Modified": "2024-07-23T18:40:00",
-        "Published": "2024-06-11T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-24704",
-        "impact": {},
-        "last-modified": "2024-07-23T18:40:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/ajax-load-more-anything/wordpress-load-more-anything-plugin-3-3-3-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in AddonMaster Load More Anything.This issue affects Load More Anything: from n/a through 3.3.3."
-    },
-    {
-        "Modified": "2024-07-23T18:28:00",
-        "Published": "2024-06-11T10:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-34824",
-        "impact": {},
-        "last-modified": "2024-07-23T18:28:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/sportspress/wordpress-sportspress-sports-club-league-manager-plugin-2-7-20-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in ThemeBoy SportsPress \u2013 Sports Club & League Manager.This issue affects SportsPress \u2013 Sports Club & League Manager: from n/a through 2.7.20."
     }
 ]
