@@ -1,5 +1,101 @@
 [
     {
+        "Modified": "2024-07-25T09:15:00",
+        "Published": "2024-07-23T08:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-41012",
+        "impact": {},
+        "last-modified": "2024-07-25T09:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b6d223942c34057fdfd8f149e763fa823731b224",
+            "https://git.kernel.org/stable/c/3cad1bc010416c6dd780643476bc59ed742436b9",
+            "https://git.kernel.org/stable/c/ef8fc41cd6f95f9a4a3470f085aecf350569a0b3",
+            "https://git.kernel.org/stable/c/5f5d0799eb0a01d550c21b7894e26b2d9db55763"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfilelock: Remove locks reliably when fcntl/close race is detected\n\nWhen fcntl_setlk() races with close(), it removes the created lock with\ndo_lock_file_wait().\nHowever, LSMs can allow the first do_lock_file_wait() that created the lock\nwhile denying the second do_lock_file_wait() that tries to remove the lock.\nSeparately, posix_lock_file() could also fail to\nremove a lock due to GFP_KERNEL allocation failure (when splitting a range\nin the middle).\n\nAfter the bug has been triggered, use-after-free reads will occur in\nlock_get_status() when userspace reads /proc/locks. This can likely be used\nto read arbitrary kernel memory, but can't corrupt kernel memory.\n\nFix it by calling locks_remove_posix() instead, which is designed to\nreliably get rid of POSIX locks associated with the given file and\nfiles_struct and is also used by filp_flush()."
+    },
+    {
+        "Modified": "2024-07-25T08:15:00",
+        "Published": "2024-07-25T08:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-41705",
+        "impact": {},
+        "last-modified": "2024-07-25T08:15:00",
+        "references": [
+            "https://www.archerirm.community/t5/platform-announcements/announcing-archer-platform-release-2024-06/ta-p/722094",
+            "https://www.archerirm.community/t5/platform-announcements/archer-update-for-multiple-vulnerabilities/ta-p/739717"
+        ],
+        "summary": "A stored XSS issue was discovered in Archer Platform 6.8 before 2024.06. A remote authenticated malicious Archer user could potentially exploit this to store malicious HTML or JavaScript code in a trusted application data store. When victim users access the data store through their browsers, the malicious code gets executed by the web browser in the context of the vulnerable application. 6.14.P4 (6.14.0.4) and 6.13 P4 (6.13.0.4) are also fixed releases. This vulnerability is similar to, but not identical to, CVE-2023-30639."
+    },
+    {
+        "Modified": "2024-07-25T08:15:00",
+        "Published": "2024-07-25T08:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-41706",
+        "impact": {},
+        "last-modified": "2024-07-25T08:15:00",
+        "references": [
+            "https://www.archerirm.community/t5/platform-announcements/announcing-archer-platform-release-2024-06/ta-p/722094",
+            "https://www.archerirm.community/t5/platform-announcements/archer-update-for-multiple-vulnerabilities/ta-p/739717"
+        ],
+        "summary": "A stored XSS issue was discovered in Archer Platform 6 before version 2024.06. A remote authenticated malicious Archer user could potentially exploit this to store malicious HTML or JavaScript code in a trusted application data store. When victim users access the data store through their browsers, the malicious code gets executed by the web browser in the context of the vulnerable application. 6.14 P4 (6.14.0.4) is also a fixed release."
+    },
+    {
+        "Modified": "2024-07-25T08:15:00",
+        "Published": "2024-07-25T08:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-41707",
+        "impact": {},
+        "last-modified": "2024-07-25T08:15:00",
+        "references": [
+            "https://www.archerirm.community/t5/platform-announcements/announcing-archer-platform-release-2024-06/ta-p/722094",
+            "https://www.archerirm.community/t5/platform-announcements/archer-update-for-multiple-vulnerabilities/ta-p/739717"
+        ],
+        "summary": "An issue was discovered in Archer Platform 6 before 2024.06. Authenticated users can achieve HTML content injection. A remote authenticated malicious Archer user could potentially exploit this to store malicious HTML code in a trusted application data store. When victim users access the data store through their browsers, the malicious code gets executed by the web browser in the context of the vulnerable application."
+    },
+    {
+        "Modified": "2024-07-25T06:15:00",
+        "Published": "2024-07-25T06:15:00",
+        "access": {},
+        "assigner": "security@octopus.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6972",
+        "impact": {},
+        "last-modified": "2024-07-25T06:15:00",
+        "references": [
+            "https://advisories.octopus.com/post/2024/sa2024-06/"
+        ],
+        "summary": "In affected versions of Octopus Server under certain circumstances it is possible for sensitive variables to be printed in the task log in clear-text."
+    },
+    {
+        "Modified": "2024-07-25T05:15:00",
+        "Published": "2024-07-25T05:15:00",
+        "access": {},
+        "assigner": "security@octopus.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-4811",
+        "impact": {},
+        "last-modified": "2024-07-25T05:15:00",
+        "references": [
+            "https://advisories.octopus.com/post/2024/sa2024-05/"
+        ],
+        "summary": "In affected versions of Octopus Server under certain conditions, a user with specific role assignments can access restricted project artifacts."
+    },
+    {
         "Modified": "2024-07-25T04:15:00",
         "Published": "2024-07-23T22:15:00",
         "access": {},
@@ -1680,101 +1776,5 @@
             "https://github.com/alpernae/CVE-2024-40422"
         ],
         "summary": "The snapshot_path parameter in the /api/get-browser-snapshot endpoint in stitionai devika v1 is susceptible to a path traversal attack. An attacker can manipulate the snapshot_path parameter to traverse directories and access sensitive files on the server. This can potentially lead to unauthorized access to critical system files and compromise the confidentiality and integrity of the system."
-    },
-    {
-        "Modified": "2024-07-24T17:12:00",
-        "Published": "2024-07-24T14:15:00",
-        "access": {},
-        "assigner": "security@progress.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6096",
-        "impact": {},
-        "last-modified": "2024-07-24T17:12:00",
-        "references": [
-            "https://docs.telerik.com/reporting/knowledge-base/unsafe-reflection-CVE-2024-6096"
-        ],
-        "summary": "In Progress\u00ae Telerik\u00ae Reporting versions prior to 18.1.24.709, a code execution attack is possible through object injection via an insecure type resolution vulnerability."
-    },
-    {
-        "Modified": "2024-07-24T17:12:00",
-        "Published": "2024-07-24T15:15:00",
-        "access": {},
-        "assigner": "security-alert@hpe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-22443",
-        "impact": {},
-        "last-modified": "2024-07-24T17:12:00",
-        "references": [
-            "https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw04672en_us&docLocale=en_US"
-        ],
-        "summary": "A vulnerability in the web-based management interface of EdgeConnect SD-WAN Orchestrator could allow an authenticated remote attacker to conduct a server-side prototype pollution attack. Successful exploitation of this vulnerability could allow an attacker to execute arbitrary commands on the underlying operating system leading to complete system compromise."
-    },
-    {
-        "Modified": "2024-07-24T17:12:00",
-        "Published": "2024-07-24T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31977",
-        "impact": {},
-        "last-modified": "2024-07-24T17:12:00",
-        "references": [
-            "https://github.com/actuator/cve/tree/main/AdTran/834-5",
-            "https://drive.proton.me/urls/GXDM5T5NSG#RHa0yVWSKyoz",
-            "https://github.com/actuator/cve/blob/main/AdTran/CVE-2024-31977"
-        ],
-        "summary": "Adtran 834-5 11.1.0.101-202106231430, and fixed as of SmartOS Version 12.5.5.1, devices allow OS Command Injection via shell metacharacters to the Ping or Traceroute utility."
-    },
-    {
-        "Modified": "2024-07-24T17:12:00",
-        "Published": "2024-07-24T14:15:00",
-        "access": {},
-        "assigner": "security@progress.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6327",
-        "impact": {},
-        "last-modified": "2024-07-24T17:12:00",
-        "references": [
-            "https://www.telerik.com/report-server",
-            "https://docs.telerik.com/report-server/knowledge-base/deserialization-vulnerability-cve-2024-6327"
-        ],
-        "summary": "In Progress\u00ae Telerik\u00ae Report Server versions prior to 2024 Q2 (10.1.24.709), a remote code execution attack is possible through an insecure deserialization vulnerability."
-    },
-    {
-        "Modified": "2024-07-24T17:12:00",
-        "Published": "2024-07-24T15:15:00",
-        "access": {},
-        "assigner": "security-alert@hpe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-41914",
-        "impact": {},
-        "last-modified": "2024-07-24T17:12:00",
-        "references": [
-            "https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw04672en_us&docLocale=en_US"
-        ],
-        "summary": "A vulnerability in the web-based management interface of EdgeConnect SD-WAN Orchestrator could allow an authenticated remote attacker to conduct a stored cross-site scripting (XSS) attack against an administrative user of the interface. A successful exploit allows an attacker to execute arbitrary script code in a victim's browser in the context of the affected interface."
-    },
-    {
-        "Modified": "2024-07-24T17:12:00",
-        "Published": "2024-07-24T15:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-7068",
-        "impact": {},
-        "last-modified": "2024-07-24T17:12:00",
-        "references": [
-            "https://vuldb.com/?id.272349",
-            "https://vuldb.com/?ctiid.272349",
-            "https://vuldb.com/?submit.378874",
-            "https://github.com/rtsjx-cve/cve/blob/main/xss2.md"
-        ],
-        "summary": "A vulnerability classified as problematic has been found in SourceCodester Insurance Management System 1.0. This affects an unknown part of the file /Script/admin/core/update_sub_category. The manipulation of the argument name leads to cross site scripting. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The identifier VDB-272349 was assigned to this vulnerability."
     }
 ]
