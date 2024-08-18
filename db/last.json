@@ -1,5 +1,22 @@
 [
     {
+        "Modified": "2024-08-17T22:15:00",
+        "Published": "2024-08-17T22:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-601",
+        "id": "CVE-2024-7902",
+        "impact": {},
+        "last-modified": "2024-08-17T22:15:00",
+        "references": [
+            "https://vuldb.com/?id.274910",
+            "https://vuldb.com/?ctiid.274910",
+            "https://vuldb.com/?submit.388216"
+        ],
+        "summary": "A vulnerability was found in pkp ojs up to 3.4.0-6 and classified as problematic. Affected by this issue is some unknown functionality of the file /login/signOut. The manipulation of the argument source with the input .example.com leads to open redirect. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
         "Modified": "2024-08-17T21:15:00",
         "Published": "2024-08-17T21:15:00",
         "access": {},
@@ -1713,23 +1730,5 @@
             "https://git.kernel.org/stable/c/2191a54f63225b548fd8346be3611c3219a24738"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsched: act_ct: take care of padding in struct zones_ht_key\n\nBlamed commit increased lookup key size from 2 bytes to 16 bytes,\nbecause zones_ht_key got a struct net pointer.\n\nMake sure rhashtable_lookup() is not using the padding bytes\nwhich are not initialized.\n\n BUG: KMSAN: uninit-value in rht_ptr_rcu include/linux/rhashtable.h:376 [inline]\n BUG: KMSAN: uninit-value in __rhashtable_lookup include/linux/rhashtable.h:607 [inline]\n BUG: KMSAN: uninit-value in rhashtable_lookup include/linux/rhashtable.h:646 [inline]\n BUG: KMSAN: uninit-value in rhashtable_lookup_fast include/linux/rhashtable.h:672 [inline]\n BUG: KMSAN: uninit-value in tcf_ct_flow_table_get+0x611/0x2260 net/sched/act_ct.c:329\n  rht_ptr_rcu include/linux/rhashtable.h:376 [inline]\n  __rhashtable_lookup include/linux/rhashtable.h:607 [inline]\n  rhashtable_lookup include/linux/rhashtable.h:646 [inline]\n  rhashtable_lookup_fast include/linux/rhashtable.h:672 [inline]\n  tcf_ct_flow_table_get+0x611/0x2260 net/sched/act_ct.c:329\n  tcf_ct_init+0xa67/0x2890 net/sched/act_ct.c:1408\n  tcf_action_init_1+0x6cc/0xb30 net/sched/act_api.c:1425\n  tcf_action_init+0x458/0xf00 net/sched/act_api.c:1488\n  tcf_action_add net/sched/act_api.c:2061 [inline]\n  tc_ctl_action+0x4be/0x19d0 net/sched/act_api.c:2118\n  rtnetlink_rcv_msg+0x12fc/0x1410 net/core/rtnetlink.c:6647\n  netlink_rcv_skb+0x375/0x650 net/netlink/af_netlink.c:2550\n  rtnetlink_rcv+0x34/0x40 net/core/rtnetlink.c:6665\n  netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]\n  netlink_unicast+0xf52/0x1260 net/netlink/af_netlink.c:1357\n  netlink_sendmsg+0x10da/0x11e0 net/netlink/af_netlink.c:1901\n  sock_sendmsg_nosec net/socket.c:730 [inline]\n  __sock_sendmsg+0x30f/0x380 net/socket.c:745\n  ____sys_sendmsg+0x877/0xb60 net/socket.c:2597\n  ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2651\n  __sys_sendmsg net/socket.c:2680 [inline]\n  __do_sys_sendmsg net/socket.c:2689 [inline]\n  __se_sys_sendmsg net/socket.c:2687 [inline]\n  __x64_sys_sendmsg+0x307/0x4a0 net/socket.c:2687\n  x64_sys_call+0x2dd6/0x3c10 arch/x86/include/generated/asm/syscalls_64.h:47\n  do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n  do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x77/0x7f\n\nLocal variable key created at:\n  tcf_ct_flow_table_get+0x4a/0x2260 net/sched/act_ct.c:324\n  tcf_ct_init+0xa67/0x2890 net/sched/act_ct.c:1408"
-    },
-    {
-        "Modified": "2024-08-17T09:15:00",
-        "Published": "2024-08-17T09:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-42273",
-        "impact": {},
-        "last-modified": "2024-08-17T09:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/5fd057160ab240dd816ae09b625395d54c297de1",
-            "https://git.kernel.org/stable/c/4239571c5db46a42f723b8fa8394039187c34439",
-            "https://git.kernel.org/stable/c/0cd106612396656d6f1ca17ef192c6759bb60791",
-            "https://git.kernel.org/stable/c/8cb1f4080dd91c6e6b01dbea013a3f42341cb6a1"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nf2fs: assign CURSEG_ALL_DATA_ATGC if blkaddr is valid\n\nmkdir /mnt/test/comp\nf2fs_io setflags compression /mnt/test/comp\ndd if=/dev/zero of=/mnt/test/comp/testfile bs=16k count=1\ntruncate --size 13 /mnt/test/comp/testfile\n\nIn the above scenario, we can get a BUG_ON.\n kernel BUG at fs/f2fs/segment.c:3589!\n Call Trace:\n  do_write_page+0x78/0x390 [f2fs]\n  f2fs_outplace_write_data+0x62/0xb0 [f2fs]\n  f2fs_do_write_data_page+0x275/0x740 [f2fs]\n  f2fs_write_single_data_page+0x1dc/0x8f0 [f2fs]\n  f2fs_write_multi_pages+0x1e5/0xae0 [f2fs]\n  f2fs_write_cache_pages+0xab1/0xc60 [f2fs]\n  f2fs_write_data_pages+0x2d8/0x330 [f2fs]\n  do_writepages+0xcf/0x270\n  __writeback_single_inode+0x44/0x350\n  writeback_sb_inodes+0x242/0x530\n  __writeback_inodes_wb+0x54/0xf0\n  wb_writeback+0x192/0x310\n  wb_workfn+0x30d/0x400\n\nThe reason is we gave CURSEG_ALL_DATA_ATGC to COMPR_ADDR where the\npage was set the gcing flag by set_cluster_dirty()."
     }
 ]
