@@ -1,5 +1,338 @@
 [
     {
+        "Modified": "2024-09-02T19:15:00",
+        "Published": "2024-09-02T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45621",
+        "impact": {},
+        "last-modified": "2024-09-02T19:15:00",
+        "references": [
+            "https://hackerone.com/reports/1967109",
+            "https://github.com/RocketChat/Rocket.Chat/releases/tag/6.3.4"
+        ],
+        "summary": "The Electron desktop application of Rocket.Chat through 6.3.4 allows stored XSS via links in an uploaded file, related to failure to use a separate browser upon encountering third-party external actions from PDF documents."
+    },
+    {
+        "Modified": "2024-09-02T19:15:00",
+        "Published": "2024-09-02T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45622",
+        "impact": {},
+        "last-modified": "2024-09-02T19:15:00",
+        "references": [
+            "https://github.com/atoz-chevara/cve/blob/main/2024/ASIS_AplikasiSistemSekolah_Using_CodeIgniter3-SQL_Injection_Authentication_Bypass.md"
+        ],
+        "summary": "ASIS (aka Aplikasi Sistem Sekolah using CodeIgniter 3) 3.0.0 through 3.2.0 allows index.php username SQL injection for Authentication Bypass."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45305",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/Byron/gitoxide/security/advisories/GHSA-v26r-4c9c-h3j6",
+            "https://git-scm.com/docs/git-config#SCOPES",
+            "https://github.com/Byron/gitoxide/blob/12251eb052df30105538fa831e641eea557f13d8/gix-path/src/env/git/mod.rs#L112",
+            "https://github.com/Byron/gitoxide/blob/12251eb052df30105538fa831e641eea557f13d8/gix-path/src/env/git/mod.rs#L91"
+        ],
+        "summary": "gix-path is a crate of the gitoxide project dealing with git paths and their conversions. `gix-path` executes `git` to find the path of a configuration file that belongs to the `git` installation itself, but mistakenly treats the local repository's configuration as system-wide if no higher scoped configuration is found. In rare cases, this causes a less trusted repository to be treated as more trusted, or leaks sensitive information from one repository to another, such as sending credentials to another repository's remote. In `gix_path::env`, the underlying implementation of the `installation_config` and `installation_config_prefix` functions calls `git config -l --show-origin` and parses the first line of the output to extract the path to the configuration file holding the configuration variable of highest scope. It is believed to be very difficult to exploit this vulnerability deliberately, due to the need either to anticipate a situation in which higher-scoped configuration variables would be absent, or to arrange for this to happen. Although any operating system may be affected, users running Apple Git on macOS are much less likely to be affected. This issue has been addressed in release version 0.10.10. All users are advised to upgrade."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45306",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/vim/vim/security/advisories/GHSA-wxf9-c5gx-qrwr",
+            "https://github.com/vim/vim/commit/396fd1ec2956307755392a1",
+            "https://github.com/vim/vim/releases/tag/v9.1.0038"
+        ],
+        "summary": "Vim is an open source, command line text editor. Patch v9.1.0038 optimized how the cursor position is calculated and removed a loop, that verified that the cursor position always points inside a line and does not become invalid by pointing beyond the end of\na line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at\nthe specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45308",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/hedgedoc/hedgedoc/security/advisories/GHSA-pjf2-269h-cx7p",
+            "https://github.com/hedgedoc/hedgedoc/commit/380587b7fd65bc1eb71eef51a3aab324f9877650"
+        ],
+        "summary": "HedgeDoc is an open source, real-time, collaborative, markdown notes application. When using HedgeDoc 1 with MySQL or MariaDB, it is possible to create notes with an alias matching the ID of existing notes. The affected existing note can then not be accessed anymore and is effectively hidden by the new one. When the freeURL feature is enabled (by setting the `allowFreeURL` config option or the `CMD_ALLOW_FREEURL` environment variable to `true`), any user with the appropriate permissions can create a note with an arbitrary alias, e.g. by accessing it in the browser. When MySQL or MariaDB are used, it is possible to create a new note with an alias that matches the lower-cased ID of a different note. HedgeDoc then always presents the new note to users, as these databases perform case-insensitive matching and the lower-cased alias is found first. This issue only affects HedgeDoc instances that use MySQL or MariaDB. Depending on the permission settings of the HedgeDoc instance, the issue can be exploited only by logged-in users or by all (including non-logged-in) users. The exploit requires knowledge of the ID of the target note. Attackers could use this issue to present a manipulated copy of the original note to the user, e.g. by replacing the links with malicious ones. Attackers can also use this issue to prevent access to the original note, causing a denial of service. No data is lost, as the original content of the affected notes is still present in the database. Users are advised to upgrade to version 1.10.0 which addresses this issue. Users unable to upgrade may disable freeURL mode which prevents the exploitation of this issue. The impact can also be limited by restricting freeURL note creation to trusted, logged-in users by enabling `requireFreeURLAuthentication`/`CMD_REQUIRE_FREEURL_AUTHENTICATION`."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45311",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/quinn-rs/quinn/security/advisories/GHSA-vr26-jcq5-fjj8",
+            "https://github.com/quinn-rs/quinn/commit/e01609ccd8738bd438d86fa7185a0f85598cb58f",
+            "https://github.com/quinn-rs/quinn/blob/bb02a12a8435a7732a1d762783eeacbb7e50418e/quinn-proto/src/endpoint.rs#L213"
+        ],
+        "summary": "Quinn is a pure-Rust, async-compatible implementation of the IETF QUIC transport protocol. As of quinn-proto 0.11, it is possible for a server to `accept()`, `retry()`, `refuse()`, or `ignore()` an `Incoming` connection. However, calling `retry()` on an unvalidated connection exposes the server to a likely panic in the following situations:  1. Calling `refuse` or `ignore` on the resulting validated connection, if a duplicate initial packet is received. This issue can go undetected until a server's `refuse()`/`ignore()` code path is exercised, such as to stop a denial of service attack. 2. Accepting when the initial packet for the resulting validated connection fails to decrypt or exhausts connection IDs, if a similar initial packet that successfully decrypts and doesn't exhaust connection IDs is received. This issue can go undetected if clients are well-behaved. The former situation was observed in a real application, while the latter is only theoretical."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45312",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/overleaf/overleaf/security/advisories/GHSA-pxm4-p454-vppg",
+            "https://github.com/overleaf/overleaf/commit/b5e5d39c3ad4e7763d42b837738955f8ded4dcd3",
+            "https://github.com/overleaf/toolkit"
+        ],
+        "summary": "Overleaf is a web-based collaborative LaTeX editor. Overleaf Community Edition and Server Pro prior to version 5.0.7 (or 4.2.7 for the 4.x series) contain a vulnerability that allows an arbitrary language parameter in client spelling requests to be passed to the `aspell` executable running on the server.  This causes `aspell` to attempt to load  a dictionary file with an arbitrary filename. File access is limited to the scope of the overleaf server. The problem is patched in versions 5.0.7 and 4.2.7.  Previous versions can be upgraded using the Overleaf toolkit `bin/upgrade` command. Users unable to upgrade may block POST requests to `/spelling/check` via a Web Application Firewall will prevent access to the vulnerable spell check feature.  However, upgrading is advised."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45313",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/overleaf/overleaf/security/advisories/GHSA-m95q-g8qg-wgj4",
+            "https://github.com/overleaf/toolkit/commit/7a8401897b24777b47338452ff8d12e2fb6dd5ff",
+            "https://github.com/overleaf/overleaf/wiki/Server-Pro:-Sandboxed-Compiles",
+            "https://github.com/overleaf/toolkit/blob/master/doc/sandboxed-compiles.md#enabling-sibling-containers"
+        ],
+        "summary": "Overleaf is a web-based collaborative LaTeX editor. When installing Server Pro using the Overleaf Toolkit from before 2024-07-17 or legacy docker-compose.yml from before 2024-08-28, the configuration for LaTeX compiles was insecure by default, requiring the administrator to enable the security features via a configuration setting (`SIBLING_CONTAINERS_ENABLED` in Toolkit, `SANDBOXED_COMPILES` in legacy docker-compose/custom deployments). If these security features are not enabled then users have access to the `sharelatex` container resources (filesystem, network, environment variables) when running compiles, leading to multiple file access vulnerabilities, either directly or via symlinks created during compiles. The setting has now been changed to be secure by default for new installs in the Toolkit and legacy docker-compose deployment. The Overleaf Toolkit has been updated to set `SIBLING_CONTAINERS_ENABLED=true` by default for new installs. It is recommended that any existing installations using the previous default setting migrate to using sibling containers. Existing installations can set `SIBLING_CONTAINERS_ENABLED=true` in `config/overleaf.rc` as a mitigation. In legacy docker-compose/custom deployments `SANDBOXED_COMPILES=true` should be used."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45388",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/SpectoLabs/hoverfly/security/advisories/GHSA-6xx4-x46f-f897",
+            "https://codeql.github.com/codeql-query-help/go/go-path-injection",
+            "https://github.com/SpectoLabs/hoverfly/releases/tag/v1.10.3",
+            "https://github.com/spectolabs/hoverfly/blob/15d6ee9ea4e0de67aec5a41c28d21dc147243da0/core/handlers/v2/simulation_handler.go#L87"
+        ],
+        "summary": "Hoverfly is a lightweight service virtualization/ API simulation / API mocking tool for developers and testers. The `/api/v2/simulation` POST handler allows users to create new simulation views from the contents of a user-specified file. This feature can be abused by an attacker to read arbitrary files from the Hoverfly server. Note that, although the code prevents absolute paths from being specified, an attacker can escape out of the `hf.Cfg.ResponsesBodyFilesPath` base path by using `../` segments and reach any arbitrary files. This issue was found using the Uncontrolled data used in path expression CodeQL query for python. Users are advised to make sure the final path (`filepath.Join(hf.Cfg.ResponsesBodyFilesPath, filePath)`) is contained within the expected base path (`filepath.Join(hf.Cfg.ResponsesBodyFilesPath, \"/\")`). This issue is also tracked as GHSL-2023-274."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-6919",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1376"
+        ],
+        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in NAC Telecommunication Systems Inc. NACPremium allows Blind SQL Injection.This issue affects NACPremium: through 01082024."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-6920",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1376"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in NAC Telecommunication Systems Inc. NACPremium allows Stored XSS.This issue affects NACPremium: through 01082024."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6921",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1376"
+        ],
+        "summary": "Cleartext Storage of Sensitive Information vulnerability in NAC Telecommunication Systems Inc. NACPremium allows Retrieve Embedded Sensitive Data.This issue affects NACPremium: through 01082024."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-1333",
+        "id": "CVE-2020-36830",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://vuldb.com/?id.276269",
+            "https://vuldb.com/?ctiid.276269",
+            "https://github.com/nescalante/urlregex/pull/8",
+            "https://github.com/nescalante/urlregex/commit/e5a085afe6abfaea1d1a78f54c45af9ef43ca1f9",
+            "https://github.com/nescalante/urlregex/releases/tag/v0.5.1"
+        ],
+        "summary": "A vulnerability was found in nescalante urlregex up to 0.5.0 and classified as problematic. This issue affects some unknown processing of the file index.js of the component Backtracking. The manipulation leads to inefficient regular expression complexity. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. Upgrading to version 0.5.1 is able to address this issue. The identifier of the patch is e5a085afe6abfaea1d1a78f54c45af9ef43ca1f9. It is recommended to upgrade the affected component."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-1333",
+        "id": "CVE-2023-7279",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://vuldb.com/?id.276268",
+            "https://vuldb.com/?ctiid.276268",
+            "https://github.com/sse-secure-systems/connaisseur/pull/1407",
+            "https://github.com/sse-secure-systems/connaisseur/commit/524b73ff7306707f6d3a4d1e86401479bca91b02",
+            "https://github.com/sse-secure-systems/connaisseur/releases/tag/v3.3.1"
+        ],
+        "summary": "A vulnerability has been found in Secure Systems Engineering Connaisseur up to 3.3.0 and classified as problematic. This vulnerability affects unknown code of the file connaisseur/res/targets_schema.json of the component Delegation Name Handler. The manipulation leads to inefficient regular expression complexity. The complexity of an attack is rather high. The exploitation appears to be difficult. Upgrading to version 3.3.1 is able to address this issue. The name of the patch is 524b73ff7306707f6d3a4d1e86401479bca91b02. It is recommended to upgrade the affected component."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-28100",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/elabftw/elabftw/security/advisories/GHSA-xp3v-w8cx-cqxc"
+        ],
+        "summary": "eLabFTW is an open source electronic lab notebook for research labs. By uploading specially crafted files, a regular user can create a circumstance where a visitor's browser runs arbitrary JavaScript code in the context of the eLabFTW application. This can be triggered by the visitor viewing a list of experiments. Viewing this allows the malicious script to act on behalf of the visitor in any way, including the creation of API keys for persistence, or other options normally available to the user. If the user viewing the page has the sysadmin role in eLabFTW, the script can act as a sysadmin (including system configuration and extensive user management roles). Users are advised to upgrade to at least version 5.0.0. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-42471",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/actions/toolkit/security/advisories/GHSA-6q32-hq47-5qq3",
+            "https://github.com/actions/toolkit/pull/1724",
+            "https://snyk.io/research/zip-slip-vulnerability"
+        ],
+        "summary": "actions/artifact is the GitHub ToolKit for developing GitHub Actions.  Versions of `actions/artifact` before 2.1.7 are vulnerable to arbitrary file write when using `downloadArtifactInternal`, `downloadArtifactPublic`, or `streamExtractExternal` for extracting a specifically crafted artifact that contains path traversal filenames. Users are advised to upgrade to version 2.1.7 or higher. There are no known workarounds for this issue."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43792",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/halo-dev/halo/security/advisories/GHSA-x3rj-3x75-vw4g"
+        ],
+        "summary": "Halo is an open source website building tool. A security vulnerability has been identified in versions prior to 2.17.0 of the Halo project. This vulnerability allows an attacker to execute malicious scripts in the user's browser through specific HTML and JavaScript code, potentially leading to a Cross-Site Scripting (XSS) attack. Users are advised to upgrade to version 2.17.0+. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43797",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-gg56-vj58-g5mc",
+            "https://github.com/advplyr/audiobookshelf-ghsa-gg56-vj58-g5mc/pull/1",
+            "https://github.com/advplyr/audiobookshelf/blob/1c0d6e9c670ebb1b6f1e427a4c4d9250a7fb9b80/server/controllers/LibraryController.js#L43-L47"
+        ],
+        "summary": "audiobookshelf is a self-hosted audiobook and podcast server. A non-admin user is not allowed to create libraries (or access only the ones they have permission to). However, the `LibraryController` is missing the check for admin user and thus allows a path traversal issue. Allowing non-admin users to write to any directory in the system can be seen as a form of path traversal. However, since it can be restricted to only admin permissions, fixing this is relatively simple and falls more into the realm of Role-Based Access Control (RBAC). This issue has been addressed in release version 2.13.0. All users are advised to upgrade. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43801",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://github.com/jellyfin/jellyfin/security/advisories/GHSA-vcmh-9wx9-rfqh",
+            "https://github.com/jellyfin/jellyfin/pull/12490"
+        ],
+        "summary": "Jellyfin is an open source self hosted media server. The Jellyfin user profile image upload accepts SVG files, allowing for a stored XSS attack against an admin user via a specially crafted malicious SVG file. When viewed by an admin outside of the Jellyfin Web UI (e.g. via \"view image\" in a browser), this malicious SVG file could interact with the browser's LocalStorage and retrieve an AccessToken, which in turn can be used in an API call to elevate the target user to a Jellyfin administrator. The actual attack vector is unlikely to be exploited, as it requires specific actions by the administrator to view the SVG image outside of Jellyfin's WebUI, i.e. it is not a passive attack. The underlying exploit mechanism is solved by PR #12490, which forces attached images (including the potential malicious SVG) to be treated as attachments and thus downloaded by browsers, rather than viewed. This prevents exploitation of the LocalStorage of the browser. This PR has been merged and the relevant code changes are included in release version 10.9.10. All users are advised to upgrade."
+    },
+    {
+        "Modified": "2024-09-02T18:15:00",
+        "Published": "2024-09-02T18:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44947",
+        "impact": {},
+        "last-modified": "2024-09-02T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/831433527773e665bdb635ab5783d0b95d1246f4",
+            "https://git.kernel.org/stable/c/ac42e0f0eb66af966015ee33fd355bc6f5d80cd6",
+            "https://git.kernel.org/stable/c/18a067240817bee8a9360539af5d79a4bf5398a5",
+            "https://git.kernel.org/stable/c/3c0da3d163eb32f1f91891efaade027fa9b245b9"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nfuse: Initialize beyond-EOF page contents before setting uptodate\n\nfuse_notify_store(), unlike fuse_do_readpage(), does not enable page\nzeroing (because it can be used to change partial page contents).\n\nSo fuse_notify_store() must be more careful to fully initialize page\ncontents (including parts of the page that are beyond end-of-file)\nbefore marking the page uptodate.\n\nThe current code can leave beyond-EOF page contents uninitialized, which\nmakes these uninitialized page contents visible to userspace via mmap().\n\nThis is an information leak, but only affects systems which do not\nenable init-on-alloc (via CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y or the\ncorresponding kernel command line parameter)."
+    },
+    {
         "Modified": "2024-09-02T12:15:00",
         "Published": "2024-09-02T12:15:00",
         "access": {},
@@ -1245,327 +1578,5 @@
             "https://www.dell.com/support/kbdoc/en-us/000228207/dsa-2024-346-security-update-for-dell-powerscale-onefs-for-multiple-security-vulnerabilities"
         ],
         "summary": "Dell PowerScale OneFS versions 8.2.2.x through 9.8.0.0 contains an incorrect privilege assignment vulnerability. A local high privileged attacker could potentially exploit this vulnerability to gain root-level access."
-    },
-    {
-        "Modified": "2024-08-31T08:15:00",
-        "Published": "2024-08-31T08:15:00",
-        "access": {},
-        "assigner": "secure@dell.com",
-        "cvss": null,
-        "cwe": "CWE-61",
-        "id": "CVE-2024-39578",
-        "impact": {},
-        "last-modified": "2024-08-31T08:15:00",
-        "references": [
-            "https://www.dell.com/support/kbdoc/en-us/000228207/dsa-2024-346-security-update-for-dell-powerscale-onefs-for-multiple-security-vulnerabilities"
-        ],
-        "summary": "Dell PowerScale OneFS versions 8.2.2.x through 9.8.0.1 contains a UNIX symbolic link (symlink) following vulnerability. A local high privileged attacker could potentially exploit this vulnerability, leading to denial of service, information tampering."
-    },
-    {
-        "Modified": "2024-08-31T08:15:00",
-        "Published": "2024-08-31T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-8276",
-        "impact": {},
-        "last-modified": "2024-08-31T08:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2e7d5503-0a6e-4611-bb7c-b2871be828be?source=cve",
-            "https://plugins.trac.wordpress.org/browser/wpzoom-portfolio/trunk/build/blocks/portfolio-layouts/index.php#L63",
-            "https://wordpress.org/plugins/wpzoom-portfolio/#developers",
-            "https://plugins.trac.wordpress.org/changeset/3144394"
-        ],
-        "summary": "The WPZOOM Portfolio Lite \u2013 Filterable Portfolio Plugin plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the \u2018align\u2019 attribute within the 'wp:wpzoom-blocks' Gutenberg block in all versions up to, and including, 1.4.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-08-31T07:15:00",
-        "Published": "2024-08-31T07:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44945",
-        "impact": {},
-        "last-modified": "2024-08-31T07:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/3e03b536d9454c5802168b9e85248d456d3ff6a3",
-            "https://git.kernel.org/stable/c/d1a7b382a9d3f0f3e5a80e0be2991c075fa4f618"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nfnetlink: Initialise extack before use in ACKs\n\nAdd missing extack initialisation when ACKing BATCH_BEGIN and BATCH_END."
-    },
-    {
-        "Modified": "2024-08-31T06:15:00",
-        "Published": "2024-08-22T04:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2022-48936",
-        "impact": {},
-        "last-modified": "2024-08-31T06:15:00",
-        "references": [],
-        "summary": "Rejected reason: This CVE ID has been rejected or withdrawn by its CVE Numbering Authority."
-    },
-    {
-        "Modified": "2024-08-31T05:15:00",
-        "Published": "2024-08-31T05:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-3886",
-        "impact": {},
-        "last-modified": "2024-08-31T05:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ed9db9c1-c6b5-459e-9820-ec4ee47b244e?source=cve",
-            "https://tagdiv.com/newspaper/"
-        ],
-        "summary": "The tagDiv Composer plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via the \u2018envato_code[]\u2019 parameter in all versions up to, and including, 5.0 due to insufficient input sanitization and output escaping within the on_ajax_check_envato_code function. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2024-08-31T05:15:00",
-        "Published": "2024-08-31T05:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-5212",
-        "impact": {},
-        "last-modified": "2024-08-31T05:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/db95415a-5354-498b-8368-58c47d9948de?source=cve",
-            "https://tagdiv.com/newspaper/"
-        ],
-        "summary": "The tagDiv Composer plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via the \u2018envato_code[]\u2019 parameter in all versions up to, and including, 5.0 due to insufficient input sanitization and output escaping within the on_ajax_register_forum_user function. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2024-08-31T03:40:00",
-        "Published": "2024-08-14T14:15:00",
-        "access": {},
-        "assigner": "secure@intel.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-25562",
-        "impact": {},
-        "last-modified": "2024-08-31T03:40:00",
-        "references": [
-            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01075.html"
-        ],
-        "summary": "Improper buffer restrictions in some Intel(R) Distribution for GDB software before version 2024.0.1 may allow an authenticated user to potentially enable denial of service via local access."
-    },
-    {
-        "Modified": "2024-08-31T03:39:00",
-        "Published": "2024-08-14T14:15:00",
-        "access": {},
-        "assigner": "secure@intel.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-24973",
-        "impact": {},
-        "last-modified": "2024-08-31T03:39:00",
-        "references": [
-            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01075.html"
-        ],
-        "summary": "Improper input validation for some Intel(R) Distribution for GDB software before version 2024.0.1 may allow an authenticated user to potentially enable denial of service via local access."
-    },
-    {
-        "Modified": "2024-08-31T03:38:00",
-        "Published": "2024-08-14T14:15:00",
-        "access": {},
-        "assigner": "secure@intel.com",
-        "cvss": null,
-        "cwe": "CWE-276",
-        "id": "CVE-2024-23495",
-        "impact": {},
-        "last-modified": "2024-08-31T03:38:00",
-        "references": [
-            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01075.html"
-        ],
-        "summary": "Incorrect default permissions in some Intel(R) Distribution for GDB software before version 2024.0.1 may allow an authenticated user to potentially enable escalation of privilege via local access."
-    },
-    {
-        "Modified": "2024-08-31T03:37:00",
-        "Published": "2024-08-14T14:15:00",
-        "access": {},
-        "assigner": "secure@intel.com",
-        "cvss": null,
-        "cwe": "CWE-427",
-        "id": "CVE-2024-23491",
-        "impact": {},
-        "last-modified": "2024-08-31T03:37:00",
-        "references": [
-            "https://www.intel.com/content/www/us/en/security-center/advisory/intel-sa-01075.html"
-        ],
-        "summary": "Uncontrolled search path in some Intel(R) Distribution for GDB software before version 2024.0.1 may allow an authenticated user to potentially enable escalation of privilege via local access."
-    },
-    {
-        "Modified": "2024-08-31T03:28:00",
-        "Published": "2024-08-21T06:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-7651",
-        "impact": {},
-        "last-modified": "2024-08-31T03:28:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/b43371a6-bcb5-4418-b5a5-85879775010c?source=cve",
-            "https://plugins.trac.wordpress.org/browser/app-builder/trunk/includes/pure.php#L18"
-        ],
-        "summary": "The App Builder \u2013 Create Native Android & iOS Apps On The Flight plugin for WordPress is vulnerable to limited SQL Injection via the \u2018app-builder-search\u2019 parameter in all versions up to, and including, 4.2.6 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for unauthenticated attackers to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
-    },
-    {
-        "Modified": "2024-08-31T03:15:00",
-        "Published": "2024-08-31T03:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2024-7435",
-        "impact": {},
-        "last-modified": "2024-08-31T03:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/f21cbe18-77e1-4a9a-96a0-74edaef0db3e?source=cve",
-            "https://themes.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=240321%40attire%2F2.0.7&old=231937%40attire%2F2.0.6"
-        ],
-        "summary": "The Attire theme for WordPress is vulnerable to PHP Object Injection in all versions up to, and including, 2.0.6 via deserialization of untrusted input. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject a PHP Object. No known POP chain is present in the vulnerable software. If a POP chain is present via an additional plugin or theme installed on the target system, it could allow the attacker to delete arbitrary files, retrieve sensitive data, or execute code."
-    },
-    {
-        "Modified": "2024-08-31T03:02:00",
-        "Published": "2024-08-21T06:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-7032",
-        "impact": {},
-        "last-modified": "2024-08-31T03:02:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/9a6b05b1-c649-4b72-b884-11fb83ec77f2?source=cve",
-            "https://plugins.trac.wordpress.org/browser/clover-online-orders/trunk/moo_OnlineOrders.php#L183",
-            "https://plugins.trac.wordpress.org/browser/clover-online-orders/trunk/includes/moo-OnlineOrders-deactivator.php#L29"
-        ],
-        "summary": "The Smart Online Order for Clover plugin for WordPress is vulnerable to unauthorized loss of data due to a missing capability check on the 'moo_deactivateAndClean' function in all versions up to, and including, 1.5.6. This makes it possible for unauthenticated attackers to deactivate the plugin and drop all plugin tables from the database."
-    },
-    {
-        "Modified": "2024-08-31T03:00:00",
-        "Published": "2024-08-21T06:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-7030",
-        "impact": {},
-        "last-modified": "2024-08-31T03:00:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/8664fec3-4e11-4775-a5ca-b4f58931da76?source=cve",
-            "https://plugins.trac.wordpress.org/browser/clover-online-orders/trunk/admin/js/moo-OnlineOrders-admin.js",
-            "https://plugins.trac.wordpress.org/browser/clover-online-orders/trunk/public/moo-OnlineOrders-public.php"
-        ],
-        "summary": "The Smart Online Order for Clover plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on several functions in all versions up to, and including, 1.5.6. This makes it possible for authenticated attackers, with Subscriber-level access and above, to update product and category descriptions, category titles and images, and sort order."
-    },
-    {
-        "Modified": "2024-08-31T02:58:00",
-        "Published": "2024-08-21T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-42939",
-        "impact": {},
-        "last-modified": "2024-08-31T02:58:00",
-        "references": [
-            "https://github.com/tcyba/open_vul/blob/main/yzncms%20has%20a%20storage%20xss%20vulnerability.pdf"
-        ],
-        "summary": "A cross-site scripting (XSS) vulnerability in the component /index/index.html of YZNCMS v1.4.2 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the configured remarks text field."
-    },
-    {
-        "Modified": "2024-08-31T02:15:00",
-        "Published": "2024-08-31T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-1392",
-        "id": "CVE-2024-39747",
-        "impact": {},
-        "last-modified": "2024-08-31T02:15:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7166947",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/297314"
-        ],
-        "summary": "IBM Sterling Connect:Direct Web Services 6.0, 6.1, 6.2, and 6.3 uses default credentials for potentially critical functionality."
-    },
-    {
-        "Modified": "2024-08-31T00:15:00",
-        "Published": "2024-08-31T00:15:00",
-        "access": {},
-        "assigner": "security@tcpdump.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-7256",
-        "impact": {},
-        "last-modified": "2024-08-31T00:15:00",
-        "references": [
-            "https://github.com/the-tcpdump-group/libpcap/commit/262e4f34979872d822ccedf9f318ed89c4d31c03",
-            "https://github.com/the-tcpdump-group/libpcap/commit/2aa69b04d8173b18a0e3492e0c8f2f7fabdf642d"
-        ],
-        "summary": "In affected libpcap versions during the setup of a remote packet capture the internal function sock_initaddress() calls getaddrinfo() and possibly freeaddrinfo(), but does not clearly indicate to the caller function whether freeaddrinfo() still remains to be called after the function returns.  This makes it possible in some scenarios that both the function and its caller call freeaddrinfo() for the same allocated memory block.  A similar problem was reported in Apple libpcap, to which Apple assigned CVE-2023-40400."
-    },
-    {
-        "Modified": "2024-08-31T00:15:00",
-        "Published": "2024-08-31T00:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45304",
-        "impact": {},
-        "last-modified": "2024-08-31T00:15:00",
-        "references": [
-            "https://github.com/OpenZeppelin/cairo-contracts/security/advisories/GHSA-w2px-25pm-2cf9",
-            "https://github.com/OpenZeppelin/cairo-contracts/commit/ef87d7847980e0cf83f4b7f3ff23e6590fb643ec",
-            "https://github.com/OpenZeppelin/cairo-contracts/releases/tag/v0.16.0"
-        ],
-        "summary": "Cairo-Contracts are OpenZeppelin Contracts written in Cairo for Starknet, a decentralized ZK Rollup. This vulnerability can lead to unauthorized ownership transfer, contrary to the original owner's intention of leaving the contract without an owner. It introduces a security risk where an unintended party (pending owner) can gain control of the contract after the original owner has renounced ownership. This could also be used by a malicious owner to simulate leaving a contract without an owner, to later regain ownership by previously having proposed himself as a pending owner. This issue has been addressed in release version 0.16.0. All users are advised to upgrade. There are no known workarounds for this vulnerability."
-    },
-    {
-        "Modified": "2024-08-31T00:15:00",
-        "Published": "2024-08-31T00:15:00",
-        "access": {},
-        "assigner": "security@tcpdump.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-8006",
-        "impact": {},
-        "last-modified": "2024-08-31T00:15:00",
-        "references": [
-            "https://github.com/the-tcpdump-group/libpcap/commit/0f8a103469ce87d2b8d68c5130a46ddb7fb5eb29",
-            "https://github.com/the-tcpdump-group/libpcap/commit/8a633ee5b9ecd9d38a587ac9b204e2380713b0d6"
-        ],
-        "summary": "Remote packet capture support is disabled by default in libpcap.  When a user builds libpcap with remote packet capture support enabled, one of the functions that become available is pcap_findalldevs_ex().  One of the function arguments can be a filesystem path, which normally means a directory with input data files.  When the specified path cannot be used as a directory, the function receives NULL from opendir(), but does not check the return value and passes the NULL value to readdir(), which causes a NULL pointer derefence."
-    },
-    {
-        "Modified": "2024-08-30T23:15:00",
-        "Published": "2024-08-30T23:15:00",
-        "access": {},
-        "assigner": "mandiant-cve@google.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6585",
-        "impact": {},
-        "last-modified": "2024-08-30T23:15:00",
-        "references": [
-            "https://github.com/google/security-research/security/advisories/GHSA-6529-6jv3-66q2",
-            "https://www.cve.org/CVERecord?id=CVE-2024-6585",
-            "https://github.com/lightdash/lightdash",
-            "https://github.com/lightdash/lightdash/releases/tag/0.1042.2",
-            "https://patch-diff.githubusercontent.com/raw/lightdash/lightdash/pull/9510.patch",
-            "https://patch-diff.githubusercontent.com/raw/lightdash/lightdash/pull/9359.patch",
-            "https://github.com/lightdash/lightdash/pull/9510",
-            "https://github.com/lightdash/lightdash/pull/9359"
-        ],
-        "summary": "Multiple stored cross-site scripting (\u201cXSS\u201d) vulnerabilities in the markdown dashboard and dashboard comment functionality of Lightdash version 0.1024.6 allows remote authenticated threat actors to inject malicious scripts into vulnerable web pages. A threat actor could potentially exploit this vulnerability to store malicious JavaScript which executes in the context of a user\u2019s session with the application."
     }
 ]
