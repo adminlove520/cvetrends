@@ -1,5 +1,503 @@
 [
     {
+        "Modified": "2024-09-03T17:59:00",
+        "Published": "2024-06-25T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-38385",
+        "impact": {},
+        "last-modified": "2024-09-03T17:59:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1c7891812d85500ae2ca4051fa5683fcf29930d8",
+            "https://git.kernel.org/stable/c/d084aa022f84319f8079e30882cbcbc026af9f21",
+            "https://git.kernel.org/stable/c/b84a8aba806261d2f759ccedf4a2a6a80a5e55ba"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngenirq/irqdesc: Prevent use-after-free in irq_find_at_or_after()\n\nirq_find_at_or_after() dereferences the interrupt descriptor which is\nreturned by mt_find() while neither holding sparse_irq_lock nor RCU read\nlock, which means the descriptor can be freed between mt_find() and the\ndereference:\n\n    CPU0                            CPU1\n    desc = mt_find()\n                                    delayed_free_desc(desc)\n    irq_desc_get_irq(desc)\n\nThe use-after-free is reported by KASAN:\n\n    Call trace:\n     irq_get_next_irq+0x58/0x84\n     show_stat+0x638/0x824\n     seq_read_iter+0x158/0x4ec\n     proc_reg_read_iter+0x94/0x12c\n     vfs_read+0x1e0/0x2c8\n\n    Freed by task 4471:\n     slab_free_freelist_hook+0x174/0x1e0\n     __kmem_cache_free+0xa4/0x1dc\n     kfree+0x64/0x128\n     irq_kobj_release+0x28/0x3c\n     kobject_put+0xcc/0x1e0\n     delayed_free_desc+0x14/0x2c\n     rcu_do_batch+0x214/0x720\n\nGuard the access with a RCU read lock section."
+    },
+    {
+        "Modified": "2024-09-03T17:51:00",
+        "Published": "2024-06-25T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2022-48772",
+        "impact": {},
+        "last-modified": "2024-09-03T17:51:00",
+        "references": [
+            "https://git.kernel.org/stable/c/8915dcd29a82096acacf54364a8425363782aea0",
+            "https://git.kernel.org/stable/c/b479fd59a1f4a342b69fce34f222d93bf791dca4",
+            "https://git.kernel.org/stable/c/526238d32c3acc3d597fd8c9a34652bfe9086cea",
+            "https://git.kernel.org/stable/c/d082757b8359201c3864323cea4b91ea30a1e676",
+            "https://git.kernel.org/stable/c/7d12e918f2994c883f41f22552a61b9310fa1e87",
+            "https://git.kernel.org/stable/c/8e1e00718d0d9dd83337300572561e30b9c0d115",
+            "https://git.kernel.org/stable/c/c1115ddbda9c930fba0fdd062e7a8873ebaf898d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: lgdt3306a: Add a check against null-pointer-def\n\nThe driver should check whether the client provides the platform_data.\n\nThe following log reveals it:\n\n[   29.610324] BUG: KASAN: null-ptr-deref in kmemdup+0x30/0x40\n[   29.610730] Read of size 40 at addr 0000000000000000 by task bash/414\n[   29.612820] Call Trace:\n[   29.613030]  <TASK>\n[   29.613201]  dump_stack_lvl+0x56/0x6f\n[   29.613496]  ? kmemdup+0x30/0x40\n[   29.613754]  print_report.cold+0x494/0x6b7\n[   29.614082]  ? kmemdup+0x30/0x40\n[   29.614340]  kasan_report+0x8a/0x190\n[   29.614628]  ? kmemdup+0x30/0x40\n[   29.614888]  kasan_check_range+0x14d/0x1d0\n[   29.615213]  memcpy+0x20/0x60\n[   29.615454]  kmemdup+0x30/0x40\n[   29.615700]  lgdt3306a_probe+0x52/0x310\n[   29.616339]  i2c_device_probe+0x951/0xa90"
+    },
+    {
+        "Modified": "2024-09-03T17:49:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43822",
+        "impact": {},
+        "last-modified": "2024-09-03T17:49:00",
+        "references": [
+            "https://git.kernel.org/stable/c/fa6f16eff7320c91e908309e31be34cbbe4b7e58",
+            "https://git.kernel.org/stable/c/3722873d49a1788d5420894d4f6f63e35f5c1f13"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nASoc: PCM6240: Return directly after a failed devm_kzalloc() in pcmdevice_i2c_probe()\n\nThe value \u201c-ENOMEM\u201d was assigned to the local variable \u201cret\u201d\nin one if branch after a devm_kzalloc() call failed at the beginning.\nThis error code will trigger then a pcmdevice_remove() call with a passed\nnull pointer so that an undesirable dereference will be performed.\nThus return the appropriate error code directly."
+    },
+    {
+        "Modified": "2024-09-03T17:49:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43823",
+        "impact": {},
+        "last-modified": "2024-09-03T17:49:00",
+        "references": [
+            "https://git.kernel.org/stable/c/bbba48ad67c53feea05936ea1e029dcca8057506",
+            "https://git.kernel.org/stable/c/0a6f1b5fe8ef8268aaa069035639968ceeea0a23",
+            "https://git.kernel.org/stable/c/dbcdd1863ba2ec9b76ec131df25d797709e05597",
+            "https://git.kernel.org/stable/c/a231707a91f323af1e5d9f1722055ec2fc1c7775"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: keystone: Fix NULL pointer dereference in case of DT error in ks_pcie_setup_rc_app_regs()\n\nIf IORESOURCE_MEM is not provided in Device Tree due to\nany error, resource_list_first_type() will return NULL and\npci_parse_request_of_pci_ranges() will just emit a warning.\n\nThis will cause a NULL pointer dereference. Fix this bug by adding NULL\nreturn check.\n\nFound by Linux Verification Center (linuxtesting.org) with SVACE."
+    },
+    {
+        "Modified": "2024-09-03T17:49:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43821",
+        "impact": {},
+        "last-modified": "2024-09-03T17:49:00",
+        "references": [
+            "https://git.kernel.org/stable/c/57600a7dd2b52c904f7c8d2cac0fd8c23868e680",
+            "https://git.kernel.org/stable/c/45b2a23e00d448a9e6d1f371ca3a4d4b073fe78c",
+            "https://git.kernel.org/stable/c/5e0bf3e8aec2cbc51123f84b29aaacbd91fc56fa"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: lpfc: Fix a possible null pointer dereference\n\nIn function lpfc_xcvr_data_show, the memory allocation with kmalloc might\nfail, thereby making rdp_context a null pointer. In the following context\nand functions that use this pointer, there are dereferencing operations,\nleading to null pointer dereference.\n\nTo fix this issue, a null pointer check should be added. If it is null,\nuse scnprintf to notify the user and return len."
+    },
+    {
+        "Modified": "2024-09-03T17:48:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43824",
+        "impact": {},
+        "last-modified": "2024-09-03T17:48:00",
+        "references": [
+            "https://git.kernel.org/stable/c/af4ad016abb1632ff7ee598a6037952b495e5b80",
+            "https://git.kernel.org/stable/c/5a5095a8bd1bd349cce1c879e5e44407a34dda8a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI: endpoint: pci-epf-test: Make use of cached 'epc_features' in pci_epf_test_core_init()\n\nInstead of getting the epc_features from pci_epc_get_features() API, use\nthe cached pci_epf_test::epc_features value to avoid the NULL check. Since\nthe NULL check is already performed in pci_epf_test_bind(), having one more\ncheck in pci_epf_test_core_init() is redundant and it is not possible to\nhit the NULL pointer dereference.\n\nAlso with commit a01e7214bef9 (\"PCI: endpoint: Remove \"core_init_notifier\"\nflag\"), 'epc_features' got dereferenced without the NULL check, leading to\nthe following false positive Smatch warning:\n\n  drivers/pci/endpoint/functions/pci-epf-test.c:784 pci_epf_test_core_init() error: we previously assumed 'epc_features' could be null (see line 747)\n\nThus, remove the redundant NULL check and also use the epc_features::\n{msix_capable/msi_capable} flags directly to avoid local variables.\n\n[kwilczynski: commit log]"
+    },
+    {
+        "Modified": "2024-09-03T17:47:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43819",
+        "impact": {},
+        "last-modified": "2024-09-03T17:47:00",
+        "references": [
+            "https://git.kernel.org/stable/c/49c9945c054df4c22008e2bf87ca74d3e2507aa6",
+            "https://git.kernel.org/stable/c/7816e58967d0e6cadce05c8540b47ed027dc2499"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nkvm: s390: Reject memory region operations for ucontrol VMs\n\nThis change rejects the KVM_SET_USER_MEMORY_REGION and\nKVM_SET_USER_MEMORY_REGION2 ioctls when called on a ucontrol VM.\nThis is necessary since ucontrol VMs have kvm->arch.gmap set to 0 and\nwould thus result in a null pointer dereference further in.\nMemory management needs to be performed in userspace and using the\nioctls KVM_S390_UCAS_MAP and KVM_S390_UCAS_UNMAP.\n\nAlso improve s390 specific documentation for KVM_SET_USER_MEMORY_REGION\nand KVM_SET_USER_MEMORY_REGION2.\n\n[frankja@linux.ibm.com: commit message spelling fix, subject prefix fix]"
+    },
+    {
+        "Modified": "2024-09-03T17:45:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43818",
+        "impact": {},
+        "last-modified": "2024-09-03T17:45:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1ba9856cf7f6492b47c1edf853137f320d583db5",
+            "https://git.kernel.org/stable/c/99b642dac24f6d09ba3ebf1d690be8aefff86164",
+            "https://git.kernel.org/stable/c/b1173d64edd276c957b6d09e1f971c85b38f1519",
+            "https://git.kernel.org/stable/c/5080808c3339de2220c602ab7c7fa23dc6c1a5a3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nASoC: amd: Adjust error handling in case of absent codec device\n\nacpi_get_first_physical_node() can return NULL in several cases (no such\ndevice, ACPI table error, reference count drop to 0, etc).\nExisting check just emit error message, but doesn't perform return.\nThen this NULL pointer is passed to devm_acpi_dev_add_driver_gpios()\nwhere it is dereferenced.\n\nAdjust this error handling by adding error code return.\n\nFound by Linux Verification Center (linuxtesting.org) with SVACE."
+    },
+    {
+        "Modified": "2024-09-03T17:41:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-43817",
+        "impact": {},
+        "last-modified": "2024-09-03T17:41:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5b1997487a3f3373b0f580c8a20b56c1b64b0775",
+            "https://git.kernel.org/stable/c/90d41ebe0cd4635f6410471efc1dd71b33e894cf",
+            "https://git.kernel.org/stable/c/e9164903b8b303c34723177b02fe91e49e3c4cd7",
+            "https://git.kernel.org/stable/c/e269d79c7d35aa3808b1f3c1737d63dab504ddc8",
+            "https://git.kernel.org/stable/c/27874ca77bd2b05a3779c7b3a5c75d8dd7f0b40f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: missing check virtio\n\nTwo missing check in virtio_net_hdr_to_skb() allowed syzbot\nto crash kernels again\n\n1. After the skb_segment function the buffer may become non-linear\n(nr_frags != 0), but since the SKBTX_SHARED_FRAG flag is not set anywhere\nthe __skb_linearize function will not be executed, then the buffer will\nremain non-linear. Then the condition (offset >= skb_headlen(skb))\nbecomes true, which causes WARN_ON_ONCE in skb_checksum_help.\n\n2. The struct sk_buff and struct virtio_net_hdr members must be\nmathematically related.\n(gso_size) must be greater than (needed) otherwise WARN_ON_ONCE.\n(remainder) must be greater than (needed) otherwise WARN_ON_ONCE.\n(remainder) may be 0 if division is without remainder.\n\noffset+2 (4191) > skb_headlen() (1116)\nWARNING: CPU: 1 PID: 5084 at net/core/dev.c:3303 skb_checksum_help+0x5e2/0x740 net/core/dev.c:3303\nModules linked in:\nCPU: 1 PID: 5084 Comm: syz-executor336 Not tainted 6.7.0-rc3-syzkaller-00014-gdf60cee26a2e #0\nHardware name: Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023\nRIP: 0010:skb_checksum_help+0x5e2/0x740 net/core/dev.c:3303\nCode: 89 e8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 52 01 00 00 44 89 e2 2b 53 74 4c 89 ee 48 c7 c7 40 57 e9 8b e8 af 8f dd f8 90 <0f> 0b 90 90 e9 87 fe ff ff e8 40 0f 6e f9 e9 4b fa ff ff 48 89 ef\nRSP: 0018:ffffc90003a9f338 EFLAGS: 00010286\nRAX: 0000000000000000 RBX: ffff888025125780 RCX: ffffffff814db209\nRDX: ffff888015393b80 RSI: ffffffff814db216 RDI: 0000000000000001\nRBP: ffff8880251257f4 R08: 0000000000000001 R09: 0000000000000000\nR10: 0000000000000000 R11: 0000000000000001 R12: 000000000000045c\nR13: 000000000000105f R14: ffff8880251257f0 R15: 000000000000105d\nFS:  0000555555c24380(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 000000002000f000 CR3: 0000000023151000 CR4: 00000000003506f0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nCall Trace:\n <TASK>\n ip_do_fragment+0xa1b/0x18b0 net/ipv4/ip_output.c:777\n ip_fragment.constprop.0+0x161/0x230 net/ipv4/ip_output.c:584\n ip_finish_output_gso net/ipv4/ip_output.c:286 [inline]\n __ip_finish_output net/ipv4/ip_output.c:308 [inline]\n __ip_finish_output+0x49c/0x650 net/ipv4/ip_output.c:295\n ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:323\n NF_HOOK_COND include/linux/netfilter.h:303 [inline]\n ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:433\n dst_output include/net/dst.h:451 [inline]\n ip_local_out+0xaf/0x1a0 net/ipv4/ip_output.c:129\n iptunnel_xmit+0x5b4/0x9b0 net/ipv4/ip_tunnel_core.c:82\n ipip6_tunnel_xmit net/ipv6/sit.c:1034 [inline]\n sit_tunnel_xmit+0xed2/0x28f0 net/ipv6/sit.c:1076\n __netdev_start_xmit include/linux/netdevice.h:4940 [inline]\n netdev_start_xmit include/linux/netdevice.h:4954 [inline]\n xmit_one net/core/dev.c:3545 [inline]\n dev_hard_start_xmit+0x13d/0x6d0 net/core/dev.c:3561\n __dev_queue_xmit+0x7c1/0x3d60 net/core/dev.c:4346\n dev_queue_xmit include/linux/netdevice.h:3134 [inline]\n packet_xmit+0x257/0x380 net/packet/af_packet.c:276\n packet_snd net/packet/af_packet.c:3087 [inline]\n packet_sendmsg+0x24ca/0x5240 net/packet/af_packet.c:3119\n sock_sendmsg_nosec net/socket.c:730 [inline]\n __sock_sendmsg+0xd5/0x180 net/socket.c:745\n __sys_sendto+0x255/0x340 net/socket.c:2190\n __do_sys_sendto net/socket.c:2202 [inline]\n __se_sys_sendto net/socket.c:2198 [inline]\n __x64_sys_sendto+0xe0/0x1b0 net/socket.c:2198\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x40/0x110 arch/x86/entry/common.c:82\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nFound by Linux Verification Center (linuxtesting.org) with Syzkaller"
+    },
+    {
+        "Modified": "2024-09-03T17:38:00",
+        "Published": "2024-08-17T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-908",
+        "id": "CVE-2024-42311",
+        "impact": {},
+        "last-modified": "2024-09-03T17:38:00",
+        "references": [
+            "https://git.kernel.org/stable/c/58d83fc160505a7009c39dec64effaac5129b971",
+            "https://git.kernel.org/stable/c/9c4e40b9b731220f9464975e49da75496e3865c4",
+            "https://git.kernel.org/stable/c/d3493d6f0dfb1ab5225b62faa77732983f2187a1",
+            "https://git.kernel.org/stable/c/26a2ed107929a855155429b11e1293b83e6b2a8b",
+            "https://git.kernel.org/stable/c/f7316b2b2f11cf0c6de917beee8d3de728be24db",
+            "https://git.kernel.org/stable/c/4a52861cd76e79f1a593beb23d096523eb9732c2",
+            "https://git.kernel.org/stable/c/10f7163bfb5f8b4e0c9c05a939f20b8540e33c65",
+            "https://git.kernel.org/stable/c/d55aae5c1730d6b70d5d8eaff00113cd34772ea3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nhfs: fix to initialize fields of hfs_inode_info after hfs_alloc_inode()\n\nSyzbot reports uninitialized value access issue as below:\n\nloop0: detected capacity change from 0 to 64\n=====================================================\nBUG: KMSAN: uninit-value in hfs_revalidate_dentry+0x307/0x3f0 fs/hfs/sysdep.c:30\n hfs_revalidate_dentry+0x307/0x3f0 fs/hfs/sysdep.c:30\n d_revalidate fs/namei.c:862 [inline]\n lookup_fast+0x89e/0x8e0 fs/namei.c:1649\n walk_component fs/namei.c:2001 [inline]\n link_path_walk+0x817/0x1480 fs/namei.c:2332\n path_lookupat+0xd9/0x6f0 fs/namei.c:2485\n filename_lookup+0x22e/0x740 fs/namei.c:2515\n user_path_at_empty+0x8b/0x390 fs/namei.c:2924\n user_path_at include/linux/namei.h:57 [inline]\n do_mount fs/namespace.c:3689 [inline]\n __do_sys_mount fs/namespace.c:3898 [inline]\n __se_sys_mount+0x66b/0x810 fs/namespace.c:3875\n __x64_sys_mount+0xe4/0x140 fs/namespace.c:3875\n do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nBUG: KMSAN: uninit-value in hfs_ext_read_extent fs/hfs/extent.c:196 [inline]\nBUG: KMSAN: uninit-value in hfs_get_block+0x92d/0x1620 fs/hfs/extent.c:366\n hfs_ext_read_extent fs/hfs/extent.c:196 [inline]\n hfs_get_block+0x92d/0x1620 fs/hfs/extent.c:366\n block_read_full_folio+0x4ff/0x11b0 fs/buffer.c:2271\n hfs_read_folio+0x55/0x60 fs/hfs/inode.c:39\n filemap_read_folio+0x148/0x4f0 mm/filemap.c:2426\n do_read_cache_folio+0x7c8/0xd90 mm/filemap.c:3553\n do_read_cache_page mm/filemap.c:3595 [inline]\n read_cache_page+0xfb/0x2f0 mm/filemap.c:3604\n read_mapping_page include/linux/pagemap.h:755 [inline]\n hfs_btree_open+0x928/0x1ae0 fs/hfs/btree.c:78\n hfs_mdb_get+0x260c/0x3000 fs/hfs/mdb.c:204\n hfs_fill_super+0x1fb1/0x2790 fs/hfs/super.c:406\n mount_bdev+0x628/0x920 fs/super.c:1359\n hfs_mount+0xcd/0xe0 fs/hfs/super.c:456\n legacy_get_tree+0x167/0x2e0 fs/fs_context.c:610\n vfs_get_tree+0xdc/0x5d0 fs/super.c:1489\n do_new_mount+0x7a9/0x16f0 fs/namespace.c:3145\n path_mount+0xf98/0x26a0 fs/namespace.c:3475\n do_mount fs/namespace.c:3488 [inline]\n __do_sys_mount fs/namespace.c:3697 [inline]\n __se_sys_mount+0x919/0x9e0 fs/namespace.c:3674\n __ia32_sys_mount+0x15b/0x1b0 fs/namespace.c:3674\n do_syscall_32_irqs_on arch/x86/entry/common.c:112 [inline]\n __do_fast_syscall_32+0xa2/0x100 arch/x86/entry/common.c:178\n do_fast_syscall_32+0x37/0x80 arch/x86/entry/common.c:203\n do_SYSENTER_32+0x1f/0x30 arch/x86/entry/common.c:246\n entry_SYSENTER_compat_after_hwframe+0x70/0x82\n\nUninit was created at:\n __alloc_pages+0x9a6/0xe00 mm/page_alloc.c:4590\n __alloc_pages_node include/linux/gfp.h:238 [inline]\n alloc_pages_node include/linux/gfp.h:261 [inline]\n alloc_slab_page mm/slub.c:2190 [inline]\n allocate_slab mm/slub.c:2354 [inline]\n new_slab+0x2d7/0x1400 mm/slub.c:2407\n ___slab_alloc+0x16b5/0x3970 mm/slub.c:3540\n __slab_alloc mm/slub.c:3625 [inline]\n __slab_alloc_node mm/slub.c:3678 [inline]\n slab_alloc_node mm/slub.c:3850 [inline]\n kmem_cache_alloc_lru+0x64d/0xb30 mm/slub.c:3879\n alloc_inode_sb include/linux/fs.h:3018 [inline]\n hfs_alloc_inode+0x5a/0xc0 fs/hfs/super.c:165\n alloc_inode+0x83/0x440 fs/inode.c:260\n new_inode_pseudo fs/inode.c:1005 [inline]\n new_inode+0x38/0x4f0 fs/inode.c:1031\n hfs_new_inode+0x61/0x1010 fs/hfs/inode.c:186\n hfs_mkdir+0x54/0x250 fs/hfs/dir.c:228\n vfs_mkdir+0x49a/0x700 fs/namei.c:4126\n do_mkdirat+0x529/0x810 fs/namei.c:4149\n __do_sys_mkdirat fs/namei.c:4164 [inline]\n __se_sys_mkdirat fs/namei.c:4162 [inline]\n __x64_sys_mkdirat+0xc8/0x120 fs/namei.c:4162\n do_syscall_x64 arch/x86/entry/common.c:52 [inline]\n do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83\n entry_SYSCALL_64_after_hwframe+0x63/0x6b\n\nIt missed to initialize .tz_secondswest, .cached_start and .cached_blocks\nfields in struct hfs_inode_info after hfs_alloc_inode(), fix it."
+    },
+    {
+        "Modified": "2024-09-03T17:35:00",
+        "Published": "2024-09-03T12:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44921",
+        "impact": {},
+        "last-modified": "2024-09-03T17:35:00",
+        "references": [
+            "https://github.com/nn0nkey/nn0nkey/blob/main/CVE-2024-44921.md"
+        ],
+        "summary": "SeaCMS v12.9 was discovered to contain a SQL injection vulnerability via the id parameter at /dmplayer/dmku/index.php?ac=del."
+    },
+    {
+        "Modified": "2024-09-03T17:23:00",
+        "Published": "2024-08-29T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-1321",
+        "id": "CVE-2024-45435",
+        "impact": {},
+        "last-modified": "2024-09-03T17:23:00",
+        "references": [
+            "https://gist.github.com/tariqhawis/c67177164d3b7975210caddb25b60d62",
+            "https://github.com/chartist-js/chartist/issues/1427"
+        ],
+        "summary": "Chartist 1.x through 1.3.0 allows Prototype Pollution via the extend function."
+    },
+    {
+        "Modified": "2024-09-03T17:15:00",
+        "Published": "2024-09-03T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-49233",
+        "impact": {},
+        "last-modified": "2024-09-03T17:15:00",
+        "references": [
+            "https://www.visual-planning.com/en/support-portal/updates",
+            "https://www.schutzwerk.com/blog/schutzwerk-sa-2023-005/"
+        ],
+        "summary": "Insufficient access checks in Visual Planning Admin Center 8 before v.1 Build 240207 allow attackers in possession of a non-administrative Visual Planning account to utilize functions normally reserved for administrators. The affected functions allow attackers to obtain different types of configured credentials and potentially elevate their privileges to administrator level."
+    },
+    {
+        "Modified": "2024-09-03T17:15:00",
+        "Published": "2024-09-03T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43412",
+        "impact": {},
+        "last-modified": "2024-09-03T17:15:00",
+        "references": [
+            "https://github.com/xibosignage/xibo-cms/security/advisories/GHSA-336f-wrgx-57gg",
+            "https://github.com/xibosignage/xibo-cms/commit/d8f13339469d9f19ce591fb2bd7c9e0e0d2da118"
+        ],
+        "summary": "Xibo is an open source digital signage platform with a web content management system (CMS). Prior to version 4.1.0, a cross-site scripting vulnerability in Xibo CMS allows authorized users to execute arbitrary JavaScript via the file preview function. Users can upload HTML/CSS/JS files into the Xibo Library via the Generic File module to be referenced on Displays and in Layouts. This is intended functionality. When previewing these resources from the Library and Layout editor they are executed in the users browser. This will be disabled in future releases, and users are encouraged to use the new developer tools in 4.1 to design their widgets which require this type of functionality. This behavior has been changed in 4.1.0 to preview previewing of generic files. There are no workarounds for this issue."
+    },
+    {
+        "Modified": "2024-09-03T17:15:00",
+        "Published": "2024-01-31T14:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-203",
+        "id": "CVE-2023-5992",
+        "impact": {},
+        "last-modified": "2024-09-03T17:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-5992",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2248685",
+            "https://github.com/OpenSC/OpenSC/wiki/CVE-2023-5992",
+            "https://access.redhat.com/errata/RHSA-2024:0966",
+            "https://access.redhat.com/errata/RHSA-2024:0967",
+            "https://www.usenix.org/system/files/usenixsecurity24-shagam.pdf"
+        ],
+        "summary": "A vulnerability was found in OpenSC where PKCS#1 encryption padding removal is not implemented as side-channel resistant. This issue may result in the potential leak of private data."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2023-11-14T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-45560",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://github.com/syz913/CVE-reports/blob/main/CVE-2023-45560.md"
+        ],
+        "summary": "An issue in Yasukawa memberscard v.13.6.1 allows attackers to send crafted notifications via leakage of the channel access token."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T16:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-42991",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://gitee.com/mingSoft/MCMS/issues/IAHN9F"
+        ],
+        "summary": "MCMS v5.4.1 has front-end file upload vulnerability which can lead to remote command execution."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2023-11-14T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-43901",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://secpro.llc/EMSigner-CVE-1/"
+        ],
+        "summary": "Incorrect access control in the AdHoc User creation form of EMSigner v2.8.7 allows unauthenticated attackers to arbitrarily modify usernames and privileges by using the email address of a registered user."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T13:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8381",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://bugzilla.mozilla.org/show_bug.cgi?id=1912715",
+            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
+            "https://www.mozilla.org/security/advisories/mfsa2024-40/",
+            "https://www.mozilla.org/security/advisories/mfsa2024-41/"
+        ],
+        "summary": "A potentially exploitable type confusion could be triggered when looking up a property name on an object being used as the `with` environment. This vulnerability affects Firefox < 130, Firefox ESR < 128.2, and Firefox ESR < 115.15."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T12:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44920",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://github.com/nn0nkey/nn0nkey/blob/main/CVE-2024-44920.md"
+        ],
+        "summary": "A cross-site scripting (XSS) vulnerability in the component admin_collect_news.php of SeaCMS v12.9 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the siteurl parameter."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T13:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8384",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://bugzilla.mozilla.org/show_bug.cgi?id=1911288",
+            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
+            "https://www.mozilla.org/security/advisories/mfsa2024-40/",
+            "https://www.mozilla.org/security/advisories/mfsa2024-41/"
+        ],
+        "summary": "The JavaScript garbage collector could mis-color cross-compartment objects if OOM conditions were detected at the right point between two passes. This could have led to memory corruption. This vulnerability affects Firefox < 130, Firefox ESR < 128.2, and Firefox ESR < 115.15."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T13:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8385",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://bugzilla.mozilla.org/show_bug.cgi?id=1911909",
+            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
+            "https://www.mozilla.org/security/advisories/mfsa2024-40/"
+        ],
+        "summary": "A difference in the handling of StructFields and ArrayTypes in WASM could be used to trigger an exploitable type confusion vulnerability. This vulnerability affects Firefox < 130 and Firefox ESR < 128.2."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T13:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8387",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://bugzilla.mozilla.org/buglist.cgi?bug_id=1857607%2C1911858%2C1914009",
+            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
+            "https://www.mozilla.org/security/advisories/mfsa2024-40/"
+        ],
+        "summary": "Memory safety bugs present in Firefox 129, Firefox ESR 128.1, and Thunderbird 128.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 130 and Firefox ESR < 128.2."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-03T13:15:00",
+        "access": {},
+        "assigner": "security@mozilla.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8389",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://bugzilla.mozilla.org/buglist.cgi?bug_id=1907230%2C1909367",
+            "https://www.mozilla.org/security/advisories/mfsa2024-39/"
+        ],
+        "summary": "Memory safety bugs present in Firefox 129. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 130."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-02T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45622",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://github.com/atoz-chevara/cve/blob/main/2024/ASIS_AplikasiSistemSekolah_Using_CodeIgniter3-SQL_Injection_Authentication_Bypass.md"
+        ],
+        "summary": "ASIS (aka Aplikasi Sistem Sekolah using CodeIgniter 3) 3.0.0 through 3.2.0 allows index.php username SQL injection for Authentication Bypass."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-02T08:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-7691",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://wpscan.com/vulnerability/d30a3b95-5d1f-4755-8b61-19946afc51ef/"
+        ],
+        "summary": "The Flaming Forms WordPress plugin through 1.0.1 does not sanitise and escape some parameters, which could allow unauthenticated users to perform Cross-Site Scripting attacks against administrators."
+    },
+    {
+        "Modified": "2024-09-03T16:35:00",
+        "Published": "2024-09-02T08:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-7692",
+        "impact": {},
+        "last-modified": "2024-09-03T16:35:00",
+        "references": [
+            "https://wpscan.com/vulnerability/5e9f98ef-5a44-4a0c-b9cd-ce750bec74f9/"
+        ],
+        "summary": "The Flaming Forms WordPress plugin through 1.0.1 does not sanitise and escape a parameter before outputting it back in the page, leading to a Reflected Cross-Site Scripting which could be used against high privilege users such as admin."
+    },
+    {
+        "Modified": "2024-09-03T16:15:00",
+        "Published": "2024-09-03T16:15:00",
+        "access": {},
+        "assigner": "openssl-security@openssl.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6119",
+        "impact": {},
+        "last-modified": "2024-09-03T16:15:00",
+        "references": [
+            "https://openssl-library.org/news/secadv/20240903.txt",
+            "https://github.com/openssl/openssl/commit/7dfcee2cd2a63b2c64b9b4b0850be64cb695b0a0",
+            "https://github.com/openssl/openssl/commit/05f360d9e849a1b277db628f1f13083a7f8dd04f",
+            "https://github.com/openssl/openssl/commit/621f3729831b05ee828a3203eddb621d014ff2b2",
+            "https://github.com/openssl/openssl/commit/06d1dc3fa96a2ba5a3e22735a033012aadc9f0d6"
+        ],
+        "summary": "Issue summary: Applications performing certificate name checks (e.g., TLS\nclients checking server certificates) may attempt to read an invalid memory\naddress resulting in abnormal termination of the application process.\n\nImpact summary: Abnormal termination of an application can a cause a denial of\nservice.\n\nApplications performing certificate name checks (e.g., TLS clients checking\nserver certificates) may attempt to read an invalid memory address when\ncomparing the expected name with an `otherName` subject alternative name of an\nX.509 certificate. This may result in an exception that terminates the\napplication program.\n\nNote that basic certificate chain validation (signatures, dates, ...) is not\naffected, the denial of service can occur only when the application also\nspecifies an expected DNS name, Email address or IP address.\n\nTLS servers rarely solicit client certificates, and even when they do, they\ngenerally don't perform a name check against a reference identifier (expected\nidentity), but rather extract the presented identity after checking the\ncertificate chain.  So TLS servers are generally not affected and the severity\nof the issue is Moderate.\n\nThe FIPS modules in 3.3, 3.2, 3.1 and 3.0 are not affected by this issue."
+    },
+    {
+        "Modified": "2024-09-03T16:15:00",
+        "Published": "2024-08-22T19:15:00",
+        "access": {},
+        "assigner": "cna@python.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8088",
+        "impact": {},
+        "last-modified": "2024-09-03T16:15:00",
+        "references": [
+            "https://mail.python.org/archives/list/security-announce@python.org/thread/GNFCKVI4TCATKQLALJ5SN4L4CSPSMILU/",
+            "https://github.com/python/cpython/pull/122906",
+            "https://github.com/python/cpython/issues/122905",
+            "https://github.com/python/cpython/commit/795f2597a4be988e2bb19b69ff9958e981cb894e",
+            "https://github.com/python/cpython/commit/8c7348939d8a3ecd79d630075f6be1b0c5b41f64",
+            "https://github.com/python/cpython/commit/dcc5182f27c1500006a1ef78e10613bb45788dea",
+            "https://github.com/python/cpython/commit/e0264a61119d551658d9445af38323ba94fc16db",
+            "https://github.com/python/cpython/issues/123270",
+            "https://github.com/python/cpython/commit/2231286d78d328c2f575e0b05b16fe447d1656d6",
+            "https://github.com/python/cpython/commit/7e8883a3f04d308302361aeffc73e0e9837f19d4",
+            "https://github.com/python/cpython/commit/95b073bddefa6243effa08e131e297c0383e7f6a"
+        ],
+        "summary": "There is a HIGH severity vulnerability affecting the CPython \"zipfile\"\nmodule affecting \"zipfile.Path\". Note that the more common API \"zipfile.ZipFile\" class is unaffected.\n\n\n\n\n\nWhen iterating over names of entries in a zip archive (for example, methods\nof \"zipfile.Path\" like \"namelist()\", \"iterdir()\", etc)\nthe process can be put into an infinite loop with a maliciously crafted\nzip archive. This defect applies when reading only metadata or extracting\nthe contents of the zip archive. Programs that are not handling\nuser-controlled zip archives are not affected."
+    },
+    {
         "Modified": "2024-09-03T15:35:00",
         "Published": "2023-11-14T23:15:00",
         "access": {},
@@ -501,24 +999,6 @@
         "assigner": "security@mozilla.org",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-8381",
-        "impact": {},
-        "last-modified": "2024-09-03T15:12:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1912715",
-            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
-            "https://www.mozilla.org/security/advisories/mfsa2024-40/",
-            "https://www.mozilla.org/security/advisories/mfsa2024-41/"
-        ],
-        "summary": "A potentially exploitable type confusion could be triggered when looking up a property name on an object being used as the `with` environment. This vulnerability affects Firefox < 130, Firefox ESR < 128.2, and Firefox ESR < 115.15."
-    },
-    {
-        "Modified": "2024-09-03T15:12:00",
-        "Published": "2024-09-03T13:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "Unknown",
         "id": "CVE-2024-8382",
         "impact": {},
         "last-modified": "2024-09-03T15:12:00",
@@ -555,41 +1035,6 @@
         "assigner": "security@mozilla.org",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-8384",
-        "impact": {},
-        "last-modified": "2024-09-03T15:12:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1911288",
-            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
-            "https://www.mozilla.org/security/advisories/mfsa2024-40/",
-            "https://www.mozilla.org/security/advisories/mfsa2024-41/"
-        ],
-        "summary": "The JavaScript garbage collector could mis-color cross-compartment objects if OOM conditions were detected at the right point between two passes. This could have led to memory corruption. This vulnerability affects Firefox < 130, Firefox ESR < 128.2, and Firefox ESR < 115.15."
-    },
-    {
-        "Modified": "2024-09-03T15:12:00",
-        "Published": "2024-09-03T13:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-8385",
-        "impact": {},
-        "last-modified": "2024-09-03T15:12:00",
-        "references": [
-            "https://bugzilla.mozilla.org/show_bug.cgi?id=1911909",
-            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
-            "https://www.mozilla.org/security/advisories/mfsa2024-40/"
-        ],
-        "summary": "A difference in the handling of StructFields and ArrayTypes in WASM could be used to trigger an exploitable type confusion vulnerability. This vulnerability affects Firefox < 130 and Firefox ESR < 128.2."
-    },
-    {
-        "Modified": "2024-09-03T15:12:00",
-        "Published": "2024-09-03T13:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "Unknown",
         "id": "CVE-2024-8386",
         "impact": {},
         "last-modified": "2024-09-03T15:12:00",
@@ -609,23 +1054,6 @@
         "assigner": "security@mozilla.org",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-8387",
-        "impact": {},
-        "last-modified": "2024-09-03T15:12:00",
-        "references": [
-            "https://bugzilla.mozilla.org/buglist.cgi?bug_id=1857607%2C1911858%2C1914009",
-            "https://www.mozilla.org/security/advisories/mfsa2024-39/",
-            "https://www.mozilla.org/security/advisories/mfsa2024-40/"
-        ],
-        "summary": "Memory safety bugs present in Firefox 129, Firefox ESR 128.1, and Thunderbird 128.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 130 and Firefox ESR < 128.2."
-    },
-    {
-        "Modified": "2024-09-03T15:12:00",
-        "Published": "2024-09-03T13:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "Unknown",
         "id": "CVE-2024-8388",
         "impact": {},
         "last-modified": "2024-09-03T15:12:00",
@@ -635,22 +1063,6 @@
             "https://www.mozilla.org/security/advisories/mfsa2024-39/"
         ],
         "summary": "Multiple prompts and panels from both Firefox and the Android OS could be used to obscure the notification announcing the transition to fullscreen mode after the fix for CVE-2023-6870 in Firefox 121. This could lead to spoofing the browser UI if the sudden appearance of the prompt distracted the user from noticing the visual transition happening behind the prompt. These notifications now use the Android Toast feature. \n*This bug only affects Firefox on Android. Other operating systems are unaffected.* This vulnerability affects Firefox < 130."
-    },
-    {
-        "Modified": "2024-09-03T15:12:00",
-        "Published": "2024-09-03T13:15:00",
-        "access": {},
-        "assigner": "security@mozilla.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-8389",
-        "impact": {},
-        "last-modified": "2024-09-03T15:12:00",
-        "references": [
-            "https://bugzilla.mozilla.org/buglist.cgi?bug_id=1907230%2C1909367",
-            "https://www.mozilla.org/security/advisories/mfsa2024-39/"
-        ],
-        "summary": "Memory safety bugs present in Firefox 129. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 130."
     },
     {
         "Modified": "2024-09-03T15:11:00",
@@ -1273,36 +1685,6 @@
     },
     {
         "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T12:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44920",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/nn0nkey/nn0nkey/blob/main/CVE-2024-44920.md"
-        ],
-        "summary": "A cross-site scripting (XSS) vulnerability in the component admin_collect_news.php of SeaCMS v12.9 allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the siteurl parameter."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T12:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44921",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/nn0nkey/nn0nkey/blob/main/CVE-2024-44921.md"
-        ],
-        "summary": "SeaCMS v12.9 was discovered to contain a SQL injection vulnerability via the id parameter at /dmplayer/dmku/index.php?ac=del."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
         "Published": "2024-09-03T10:15:00",
         "access": {},
         "assigner": "security@vmware.com",
@@ -1330,353 +1712,5 @@
             "https://www.cert-in.org.in/s2cMainServlet?pageid=PUBVLNOTES01&VLCODE=CIVN-2024-0281"
         ],
         "summary": "This vulnerability exists due to improper access controls on APIs in the Authentication module of Symphony XTS Web Trading and Mobile Trading platforms (version 2.0.0.1_P160). An authenticated remote attacker could exploit this vulnerability by manipulating parameters through HTTP request which could lead to unauthorized account take over belonging to other users."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T10:15:00",
-        "access": {},
-        "assigner": "vdisclose@cert-in.org.in",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45587",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.cert-in.org.in/s2cMainServlet?pageid=PUBVLNOTES01&VLCODE=CIVN-2024-0281"
-        ],
-        "summary": "This vulnerability exists in Symphony XTS Web Trading platform version 2.0.0.1_P160 due to improper access controls on APIs in the Transaction module of vulnerable application. An authenticated remote attacker could exploit this vulnerability by manipulating parameters through HTTP request which could lead to compromise of other user accounts."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T10:15:00",
-        "access": {},
-        "assigner": "oss-report@checkmarx.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-8374",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/Ultimaker/Cura/commit/285a241eb28da3188c977f85d68937c0dad79c50"
-        ],
-        "summary": "UltiMaker Cura slicer versions 5.7.0-beta.1 through 5.7.2 are vulnerable to code injection via the 3MF format reader (/plugins/ThreeMFReader.py). The vulnerability arises from improper handling of the drop_to_buildplate property within 3MF files, which are ZIP archives containing the model data. When a 3MF file is loaded in Cura, the value of the drop_to_buildplate property is passed to the Python eval() function without proper sanitization, allowing an attacker to execute arbitrary code by crafting a malicious 3MF file. This vulnerability poses a significant risk as 3MF files are commonly shared via 3D model databases."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T11:15:00",
-        "access": {},
-        "assigner": "vdisclose@cert-in.org.in",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45588",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.cert-in.org.in/s2cMainServlet?pageid=PUBVLNOTES01&VLCODE=CIVN-2024-0281"
-        ],
-        "summary": "This vulnerability exists in Symphony XTS Web Trading platform version 2.0.0.1_P160 due to improper access controls on APIs in the Preference module of the application. An authenticated remote attacker could exploit this vulnerability by manipulating parameters through HTTP request which could lead to unauthorized access and modification of sensitive information belonging to other users."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T11:15:00",
-        "access": {},
-        "assigner": "browser-security@yandex-team.ru",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6473",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://yandex.com/bugbounty/i/hall-of-fame-browser/"
-        ],
-        "summary": "Yandex Browser for Desktop before 24.7.1.380 has a DLL Hijacking Vulnerability because an untrusted search path is used."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T06:15:00",
-        "access": {},
-        "assigner": "secure@dell.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-37136",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.dell.com/support/kbdoc/en-us/000227430/dsa-2024-291-security-update-for-dell-path-to-powerprotect-for-security-vulnerability"
-        ],
-        "summary": "Dell Path to PowerProtect, versions 1.1, 1.2, contains an Exposure of Private Personal Information to an Unauthorized Actor vulnerability. A remote high privileged attacker could potentially exploit this vulnerability, leading to information exposure."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-8380",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://vuldb.com/?id.276353",
-            "https://vuldb.com/?ctiid.276353",
-            "https://vuldb.com/?submit.401249",
-            "https://github.com/jadu101/CVE/blob/main/SourceCodester_Contact_Manager_delete_contact_sqli.md",
-            "https://www.sourcecodester.com/"
-        ],
-        "summary": "A vulnerability was found in SourceCodester Contact Manager with Export to VCF 1.0. It has been rated as critical. This issue affects some unknown processing of the file /endpoint/delete-account.php of the component Delete Contact Handler. The manipulation of the argument contact leads to sql injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-42057",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A command injection vulnerability in the IPSec VPN feature of Zyxel ATP series firmware versions from V4.32 through V5.38, USG FLEX series firmware versions from V4.50 through V5.38, USG FLEX 50(W) series firmware versions from V4.16 through V5.38, and USG20(W)-VPN series firmware versions from V4.16 through V5.38 could allow an unauthenticated attacker to execute some OS commands on an affected device by sending a crafted username to the vulnerable device. Note that this attack could be successful only if the device was configured in User-Based-PSK authentication mode and a valid user with a long username exceeding 28 characters exists."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-42058",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A null pointer dereference vulnerability in Zyxel ATP series firmware versions from V4.32 through V5.38, USG FLEX series firmware versions from V4.50 through V5.38, USG FLEX 50(W) series firmware versions from V5.20 through V5.38, and USG20(W)-VPN series firmware versions from V5.20 through V5.38 could allow an unauthenticated attacker to cause DoS conditions by sending crafted packets to a vulnerable device."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-42059",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A post-authentication command injection vulnerability in Zyxel ATP series firmware versions from V5.00 through V5.38, USG FLEX series firmware versions from V5.00 through V5.38, USG FLEX 50(W) series firmware versions from V5.00 through V5.38, and USG20(W)-VPN series firmware versions from V5.00 through V5.38 could allow an authenticated attacker with administrator privileges to execute some OS commands on an affected device by uploading a crafted compressed language file via FTP."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-42060",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A post-authentication command injection vulnerability in Zyxel ATP series firmware versions from V4.32 through V5.38, USG FLEX series firmware versions from V4.50 through V5.38, USG FLEX 50(W) series firmware versions from V4.16 through V5.38, and USG20(W)-VPN series firmware versions from V4.16 through V5.38 could allow an authenticated attacker with administrator privileges to execute some OS commands on an affected device by uploading a crafted internal user agreement file to the vulnerable device."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2024-5412",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-buffer-overflow-vulnerability-in-some-5g-nr-cpe-dsl-ethernet-cpe-fiber-ont-wifi-extender-and-security-router-devices-09-03-2024"
-        ],
-        "summary": "A buffer overflow vulnerability in the library \"libclinkc\" of the Zyxel VMG8825-T50K firmware version 5.50(ABOM.8)C0 could allow an unauthenticated attacker to cause denial of service (DoS) conditions by sending a crafted HTTP request to a vulnerable device."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2024-6343",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A buffer overflow vulnerability in the CGI program of Zyxel ATP series firmware versions from V4.32 through V5.38, USG FLEX series firmware versions from V4.50 through V5.38, USG FLEX 50(W) series firmware versions from V4.16 through V5.38, and USG20(W)-VPN series firmware versions from V4.16 through V5.38 could allow an authenticated attacker with administrator privileges to cause denial of service (DoS) conditions by sending a crafted HTTP request to a vulnerable device."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T02:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-7203",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A post-authentication command injection vulnerability in Zyxel ATP series firmware versions from V4.60 through V5.38 and USG FLEX series firmware versions from V4.60 through V5.38 could allow an authenticated attacker with administrator privileges to execute some operating system (OS) commands on an affected device by executing a crafted CLI command."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T03:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-42061",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-multiple-vulnerabilities-in-firewalls-09-03-2024"
-        ],
-        "summary": "A reflected cross-site scripting (XSS) vulnerability in the CGI program \"dynamic_script.cgi\" of Zyxel ATP series firmware versions from V4.32 through V5.38, USG FLEX series firmware versions from V4.50 through V5.38, USG FLEX 50(W) series firmware versions from V4.16 through V5.38, and USG20(W)-VPN series firmware versions from V4.16 through V5.38 could allow an attacker to trick a user into visiting a crafted URL with the XSS payload. The attacker could obtain browser-based information if the malicious script is executed on the victim\u2019s browser."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-03T03:15:00",
-        "access": {},
-        "assigner": "security@zyxel.com.tw",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-7261",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://www.zyxel.com/global/en/support/security-advisories/zyxel-security-advisory-for-os-command-injection-vulnerability-in-aps-and-security-router-devices-09-03-2024"
-        ],
-        "summary": "The improper neutralization of special elements in the parameter \"host\" in the CGI program of Zyxel NWA1123ACv3 firmware version 6.70(ABVT.4) and earlier, WAC500 firmware version 6.70(ABVS.4) \n\nand earlier, WAX655E firmware version 7.00(ACDO.1) and earlier, WBE530 firmware version 7.00(ACLE.1) \n\nand earlier, and\u00a0USG LITE 60AX firmware version\u00a0V2.00(ACIP.2) could allow an unauthenticated attacker to execute OS commands by sending a crafted cookie to a vulnerable device."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T20:15:00",
-        "access": {},
-        "assigner": "product-security@canon-europe.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1621",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://ntware.atlassian.net/wiki/spaces/SA/pages/12113215492/2024+Security+Advisory+Device+registration+susceptible+to+compromise",
-            "https://www.canon-europe.com/psirt/advisory-information/"
-        ],
-        "summary": "The registration process of uniFLOW Online (NT-ware product) apps, prior to and including version 2024.1.0, can be compromised when email login is enabled on the tenant. Those tenants utilising email login in combination with Microsoft Safe Links or similar are impacted. This vulnerability may allow the attacker to register themselves against a genuine user in the system and allow malicious users with similar access and capabilities via the app to the existing genuine user."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T18:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45305",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/Byron/gitoxide/security/advisories/GHSA-v26r-4c9c-h3j6",
-            "https://git-scm.com/docs/git-config#SCOPES",
-            "https://github.com/Byron/gitoxide/blob/12251eb052df30105538fa831e641eea557f13d8/gix-path/src/env/git/mod.rs#L112",
-            "https://github.com/Byron/gitoxide/blob/12251eb052df30105538fa831e641eea557f13d8/gix-path/src/env/git/mod.rs#L91"
-        ],
-        "summary": "gix-path is a crate of the gitoxide project dealing with git paths and their conversions. `gix-path` executes `git` to find the path of a configuration file that belongs to the `git` installation itself, but mistakenly treats the local repository's configuration as system-wide if no higher scoped configuration is found. In rare cases, this causes a less trusted repository to be treated as more trusted, or leaks sensitive information from one repository to another, such as sending credentials to another repository's remote. In `gix_path::env`, the underlying implementation of the `installation_config` and `installation_config_prefix` functions calls `git config -l --show-origin` and parses the first line of the output to extract the path to the configuration file holding the configuration variable of highest scope. It is believed to be very difficult to exploit this vulnerability deliberately, due to the need either to anticipate a situation in which higher-scoped configuration variables would be absent, or to arrange for this to happen. Although any operating system may be affected, users running Apple Git on macOS are much less likely to be affected. This issue has been addressed in release version 0.10.10. All users are advised to upgrade."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T18:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45306",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/vim/vim/security/advisories/GHSA-wxf9-c5gx-qrwr",
-            "https://github.com/vim/vim/commit/396fd1ec2956307755392a1",
-            "https://github.com/vim/vim/releases/tag/v9.1.0038"
-        ],
-        "summary": "Vim is an open source, command line text editor. Patch v9.1.0038 optimized how the cursor position is calculated and removed a loop, that verified that the cursor position always points inside a line and does not become invalid by pointing beyond the end of\na line. Back then we assumed this loop is unnecessary. However, this change made it possible that the cursor position stays invalid and points beyond the end of a line, which would eventually cause a heap-buffer-overflow when trying to access the line pointer at\nthe specified cursor position. It's not quite clear yet, what can lead to this situation that the cursor points to an invalid position. That's why patch v9.1.0707 does not include a test case. The only observed impact has been a program crash. This issue has been addressed in with the patch v9.1.0707. All users are advised to upgrade."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T18:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45308",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/hedgedoc/hedgedoc/security/advisories/GHSA-pjf2-269h-cx7p",
-            "https://github.com/hedgedoc/hedgedoc/commit/380587b7fd65bc1eb71eef51a3aab324f9877650"
-        ],
-        "summary": "HedgeDoc is an open source, real-time, collaborative, markdown notes application. When using HedgeDoc 1 with MySQL or MariaDB, it is possible to create notes with an alias matching the ID of existing notes. The affected existing note can then not be accessed anymore and is effectively hidden by the new one. When the freeURL feature is enabled (by setting the `allowFreeURL` config option or the `CMD_ALLOW_FREEURL` environment variable to `true`), any user with the appropriate permissions can create a note with an arbitrary alias, e.g. by accessing it in the browser. When MySQL or MariaDB are used, it is possible to create a new note with an alias that matches the lower-cased ID of a different note. HedgeDoc then always presents the new note to users, as these databases perform case-insensitive matching and the lower-cased alias is found first. This issue only affects HedgeDoc instances that use MySQL or MariaDB. Depending on the permission settings of the HedgeDoc instance, the issue can be exploited only by logged-in users or by all (including non-logged-in) users. The exploit requires knowledge of the ID of the target note. Attackers could use this issue to present a manipulated copy of the original note to the user, e.g. by replacing the links with malicious ones. Attackers can also use this issue to prevent access to the original note, causing a denial of service. No data is lost, as the original content of the affected notes is still present in the database. Users are advised to upgrade to version 1.10.0 which addresses this issue. Users unable to upgrade may disable freeURL mode which prevents the exploitation of this issue. The impact can also be limited by restricting freeURL note creation to trusted, logged-in users by enabling `requireFreeURLAuthentication`/`CMD_REQUIRE_FREEURL_AUTHENTICATION`."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T18:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45311",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/quinn-rs/quinn/security/advisories/GHSA-vr26-jcq5-fjj8",
-            "https://github.com/quinn-rs/quinn/commit/e01609ccd8738bd438d86fa7185a0f85598cb58f",
-            "https://github.com/quinn-rs/quinn/blob/bb02a12a8435a7732a1d762783eeacbb7e50418e/quinn-proto/src/endpoint.rs#L213"
-        ],
-        "summary": "Quinn is a pure-Rust, async-compatible implementation of the IETF QUIC transport protocol. As of quinn-proto 0.11, it is possible for a server to `accept()`, `retry()`, `refuse()`, or `ignore()` an `Incoming` connection. However, calling `retry()` on an unvalidated connection exposes the server to a likely panic in the following situations:  1. Calling `refuse` or `ignore` on the resulting validated connection, if a duplicate initial packet is received. This issue can go undetected until a server's `refuse()`/`ignore()` code path is exercised, such as to stop a denial of service attack. 2. Accepting when the initial packet for the resulting validated connection fails to decrypt or exhausts connection IDs, if a similar initial packet that successfully decrypts and doesn't exhaust connection IDs is received. This issue can go undetected if clients are well-behaved. The former situation was observed in a real application, while the latter is only theoretical."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T18:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45312",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/overleaf/overleaf/security/advisories/GHSA-pxm4-p454-vppg",
-            "https://github.com/overleaf/overleaf/commit/b5e5d39c3ad4e7763d42b837738955f8ded4dcd3",
-            "https://github.com/overleaf/toolkit"
-        ],
-        "summary": "Overleaf is a web-based collaborative LaTeX editor. Overleaf Community Edition and Server Pro prior to version 5.0.7 (or 4.2.7 for the 4.x series) contain a vulnerability that allows an arbitrary language parameter in client spelling requests to be passed to the `aspell` executable running on the server.  This causes `aspell` to attempt to load  a dictionary file with an arbitrary filename. File access is limited to the scope of the overleaf server. The problem is patched in versions 5.0.7 and 4.2.7.  Previous versions can be upgraded using the Overleaf toolkit `bin/upgrade` command. Users unable to upgrade may block POST requests to `/spelling/check` via a Web Application Firewall will prevent access to the vulnerable spell check feature.  However, upgrading is advised."
-    },
-    {
-        "Modified": "2024-09-03T12:59:00",
-        "Published": "2024-09-02T18:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45313",
-        "impact": {},
-        "last-modified": "2024-09-03T12:59:00",
-        "references": [
-            "https://github.com/overleaf/overleaf/security/advisories/GHSA-m95q-g8qg-wgj4",
-            "https://github.com/overleaf/toolkit/commit/7a8401897b24777b47338452ff8d12e2fb6dd5ff",
-            "https://github.com/overleaf/overleaf/wiki/Server-Pro:-Sandboxed-Compiles",
-            "https://github.com/overleaf/toolkit/blob/master/doc/sandboxed-compiles.md#enabling-sibling-containers"
-        ],
-        "summary": "Overleaf is a web-based collaborative LaTeX editor. When installing Server Pro using the Overleaf Toolkit from before 2024-07-17 or legacy docker-compose.yml from before 2024-08-28, the configuration for LaTeX compiles was insecure by default, requiring the administrator to enable the security features via a configuration setting (`SIBLING_CONTAINERS_ENABLED` in Toolkit, `SANDBOXED_COMPILES` in legacy docker-compose/custom deployments). If these security features are not enabled then users have access to the `sharelatex` container resources (filesystem, network, environment variables) when running compiles, leading to multiple file access vulnerabilities, either directly or via symlinks created during compiles. The setting has now been changed to be secure by default for new installs in the Toolkit and legacy docker-compose deployment. The Overleaf Toolkit has been updated to set `SIBLING_CONTAINERS_ENABLED=true` by default for new installs. It is recommended that any existing installations using the previous default setting migrate to using sibling containers. Existing installations can set `SIBLING_CONTAINERS_ENABLED=true` in `config/overleaf.rc` as a mitigation. In legacy docker-compose/custom deployments `SANDBOXED_COMPILES=true` should be used."
     }
 ]
