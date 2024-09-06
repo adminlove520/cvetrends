@@ -1,5 +1,884 @@
 [
     {
+        "Modified": "2024-09-06T13:56:00",
+        "Published": "2024-08-08T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-42256",
+        "impact": {},
+        "last-modified": "2024-09-06T13:56:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b1d0a566769b6fb3795b5289fc1daf9e0638d97a",
+            "https://git.kernel.org/stable/c/de40579b903883274fe203865f29d66b168b7236"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncifs: Fix server re-repick on subrequest retry\n\nWhen a subrequest is marked for needing retry, netfs will call\ncifs_prepare_write() which will make cifs repick the server for the op\nbefore renegotiating credits; it then calls cifs_issue_write() which\ninvokes smb2_async_writev() - which re-repicks the server.\n\nIf a different server is then selected, this causes the increment of\nserver->in_flight to happen against one record and the decrement to happen\nagainst another, leading to misaccounting.\n\nFix this by just removing the repick code in smb2_async_writev().  As this\nis only called from netfslib-driven code, cifs_prepare_write() should\nalways have been called first, and so server should never be NULL and the\npreparatory step is repeated in the event that we do a retry.\n\nThe problem manifests as a warning looking something like:\n\n WARNING: CPU: 4 PID: 72896 at fs/smb/client/smb2ops.c:97 smb2_add_credits+0x3f0/0x9e0 [cifs]\n ...\n RIP: 0010:smb2_add_credits+0x3f0/0x9e0 [cifs]\n ...\n  smb2_writev_callback+0x334/0x560 [cifs]\n  cifs_demultiplex_thread+0x77a/0x11b0 [cifs]\n  kthread+0x187/0x1d0\n  ret_from_fork+0x34/0x60\n  ret_from_fork_asm+0x1a/0x30\n\nWhich may be triggered by a number of different xfstests running against an\nAzure server in multichannel mode.  generic/249 seems the most repeatable,\nbut generic/215, generic/249 and generic/308 may also show it."
+    },
+    {
+        "Modified": "2024-09-06T13:54:00",
+        "Published": "2024-09-04T03:15:00",
+        "access": {},
+        "assigner": "psirt@huawei.com",
+        "cvss": null,
+        "cwe": "CWE-459",
+        "id": "CVE-2024-45445",
+        "impact": {},
+        "last-modified": "2024-09-06T13:54:00",
+        "references": [
+            "https://consumer.huawei.com/en/support/bulletin/2024/9/"
+        ],
+        "summary": "Vulnerability of resources not being closed or released in the keystore module\nImpact: Successful exploitation of this vulnerability will affect availability."
+    },
+    {
+        "Modified": "2024-09-06T13:48:00",
+        "Published": "2024-09-04T03:15:00",
+        "access": {},
+        "assigner": "psirt@huawei.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-45444",
+        "impact": {},
+        "last-modified": "2024-09-06T13:48:00",
+        "references": [
+            "https://consumer.huawei.com/en/support/bulletin/2024/9/"
+        ],
+        "summary": "Access permission verification vulnerability in the WMS module\nImpact: Successful exploitation of this vulnerability may affect service confidentiality."
+    },
+    {
+        "Modified": "2024-09-06T13:41:00",
+        "Published": "2024-08-08T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-42255",
+        "impact": {},
+        "last-modified": "2024-09-06T13:41:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b9afbb9a0c734197c59c43610071041044bf1562",
+            "https://git.kernel.org/stable/c/7dc357d343f134bf59815ff6098b93503ec8a23b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntpm: Use auth only after NULL check in tpm_buf_check_hmac_response()\n\nDereference auth after NULL check in tpm_buf_check_hmac_response().\nOtherwise, unless tpm2_sessions_init() was called, a call can cause NULL\ndereference, when TCG_TPM2_HMAC is enabled.\n\n[jarkko: adjusted the commit message.]"
+    },
+    {
+        "Modified": "2024-09-06T13:40:00",
+        "Published": "2024-08-08T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-42254",
+        "impact": {},
+        "last-modified": "2024-09-06T13:40:00",
+        "references": [
+            "https://git.kernel.org/stable/c/68d19af95a353f5e2b021602180b65b303eba99d",
+            "https://git.kernel.org/stable/c/bcc87d978b834c298bbdd9c52454c5d0a946e97e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nio_uring: fix error pbuf checking\n\nSyz reports a problem, which boils down to NULL vs IS_ERR inconsistent\nerror handling in io_alloc_pbuf_ring().\n\nKASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]\nRIP: 0010:__io_remove_buffers+0xac/0x700 io_uring/kbuf.c:341\nCall Trace:\n <TASK>\n io_put_bl io_uring/kbuf.c:378 [inline]\n io_destroy_buffers+0x14e/0x490 io_uring/kbuf.c:392\n io_ring_ctx_free+0xa00/0x1070 io_uring/io_uring.c:2613\n io_ring_exit_work+0x80f/0x8a0 io_uring/io_uring.c:2844\n process_one_work kernel/workqueue.c:3231 [inline]\n process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312\n worker_thread+0x86d/0xd40 kernel/workqueue.c:3390\n kthread+0x2f0/0x390 kernel/kthread.c:389\n ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147\n ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244"
+    },
+    {
+        "Modified": "2024-09-06T13:38:00",
+        "Published": "2024-08-08T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-667",
+        "id": "CVE-2024-42253",
+        "impact": {},
+        "last-modified": "2024-09-06T13:38:00",
+        "references": [
+            "https://git.kernel.org/stable/c/58a5c93bd1a6e949267400080f07e57ffe05ec34",
+            "https://git.kernel.org/stable/c/e2ecdddca80dd845df42376e4b0197fe97018ba2",
+            "https://git.kernel.org/stable/c/de7cffa53149c7b48bd1bb29b02390c9f05b7f41",
+            "https://git.kernel.org/stable/c/bfc6444b57dc7186b6acc964705d7516cbaf3904"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngpio: pca953x: fix pca953x_irq_bus_sync_unlock race\n\nEnsure that `i2c_lock' is held when setting interrupt latch and mask in\npca953x_irq_bus_sync_unlock() in order to avoid races.\n\nThe other (non-probe) call site pca953x_gpio_set_multiple() ensures the\nlock is held before calling pca953x_write_regs().\n\nThe problem occurred when a request raced against irq_bus_sync_unlock()\napproximately once per thousand reboots on an i.MX8MP based system.\n\n * Normal case\n\n   0-0022: write register AI|3a {03,02,00,00,01} Input latch P0\n   0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0\n   0-0022: write register AI|08 {ff,00,00,00,00} Output P3\n   0-0022: write register AI|12 {fc,00,00,00,00} Config P3\n\n * Race case\n\n   0-0022: write register AI|08 {ff,00,00,00,00} Output P3\n   0-0022: write register AI|08 {03,02,00,00,01} *** Wrong register ***\n   0-0022: write register AI|12 {fc,00,00,00,00} Config P3\n   0-0022: write register AI|49 {fc,fd,ff,ff,fe} Interrupt mask P0"
+    },
+    {
+        "Modified": "2024-09-06T13:37:00",
+        "Published": "2024-08-08T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-617",
+        "id": "CVE-2024-42252",
+        "impact": {},
+        "last-modified": "2024-09-06T13:37:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5d85f2ab79d5918a66539ebf046c099f7448db8d",
+            "https://git.kernel.org/stable/c/339b84ab6b1d66900c27bd999271cb2ae40ce812"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nclosures: Change BUG_ON() to WARN_ON()\n\nIf a BUG_ON() can be hit in the wild, it shouldn't be a BUG_ON()\n\nFor reference, this has popped up once in the CI, and we'll need more\ninfo to debug it:\n\n03240 ------------[ cut here ]------------\n03240 kernel BUG at lib/closure.c:21!\n03240 kernel BUG at lib/closure.c:21!\n03240 Internal error: Oops - BUG: 00000000f2000800 [#1] SMP\n03240 Modules linked in:\n03240 CPU: 15 PID: 40534 Comm: kworker/u80:1 Not tainted 6.10.0-rc4-ktest-ga56da69799bd #25570\n03240 Hardware name: linux,dummy-virt (DT)\n03240 Workqueue: btree_update btree_interior_update_work\n03240 pstate: 00001005 (nzcv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=--)\n03240 pc : closure_put+0x224/0x2a0\n03240 lr : closure_put+0x24/0x2a0\n03240 sp : ffff0000d12071c0\n03240 x29: ffff0000d12071c0 x28: dfff800000000000 x27: ffff0000d1207360\n03240 x26: 0000000000000040 x25: 0000000000000040 x24: 0000000000000040\n03240 x23: ffff0000c1f20180 x22: 0000000000000000 x21: ffff0000c1f20168\n03240 x20: 0000000040000000 x19: ffff0000c1f20140 x18: 0000000000000001\n03240 x17: 0000000000003aa0 x16: 0000000000003ad0 x15: 1fffe0001c326974\n03240 x14: 0000000000000a1e x13: 0000000000000000 x12: 1fffe000183e402d\n03240 x11: ffff6000183e402d x10: dfff800000000000 x9 : ffff6000183e402e\n03240 x8 : 0000000000000001 x7 : 00009fffe7c1bfd3 x6 : ffff0000c1f2016b\n03240 x5 : ffff0000c1f20168 x4 : ffff6000183e402e x3 : ffff800081391954\n03240 x2 : 0000000000000001 x1 : 0000000000000000 x0 : 00000000a8000000\n03240 Call trace:\n03240  closure_put+0x224/0x2a0\n03240  bch2_check_for_deadlock+0x910/0x1028\n03240  bch2_six_check_for_deadlock+0x1c/0x30\n03240  six_lock_slowpath.isra.0+0x29c/0xed0\n03240  six_lock_ip_waiter+0xa8/0xf8\n03240  __bch2_btree_node_lock_write+0x14c/0x298\n03240  bch2_trans_lock_write+0x6d4/0xb10\n03240  __bch2_trans_commit+0x135c/0x5520\n03240  btree_interior_update_work+0x1248/0x1c10\n03240  process_scheduled_works+0x53c/0xd90\n03240  worker_thread+0x370/0x8c8\n03240  kthread+0x258/0x2e8\n03240  ret_from_fork+0x10/0x20\n03240 Code: aa1303e0 d63f0020 a94363f7 17ffff8c (d4210000)\n03240 ---[ end trace 0000000000000000 ]---\n03240 Kernel panic - not syncing: Oops - BUG: Fatal exception\n03240 SMP: stopping secondary CPUs\n03241 SMP: failed to stop secondary CPUs 13,15\n03241 Kernel Offset: disabled\n03241 CPU features: 0x00,00000003,80000008,4240500b\n03241 Memory Limit: none\n03241 ---[ end Kernel panic - not syncing: Oops - BUG: Fatal exception ]---\n03246 ========= FAILED TIMEOUT copygc_torture_no_checksum in 7200s"
+    },
+    {
+        "Modified": "2024-09-06T13:35:00",
+        "Published": "2024-09-06T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6792",
+        "impact": {},
+        "last-modified": "2024-09-06T13:35:00",
+        "references": [
+            "https://wpscan.com/vulnerability/3c470edd-4b9b-461e-839f-f3a87f0060aa/"
+        ],
+        "summary": "The WP ULike  WordPress plugin before 4.7.2.1 does not properly sanitize user display names when rendering on a public page."
+    },
+    {
+        "Modified": "2024-09-06T13:33:00",
+        "Published": "2024-09-04T03:15:00",
+        "access": {},
+        "assigner": "psirt@huawei.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-45443",
+        "impact": {},
+        "last-modified": "2024-09-06T13:33:00",
+        "references": [
+            "https://consumer.huawei.com/en/support/bulletin/2024/9/"
+        ],
+        "summary": "Directory traversal vulnerability in the cust module\nImpact: Successful exploitation of this vulnerability will affect availability and confidentiality."
+    },
+    {
+        "Modified": "2024-09-06T13:24:00",
+        "Published": "2024-09-05T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2024-45392",
+        "impact": {},
+        "last-modified": "2024-09-06T13:24:00",
+        "references": [
+            "https://github.com/salesagility/SuiteCRM/security/advisories/GHSA-8qfx-h7pm-2587",
+            "https://docs.suitecrm.com/admin/releases/7.14.x/#_7_14_5"
+        ],
+        "summary": "SuiteCRM is an open-source customer relationship management (CRM) system. Prior to version 7.14.5 and 8.6.2, insufficient access control checks allow a threat actor to delete records via the API. Versions 7.14.5 and 8.6.2 contain a patch for the issue."
+    },
+    {
+        "Modified": "2024-09-06T13:23:00",
+        "Published": "2024-09-05T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-44728",
+        "impact": {},
+        "last-modified": "2024-09-06T13:23:00",
+        "references": [
+            "https://github.com/AslamMahi/CVE-Aslam-Mahi/blob/main/Sourcecodehero%20Event%20Management%20System/CVE-2024-44728.md"
+        ],
+        "summary": "Sourcecodehero Event Management System 1.0 allows Stored Cross-Site Scripting via parameters Full Name, Address, Email, and contact# in /clientdetails/admin/regester.php."
+    },
+    {
+        "Modified": "2024-09-06T13:23:00",
+        "Published": "2024-08-01T17:16:00",
+        "access": {},
+        "assigner": "security@1e.com",
+        "cvss": null,
+        "cwe": "CWE-601",
+        "id": "CVE-2024-7211",
+        "impact": {},
+        "last-modified": "2024-09-06T13:23:00",
+        "references": [
+            "https://www.1e.com/trust-security-compliance/cve-info/"
+        ],
+        "summary": "The 1E Platform's component utilized the third-party Duende Identity Server, which suffered from an open redirect vulnerability, permitting an attacker to control the redirection path of end users.\n\nNote: 1E Platform's component utilizing the third-party Duende Identity Server has been updated with the patch that includes the fix."
+    },
+    {
+        "Modified": "2024-09-06T13:21:00",
+        "Published": "2024-08-08T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-617",
+        "id": "CVE-2024-42251",
+        "impact": {},
+        "last-modified": "2024-09-06T13:21:00",
+        "references": [
+            "https://git.kernel.org/stable/c/16380f52b72166d6a33b508cc2509716f436253f",
+            "https://git.kernel.org/stable/c/e7db2762ea3e69f215b3ec4db666006deccc37b4",
+            "https://git.kernel.org/stable/c/fa2690af573dfefb47ba6eef888797a64b6b5f3c"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: page_ref: remove folio_try_get_rcu()\n\nThe below bug was reported on a non-SMP kernel:\n\n[  275.267158][ T4335] ------------[ cut here ]------------\n[  275.267949][ T4335] kernel BUG at include/linux/page_ref.h:275!\n[  275.268526][ T4335] invalid opcode: 0000 [#1] KASAN PTI\n[  275.269001][ T4335] CPU: 0 PID: 4335 Comm: trinity-c3 Not tainted 6.7.0-rc4-00061-gefa7df3e3bb5 #1\n[  275.269787][ T4335] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014\n[  275.270679][ T4335] RIP: 0010:try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))\n[  275.272813][ T4335] RSP: 0018:ffffc90005dcf650 EFLAGS: 00010202\n[  275.273346][ T4335] RAX: 0000000000000246 RBX: ffffea00066e0000 RCX: 0000000000000000\n[  275.274032][ T4335] RDX: fffff94000cdc007 RSI: 0000000000000004 RDI: ffffea00066e0034\n[  275.274719][ T4335] RBP: ffffea00066e0000 R08: 0000000000000000 R09: fffff94000cdc006\n[  275.275404][ T4335] R10: ffffea00066e0037 R11: 0000000000000000 R12: 0000000000000136\n[  275.276106][ T4335] R13: ffffea00066e0034 R14: dffffc0000000000 R15: ffffea00066e0008\n[  275.276790][ T4335] FS:  00007fa2f9b61740(0000) GS:ffffffff89d0d000(0000) knlGS:0000000000000000\n[  275.277570][ T4335] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[  275.278143][ T4335] CR2: 00007fa2f6c00000 CR3: 0000000134b04000 CR4: 00000000000406f0\n[  275.278833][ T4335] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[  275.279521][ T4335] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[  275.280201][ T4335] Call Trace:\n[  275.280499][ T4335]  <TASK>\n[ 275.280751][ T4335] ? die (arch/x86/kernel/dumpstack.c:421 arch/x86/kernel/dumpstack.c:434 arch/x86/kernel/dumpstack.c:447)\n[ 275.281087][ T4335] ? do_trap (arch/x86/kernel/traps.c:112 arch/x86/kernel/traps.c:153)\n[ 275.281463][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))\n[ 275.281884][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))\n[ 275.282300][ T4335] ? do_error_trap (arch/x86/kernel/traps.c:174)\n[ 275.282711][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))\n[ 275.283129][ T4335] ? handle_invalid_op (arch/x86/kernel/traps.c:212)\n[ 275.283561][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))\n[ 275.283990][ T4335] ? exc_invalid_op (arch/x86/kernel/traps.c:264)\n[ 275.284415][ T4335] ? asm_exc_invalid_op (arch/x86/include/asm/idtentry.h:568)\n[ 275.284859][ T4335] ? try_get_folio (include/linux/page_ref.h:275 (discriminator 3) mm/gup.c:79 (discriminator 3))\n[ 275.285278][ T4335] try_grab_folio (mm/gup.c:148)\n[ 275.285684][ T4335] __get_user_pages (mm/gup.c:1297 (discriminator 1))\n[ 275.286111][ T4335] ? __pfx___get_user_pages (mm/gup.c:1188)\n[ 275.286579][ T4335] ? __pfx_validate_chain (kernel/locking/lockdep.c:3825)\n[ 275.287034][ T4335] ? mark_lock (kernel/locking/lockdep.c:4656 (discriminator 1))\n[ 275.287416][ T4335] __gup_longterm_locked (mm/gup.c:1509 mm/gup.c:2209)\n[ 275.288192][ T4335] ? __pfx___gup_longterm_locked (mm/gup.c:2204)\n[ 275.288697][ T4335] ? __pfx_lock_acquire (kernel/locking/lockdep.c:5722)\n[ 275.289135][ T4335] ? __pfx___might_resched (kernel/sched/core.c:10106)\n[ 275.289595][ T4335] pin_user_pages_remote (mm/gup.c:3350)\n[ 275.290041][ T4335] ? __pfx_pin_user_pages_remote (mm/gup.c:3350)\n[ 275.290545][ T4335] ? find_held_lock (kernel/locking/lockdep.c:5244 (discriminator 1))\n[ 275.290961][ T4335] ? mm_access (kernel/fork.c:1573)\n[ 275.291353][ T4335] process_vm_rw_single_vec+0x142/0x360\n[ 275.291900][ T4335] ? __pfx_process_vm_rw_single_vec+0x10/0x10\n[ 275.292471][ T4335] ? mm_access (kernel/fork.c:1573)\n[ 275.292859][ T4335] process_vm_rw_core+0x272/0x4e0\n[ 275.293384][ T4335] ? hlock_class (a\n---truncated---"
+    },
+    {
+        "Modified": "2024-09-06T13:19:00",
+        "Published": "2024-07-18T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-682",
+        "id": "CVE-2024-41011",
+        "impact": {},
+        "last-modified": "2024-09-06T13:19:00",
+        "references": [
+            "https://git.kernel.org/stable/c/89fffbdf535ce659c1a26b51ad62070566e33b28",
+            "https://git.kernel.org/stable/c/4b4cff994a27ebf7bd3fb9a798a1cdfa8d01b724",
+            "https://git.kernel.org/stable/c/6186c93560889265bfe0914609c274eff40bbeb5",
+            "https://git.kernel.org/stable/c/be4a2a81b6b90d1a47eaeaace4cc8e2cb57b96c7",
+            "https://git.kernel.org/stable/c/009c4d78bcf07c4ac2e3dd9f275b4eaa72b4f884",
+            "https://git.kernel.org/stable/c/f7276cdc1912325b64c33fcb1361952c06e55f63",
+            "https://git.kernel.org/stable/c/8ad4838040e5515939c071a0f511ce2661a0889d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdkfd: don't allow mapping the MMIO HDP page with large pages\n\nWe don't get the right offset in that case.  The GPU has\nan unused 4K area of the register BAR space into which you can\nremap registers.  We remap the HDP flush registers into this\nspace to allow userspace (CPU or GPU) to flush the HDP when it\nupdates VRAM.  However, on systems with >4K pages, we end up\nexposing PAGE_SIZE of MMIO space."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2024-1744",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1408"
+        ],
+        "summary": "Exposure of Sensitive Information to an Unauthorized Actor vulnerability in Ariva Computer Accord ORS allows Retrieve Embedded Sensitive Data.This issue affects Accord ORS: before 7.3.2.1."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44739",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/zach341/Cve_report/blob/main/simple-forum-website/SQLi-1.md"
+        ],
+        "summary": "Sourcecodester Simple Forum Website v1.0 has a SQL injection vulnerability in /php-sqlite-forum/?page=manage_user&id=."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45039",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/Consensys/gnark/security/advisories/GHSA-q3hw-3gm4-w5cr",
+            "https://github.com/Consensys/gnark/commit/e7c66b000454f4d2a4ae48c005c34154d4cfc2a2"
+        ],
+        "summary": "gnark is a fast zk-SNARK library that offers a high-level API to design circuits. Versions prior to 0.11.0 have a soundness issue - in case of multiple commitments used inside the circuit the prover is able to choose all but the last commitment. As gnark uses the commitments for optimized non-native multiplication, lookup checks etc. as random challenges, then it could impact the soundness of the whole circuit. However, using multiple commitments has been discouraged due to the additional cost to the verifier and it has not been supported in the recursive in-circuit Groth16 verifier and Solidity verifier. gnark's maintainers expect the impact of the issue be very small - only for the users who have implemented the native Groth16 verifier or are using it with multiple commitments. We do not have information of such users. The issue has been patched in version 0.11.0. As a workaround, users should follow gnark maintainers' recommendation to use only a single commitment and then derive in-circuit commitments as needed using the `std/multicommit` package."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45040",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/Consensys/gnark/security/advisories/GHSA-9xcg-3q8v-7fq6",
+            "https://github.com/Consensys/gnark/pull/1245",
+            "https://github.com/Consensys/gnark/commit/afda68a38acca37becb8ba6d8982d03fee9559a0"
+        ],
+        "summary": "gnark is a fast zk-SNARK library that offers a high-level API to design circuits. Prior to version 0.11.0, commitments to private witnesses in Groth16 as implemented break the zero-knowledge property. The vulnerability affects only Groth16 proofs with commitments. Notably, PLONK proofs are not affected. The vulnerability affects the zero-knowledge property of the proofs - in case the witness (secret or internal) values are small, then the attacker may be able to enumerate all possible choices to deduce the actual value. If the possible choices for the variables to be committed is large or there are many values committed, then it would be computationally infeasible to enumerate all valid choices. It doesn't affect the completeness/soundness of the proofs. The vulnerability has been fixed in version 0.11.0. The patch to fix the issue is to add additional randomized value to the list of committed value at proving time to mask the rest of the values which were committed. As a workaround, the user can manually commit to a randomized value."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45299",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/alfio-event/alf.io/security/advisories/GHSA-mcx6-25f8-8rqw",
+            "https://github.com/alfio-event/alf.io/commit/e7131c588f4ac31067a41d0e31e6a6a721b2ff4b"
+        ],
+        "summary": "alf.io is an open source ticket reservation system for conferences, trade shows, workshops, and meetups. Prior to version 2.0-M5, the preloaded data as json is not escaped correctly, the administrator / event admin could break their own install by inserting non correctly escaped text. The Content-Security-Policy directive blocks any potential script execution. The administrator or event administrator can override the texts for customization purpose. The texts are not properly escaped. Version 2.0-M5 fixes this issue."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45300",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/alfio-event/alf.io/security/advisories/GHSA-67jg-m6f3-473g",
+            "https://github.com/alfio-event/alf.io/commit/53b3309e26e8acec6860d1e045df3046153a3245"
+        ],
+        "summary": "alf.io is an open source ticket reservation system for conferences, trade shows, workshops, and meetups. Prior to version 2.0-M5, a race condition allows the user to bypass the limit on the number of promo codes and use the discount coupon multiple times. In \"alf.io\", an event organizer can apply price discounts by using promo codes to your events. The organizer can limit the number of promo codes that will be used for this, but the time-gap between checking the number of codes and restricting the use of the codes allows a threat actor to bypass the promo code limit. Version 2.0-M5 fixes this issue."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-06T13:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45405",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/Byron/gitoxide/security/advisories/GHSA-m8rp-vv92-46c7",
+            "https://github.com/Byron/gitoxide/commit/650a1b5cf25e086197cc55a68525a411e1c28031",
+            "https://github.com/Byron/gitoxide/blob/1cfe577d461293879e91538dbc4bbfe01722e1e8/gix-path/src/env/git/mod.rs#L138-L142"
+        ],
+        "summary": "`gix-path` is a crate of the `gitoxide` project (an implementation of `git` written in Rust) dealing paths and their conversions. Prior to version 0.10.11, `gix-path` runs `git` to find the path of a configuration file associated with the `git` installation, but improperly resolves paths containing unusual or non-ASCII characters, in rare cases enabling a local attacker to inject configuration leading to code execution. Version 0.10.11 contains a patch for the issue.\n\nIn `gix_path::env`, the underlying implementation of the `installation_config` and `installation_config_prefix` functions calls `git config -l --show-origin` to find the path of a file to treat as belonging to the `git` installation. Affected versions of `gix-path` do not pass `-z`/`--null` to cause `git` to report literal paths. Instead, to cover the occasional case that `git` outputs a quoted path, they attempt to parse the path by stripping the quotation marks. The problem is that, when a path is quoted, it may change in substantial ways beyond the concatenation of quotation marks. If not reversed, these changes can result in another valid path that is not equivalent to the original.\n\nOn a single-user system, it is not possible to exploit this, unless `GIT_CONFIG_SYSTEM` and `GIT_CONFIG_GLOBAL` have been set to unusual values or Git has been installed in an unusual way. Such a scenario is not expected. Exploitation is unlikely even on a multi-user system, though it is plausible in some uncommon configurations or use cases. In general, exploitation is more likely to succeed if users are expected to install `git` themselves, and are likely to do so in predictable locations; locations where `git` is installed, whether due to usernames in their paths or otherwise, contain characters that `git` quotes by default in paths, such as non-English letters and accented letters; a custom `system`-scope configuration file is specified with the `GIT_CONFIG_SYSTEM` environment variable, and its path is in an unusual location or has strangely named components; or a `system`-scope configuration file is absent, empty, or suppressed by means other than `GIT_CONFIG_NOSYSTEM`. Currently, `gix-path` can treat a `global`-scope configuration file as belonging to the installation if no higher scope configuration file is available. This increases the likelihood of exploitation even on a system where `git` is installed system-wide in an ordinary way. However, exploitation is expected to be very difficult even under any combination of those factors."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-09-05T17:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-44727",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://github.com/AslamMahi/CVE-Aslam-Mahi/blob/main/Sourcecodehero%20Event%20Management%20System/CVE-2024-44727.MD"
+        ],
+        "summary": "Sourcecodehero Event Management System1.0 is vulnerable to SQL Injection via the parameter 'username' in /event/admin/login.php."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-08-28T12:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6449",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://cert.pl/en/posts/2024/08/CVE-2024-6449",
+            "https://cert.pl/posts/2024/08/CVE-2024-6449"
+        ],
+        "summary": "HyperView\u00a0Geoportal Toolkit in versions lower than\u00a08.5.0\u00a0does not restrict cross-domain requests when fetching remote content pointed by one of GET request parameters.\nAn unauthenticated remote attacker can prepare links, which upon opening will load scripts from a remote location controlled by the attacker and execute them in the user space.\nBy manipulating this parameter it is also possible to enumerate some of the devices in Local Area Network in which the server resides."
+    },
+    {
+        "Modified": "2024-09-06T13:15:00",
+        "Published": "2024-08-28T12:15:00",
+        "access": {},
+        "assigner": "cvd@cert.pl",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6450",
+        "impact": {},
+        "last-modified": "2024-09-06T13:15:00",
+        "references": [
+            "https://cert.pl/en/posts/2024/08/CVE-2024-6449",
+            "https://cert.pl/posts/2024/08/CVE-2024-6449"
+        ],
+        "summary": "HyperView\u00a0Geoportal Toolkit in versions lower than 8.5.0 is vulnerable to Reflected Cross-Site Scripting (XSS). An unauthenticated attacker might trick somebody into using a crafted URL, which will cause a script to be run in user's browser."
+    },
+    {
+        "Modified": "2024-09-06T13:11:00",
+        "Published": "2024-02-12T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-25744",
+        "impact": {},
+        "last-modified": "2024-09-06T13:11:00",
+        "references": [
+            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b82a8dbd3d2f4563156f7150c6f2ecab6e960b30",
+            "https://cdn.kernel.org/pub/linux/kernel/v6.x/ChangeLog-6.6.7"
+        ],
+        "summary": "In the Linux kernel before 6.6.7, an untrusted VMM can trigger int80 syscall handling at any given point. This is related to arch/x86/coco/tdx/tdx.c and arch/x86/mm/mem_encrypt_amd.c."
+    },
+    {
+        "Modified": "2024-09-06T13:06:00",
+        "Published": "2024-09-05T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-918",
+        "id": "CVE-2024-24759",
+        "impact": {},
+        "last-modified": "2024-09-06T13:06:00",
+        "references": [
+            "https://github.com/mindsdb/mindsdb/security/advisories/GHSA-4jcv-vp96-94xr",
+            "https://github.com/mindsdb/mindsdb/commit/5f7496481bd3db1d06a2d2e62c0dce960a1fe12b"
+        ],
+        "summary": "MindsDB is a platform for building artificial intelligence from enterprise data. Prior to version 23.12.4.2, a threat actor can bypass the server-side request forgery protection on the whole website with DNS Rebinding. The vulnerability can also lead to denial of service. Version 23.12.4.2 contains a patch."
+    },
+    {
+        "Modified": "2024-09-06T13:01:00",
+        "Published": "2024-09-05T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-45098",
+        "impact": {},
+        "last-modified": "2024-09-06T13:01:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7167255"
+        ],
+        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.9 could allow a user to bypass intended access restrictions and conduct resource modification."
+    },
+    {
+        "Modified": "2024-09-06T13:00:00",
+        "Published": "2024-02-12T03:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-25741",
+        "impact": {},
+        "last-modified": "2024-09-06T13:00:00",
+        "references": [
+            "https://www.spinics.net/lists/linux-usb/msg252167.html"
+        ],
+        "summary": "printer_write in drivers/usb/gadget/function/f_printer.c in the Linux kernel through 6.7.4 does not properly call usb_ep_queue, which might allow attackers to cause a denial of service or have unspecified other impact."
+    },
+    {
+        "Modified": "2024-09-06T12:51:00",
+        "Published": "2024-09-05T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-436",
+        "id": "CVE-2024-45097",
+        "impact": {},
+        "last-modified": "2024-09-06T12:51:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7167255"
+        ],
+        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.9 could allow a user to bypass intended access restrictions and conduct resource modification."
+    },
+    {
+        "Modified": "2024-09-06T12:34:00",
+        "Published": "2024-09-05T16:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2024-45096",
+        "impact": {},
+        "last-modified": "2024-09-06T12:34:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7167255"
+        ],
+        "summary": "IBM Aspera Faspex 5.0.0 through 5.0.9 could allow a user with access to the package to obtain sensitive information through a directory listing."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T05:15:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2024-38486",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000228355/dsa-2024-376-security-update-for-dell-networking-os10-vulnerability"
+        ],
+        "summary": "Dell SmartFabric OS10 Software, version(s) 10.5.5.4 through 10.5.5.10 and 10.5.6.x , contain(s) an Improper Neutralization of Special Elements used in a Command ('Command Injection') vulnerability. A low privileged attacker with remote access could potentially exploit this vulnerability, leading to Command execution."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T05:15:00",
+        "access": {},
+        "assigner": "secure@dell.com",
+        "cvss": null,
+        "cwe": "CWE-259",
+        "id": "CVE-2024-39585",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.dell.com/support/kbdoc/en-us/000228357/dsa-2024-377-security-update-for-dell-networking-os10-vulnerability"
+        ],
+        "summary": "Dell SmartFabric OS10 Software, version(s) 10.5.5.4 through 10.5.5.10 and 10.5.6.x, contain(s) an Use of Hard-coded Password vulnerability. A low privileged attacker with remote access could potentially exploit this vulnerability, leading to Client-side request forgery and Information disclosure."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T05:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45751",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://github.com/fujita/tgt/pull/67",
+            "https://github.com/fujita/tgt/compare/v1.0.92...v1.0.93"
+        ],
+        "summary": "tgt (aka Linux target framework) before 1.0.93 attempts to achieve entropy by calling rand without srand. The PRNG seed is always 1, and thus the sequence of challenges is always identical."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-7349",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/3a096506-b18e-419c-808b-6099baa628ce?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3139798/lifterlms/tags/7.7.6/includes/abstracts/abstract.llms.database.query.php"
+        ],
+        "summary": "The LifterLMS \u2013 WP LMS for eLearning, Online Courses, & Quizzes plugin for WordPress is vulnerable to blind SQL Injection via the 'order' parameter in all versions up to, and including, 7.7.5 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with administrator-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-639",
+        "id": "CVE-2024-8292",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/8fa4b5df-dc71-49de-880b-895eb1d9cdca?source=cve",
+            "https://plugins.trac.wordpress.org/browser/wp-recall/tags/16.26.8/add-on/commerce/functions-frontend.php#L113",
+            "https://plugins.trac.wordpress.org/browser/wp-recall/tags/16.26.8/add-on/commerce/classes/class-rcl-create-order.php#L127",
+            "https://plugins.trac.wordpress.org/browser/wp-recall/tags/16.26.8/rcl-functions.php#L1339",
+            "https://plugins.trac.wordpress.org/changeset/3145798/wp-recall/trunk/add-on/commerce/classes/class-rcl-create-order.php"
+        ],
+        "summary": "The WP-Recall \u2013 Registration, Profile, Commerce & More plugin for WordPress is vulnerable to privilege escalation/account takeover in all versions up to, and including, 16.26.8. This is due to to plugin not properly verifying a user's identity during new order creation. This makes it possible for unauthenticated attackers to supply any email through the user_email field and update the password for that user during new order creation. This requires the commerce addon to be enabled in order to exploit."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8317",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ac7f95c7-2159-4327-ba09-da7721f1312e?source=cve",
+            "https://plugins.trac.wordpress.org/browser/wpadcenter/trunk/admin/class-wpadcenter-admin.php#L2922",
+            "https://wordpress.org/plugins/wpadcenter/#developers",
+            "https://plugins.trac.wordpress.org/browser/wpadcenter/trunk/admin/class-wpadcenter-admin.php#L3020",
+            "https://plugins.trac.wordpress.org/browser/wpadcenter/trunk/admin/class-wpadcenter-admin.php#L3127",
+            "https://plugins.trac.wordpress.org/changeset/3146736/#file6",
+            "https://plugins.trac.wordpress.org/changeset/3146736/"
+        ],
+        "summary": "The WP AdCenter \u2013 Ad Manager & Adsense Ads plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the \u2018ad_alignment\u2019 attribute in all versions up to, and including, 2.5.6 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-8427",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/e84b68b6-1ce8-45fb-823f-a61158aa4d21?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3147218/frontend-post-submission-manager-lite/trunk/includes/classes/admin/class-fpsml-ajax-admin.php",
+            "https://plugins.trac.wordpress.org/browser/frontend-post-submission-manager-lite/tags/1.2.2/includes/classes/admin/class-fpsml-ajax-admin.php#L25"
+        ],
+        "summary": "The Frontend Post Submission Manager Lite \u2013 Frontend Posting WordPress Plugin plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the save_global_settings and process_form_edit functions in all versions up to, and including, 1.2.2. This makes it possible for authenticated attackers, with Subscriber-level access and above, to update the plugin's settings and forms."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52915",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b2f54ed7739dfdf42c4df0a11131aad7c8635464",
+            "https://git.kernel.org/stable/c/fa58d9db5cad4bb7bb694b6837e3b96d87554f2b",
+            "https://git.kernel.org/stable/c/b49c6e5dd236787f13a062ec528d724169f11152",
+            "https://git.kernel.org/stable/c/6c01ef65de0b321b2db1ef9abf8f1d15862b937e",
+            "https://git.kernel.org/stable/c/d9ef84a7c222497ecb5fdf93361c76931804825e",
+            "https://git.kernel.org/stable/c/0143f282b15f7cedc0392ea10050fb6000fd16e6",
+            "https://git.kernel.org/stable/c/41b7181a40af84448a2b144fb02d8bf32b7e9a23",
+            "https://git.kernel.org/stable/c/7bf744f2de0a848fb1d717f5831b03db96feae89"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: dvb-usb-v2: af9035: Fix null-ptr-deref in af9035_i2c_master_xfer\n\nIn af9035_i2c_master_xfer, msg is controlled by user. When msg[i].buf\nis null and msg[i].len is zero, former checks on msg[i].buf would be\npassed. Malicious data finally reach af9035_i2c_master_xfer. If accessing\nmsg[i].buf[0] without sanity check, null ptr deref would happen.\nWe add check on msg[i].len to prevent crash.\n\nSimilar commit:\ncommit 0ed554fd769a\n(\"media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer()\")"
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T09:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-52916",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c281355068bc258fd619c5aefd978595bede7bfe"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: aspeed: Fix memory overwrite if timing is 1600x900\n\nWhen capturing 1600x900, system could crash when system memory usage is\ntight.\n\nThe way to reproduce this issue:\n1. Use 1600x900 to display on host\n2. Mount ISO through 'Virtual media' on OpenBMC's web\n3. Run script as below on host to do sha continuously\n  #!/bin/bash\n  while [ [1] ];\n  do\n\tfind /media -type f -printf '\"%h/%f\"\\n' | xargs sha256sum\n  done\n4. Open KVM on OpenBMC's web\n\nThe size of macro block captured is 8x8. Therefore, we should make sure\nthe height of src-buf is 8 aligned to fix this issue."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T00:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45400",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://github.com/mlewand/ckeditor-plugin-openlink/security/advisories/GHSA-qj47-6x6q-m3c9",
+            "https://github.com/mlewand/ckeditor-plugin-openlink/commit/402391fdd4d9cfd079031372f9caebbf54993ffb"
+        ],
+        "summary": "ckeditor-plugin-openlink is a plugin for the CKEditor JavaScript text editor that extends the context menu with a possibility to open a link in a new tab. A vulnerability in versions of the plugin prior to 1.0.7 allowed a user to execute JavaScript code by abusing the link href attribute. The fix is available starting with version 1.0.7."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44082",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://bugs.launchpad.net/ironic/+bug/2071740",
+            "https://www.openwall.com/lists/oss-security/2024/09/04/4"
+        ],
+        "summary": "In OpenStack Ironic before 26.0.1 and ironic-python-agent before 9.13.1, there is a vulnerability in image processing, in which a crafted image could be used by an authenticated user to exploit undesired behaviors in qemu-img, including possible unauthorized access to potentially sensitive data. The affected/fixed version details are: Ironic: <21.4.3, >=22.0.0 <23.0.2, >=23.1.0 <24.1.2, >=25.0.0 <26.0.1; Ironic-python-agent: <9.4.2, >=9.5.0 <9.7.1, >=9.8.0 <9.11.1, >=9.12.0 <9.13.1."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T02:15:00",
+        "access": {},
+        "assigner": "product-security@apple.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-40865",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://support.apple.com/en-us/120915"
+        ],
+        "summary": "The issue was addressed by suspending Persona when the virtual keyboard is active. This issue is fixed in visionOS 1.3. Inputs to the virtual keyboard may be inferred from Persona."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T04:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2024-7415",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/01707346-86c2-45c8-a2c9-81a147506fa4?source=cve",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3146603%40remember-me-controls&new=3146603%40remember-me-controls&sfp_email=&sfph_mail=",
+            "https://plugins.trac.wordpress.org/browser/remember-me-controls/tags/2.0.1/tests/phpunit/bootstrap.php"
+        ],
+        "summary": "The Remember Me Controls plugin for WordPress is vulnerable to Full Path Disclosure in all versions up to, and including, 2.0.1. This is due to the plugin allowing direct access to the bootstrap.php file which has display_errors on. This makes it possible for unauthenticated attackers to retrieve the full path of the web application, which can be used to aid other attacks. The information displayed is not useful on its own, and requires another vulnerability to be present for damage to an affected website."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T04:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-269",
+        "id": "CVE-2024-8247",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2577102f-6355-4483-bd3d-1948497cb843?source=cve",
+            "https://plugins.trac.wordpress.org/browser/newsletters-lite/tags/4.9.9.1/wp-mailinglist.php#L3279",
+            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3146287%40newsletters-lite&new=3146287%40newsletters-lite&sfp_email=&sfph_mail="
+        ],
+        "summary": "The Newsletters plugin for WordPress is vulnerable to privilege escalation in all versions up to, and including, 4.9.9.2. This is due to the plugin not restricting what user meta can be updated as screen options. This makes it possible for authenticated attackers, with subscriber-level access and above, to escalate their privileges to that of an administrator. Please note that this only affects users with access to edit/update screen options, which means an administrator would need to grant lower privilege users with access to the Sent & Draft Emails page of the plugin in order for this to be exploited."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-06T04:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-8480",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/1e3e628f-b5e7-40fd-9d34-4a3b23e1e0e7?source=cve",
+            "https://plugins.trac.wordpress.org/browser/sirv/trunk/sirv.php?rev=3103410#L4647",
+            "https://plugins.trac.wordpress.org/browser/sirv/tags/7.2.7/sirv.php#L6331",
+            "https://plugins.trac.wordpress.org/changeset/3115018/"
+        ],
+        "summary": "The Image Optimizer, Resizer and CDN \u2013 Sirv plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the 'sirv_save_prevented_sizes' function in all versions up to, and including, 7.2.7. This makes it possible for authenticated attackers, with Contributor-level access and above, to exploit the 'sirv_upload_file_by_chunks_callback' function, which lacks proper file type validation, allowing attackers to upload arbitrary files on the affected site's server which may make remote code execution possible."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T23:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2024-39278",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-249-01"
+        ],
+        "summary": "Credentials to access device configuration information stored unencrypted in flash memory. These credentials would allow read-only access to network configuration information and terminal configuration data."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T23:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-311",
+        "id": "CVE-2024-42495",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-249-01"
+        ],
+        "summary": "Credentials to access device configuration were transmitted using an unencrypted protocol. These credentials would allow read-only access to network configuration information and terminal configuration data."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T20:15:00",
+        "access": {},
+        "assigner": "ics-cert@hq.dhs.gov",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-8395",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://ian.sh/tsa"
+        ],
+        "summary": "FlyCASS CASS and KCM systems did not correctly filter SQL queries, which\n made them vulnerable to attack by outside attackers with no \nauthentication."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-42491",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://github.com/asterisk/asterisk/security/advisories/GHSA-v428-g3cw-7hv9",
+            "https://github.com/asterisk/asterisk/commit/42a2f4ccfa2c7062a15063e765916b3332e34cc4",
+            "https://github.com/asterisk/asterisk/commit/4f01669c7c41c9184f3cce9a3cf1b2ebf6201742",
+            "https://github.com/asterisk/asterisk/commit/50bf8d4d3064930d28ecf1ce3397b14574d514d2",
+            "https://github.com/asterisk/asterisk/commit/7a0090325bfa9d778a39ae5f7d0a98109e4651c8",
+            "https://github.com/asterisk/asterisk/commit/a15050650abf09c10a3c135fab148220cd41d3a0"
+        ],
+        "summary": "Asterisk is an open-source private branch exchange (PBX). Prior to versions 18.24.3, 20.9.3, and 21.4.3 of Asterisk and versions 18.9-cert12 and 20.7-cert2 of certified-asterisk, if Asterisk attempts to send a SIP request to a URI whose host portion starts with `.1` or `[.1]`, and res_resolver_unbound is loaded, Asterisk will crash with a SEGV. To receive a patch, users should upgrade to one of the following versions: 18.24.3, 20.9.3, 21.4.3, certified-18.9-cert12, certified-20.7-cert2. Two workarounds are available. Disable res_resolver_unbound by setting `noload = res_resolver_unbound.so` in modules.conf, or set `rewrite_contact = yes` on all PJSIP endpoints. NOTE: This may not be appropriate for all Asterisk configurations."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T18:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45401",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://github.com/stripe/stripe-cli/security/advisories/GHSA-fv4g-gwpj-74gr",
+            "CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:C/C:H/I:H/A:H"
+        ],
+        "summary": "stripe-cli is a command-line tool for the payment processor Stripe. A vulnerability exists in stripe-cli starting in version 1.11.1 and prior to version 1.21.3 where a plugin package containing a manifest with a malformed plugin shortname installed using the --archive-url or --archive-path flags can overwrite arbitrary files. The update in version 1.21.3 addresses the path traversal vulnerability by removing the ability to install plugins from an archive URL or path. There has been no evidence of exploitation of this vulnerability."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T18:15:00",
+        "access": {},
+        "assigner": "security@progress.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-7591",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://support.kemptechnologies.com/hc/en-us/articles/29196371689613-LoadMaster-Security-Vulnerability-CVE-2024-7591"
+        ],
+        "summary": "Improper Input Validation vulnerability in Progress LoadMaster allows OS Command Injection.This issue affects:\n\n* LoadMaster: 7.2.40.0 and above\n\n* ECS: All versions\n\n* Multi-Tenancy: 7.1.35.4 and above"
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45157",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://mbed-tls.readthedocs.io/en/latest/security-advisories/",
+            "https://github.com/Mbed-TLS/mbedtls/releases/",
+            "https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2024-08-1/"
+        ],
+        "summary": "An issue was discovered in Mbed TLS before 2.28.9 and 3.x before 3.6.1, in which the user-selected algorithm is not used. Unlike previously documented, enabling MBEDTLS_PSA_HMAC_DRBG_MD_TYPE does not cause the PSA subsystem to use HMAC_DRBG: it uses HMAC_DRBG only when MBEDTLS_PSA_CRYPTO_EXTERNAL_RNG and MBEDTLS_CTR_DRBG_C are disabled."
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45158",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://mbed-tls.readthedocs.io/en/latest/security-advisories/",
+            "https://github.com/Mbed-TLS/mbedtls/releases/",
+            "https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2024-08-2/"
+        ],
+        "summary": "An issue was discovered in Mbed TLS 3.6 before 3.6.1. A stack buffer overflow in mbedtls_ecdsa_der_to_raw() and mbedtls_ecdsa_raw_to_der() can occur when the bits parameter is larger than the largest supported curve. In some configurations with PSA disabled, all values of bits are affected. (This never happens in internal library calls, but can affect applications that call these functions directly.)"
+    },
+    {
+        "Modified": "2024-09-06T12:08:00",
+        "Published": "2024-09-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45159",
+        "impact": {},
+        "last-modified": "2024-09-06T12:08:00",
+        "references": [
+            "https://mbed-tls.readthedocs.io/en/latest/security-advisories/",
+            "https://github.com/Mbed-TLS/mbedtls/releases/",
+            "https://mbed-tls.readthedocs.io/en/latest/security-advisories/mbedtls-security-advisory-2024-08-3/"
+        ],
+        "summary": "An issue was discovered in Mbed TLS 3.x before 3.6.1. With TLS 1.3, when a server enables optional authentication of the client, if the client-provided certificate does not have appropriate values in if keyUsage or extKeyUsage extensions, then the return value of mbedtls_ssl_get_verify_result() would incorrectly have the MBEDTLS_X509_BADCERT_KEY_USAGE and MBEDTLS_X509_BADCERT_KEY_USAGE bits clear. As a result, an attacker that had a certificate valid for uses other than TLS client authentication would nonetheless be able to use it for TLS client authentication. Only TLS 1.3 servers were affected, and only with optional authentication (with required authentication, the handshake would be aborted with a fatal alert)."
+    },
+    {
         "Modified": "2024-09-06T11:44:00",
         "Published": "2024-09-05T13:15:00",
         "access": {},
@@ -183,43 +1062,6 @@
         "summary": "The Geo Controller plugin for WordPress is vulnerable to unauthorized menu creation/deletion due to missing capability checks on the ajax__geolocate_menu and ajax__geolocate_remove_menu functions in all versions up to, and including, 8.6.9. This makes it possible for authenticated attackers, with Subscriber-level access and above, to create or delete WordPress menus."
     },
     {
-        "Modified": "2024-09-06T09:15:00",
-        "Published": "2024-09-06T09:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52915",
-        "impact": {},
-        "last-modified": "2024-09-06T09:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b2f54ed7739dfdf42c4df0a11131aad7c8635464",
-            "https://git.kernel.org/stable/c/fa58d9db5cad4bb7bb694b6837e3b96d87554f2b",
-            "https://git.kernel.org/stable/c/b49c6e5dd236787f13a062ec528d724169f11152",
-            "https://git.kernel.org/stable/c/6c01ef65de0b321b2db1ef9abf8f1d15862b937e",
-            "https://git.kernel.org/stable/c/d9ef84a7c222497ecb5fdf93361c76931804825e",
-            "https://git.kernel.org/stable/c/0143f282b15f7cedc0392ea10050fb6000fd16e6",
-            "https://git.kernel.org/stable/c/41b7181a40af84448a2b144fb02d8bf32b7e9a23",
-            "https://git.kernel.org/stable/c/7bf744f2de0a848fb1d717f5831b03db96feae89"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: dvb-usb-v2: af9035: Fix null-ptr-deref in af9035_i2c_master_xfer\n\nIn af9035_i2c_master_xfer, msg is controlled by user. When msg[i].buf\nis null and msg[i].len is zero, former checks on msg[i].buf would be\npassed. Malicious data finally reach af9035_i2c_master_xfer. If accessing\nmsg[i].buf[0] without sanity check, null ptr deref would happen.\nWe add check on msg[i].len to prevent crash.\n\nSimilar commit:\ncommit 0ed554fd769a\n(\"media: dvb-usb: az6027: fix null-ptr-deref in az6027_i2c_xfer()\")"
-    },
-    {
-        "Modified": "2024-09-06T09:15:00",
-        "Published": "2024-09-06T09:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52916",
-        "impact": {},
-        "last-modified": "2024-09-06T09:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c281355068bc258fd619c5aefd978595bede7bfe"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmedia: aspeed: Fix memory overwrite if timing is 1600x900\n\nWhen capturing 1600x900, system could crash when system memory usage is\ntight.\n\nThe way to reproduce this issue:\n1. Use 1600x900 to display on host\n2. Mount ISO through 'Virtual media' on OpenBMC's web\n3. Run script as below on host to do sha continuously\n  #!/bin/bash\n  while [ [1] ];\n  do\n\tfind /media -type f -printf '\"%h/%f\"\\n' | xargs sha256sum\n  done\n4. Open KVM on OpenBMC's web\n\nThe size of macro block captured is 8x8. Therefore, we should make sure\nthe height of src-buf is 8 aligned to fix this issue."
-    },
-    {
         "Modified": "2024-09-06T08:15:00",
         "Published": "2024-02-05T16:15:00",
         "access": {},
@@ -233,140 +1075,6 @@
             "https://www.br-automation.com/fileadmin/SA23P004_FTP_uses_unsecure_encryption_mechanisms-f57c147c.pdf"
         ],
         "summary": "The FTP server used on the B&R\nAutomation Runtime supports unsecure encryption mechanisms, such as SSLv3,\nTLSv1.0 and TLS1.1. An network-based attacker can exploit the flaws to conduct\nman-in-the-middle attacks or to decrypt communications between the affected product\nclients."
-    },
-    {
-        "Modified": "2024-09-06T07:15:00",
-        "Published": "2024-09-06T07:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-7349",
-        "impact": {},
-        "last-modified": "2024-09-06T07:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/3a096506-b18e-419c-808b-6099baa628ce?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3139798/lifterlms/tags/7.7.6/includes/abstracts/abstract.llms.database.query.php"
-        ],
-        "summary": "The LifterLMS \u2013 WP LMS for eLearning, Online Courses, & Quizzes plugin for WordPress is vulnerable to blind SQL Injection via the 'order' parameter in all versions up to, and including, 7.7.5 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with administrator-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
-    },
-    {
-        "Modified": "2024-09-06T07:15:00",
-        "Published": "2024-09-06T07:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-639",
-        "id": "CVE-2024-8292",
-        "impact": {},
-        "last-modified": "2024-09-06T07:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/8fa4b5df-dc71-49de-880b-895eb1d9cdca?source=cve",
-            "https://plugins.trac.wordpress.org/browser/wp-recall/tags/16.26.8/add-on/commerce/functions-frontend.php#L113",
-            "https://plugins.trac.wordpress.org/browser/wp-recall/tags/16.26.8/add-on/commerce/classes/class-rcl-create-order.php#L127",
-            "https://plugins.trac.wordpress.org/browser/wp-recall/tags/16.26.8/rcl-functions.php#L1339",
-            "https://plugins.trac.wordpress.org/changeset/3145798/wp-recall/trunk/add-on/commerce/classes/class-rcl-create-order.php"
-        ],
-        "summary": "The WP-Recall \u2013 Registration, Profile, Commerce & More plugin for WordPress is vulnerable to privilege escalation/account takeover in all versions up to, and including, 16.26.8. This is due to to plugin not properly verifying a user's identity during new order creation. This makes it possible for unauthenticated attackers to supply any email through the user_email field and update the password for that user during new order creation. This requires the commerce addon to be enabled in order to exploit."
-    },
-    {
-        "Modified": "2024-09-06T07:15:00",
-        "Published": "2024-09-06T07:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-8317",
-        "impact": {},
-        "last-modified": "2024-09-06T07:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ac7f95c7-2159-4327-ba09-da7721f1312e?source=cve",
-            "https://plugins.trac.wordpress.org/browser/wpadcenter/trunk/admin/class-wpadcenter-admin.php#L2922",
-            "https://wordpress.org/plugins/wpadcenter/#developers",
-            "https://plugins.trac.wordpress.org/browser/wpadcenter/trunk/admin/class-wpadcenter-admin.php#L3020",
-            "https://plugins.trac.wordpress.org/browser/wpadcenter/trunk/admin/class-wpadcenter-admin.php#L3127",
-            "https://plugins.trac.wordpress.org/changeset/3146736/#file6",
-            "https://plugins.trac.wordpress.org/changeset/3146736/"
-        ],
-        "summary": "The WP AdCenter \u2013 Ad Manager & Adsense Ads plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the \u2018ad_alignment\u2019 attribute in all versions up to, and including, 2.5.6 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-09-06T07:15:00",
-        "Published": "2024-09-06T07:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-8427",
-        "impact": {},
-        "last-modified": "2024-09-06T07:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/e84b68b6-1ce8-45fb-823f-a61158aa4d21?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3147218/frontend-post-submission-manager-lite/trunk/includes/classes/admin/class-fpsml-ajax-admin.php",
-            "https://plugins.trac.wordpress.org/browser/frontend-post-submission-manager-lite/tags/1.2.2/includes/classes/admin/class-fpsml-ajax-admin.php#L25"
-        ],
-        "summary": "The Frontend Post Submission Manager Lite \u2013 Frontend Posting WordPress Plugin plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the save_global_settings and process_form_edit functions in all versions up to, and including, 1.2.2. This makes it possible for authenticated attackers, with Subscriber-level access and above, to update the plugin's settings and forms."
-    },
-    {
-        "Modified": "2024-09-06T06:15:00",
-        "Published": "2024-09-06T06:15:00",
-        "access": {},
-        "assigner": "contact@wpscan.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-6792",
-        "impact": {},
-        "last-modified": "2024-09-06T06:15:00",
-        "references": [
-            "https://wpscan.com/vulnerability/3c470edd-4b9b-461e-839f-f3a87f0060aa/"
-        ],
-        "summary": "The WP ULike  WordPress plugin before 4.7.2.1 does not properly sanitize user display names when rendering on a public page."
-    },
-    {
-        "Modified": "2024-09-06T05:15:00",
-        "Published": "2024-09-06T05:15:00",
-        "access": {},
-        "assigner": "secure@dell.com",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2024-38486",
-        "impact": {},
-        "last-modified": "2024-09-06T05:15:00",
-        "references": [
-            "https://www.dell.com/support/kbdoc/en-us/000228355/dsa-2024-376-security-update-for-dell-networking-os10-vulnerability"
-        ],
-        "summary": "Dell SmartFabric OS10 Software, version(s) 10.5.5.4 through 10.5.5.10 and 10.5.6.x , contain(s) an Improper Neutralization of Special Elements used in a Command ('Command Injection') vulnerability. A low privileged attacker with remote access could potentially exploit this vulnerability, leading to Command execution."
-    },
-    {
-        "Modified": "2024-09-06T05:15:00",
-        "Published": "2024-09-06T05:15:00",
-        "access": {},
-        "assigner": "secure@dell.com",
-        "cvss": null,
-        "cwe": "CWE-259",
-        "id": "CVE-2024-39585",
-        "impact": {},
-        "last-modified": "2024-09-06T05:15:00",
-        "references": [
-            "https://www.dell.com/support/kbdoc/en-us/000228357/dsa-2024-377-security-update-for-dell-networking-os10-vulnerability"
-        ],
-        "summary": "Dell SmartFabric OS10 Software, version(s) 10.5.5.4 through 10.5.5.10 and 10.5.6.x, contain(s) an Use of Hard-coded Password vulnerability. A low privileged attacker with remote access could potentially exploit this vulnerability, leading to Client-side request forgery and Information disclosure."
-    },
-    {
-        "Modified": "2024-09-06T05:15:00",
-        "Published": "2024-09-06T05:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45751",
-        "impact": {},
-        "last-modified": "2024-09-06T05:15:00",
-        "references": [
-            "https://github.com/fujita/tgt/pull/67",
-            "https://github.com/fujita/tgt/compare/v1.0.92...v1.0.93"
-        ],
-        "summary": "tgt (aka Linux target framework) before 1.0.93 attempts to achieve entropy by calling rand without srand. The PRNG seed is always 1, and thus the sequence of challenges is always identical."
     },
     {
         "Modified": "2024-09-06T05:15:00",
@@ -414,58 +1122,6 @@
         "summary": "nGrinder before 3.5.9 allows to set delay without limitation, which could be the cause of Denial of Service by remote attacker."
     },
     {
-        "Modified": "2024-09-06T04:15:00",
-        "Published": "2024-09-06T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-200",
-        "id": "CVE-2024-7415",
-        "impact": {},
-        "last-modified": "2024-09-06T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/01707346-86c2-45c8-a2c9-81a147506fa4?source=cve",
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3146603%40remember-me-controls&new=3146603%40remember-me-controls&sfp_email=&sfph_mail=",
-            "https://plugins.trac.wordpress.org/browser/remember-me-controls/tags/2.0.1/tests/phpunit/bootstrap.php"
-        ],
-        "summary": "The Remember Me Controls plugin for WordPress is vulnerable to Full Path Disclosure in all versions up to, and including, 2.0.1. This is due to the plugin allowing direct access to the bootstrap.php file which has display_errors on. This makes it possible for unauthenticated attackers to retrieve the full path of the web application, which can be used to aid other attacks. The information displayed is not useful on its own, and requires another vulnerability to be present for damage to an affected website."
-    },
-    {
-        "Modified": "2024-09-06T04:15:00",
-        "Published": "2024-09-06T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-8247",
-        "impact": {},
-        "last-modified": "2024-09-06T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2577102f-6355-4483-bd3d-1948497cb843?source=cve",
-            "https://plugins.trac.wordpress.org/browser/newsletters-lite/tags/4.9.9.1/wp-mailinglist.php#L3279",
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3146287%40newsletters-lite&new=3146287%40newsletters-lite&sfp_email=&sfph_mail="
-        ],
-        "summary": "The Newsletters plugin for WordPress is vulnerable to privilege escalation in all versions up to, and including, 4.9.9.2. This is due to the plugin not restricting what user meta can be updated as screen options. This makes it possible for authenticated attackers, with subscriber-level access and above, to escalate their privileges to that of an administrator. Please note that this only affects users with access to edit/update screen options, which means an administrator would need to grant lower privilege users with access to the Sent & Draft Emails page of the plugin in order for this to be exploited."
-    },
-    {
-        "Modified": "2024-09-06T04:15:00",
-        "Published": "2024-09-06T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-8480",
-        "impact": {},
-        "last-modified": "2024-09-06T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/1e3e628f-b5e7-40fd-9d34-4a3b23e1e0e7?source=cve",
-            "https://plugins.trac.wordpress.org/browser/sirv/trunk/sirv.php?rev=3103410#L4647",
-            "https://plugins.trac.wordpress.org/browser/sirv/tags/7.2.7/sirv.php#L6331",
-            "https://plugins.trac.wordpress.org/changeset/3115018/"
-        ],
-        "summary": "The Image Optimizer, Resizer and CDN \u2013 Sirv plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the 'sirv_save_prevented_sizes' function in all versions up to, and including, 7.2.7. This makes it possible for authenticated attackers, with Contributor-level access and above, to exploit the 'sirv_upload_file_by_chunks_callback' function, which lacks proper file type validation, allowing attackers to upload arbitrary files on the affected site's server which may make remote code execution possible."
-    },
-    {
         "Modified": "2024-09-06T03:15:00",
         "Published": "2023-11-27T07:15:00",
         "access": {},
@@ -479,83 +1135,6 @@
             "https://cve.naver.com/detail/cve-2023-25632.html"
         ],
         "summary": "The Android Mobile Whale browser app before 3.0.1.2 allows the attacker to bypass its browser unlock function via 'Open in Whale' feature."
-    },
-    {
-        "Modified": "2024-09-06T02:15:00",
-        "Published": "2024-09-06T02:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40865",
-        "impact": {},
-        "last-modified": "2024-09-06T02:15:00",
-        "references": [
-            "https://support.apple.com/en-us/120915"
-        ],
-        "summary": "The issue was addressed by suspending Persona when the virtual keyboard is active. This issue is fixed in visionOS 1.3. Inputs to the virtual keyboard may be inferred from Persona."
-    },
-    {
-        "Modified": "2024-09-06T01:15:00",
-        "Published": "2024-09-06T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44082",
-        "impact": {},
-        "last-modified": "2024-09-06T01:15:00",
-        "references": [
-            "https://bugs.launchpad.net/ironic/+bug/2071740",
-            "https://www.openwall.com/lists/oss-security/2024/09/04/4"
-        ],
-        "summary": "In OpenStack Ironic before 26.0.1 and ironic-python-agent before 9.13.1, there is a vulnerability in image processing, in which a crafted image could be used by an authenticated user to exploit undesired behaviors in qemu-img, including possible unauthorized access to potentially sensitive data. The affected/fixed version details are: Ironic: <21.4.3, >=22.0.0 <23.0.2, >=23.1.0 <24.1.2, >=25.0.0 <26.0.1; Ironic-python-agent: <9.4.2, >=9.5.0 <9.7.1, >=9.8.0 <9.11.1, >=9.12.0 <9.13.1."
-    },
-    {
-        "Modified": "2024-09-06T00:15:00",
-        "Published": "2024-09-06T00:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45400",
-        "impact": {},
-        "last-modified": "2024-09-06T00:15:00",
-        "references": [
-            "https://github.com/mlewand/ckeditor-plugin-openlink/security/advisories/GHSA-qj47-6x6q-m3c9",
-            "https://github.com/mlewand/ckeditor-plugin-openlink/commit/402391fdd4d9cfd079031372f9caebbf54993ffb"
-        ],
-        "summary": "ckeditor-plugin-openlink is a plugin for the CKEditor JavaScript text editor that extends the context menu with a possibility to open a link in a new tab. A vulnerability in versions of the plugin prior to 1.0.7 allowed a user to execute JavaScript code by abusing the link href attribute. The fix is available starting with version 1.0.7."
-    },
-    {
-        "Modified": "2024-09-05T23:15:00",
-        "Published": "2024-09-05T23:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "CWE-522",
-        "id": "CVE-2024-39278",
-        "impact": {},
-        "last-modified": "2024-09-05T23:15:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-249-01"
-        ],
-        "summary": "Credentials to access device configuration information stored unencrypted in flash memory. These credentials would allow read-only access to network configuration information and terminal configuration data."
-    },
-    {
-        "Modified": "2024-09-05T23:15:00",
-        "Published": "2024-09-05T23:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "CWE-311",
-        "id": "CVE-2024-42495",
-        "impact": {},
-        "last-modified": "2024-09-05T23:15:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-249-01"
-        ],
-        "summary": "Credentials to access device configuration were transmitted using an unencrypted protocol. These credentials would allow read-only access to network configuration information and terminal configuration data."
     },
     {
         "Modified": "2024-09-05T23:15:00",
@@ -1017,557 +1596,5 @@
             "https://security.freebsd.org/advisories/FreeBSD-SA-24:11.ctl.asc"
         ],
         "summary": "The ctl_report_supported_opcodes function did not sufficiently validate a field provided by userspace, allowing an arbitrary write to a limited amount of kernel help memory.\n\nMalicious software running in a guest VM that exposes virtio_scsi can exploit the vulnerabilities to achieve code execution on the host in the bhyve userspace process, which typically runs as root.  Note that bhyve runs in a Capsicum sandbox, so malicious code is constrained by the capabilities available to the bhyve process.  A malicious iSCSI initiator could achieve remote code execution on the iSCSI target host."
-    },
-    {
-        "Modified": "2024-09-05T21:23:00",
-        "Published": "2024-09-05T05:15:00",
-        "access": {},
-        "assigner": "secteam@freebsd.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2024-43102",
-        "impact": {},
-        "last-modified": "2024-09-05T21:23:00",
-        "references": [
-            "https://security.freebsd.org/advisories/FreeBSD-SA-24:14.umtx.asc"
-        ],
-        "summary": "Concurrent removals of certain anonymous shared memory mappings by using the UMTX_SHM_DESTROY sub-request of UMTX_OP_SHM can lead to decreasing the reference count of the object representing the mapping too many times, causing it to be freed too early.\n\nA malicious code exercizing the UMTX_SHM_DESTROY sub-request in parallel can panic the kernel or enable further Use-After-Free attacks, potentially including code execution or Capsicum sandbox escape."
-    },
-    {
-        "Modified": "2024-09-05T21:22:00",
-        "Published": "2024-09-05T05:15:00",
-        "access": {},
-        "assigner": "secteam@freebsd.org",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-43110",
-        "impact": {},
-        "last-modified": "2024-09-05T21:22:00",
-        "references": [
-            "https://security.freebsd.org/advisories/FreeBSD-SA-24:11.ctl.asc"
-        ],
-        "summary": "The ctl_request_sense function could expose up to three bytes of the kernel heap to userspace.\n\nMalicious software running in a guest VM that exposes virtio_scsi can exploit the vulnerabilities to achieve code execution on the host in the bhyve userspace process, which typically runs as root.  Note that bhyve runs in a Capsicum sandbox, so malicious code is constrained by the capabilities available to the bhyve process.  A malicious iSCSI initiator could achieve remote code execution on the iSCSI target host."
-    },
-    {
-        "Modified": "2024-09-05T21:21:00",
-        "Published": "2024-09-05T05:15:00",
-        "access": {},
-        "assigner": "secteam@freebsd.org",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2024-45063",
-        "impact": {},
-        "last-modified": "2024-09-05T21:21:00",
-        "references": [
-            "https://security.freebsd.org/advisories/FreeBSD-SA-24:11.ctl.asc"
-        ],
-        "summary": "The function ctl_write_buffer incorrectly set a flag which resulted in a kernel Use-After-Free when a command finished processing.\n\nMalicious software running in a guest VM that exposes virtio_scsi can exploit the vulnerabilities to achieve code execution on the host in the bhyve userspace process, which typically runs as root.  Note that bhyve runs in a Capsicum sandbox, so malicious code is constrained by the capabilities available to the bhyve process.  A malicious iSCSI initiator could achieve remote code execution on the iSCSI target host."
-    },
-    {
-        "Modified": "2024-09-05T21:21:00",
-        "Published": "2024-09-05T05:15:00",
-        "access": {},
-        "assigner": "secteam@freebsd.org",
-        "cvss": null,
-        "cwe": "CWE-909",
-        "id": "CVE-2024-8178",
-        "impact": {},
-        "last-modified": "2024-09-05T21:21:00",
-        "references": [
-            "https://security.freebsd.org/advisories/FreeBSD-SA-24:11.ctl.asc"
-        ],
-        "summary": "The ctl_write_buffer and ctl_read_buffer functions allocated memory to be returned to userspace, without initializing it.\n\nMalicious software running in a guest VM that exposes virtio_scsi can exploit the vulnerabilities to achieve code execution on the host in the bhyve userspace process, which typically runs as root.  Note that bhyve runs in a Capsicum sandbox, so malicious code is constrained by the capabilities available to the bhyve process.  A malicious iSCSI initiator could achieve remote code execution on the iSCSI target host."
-    },
-    {
-        "Modified": "2024-09-05T21:14:00",
-        "Published": "2024-07-18T17:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "CWE-521",
-        "id": "CVE-2023-40539",
-        "impact": {},
-        "last-modified": "2024-09-05T21:14:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-medical-advisories/icsma-24-200-01",
-            "http://www.philips.com/productsecurity"
-        ],
-        "summary": "Philips Vue PACS does not require that users have strong passwords, which could make it easier for attackers to compromise user accounts."
-    },
-    {
-        "Modified": "2024-09-05T21:01:00",
-        "Published": "2024-07-18T17:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2023-40704",
-        "impact": {},
-        "last-modified": "2024-09-05T21:01:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-medical-advisories/icsma-24-200-01",
-            "http://www.philips.com/productsecurity"
-        ],
-        "summary": "Philips Vue PACS uses default credentials for potentially critical functionality."
-    },
-    {
-        "Modified": "2024-09-05T20:45:00",
-        "Published": "2024-07-18T17:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-40223",
-        "impact": {},
-        "last-modified": "2024-09-05T20:45:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-medical-advisories/icsma-24-200-01",
-            "http://www.philips.com/productsecurity"
-        ],
-        "summary": "Philips Vue PACS does not properly assign, modify, track, or check actor privileges, creating an unintended sphere of control for that actor."
-    },
-    {
-        "Modified": "2024-09-05T20:41:00",
-        "Published": "2024-07-18T17:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-40159",
-        "impact": {},
-        "last-modified": "2024-09-05T20:41:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-medical-advisories/icsma-24-200-01",
-            "http://www.philips.com/productsecurity"
-        ],
-        "summary": "A validated user not explicitly authorized to have access to certain sensitive information could access Philips Vue PACS on the same network to expose that information."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-06T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2023-47253",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://www.qualitor.com.br/qualitor-8-20",
-            "https://www.linkedin.com/in/xvinicius/",
-            "https://www.linkedin.com/in/hairrison-wenning-4631a4124/",
-            "https://openxp.xpsec.co/blog/cve-2023-47253"
-        ],
-        "summary": "Qualitor through 8.20 allows remote attackers to execute arbitrary code via PHP code in the html/ad/adpesquisasql/request/processVariavel.php gridValoresPopHidden parameter."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-06T08:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-47428",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/booking-calendar/wordpress-booking-calendar-appointment-booking-system-plugin-3-2-6-sql-injection?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in WpDevArt Booking calendar, Appointment Booking System allows SQL Injection.This issue affects Booking calendar, Appointment Booking System: from n/a through 3.2.7.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-06T08:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-47420",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/online-accessibility/wordpress-accessibility-suite-by-online-ada-plugin-4-11-sql-injection?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Online ADA Accessibility Suite by Online ADA allows SQL Injection.This issue affects Accessibility Suite by Online ADA: from n/a through 4.12."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-03T23:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-36677",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/sp-client-document-manager/wordpress-sp-project-document-manager-plugin-4-67-sql-injection?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Smartypants SP Project & Document Manager allows SQL Injection.This issue affects SP Project & Document Manager: from n/a through 4.67.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-03T20:15:00",
-        "access": {},
-        "assigner": "support@hackerone.com",
-        "cvss": null,
-        "cwe": "CWE-306",
-        "id": "CVE-2022-43554",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://download.wavelink.com/Files/avalanche_v6.4.1.236_release_notes.txt"
-        ],
-        "summary": "Ivanti Avalanche Smart Device Service Missing Authentication Local Privilege Escalation Vulnerability"
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-03T20:15:00",
-        "access": {},
-        "assigner": "support@hackerone.com",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2022-44569",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://help.ivanti.com/res/help/en_US/IA/2023/Admin/Content/relnotes.htm"
-        ],
-        "summary": "A locally authenticated attacker with low privileges can bypass authentication due to insecure inter-process communication."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-02T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-46925",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://github.com/reportico-web/reportico/issues/47"
-        ],
-        "summary": "Reportico 7.1.21 is vulnerable to Cross Site Scripting (XSS)."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-11-01T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2023-44954",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://www.bigtreecms.org/download/core/",
-            "https://github.com/Ciber-Mike/BigTree_CMS-Stored_XSS-Developer_Settings/blob/main/README.md"
-        ],
-        "summary": "Cross Site Scripting vulnerability in BigTree CMS v.4.5.7 allows a remote attacker to execute arbitrary code via the ID parameter in the Developer Settings functions."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-10-31T18:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-45955",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://github.com/IoT-Fuzz/IoT-Fuzz/blob/main/Nanoleaf%20Lightstrip%20Vulnerability%20Report.pdf"
-        ],
-        "summary": "An issue discovered in Nanoleaf Light strip v3.5.10 allows attackers to cause a denial of service via crafted write binding attribute commands."
-    },
-    {
-        "Modified": "2024-09-05T20:35:00",
-        "Published": "2023-10-30T18:15:00",
-        "access": {},
-        "assigner": "security@android.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2023-21390",
-        "impact": {},
-        "last-modified": "2024-09-05T20:35:00",
-        "references": [
-            "https://source.android.com/docs/security/bulletin/android-14"
-        ],
-        "summary": "In Sim, there is a possible way to evade mobile preference restrictions due to a permission bypass. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
-    },
-    {
-        "Modified": "2024-09-05T20:27:00",
-        "Published": "2024-08-27T18:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-Other",
-        "id": "CVE-2024-36068",
-        "impact": {},
-        "last-modified": "2024-09-05T20:27:00",
-        "references": [
-            "https://www.rubrik.com/products/cloud-data-management",
-            "https://www.rubrik.com/advisories/rbk-20240619-v0044"
-        ],
-        "summary": "An incorrect access control vulnerability in Rubrik CDM versions prior to 9.1.2-p1, 9.0.3-p6 and 8.1.3-p12, allows an attacker with network access to execute arbitrary code."
-    },
-    {
-        "Modified": "2024-09-05T20:15:00",
-        "Published": "2024-09-05T20:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-8395",
-        "impact": {},
-        "last-modified": "2024-09-05T20:15:00",
-        "references": [
-            "https://ian.sh/tsa"
-        ],
-        "summary": "FlyCASS CASS and KCM systems did not correctly filter SQL queries, which\n made them vulnerable to attack by outside attackers with no \nauthentication."
-    },
-    {
-        "Modified": "2024-09-05T19:58:00",
-        "Published": "2024-08-26T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-41879",
-        "impact": {},
-        "last-modified": "2024-09-05T19:58:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-41879"
-        ],
-        "summary": "Acrobat Reader versions 127.0.2651.105 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-05T19:47:00",
-        "Published": "2024-07-21T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37558",
-        "impact": {},
-        "last-modified": "2024-09-05T19:47:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wpfavicon/wordpress-wpfavicon-plugin-2-1-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Nazmul Hossain Nihal WPFavicon allows Stored XSS.This issue affects WPFavicon: from n/a through 2.1.1."
-    },
-    {
-        "Modified": "2024-09-05T19:43:00",
-        "Published": "2024-08-26T11:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-43887",
-        "impact": {},
-        "last-modified": "2024-09-05T19:43:00",
-        "references": [
-            "https://git.kernel.org/stable/c/954d55a59b2501f4a9bd693b40ce45a1c46cb2b3",
-            "https://git.kernel.org/stable/c/14ab4792ee120c022f276a7e4768f4dcb08f0cdd"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/tcp: Disable TCP-AO static key after RCU grace period\n\nThe lifetime of TCP-AO static_key is the same as the last\ntcp_ao_info. On the socket destruction tcp_ao_info ceases to be\nwith RCU grace period, while tcp-ao static branch is currently deferred\ndestructed. The static key definition is\n: DEFINE_STATIC_KEY_DEFERRED_FALSE(tcp_ao_needed, HZ);\n\nwhich means that if RCU grace period is delayed by more than a second\nand tcp_ao_needed is in the process of disablement, other CPUs may\nyet see tcp_ao_info which atent dead, but soon-to-be.\nAnd that breaks the assumption of static_key_fast_inc_not_disabled().\n\nSee the comment near the definition:\n> * The caller must make sure that the static key can't get disabled while\n> * in this function. It doesn't patch jump labels, only adds a user to\n> * an already enabled static key.\n\nOriginally it was introduced in commit eb8c507296f6 (\"jump_label:\nPrevent key->enabled int overflow\"), which is needed for the atomic\ncontexts, one of which would be the creation of a full socket from a\nrequest socket. In that atomic context, it's known by the presence\nof the key (md5/ao) that the static branch is already enabled.\nSo, the ref counter for that static branch is just incremented\ninstead of holding the proper mutex.\nstatic_key_fast_inc_not_disabled() is just a helper for such usage\ncase. But it must not be used if the static branch could get disabled\nin parallel as it's not protected by jump_label_mutex and as a result,\nraces with jump_label_update() implementation details.\n\nHappened on netdev test-bot[1], so not a theoretical issue:\n\n[] jump_label: Fatal kernel bug, unexpected op at tcp_inbound_hash+0x1a7/0x870 [ffffffffa8c4e9b7] (eb 50 0f 1f 44 != 66 90 0f 1f 00)) size:2 type:1\n[] ------------[ cut here ]------------\n[] kernel BUG at arch/x86/kernel/jump_label.c:73!\n[] Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI\n[] CPU: 3 PID: 243 Comm: kworker/3:3 Not tainted 6.10.0-virtme #1\n[] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014\n[] Workqueue: events jump_label_update_timeout\n[] RIP: 0010:__jump_label_patch+0x2f6/0x350\n...\n[] Call Trace:\n[]  <TASK>\n[]  arch_jump_label_transform_queue+0x6c/0x110\n[]  __jump_label_update+0xef/0x350\n[]  __static_key_slow_dec_cpuslocked.part.0+0x3c/0x60\n[]  jump_label_update_timeout+0x2c/0x40\n[]  process_one_work+0xe3b/0x1670\n[]  worker_thread+0x587/0xce0\n[]  kthread+0x28a/0x350\n[]  ret_from_fork+0x31/0x70\n[]  ret_from_fork_asm+0x1a/0x30\n[]  </TASK>\n[] Modules linked in: veth\n[] ---[ end trace 0000000000000000 ]---\n[] RIP: 0010:__jump_label_patch+0x2f6/0x350\n\n[1]: https://netdev-3.bots.linux.dev/vmksft-tcp-ao-dbg/results/696681/5-connect-deny-ipv6/stderr"
-    },
-    {
-        "Modified": "2024-09-05T19:41:00",
-        "Published": "2024-07-21T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37557",
-        "impact": {},
-        "last-modified": "2024-09-05T19:41:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wp-cookie-law-info/wordpress-wp-cookie-law-info-plugin-1-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Soham Web Solution WP Cookie Law Info allows Stored XSS.This issue affects WP Cookie Law Info: from n/a through 1.1."
-    },
-    {
-        "Modified": "2024-09-05T19:40:00",
-        "Published": "2024-07-21T07:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-37556",
-        "impact": {},
-        "last-modified": "2024-09-05T19:40:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/wordpress-notification-bar/wordpress-wordpress-notification-bar-plugin-1-3-10-cross-site-scripting-xss-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in SeedProd WordPress Notification Bar allows Stored XSS.This issue affects WordPress Notification Bar: from n/a through 1.3.10."
-    },
-    {
-        "Modified": "2024-09-05T19:36:00",
-        "Published": "2024-07-16T12:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-667",
-        "id": "CVE-2022-48826",
-        "impact": {},
-        "last-modified": "2024-09-05T19:36:00",
-        "references": [
-            "https://git.kernel.org/stable/c/770d1ba9a8201ce9bee0946eb03746449b6f3b80",
-            "https://git.kernel.org/stable/c/dddd832f35096fbc5004e3a7e58fb4d2cefb8deb",
-            "https://git.kernel.org/stable/c/0a3d12ab5097b1d045e693412e6b366b7e82031b"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/vc4: Fix deadlock on DSI device attach error\n\nDSI device attach to DSI host will be done with host device's lock\nheld.\n\nUn-registering host in \"device attach\" error path (ex: probe retry)\nwill result in deadlock with below call trace and non operational\nDSI display.\n\nStartup Call trace:\n[   35.043036]  rt_mutex_slowlock.constprop.21+0x184/0x1b8\n[   35.043048]  mutex_lock_nested+0x7c/0xc8\n[   35.043060]  device_del+0x4c/0x3e8\n[   35.043075]  device_unregister+0x20/0x40\n[   35.043082]  mipi_dsi_remove_device_fn+0x18/0x28\n[   35.043093]  device_for_each_child+0x68/0xb0\n[   35.043105]  mipi_dsi_host_unregister+0x40/0x90\n[   35.043115]  vc4_dsi_host_attach+0xf0/0x120 [vc4]\n[   35.043199]  mipi_dsi_attach+0x30/0x48\n[   35.043209]  tc358762_probe+0x128/0x164 [tc358762]\n[   35.043225]  mipi_dsi_drv_probe+0x28/0x38\n[   35.043234]  really_probe+0xc0/0x318\n[   35.043244]  __driver_probe_device+0x80/0xe8\n[   35.043254]  driver_probe_device+0xb8/0x118\n[   35.043263]  __device_attach_driver+0x98/0xe8\n[   35.043273]  bus_for_each_drv+0x84/0xd8\n[   35.043281]  __device_attach+0xf0/0x150\n[   35.043290]  device_initial_probe+0x1c/0x28\n[   35.043300]  bus_probe_device+0xa4/0xb0\n[   35.043308]  deferred_probe_work_func+0xa0/0xe0\n[   35.043318]  process_one_work+0x254/0x700\n[   35.043330]  worker_thread+0x4c/0x448\n[   35.043339]  kthread+0x19c/0x1a8\n[   35.043348]  ret_from_fork+0x10/0x20\n\nShutdown Call trace:\n[  365.565417] Call trace:\n[  365.565423]  __switch_to+0x148/0x200\n[  365.565452]  __schedule+0x340/0x9c8\n[  365.565467]  schedule+0x48/0x110\n[  365.565479]  schedule_timeout+0x3b0/0x448\n[  365.565496]  wait_for_completion+0xac/0x138\n[  365.565509]  __flush_work+0x218/0x4e0\n[  365.565523]  flush_work+0x1c/0x28\n[  365.565536]  wait_for_device_probe+0x68/0x158\n[  365.565550]  device_shutdown+0x24/0x348\n[  365.565561]  kernel_restart_prepare+0x40/0x50\n[  365.565578]  kernel_restart+0x20/0x70\n[  365.565591]  __do_sys_reboot+0x10c/0x220\n[  365.565605]  __arm64_sys_reboot+0x2c/0x38\n[  365.565619]  invoke_syscall+0x4c/0x110\n[  365.565634]  el0_svc_common.constprop.3+0xfc/0x120\n[  365.565648]  do_el0_svc+0x2c/0x90\n[  365.565661]  el0_svc+0x4c/0xf0\n[  365.565671]  el0t_64_sync_handler+0x90/0xb8\n[  365.565682]  el0t_64_sync+0x180/0x184"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-04T00:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-40215",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/demon-image-annotation/wordpress-demon-image-annotation-plugin-5-1-sql-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Demonisblack demon image annotation allows SQL Injection.This issue affects demon image annotation: from n/a through 5.1.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T16:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-46818",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/email-posts-to-subscribers/wordpress-email-posts-to-subscribers-plugin-6-2-sql-injection?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Gopi Ramasamy Email posts to subscribers allows SQL Injection.This issue affects Email posts to subscribers: from n/a through 6.2.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T17:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-25700",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/tutor/wordpress-tutor-lms-plugin-2-1-10-unauthenticated-sql-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Themeum Tutor LMS allows SQL Injection.This issue affects Tutor LMS: from n/a through 2.1.10.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T17:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-25800",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/tutor/wordpress-tutor-lms-plugin-2-1-10-multiple-student-sql-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Themeum Tutor LMS allows SQL Injection.This issue affects Tutor LMS: from n/a through 2.2.0.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T17:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-25990",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/tutor/wordpress-tutor-lms-plugin-2-1-10-multiple-tutor-instructor-sql-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Themeum Tutor LMS allows SQL Injection.This issue affects Tutor LMS: from n/a through 2.1.10.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T17:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-32508",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/order-your-posts-manually/wordpress-order-your-posts-manually-plugin-2-2-5-sql-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Rolf van Gelder Order Your Posts Manually allows SQL Injection.This issue affects Order Your Posts Manually: from n/a through 2.2.5.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T17:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2023-34179",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/groundhogg/wordpress-groundhogg-plugin-2-7-10-3-sql-injection-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Groundhogg Inc. Groundhogg allows SQL Injection.This issue affects Groundhogg: from n/a through 2.7.11.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T13:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-46808",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/armember-membership/wordpress-armember-3-4-11-sql-injection?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Repute Infosystems ARMember armember-membership allows SQL Injection.This issue affects ARMember: from n/a through 3.4.11.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T13:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-46859",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/spiffy-calendar/wordpress-spiffy-calendar-plugin-4-9-1-auth-sql-injection-sqli-vulnerability?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Spiffy Plugins Spiffy Calendar spiffy-calendar allows SQL Injection.This issue affects Spiffy Calendar: from n/a through 4.9.1.\n\n"
-    },
-    {
-        "Modified": "2024-09-05T19:35:00",
-        "Published": "2023-11-03T13:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2022-47426",
-        "impact": {},
-        "last-modified": "2024-09-05T19:35:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/neshan-maps/wordpress-neshan-maps-plugin-1-1-4-sql-injection?_s_id=cve"
-        ],
-        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Neshan Maps Platform Neshan Maps neshan-maps allows SQL Injection.This issue affects Neshan Maps: from n/a through 1.1.4.\n\n"
     }
 ]
