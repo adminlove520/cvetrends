@@ -1,5 +1,274 @@
 [
     {
+        "Modified": "2024-09-08T08:15:00",
+        "Published": "2024-09-08T08:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-209",
+        "id": "CVE-2024-8571",
+        "impact": {},
+        "last-modified": "2024-09-08T08:15:00",
+        "references": [
+            "https://vuldb.com/?id.276801",
+            "https://vuldb.com/?ctiid.276801",
+            "https://vuldb.com/?submit.400796",
+            "https://github.com/erjemin/roll_cms/issues/1"
+        ],
+        "summary": "A vulnerability was found in erjemin roll_cms up to 1484fe2c4e0805946a7bcf46218509fcb34883a9. It has been classified as problematic. This affects an unknown part of the file roll_cms/roll_cms/views.py. The manipulation leads to information exposure through error message. This product takes the approach of rolling releases to provide continious delivery. Therefore, version details for affected and updated releases are not available."
+    },
+    {
+        "Modified": "2024-09-08T08:15:00",
+        "Published": "2024-09-08T08:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8572",
+        "impact": {},
+        "last-modified": "2024-09-08T08:15:00",
+        "references": [
+            "https://vuldb.com/?id.276802",
+            "https://vuldb.com/?ctiid.276802",
+            "https://vuldb.com/?submit.401896",
+            "https://github.com/gouniverse/cms/issues/5",
+            "https://github.com/gouniverse/cms/issues/5#issuecomment-2330848731",
+            "https://github.com/gouniverse/cms/commit/3e661cdfb4beeb9fe2ad507cdb8104c0b17d072c",
+            "https://github.com/gouniverse/cms/releases/tag/v1.4.1"
+        ],
+        "summary": "A vulnerability was found in Gouniverse GoLang CMS 1.4.0. It has been declared as problematic. This vulnerability affects the function PageRenderHtmlByAlias of the file FrontendHandler.go. The manipulation of the argument alias leads to cross site scripting. The attack can be initiated remotely. Upgrading to version 1.4.1 is able to address this issue. The patch is identified as 3e661cdfb4beeb9fe2ad507cdb8104c0b17d072c. It is recommended to upgrade the affected component."
+    },
+    {
+        "Modified": "2024-09-08T08:15:00",
+        "Published": "2024-09-04T20:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-44974",
+        "impact": {},
+        "last-modified": "2024-09-08T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9a9afbbc3fbfca4975eea4aa5b18556db5a0c0b8",
+            "https://git.kernel.org/stable/c/0201d65d9806d287a00e0ba96f0321835631f63f",
+            "https://git.kernel.org/stable/c/48e50dcbcbaaf713d82bf2da5c16aeced94ad07d",
+            "https://git.kernel.org/stable/c/2b4f46f9503633dade75cb796dd1949d0e6581a1"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: pm: avoid possible UaF when selecting endp\n\nselect_local_address() and select_signal_address() both select an\nendpoint entry from the list inside an RCU protected section, but return\na reference to it, to be read later on. If the entry is dereferenced\nafter the RCU unlock, reading info could cause a Use-after-Free.\n\nA simple solution is to copy the required info while inside the RCU\nprotected section to avoid any risk of UaF later. The address ID might\nneed to be modified later to handle the ID0 case later, so a copy seems\nOK to deal with."
+    },
+    {
+        "Modified": "2024-09-08T08:15:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43835",
+        "impact": {},
+        "last-modified": "2024-09-08T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/468a729b78895893d0e580ceea49bed8ada2a2bd",
+            "https://git.kernel.org/stable/c/f8321fa75102246d7415a6af441872f6637c93ab",
+            "https://git.kernel.org/stable/c/6b5325f2457521bbece29499970c0117a648c620",
+            "https://git.kernel.org/stable/c/f5e9a22d19bb98a7e86034db85eb295e94187caa"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvirtio_net: Fix napi_skb_cache_put warning\n\nAfter the commit bdacf3e34945 (\"net: Use nested-BH locking for\nnapi_alloc_cache.\") was merged, the following warning began to appear:\n\n\t WARNING: CPU: 5 PID: 1 at net/core/skbuff.c:1451 napi_skb_cache_put+0x82/0x4b0\n\n\t  __warn+0x12f/0x340\n\t  napi_skb_cache_put+0x82/0x4b0\n\t  napi_skb_cache_put+0x82/0x4b0\n\t  report_bug+0x165/0x370\n\t  handle_bug+0x3d/0x80\n\t  exc_invalid_op+0x1a/0x50\n\t  asm_exc_invalid_op+0x1a/0x20\n\t  __free_old_xmit+0x1c8/0x510\n\t  napi_skb_cache_put+0x82/0x4b0\n\t  __free_old_xmit+0x1c8/0x510\n\t  __free_old_xmit+0x1c8/0x510\n\t  __pfx___free_old_xmit+0x10/0x10\n\nThe issue arises because virtio is assuming it's running in NAPI context\neven when it's not, such as in the netpoll case.\n\nTo resolve this, modify virtnet_poll_tx() to only set NAPI when budget\nis available. Same for virtnet_poll_cleantx(), which always assumed that\nit was in a NAPI context."
+    },
+    {
+        "Modified": "2024-09-08T08:15:00",
+        "Published": "2024-08-17T10:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-43859",
+        "impact": {},
+        "last-modified": "2024-09-08T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f44a25a8bfe0c15d33244539696cd9119cf44d18",
+            "https://git.kernel.org/stable/c/3ba0ae885215b325605ff7ebf6de12ac2adf204d",
+            "https://git.kernel.org/stable/c/298b1e4182d657c3e388adcc29477904e9600ed5",
+            "https://git.kernel.org/stable/c/5f04969136db674f133781626e0b692c5f2bf2f0"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nf2fs: fix to truncate preallocated blocks in f2fs_file_open()\n\nchenyuwen reports a f2fs bug as below:\n\nUnable to handle kernel NULL pointer dereference at virtual address 0000000000000011\n fscrypt_set_bio_crypt_ctx+0x78/0x1e8\n f2fs_grab_read_bio+0x78/0x208\n f2fs_submit_page_read+0x44/0x154\n f2fs_get_read_data_page+0x288/0x5f4\n f2fs_get_lock_data_page+0x60/0x190\n truncate_partial_data_page+0x108/0x4fc\n f2fs_do_truncate_blocks+0x344/0x5f0\n f2fs_truncate_blocks+0x6c/0x134\n f2fs_truncate+0xd8/0x200\n f2fs_iget+0x20c/0x5ac\n do_garbage_collect+0x5d0/0xf6c\n f2fs_gc+0x22c/0x6a4\n f2fs_disable_checkpoint+0xc8/0x310\n f2fs_fill_super+0x14bc/0x1764\n mount_bdev+0x1b4/0x21c\n f2fs_mount+0x20/0x30\n legacy_get_tree+0x50/0xbc\n vfs_get_tree+0x5c/0x1b0\n do_new_mount+0x298/0x4cc\n path_mount+0x33c/0x5fc\n __arm64_sys_mount+0xcc/0x15c\n invoke_syscall+0x60/0x150\n el0_svc_common+0xb8/0xf8\n do_el0_svc+0x28/0xa0\n el0_svc+0x24/0x84\n el0t_64_sync_handler+0x88/0xec\n\nIt is because inode.i_crypt_info is not initialized during below path:\n- mount\n - f2fs_fill_super\n  - f2fs_disable_checkpoint\n   - f2fs_gc\n    - f2fs_iget\n     - f2fs_truncate\n\nSo, let's relocate truncation of preallocated blocks to f2fs_file_open(),\nafter fscrypt_file_open()."
+    },
+    {
+        "Modified": "2024-09-08T08:15:00",
+        "Published": "2024-07-29T16:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-41096",
+        "impact": {},
+        "last-modified": "2024-09-08T08:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/ff1121d2214b794dc1772081f27bdd90721a84bc",
+            "https://git.kernel.org/stable/c/45fc8d20e0768ab0a0ad054081d0f68aa3c83976",
+            "https://git.kernel.org/stable/c/9eee5330656bf92f51cb1f09b2dc9f8cf975b3d1",
+            "https://git.kernel.org/stable/c/0ae40b2d0a5de6b045504098e365d4fdff5bbeba"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nPCI/MSI: Fix UAF in msi_capability_init\n\nKFENCE reports the following UAF:\n\n BUG: KFENCE: use-after-free read in __pci_enable_msi_range+0x2c0/0x488\n\n Use-after-free read at 0x0000000024629571 (in kfence-#12):\n  __pci_enable_msi_range+0x2c0/0x488\n  pci_alloc_irq_vectors_affinity+0xec/0x14c\n  pci_alloc_irq_vectors+0x18/0x28\n\n kfence-#12: 0x0000000008614900-0x00000000e06c228d, size=104, cache=kmalloc-128\n\n allocated by task 81 on cpu 7 at 10.808142s:\n  __kmem_cache_alloc_node+0x1f0/0x2bc\n  kmalloc_trace+0x44/0x138\n  msi_alloc_desc+0x3c/0x9c\n  msi_domain_insert_msi_desc+0x30/0x78\n  msi_setup_msi_desc+0x13c/0x184\n  __pci_enable_msi_range+0x258/0x488\n  pci_alloc_irq_vectors_affinity+0xec/0x14c\n  pci_alloc_irq_vectors+0x18/0x28\n\n freed by task 81 on cpu 7 at 10.811436s:\n  msi_domain_free_descs+0xd4/0x10c\n  msi_domain_free_locked.part.0+0xc0/0x1d8\n  msi_domain_alloc_irqs_all_locked+0xb4/0xbc\n  pci_msi_setup_msi_irqs+0x30/0x4c\n  __pci_enable_msi_range+0x2a8/0x488\n  pci_alloc_irq_vectors_affinity+0xec/0x14c\n  pci_alloc_irq_vectors+0x18/0x28\n\nDescriptor allocation done in:\n__pci_enable_msi_range\n    msi_capability_init\n        msi_setup_msi_desc\n            msi_insert_msi_desc\n                msi_domain_insert_msi_desc\n                    msi_alloc_desc\n                        ...\n\nFreed in case of failure in __msi_domain_alloc_locked()\n__pci_enable_msi_range\n    msi_capability_init\n        pci_msi_setup_msi_irqs\n            msi_domain_alloc_irqs_all_locked\n                msi_domain_alloc_locked\n                    __msi_domain_alloc_locked => fails\n                    msi_domain_free_locked\n                        ...\n\nThat failure propagates back to pci_msi_setup_msi_irqs() in\nmsi_capability_init() which accesses the descriptor for unmasking in the\nerror exit path.\n\nCure it by copying the descriptor and using the copy for the error exit path\nunmask operation.\n\n[ tglx: Massaged change log ]"
+    },
+    {
+        "Modified": "2024-09-08T07:15:00",
+        "Published": "2024-09-08T07:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-8570",
+        "impact": {},
+        "last-modified": "2024-09-08T07:15:00",
+        "references": [
+            "https://vuldb.com/?id.276800",
+            "https://vuldb.com/?ctiid.276800",
+            "https://vuldb.com/?submit.403126",
+            "https://github.com/teachersongsec/cve/issues/2",
+            "https://itsourcecode.com/"
+        ],
+        "summary": "A vulnerability was found in itsourcecode Tailoring Management System 1.0 and classified as critical. Affected by this issue is some unknown functionality of the file /inccatadd.php. The manipulation of the argument title leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6852",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/e6c7c153-8080-40b3-85e2-604ce7c66e32/"
+        ],
+        "summary": "The WP MultiTasking  WordPress plugin through 0.1.12 does not have CSRF check in place when updating its settings, which could allow attackers to make a logged in admin change them via a CSRF attack"
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6853",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/d1ce78c3-5d6c-465e-9ce8-6d92f7480333/"
+        ],
+        "summary": "The WP MultiTasking  WordPress plugin through 0.1.12 does not have CSRF check when updating welcome popups, which could allow attackers to make logged admins perform such action via a CSRF attack"
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6855",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/1124b07a-6274-49df-be77-615fda8f3a38/"
+        ],
+        "summary": "The WP MultiTasking  WordPress plugin through 0.1.12 does not have CSRF check when updating exit popups, which could allow attackers to make logged admins perform such action via a CSRF attack"
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6856",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/9700845e-89ca-4f9b-95f0-4b46a975b662/"
+        ],
+        "summary": "The WP MultiTasking  WordPress plugin through 0.1.12 does not have CSRF check in place when updating its settings, which could allow attackers to make a logged in admin change them via a CSRF attack"
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6859",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/34ae6121-304f-495b-bcc1-4fbd3d70a9fb/"
+        ],
+        "summary": "The WP MultiTasking  WordPress plugin through 0.1.12 does not validate and escape some of its shortcode attributes before outputting them back in a page/post where the shortcode is embed, which could allow users with the contributor role and above to perform Stored Cross-Site Scripting attacks"
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6924",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/39e79801-6ec7-4579-bc6b-fd7e899733a8/"
+        ],
+        "summary": "The TrueBooker  WordPress plugin before 1.0.3 does not properly sanitise and escape a parameter before using it in a SQL statement via an AJAX action available to unauthenticated users, leading to a SQL injection."
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6925",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/1da75fd7-e44f-4043-b8f4-7ee975356982/"
+        ],
+        "summary": "The TrueBooker  WordPress plugin before 1.0.3 does not have CSRF check in place when updating its settings, which could allow attackers to make a logged in admin change them via a CSRF attack."
+    },
+    {
+        "Modified": "2024-09-08T06:15:00",
+        "Published": "2024-09-08T06:15:00",
+        "access": {},
+        "assigner": "contact@wpscan.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-6928",
+        "impact": {},
+        "last-modified": "2024-09-08T06:15:00",
+        "references": [
+            "https://wpscan.com/vulnerability/7bb9474f-2b9d-4856-b36d-a43da3db0245/"
+        ],
+        "summary": "The Opti Marketing WordPress plugin through 2.0.9 does not properly sanitise and escape a parameter before using it in a SQL statement via an AJAX action available to unauthenticated users, leading to a SQL injection."
+    },
+    {
+        "Modified": "2024-09-08T05:15:00",
+        "Published": "2024-09-08T05:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-8569",
+        "impact": {},
+        "last-modified": "2024-09-08T05:15:00",
+        "references": [
+            "https://vuldb.com/?id.276799",
+            "https://vuldb.com/?ctiid.276799",
+            "https://vuldb.com/?submit.403125",
+            "https://github.com/teachersongsec/cve/issues/1",
+            "https://code-projects.org/"
+        ],
+        "summary": "A vulnerability has been found in code-projects Hospital Management System 1.0 and classified as critical. Affected by this vulnerability is an unknown functionality of the file user-login.php. The manipulation of the argument username leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
         "Modified": "2024-09-08T03:15:00",
         "Published": "2024-09-08T03:15:00",
         "access": {},
@@ -1391,288 +1660,5 @@
             "https://github.com/nu11secur1ty/CVE-nu11secur1ty/tree/main/vendors/oretnom23/2022/Employee-and-Visitor-Gate-Pass-Logging"
         ],
         "summary": "An SQL Injection vulnerability exists in Sourcecodester Employee and Visitor Gate Pass Logging System 1.0 via the username parameter."
-    },
-    {
-        "Modified": "2024-09-07T12:15:00",
-        "Published": "2024-09-07T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-1596",
-        "impact": {},
-        "last-modified": "2024-09-07T12:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/499a1892-12b7-49d5-b65f-4f53a968a23a?source=cve",
-            "https://ninjaforms.com/extensions/file-uploads/",
-            "https://ninjaforms.com/extensions/file-uploads/?changelog=1/"
-        ],
-        "summary": "The Ninja Forms - File Uploads plugin for WordPress is vulnerable to Stored Cross-Site Scripting via an uploaded file (e.g. RTX file) in all versions up to, and including, 3.3.16 due to insufficient input sanitization and output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
-    },
-    {
-        "Modified": "2024-09-07T12:15:00",
-        "Published": "2024-09-07T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-472",
-        "id": "CVE-2024-6010",
-        "impact": {},
-        "last-modified": "2024-09-07T12:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/fc04e676-e394-488e-a239-95af5f865613?source=cve",
-            "https://plugins.trac.wordpress.org/browser/cost-calculator-builder/trunk/frontend/dist/order.js"
-        ],
-        "summary": "The Cost Calculator Builder PRO plugin for WordPress is vulnerable to price manipulation in all versions up to, and including, 3.1.96. This is due to the plugin allowing the price field to be manipulated prior to processing via the 'create_cc_order' function, called from the Cost Calculator Builder plugin. This makes it possible for unauthenticated attackers to manipulate the price of orders submitted via the calculator. Note: this vulnerability was partially patched with the release of Cost Calculator Builder version 3.2.17."
-    },
-    {
-        "Modified": "2024-09-07T12:15:00",
-        "Published": "2024-09-07T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-7112",
-        "impact": {},
-        "last-modified": "2024-09-07T12:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/5a7358cd-fec8-4a16-ae6b-14194bb63396?source=cve",
-            "https://plugins.trac.wordpress.org/browser/booking-system/trunk/includes/calendars/class-backend-calendar-schedule.php#L529",
-            "https://plugins.trac.wordpress.org/browser/booking-system/trunk/includes/calendars/class-backend-calendar-schedule.php#L441",
-            "https://plugins.trac.wordpress.org/changeset/3147739/"
-        ],
-        "summary": "The Pinpoint Booking System \u2013 #1 WordPress Booking Plugin plugin for WordPress is vulnerable to SQL Injection via the \u2018schedule\u2019 parameter in all versions up to, and including, 2.9.9.5.0 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with Subscriber-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database."
-    },
-    {
-        "Modified": "2024-09-07T12:15:00",
-        "Published": "2024-09-07T12:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-7620",
-        "impact": {},
-        "last-modified": "2024-09-07T12:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/7600e7df-725d-4877-b0bf-5329f814723f?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3144365/customizer-export-import"
-        ],
-        "summary": "The Customizer Export/Import plugin for WordPress is vulnerable to arbitrary file uploads due to missing file type validation in the '_import' function in all versions up to, and including, 0.9.7. This makes it possible for authenticated attackers, with Administrator-level access and above, to upload arbitrary files on the affected site's server which may make remote code execution possible. NOTE: This vulnerability is only exploitable when used in conjunction with a race condition as the uploaded file is deleted shortly after it is created."
-    },
-    {
-        "Modified": "2024-09-07T09:15:00",
-        "Published": "2024-09-07T09:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-6849",
-        "impact": {},
-        "last-modified": "2024-09-07T09:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/85e0e1c5-211f-434c-8cc8-1ca676a8c7c2?source=cve",
-            "https://plugins.trac.wordpress.org/browser/preloader-plus/tags/2.2.1/inc/preloader-plus.php#L351",
-            "https://wordpress.org/plugins/preloader-plus/#developers"
-        ],
-        "summary": "The Preloader Plus \u2013 WordPress Loading Screen Plugin plugin for WordPress is vulnerable to Stored Cross-Site Scripting via SVG File uploads in all versions up to, and including, 2.2.1 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses the SVG file."
-    },
-    {
-        "Modified": "2024-09-07T09:15:00",
-        "Published": "2024-09-07T09:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2024-8523",
-        "impact": {},
-        "last-modified": "2024-09-07T09:15:00",
-        "references": [
-            "https://vuldb.com/?id.276728",
-            "https://vuldb.com/?ctiid.276728",
-            "https://vuldb.com/?submit.399916",
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/lmx.md"
-        ],
-        "summary": "A vulnerability was found in lmxcms up to 1.4 and classified as critical. Affected by this issue is the function formatData of the file /admin.php?m=Acquisi&a=testcj&lid=1 of the component SQL Command Execution Module. The manipulation of the argument data leads to code injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-09-07T09:15:00",
-        "Published": "2024-09-07T09:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-200",
-        "id": "CVE-2024-8538",
-        "impact": {},
-        "last-modified": "2024-09-07T09:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/1bd308a4-7157-4bc6-a55b-c6a4a62510a9?source=cve",
-            "https://github.com/uglyrobot/big-file-uploads/blob/master/tuxedo_big_file_uploads.php#L601",
-            "https://plugins.trac.wordpress.org/changeset/3147755/tuxedo-big-file-uploads/trunk/tuxedo_big_file_uploads.php"
-        ],
-        "summary": "The Big File Uploads \u2013 Increase Maximum File Upload Size plugin for WordPress is vulnerable to Full Path Disclosure in all versions up to, and including, 2.1.2. This is due the plugin not sanitizing a file path in an error message. This makes it possible for authenticated attackers, with author-level access and above, to retrieve the full path of the web application, which can be used to aid other attacks. The information displayed is not useful on its own, and requires another vulnerability to be present for damage to an affected website."
-    },
-    {
-        "Modified": "2024-09-07T08:15:00",
-        "Published": "2024-09-07T08:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45034",
-        "impact": {},
-        "last-modified": "2024-09-07T08:15:00",
-        "references": [
-            "https://github.com/apache/airflow/pull/41672",
-            "https://lists.apache.org/thread/b4fcw33vh60yfg9990n5vmc7sy2dcgjx"
-        ],
-        "summary": "Apache Airflow versions before 2.10.1 have a vulnerability that allows\u00a0DAG authors to add local settings to the DAG folder and get it executed by the scheduler, where the scheduler is not supposed to execute code submitted by the DAG author. \nUsers are advised to upgrade to version 2.10.1 or later, which has fixed the vulnerability."
-    },
-    {
-        "Modified": "2024-09-07T08:15:00",
-        "Published": "2024-09-07T08:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-116",
-        "id": "CVE-2024-45498",
-        "impact": {},
-        "last-modified": "2024-09-07T08:15:00",
-        "references": [
-            "https://github.com/apache/airflow/pull/41873",
-            "https://lists.apache.org/thread/tl7lzczcqdmqj2pcpbvtjdpd2tb9561n"
-        ],
-        "summary": "Example DAG: example_inlet_event_extra.py shipped with Apache Airflow version 2.10.0 has a vulnerability that allows an authenticated attacker with only DAG trigger permission to execute arbitrary commands. If you used that example as the base of your DAGs - please review if you have not copied the dangerous example; see  https://github.com/apache/airflow/pull/41873 \u00a0for more information. We recommend against exposing the example DAGs in your deployment. If you must expose the example DAGs, upgrade Airflow to version 2.10.1 or later."
-    },
-    {
-        "Modified": "2024-09-07T08:15:00",
-        "Published": "2024-09-07T08:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-8521",
-        "impact": {},
-        "last-modified": "2024-09-07T08:15:00",
-        "references": [
-            "https://vuldb.com/?id.276726",
-            "https://vuldb.com/?ctiid.276726",
-            "https://vuldb.com/?submit.399819",
-            "https://github.com/wavelog/wavelog/pull/744",
-            "https://github.com/GithubUser843205/CVEs/tree/main/CVE-2024-8521",
-            "https://github.com/wavelog/wavelog/commit/b31002cec6b71ab5f738881806bb546430ec692e",
-            "https://github.com/wavelog/wavelog/releases/tag/1.8.1"
-        ],
-        "summary": "A vulnerability, which was classified as problematic, was found in Wavelog up to 1.8.0. Affected is the function index of the file /qso of the component Live QSO. The manipulation of the argument manual leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. Upgrading to version 1.8.1 is able to address this issue. The patch is identified as b31002cec6b71ab5f738881806bb546430ec692e. It is recommended to upgrade the affected component."
-    },
-    {
-        "Modified": "2024-09-07T03:15:00",
-        "Published": "2024-05-07T21:15:00",
-        "access": {},
-        "assigner": "cna@python.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4030",
-        "impact": {},
-        "last-modified": "2024-09-07T03:15:00",
-        "references": [
-            "https://mail.python.org/archives/list/security-announce@python.org/thread/PRGS5OR3N3PNPT4BMV2VAGN5GMUI5636/",
-            "https://github.com/python/cpython/issues/118486",
-            "https://github.com/python/cpython/commit/81939dad77001556c527485d31a2d0f4a759033e",
-            "https://github.com/python/cpython/commit/8ed546679524140d8282175411fd141fe7df070d",
-            "https://github.com/python/cpython/commit/35c799d79177b962ddace2fa068101465570a29a",
-            "https://github.com/python/cpython/commit/5130731c9e779b97d00a24f54cdce73ce9975dfd",
-            "https://github.com/python/cpython/commit/66f8bb76a15e64a1bb7688b177ed29e26230fdee",
-            "https://github.com/python/cpython/commit/6d0850c4c8188035643586ab4d8ec2468abd699e",
-            "https://github.com/python/cpython/commit/91e3669e01245185569d09e9e6e11641282971ee",
-            "https://github.com/python/cpython/commit/94591dca510c796c7d40e9b4167ea56f2fdf28ca",
-            "https://github.com/python/cpython/commit/c8f868dc52f98011d0f9b459b6487920bfb0ac4d",
-            "https://github.com/python/cpython/commit/d86b49411753bf2c83291e3a14ae43fefded2f84",
-            "https://github.com/python/cpython/commit/e1dfa978b1ad210d551385ad8073ec6154f53763",
-            "https://github.com/python/cpython/commit/eb29e2f5905da93333d1ce78bc98b151e763ff46",
-            "https://security.netapp.com/advisory/ntap-20240705-0005/"
-        ],
-        "summary": "On Windows a directory returned by tempfile.mkdtemp() would not always have permissions set to restrict reading and writing to the temporary directory by other users, instead usually inheriting the correct permissions from the default location. Alternate configurations or users without a profile directory may not have the intended permissions.\n\nIf you\u2019re not using Windows or haven\u2019t changed the temporary directory location then you aren\u2019t affected by this vulnerability. On other platforms the returned directory is consistently readable and writable only by the current user.\n\nThis issue was caused by Python not supporting Unix permissions on Windows. The fix adds support for Unix \u201c700\u201d for the mkdir function on Windows which is used by mkdtemp() to ensure the newly created directory has the proper permissions."
-    },
-    {
-        "Modified": "2024-09-07T01:34:00",
-        "Published": "2024-09-03T19:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2024-45307",
-        "impact": {},
-        "last-modified": "2024-09-07T01:34:00",
-        "references": [
-            "https://github.com/onesoft-sudo/sudobot/security/advisories/GHSA-crgg-w3rr-r9h4",
-            "https://github.com/onesoft-sudo/sudobot/commit/ef46ca98562f3c1abef4ff7dd94d8f7b8155ee50"
-        ],
-        "summary": "SudoBot, a Discord moderation bot, is vulnerable to privilege escalation and exploit of the `-config` command in versions prior to 9.26.7. Anyone is theoretically able to update any configuration of the bot and potentially gain control over the bot's settings. Every version of v9 before v9.26.7 is affected. Other versions (e.g. v8) are not affected. Users should upgrade to version 9.26.7 to receive a patch. A workaround would be to create a command permission overwrite in the Database. A SQL statement provided in the GitHub Security Advisor can be executed to create a overwrite that disallows users without `ManageGuild` permission to run the `-config` command. Run the SQL statement for every server the bot is in, and replace `<guild_id>` with the appropriate Guild ID each time."
-    },
-    {
-        "Modified": "2024-09-06T23:35:00",
-        "Published": "2024-08-26T20:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-44796",
-        "impact": {},
-        "last-modified": "2024-09-06T23:35:00",
-        "references": [
-            "http://picuploader.com",
-            "https://github.com/xiebruce/PicUploader",
-            "https://github.com/xiebruce/PicUploader/issues/90"
-        ],
-        "summary": "A cross-site scripting (XSS) vulnerability in the component /auth/AzureRedirect.php of PicUploader commit fcf82ea allows attackers to execute arbitrary web scripts or HTML via a crafted payload injected into the error_description parameter."
-    },
-    {
-        "Modified": "2024-09-06T23:35:00",
-        "Published": "2024-06-13T21:15:00",
-        "access": {},
-        "assigner": "dsap-vuln-management@google.com",
-        "cvss": null,
-        "cwe": "CWE-327",
-        "id": "CVE-2024-32911",
-        "impact": {},
-        "last-modified": "2024-09-06T23:35:00",
-        "references": [
-            "https://source.android.com/security/bulletin/pixel/2024-06-01"
-        ],
-        "summary": "There is a possible escalation of privilege due to improperly used crypto. This could lead to remote escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
-    },
-    {
-        "Modified": "2024-09-06T23:35:00",
-        "Published": "2024-05-14T15:23:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30802",
-        "impact": {},
-        "last-modified": "2024-09-06T23:35:00",
-        "references": [
-            "https://github.com/WarmBrew/web_vul/blob/main/TTX.md"
-        ],
-        "summary": "An issue in Vehicle Management System 7.31.0.3_20230412 allows an attacker to escalate privileges via the login.html component."
-    },
-    {
-        "Modified": "2024-09-06T23:35:00",
-        "Published": "2024-04-29T01:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-33903",
-        "impact": {},
-        "last-modified": "2024-09-06T23:35:00",
-        "references": [
-            "https://github.com/carla-simulator/carla/issues/7025",
-            "https://github.com/carla-simulator/carla/issues/7394#issuecomment-2058130066",
-            "https://github.com/carla-simulator/carla/pull/7445",
-            "https://github.com/carla-simulator/carla/tags",
-            "https://github.com/carla-simulator/carla/blob/60bd026b4822b4edb8a68cc17b9119866f303853/Docs/core_concepts.md"
-        ],
-        "summary": "In CARLA through 0.9.15.2, the collision sensor mishandles some situations involving pedestrians or bicycles, in part because the collision sensor function is not exposed to the Blueprint library."
     }
 ]
