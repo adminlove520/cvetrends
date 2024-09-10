@@ -1,5 +1,45 @@
 [
     {
+        "Modified": "2024-09-09T23:15:00",
+        "Published": "2024-08-21T14:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-7885",
+        "impact": {},
+        "last-modified": "2024-09-09T23:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-7885",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2305290",
+            "https://access.redhat.com/errata/RHSA-2024:6508"
+        ],
+        "summary": "A vulnerability was found in Undertow where the ProxyProtocolReadListener reuses the same StringBuilder instance across multiple requests. This issue occurs when the parseProxyProtocolV1 method processes multiple requests on the same HTTP connection. As a result, different requests may share the same StringBuilder instance, potentially leading to information leakage between requests or responses. In some cases, a value from a previous request or response may be erroneously reused, which could lead to unintended data exposure. This issue primarily results in errors and connection termination but creates a risk of data leakage in multi-request environments."
+    },
+    {
+        "Modified": "2024-09-09T23:15:00",
+        "Published": "2024-07-08T21:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-674",
+        "id": "CVE-2024-5971",
+        "impact": {},
+        "last-modified": "2024-09-09T23:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-5971",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2292211",
+            "https://access.redhat.com/errata/RHSA-2024:4392",
+            "https://access.redhat.com/errata/RHSA-2024:4884",
+            "https://access.redhat.com/errata/RHSA-2024:5143",
+            "https://access.redhat.com/errata/RHSA-2024:5144",
+            "https://access.redhat.com/errata/RHSA-2024:5145",
+            "https://access.redhat.com/errata/RHSA-2024:5147",
+            "https://access.redhat.com/errata/RHSA-2024:6508"
+        ],
+        "summary": "A vulnerability was found in Undertow, where the chunked response hangs after the body was flushed. The response headers and body were sent but the client would continue waiting as Undertow does not send the expected 0\\r\\n termination of the chunked response. This results in uncontrolled resource consumption, leaving the server side to a denial of service attack. This happens only with Java 17 TLSv1.3 scenarios."
+    },
+    {
         "Modified": "2024-09-09T21:35:00",
         "Published": "2024-09-09T20:15:00",
         "access": {},
@@ -1602,48 +1642,5 @@
             "https://git.kernel.org/stable/c/61cc70d9e8ef5b042d4ed87994d20100ec8896d9"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvt_ioctl: fix array_index_nospec in vt_setactivate\n\narray_index_nospec ensures that an out-of-bounds value is set to zero\non the transient path. Decreasing the value by one afterwards causes\na transient integer underflow. vsa.console should be decreased first\nand then sanitized with array_index_nospec.\n\nKasper Acknowledgements: Jakob Koschel, Brian Johannesmeyer, Kaveh\nRazavi, Herbert Bos, Cristiano Giuffrida from the VUSec group at VU\nAmsterdam."
-    },
-    {
-        "Modified": "2024-09-09T18:16:00",
-        "Published": "2024-07-12T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-667",
-        "id": "CVE-2024-40981",
-        "impact": {},
-        "last-modified": "2024-09-09T18:16:00",
-        "references": [
-            "https://git.kernel.org/stable/c/79636f636126775436a11ee9cf00a9253a33ac11",
-            "https://git.kernel.org/stable/c/154e3f862ba33675cf3f4abf0a0a309a89df87d2",
-            "https://git.kernel.org/stable/c/82cdea8f3af1e36543c937df963d108c60bea030",
-            "https://git.kernel.org/stable/c/92176caf9896572f00e741a93cecc0ef1172da07",
-            "https://git.kernel.org/stable/c/fed7914858a1f1f3e6350bb0f620d6ef15107d16",
-            "https://git.kernel.org/stable/c/2685008a5f9a636434a8508419cee8158a2f52c8",
-            "https://git.kernel.org/stable/c/ae7f3cffe86aea3da0e8e079525a1ae619b8862a",
-            "https://git.kernel.org/stable/c/40dc8ab605894acae1473e434944924a22cfaaa0"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbatman-adv: bypass empty buckets in batadv_purge_orig_ref()\n\nMany syzbot reports are pointing to soft lockups in\nbatadv_purge_orig_ref() [1]\n\nRoot cause is unknown, but we can avoid spending too much\ntime there and perhaps get more interesting reports.\n\n[1]\n\nwatchdog: BUG: soft lockup - CPU#0 stuck for 27s! [kworker/u4:6:621]\nModules linked in:\nirq event stamp: 6182794\n hardirqs last  enabled at (6182793): [<ffff8000801dae10>] __local_bh_enable_ip+0x224/0x44c kernel/softirq.c:386\n hardirqs last disabled at (6182794): [<ffff80008ad66a78>] __el1_irq arch/arm64/kernel/entry-common.c:533 [inline]\n hardirqs last disabled at (6182794): [<ffff80008ad66a78>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:551\n softirqs last  enabled at (6182792): [<ffff80008aab71c4>] spin_unlock_bh include/linux/spinlock.h:396 [inline]\n softirqs last  enabled at (6182792): [<ffff80008aab71c4>] batadv_purge_orig_ref+0x114c/0x1228 net/batman-adv/originator.c:1287\n softirqs last disabled at (6182790): [<ffff80008aab61dc>] spin_lock_bh include/linux/spinlock.h:356 [inline]\n softirqs last disabled at (6182790): [<ffff80008aab61dc>] batadv_purge_orig_ref+0x164/0x1228 net/batman-adv/originator.c:1271\nCPU: 0 PID: 621 Comm: kworker/u4:6 Not tainted 6.8.0-rc7-syzkaller-g707081b61156 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024\nWorkqueue: bat_events batadv_purge_orig\npstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)\n pc : should_resched arch/arm64/include/asm/preempt.h:79 [inline]\n pc : __local_bh_enable_ip+0x228/0x44c kernel/softirq.c:388\n lr : __local_bh_enable_ip+0x224/0x44c kernel/softirq.c:386\nsp : ffff800099007970\nx29: ffff800099007980 x28: 1fffe00018fce1bd x27: dfff800000000000\nx26: ffff0000d2620008 x25: ffff0000c7e70de8 x24: 0000000000000001\nx23: 1fffe00018e57781 x22: dfff800000000000 x21: ffff80008aab71c4\nx20: ffff0001b40136c0 x19: ffff0000c72bbc08 x18: 1fffe0001a817bb0\nx17: ffff800125414000 x16: ffff80008032116c x15: 0000000000000001\nx14: 1fffe0001ee9d610 x13: 0000000000000000 x12: 0000000000000003\nx11: 0000000000000000 x10: 0000000000ff0100 x9 : 0000000000000000\nx8 : 00000000005e5789 x7 : ffff80008aab61dc x6 : 0000000000000000\nx5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000\nx2 : 0000000000000006 x1 : 0000000000000080 x0 : ffff800125414000\nCall trace:\n  __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:27 [inline]\n  arch_local_irq_enable arch/arm64/include/asm/irqflags.h:49 [inline]\n  __local_bh_enable_ip+0x228/0x44c kernel/softirq.c:386\n  __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:167 [inline]\n  _raw_spin_unlock_bh+0x3c/0x4c kernel/locking/spinlock.c:210\n  spin_unlock_bh include/linux/spinlock.h:396 [inline]\n  batadv_purge_orig_ref+0x114c/0x1228 net/batman-adv/originator.c:1287\n  batadv_purge_orig+0x20/0x70 net/batman-adv/originator.c:1300\n  process_one_work+0x694/0x1204 kernel/workqueue.c:2633\n  process_scheduled_works kernel/workqueue.c:2706 [inline]\n  worker_thread+0x938/0xef4 kernel/workqueue.c:2787\n  kthread+0x288/0x310 kernel/kthread.c:388\n  ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860\nSending NMI from CPU 0 to CPUs 1:\nNMI backtrace for cpu 1\nCPU: 1 PID: 0 Comm: swapper/1 Not tainted 6.8.0-rc7-syzkaller-g707081b61156 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024\npstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)\n pc : arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:51\n lr : default_idle_call+0xf8/0x128 kernel/sched/idle.c:103\nsp : ffff800093a17d30\nx29: ffff800093a17d30 x28: dfff800000000000 x27: 1ffff00012742fb4\nx26: ffff80008ec9d000 x25: 0000000000000000 x24: 0000000000000002\nx23: 1ffff00011d93a74 x22: ffff80008ec9d3a0 x21: 0000000000000000\nx20: ffff0000c19dbc00 x19: ffff8000802d0fd8 x18: 1fffe00036804396\nx17: ffff80008ec9d000 x16: ffff8000802d089c x15: 0000000000000001\n---truncated---"
-    },
-    {
-        "Modified": "2024-09-09T18:15:00",
-        "Published": "2024-07-12T13:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-667",
-        "id": "CVE-2024-40980",
-        "impact": {},
-        "last-modified": "2024-09-09T18:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/594e47957f3fe034645e6885393ce96c12286334",
-            "https://git.kernel.org/stable/c/96941f29ebcc1e9cbf570dc903f30374909562f5",
-            "https://git.kernel.org/stable/c/b3722fb69468693555f531cddda5c30444726dac",
-            "https://git.kernel.org/stable/c/f251ccef1d864790e5253386e95544420b7cd8f3",
-            "https://git.kernel.org/stable/c/76ce2f9125244e1708d29c1d3f9d1d50b347bda0",
-            "https://git.kernel.org/stable/c/07ea878684dfb78a9d4f564c39d07e855a9e242e",
-            "https://git.kernel.org/stable/c/f1e197a665c2148ebc25fe09c53689e60afea195"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrop_monitor: replace spin_lock by raw_spin_lock\n\ntrace_drop_common() is called with preemption disabled, and it acquires\na spin_lock. This is problematic for RT kernels because spin_locks are\nsleeping locks in this configuration, which causes the following splat:\n\nBUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48\nin_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 449, name: rcuc/47\npreempt_count: 1, expected: 0\nRCU nest depth: 2, expected: 2\n5 locks held by rcuc/47/449:\n #0: ff1100086ec30a60 ((softirq_ctrl.lock)){+.+.}-{2:2}, at: __local_bh_disable_ip+0x105/0x210\n #1: ffffffffb394a280 (rcu_read_lock){....}-{1:2}, at: rt_spin_lock+0xbf/0x130\n #2: ffffffffb394a280 (rcu_read_lock){....}-{1:2}, at: __local_bh_disable_ip+0x11c/0x210\n #3: ffffffffb394a160 (rcu_callback){....}-{0:0}, at: rcu_do_batch+0x360/0xc70\n #4: ff1100086ee07520 (&data->lock){+.+.}-{2:2}, at: trace_drop_common.constprop.0+0xb5/0x290\nirq event stamp: 139909\nhardirqs last  enabled at (139908): [<ffffffffb1df2b33>] _raw_spin_unlock_irqrestore+0x63/0x80\nhardirqs last disabled at (139909): [<ffffffffb19bd03d>] trace_drop_common.constprop.0+0x26d/0x290\nsoftirqs last  enabled at (139892): [<ffffffffb07a1083>] __local_bh_enable_ip+0x103/0x170\nsoftirqs last disabled at (139898): [<ffffffffb0909b33>] rcu_cpu_kthread+0x93/0x1f0\nPreemption disabled at:\n[<ffffffffb1de786b>] rt_mutex_slowunlock+0xab/0x2e0\nCPU: 47 PID: 449 Comm: rcuc/47 Not tainted 6.9.0-rc2-rt1+ #7\nHardware name: Dell Inc. PowerEdge R650/0Y2G81, BIOS 1.6.5 04/15/2022\nCall Trace:\n <TASK>\n dump_stack_lvl+0x8c/0xd0\n dump_stack+0x14/0x20\n __might_resched+0x21e/0x2f0\n rt_spin_lock+0x5e/0x130\n ? trace_drop_common.constprop.0+0xb5/0x290\n ? skb_queue_purge_reason.part.0+0x1bf/0x230\n trace_drop_common.constprop.0+0xb5/0x290\n ? preempt_count_sub+0x1c/0xd0\n ? _raw_spin_unlock_irqrestore+0x4a/0x80\n ? __pfx_trace_drop_common.constprop.0+0x10/0x10\n ? rt_mutex_slowunlock+0x26a/0x2e0\n ? skb_queue_purge_reason.part.0+0x1bf/0x230\n ? __pfx_rt_mutex_slowunlock+0x10/0x10\n ? skb_queue_purge_reason.part.0+0x1bf/0x230\n trace_kfree_skb_hit+0x15/0x20\n trace_kfree_skb+0xe9/0x150\n kfree_skb_reason+0x7b/0x110\n skb_queue_purge_reason.part.0+0x1bf/0x230\n ? __pfx_skb_queue_purge_reason.part.0+0x10/0x10\n ? mark_lock.part.0+0x8a/0x520\n...\n\ntrace_drop_common() also disables interrupts, but this is a minor issue\nbecause we could easily replace it with a local_lock.\n\nReplace the spin_lock with raw_spin_lock to avoid sleeping in atomic\ncontext."
     }
 ]
