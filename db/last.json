@@ -1,5 +1,172 @@
 [
     {
+        "Modified": "2024-09-13T13:52:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-52897",
+        "impact": {},
+        "last-modified": "2024-09-13T13:52:00",
+        "references": [
+            "https://git.kernel.org/stable/c/bb2c2e62539f2b63c5e0beb51501d328260c7595",
+            "https://git.kernel.org/stable/c/75181406b4eafacc531ff2ee5fb032bd93317e2b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: qgroup: do not warn on record without old_roots populated\n\n[BUG]\nThere are some reports from the mailing list that since v6.1 kernel, the\nWARN_ON() inside btrfs_qgroup_account_extent() gets triggered during\nrescan:\n\n  WARNING: CPU: 3 PID: 6424 at fs/btrfs/qgroup.c:2756 btrfs_qgroup_account_extents+0x1ae/0x260 [btrfs]\n  CPU: 3 PID: 6424 Comm: snapperd Tainted: P           OE      6.1.2-1-default #1 openSUSE Tumbleweed 05c7a1b1b61d5627475528f71f50444637b5aad7\n  RIP: 0010:btrfs_qgroup_account_extents+0x1ae/0x260 [btrfs]\n  Call Trace:\n   <TASK>\n  btrfs_commit_transaction+0x30c/0xb40 [btrfs c39c9c546c241c593f03bd6d5f39ea1b676250f6]\n   ? start_transaction+0xc3/0x5b0 [btrfs c39c9c546c241c593f03bd6d5f39ea1b676250f6]\n  btrfs_qgroup_rescan+0x42/0xc0 [btrfs c39c9c546c241c593f03bd6d5f39ea1b676250f6]\n   btrfs_ioctl+0x1ab9/0x25c0 [btrfs c39c9c546c241c593f03bd6d5f39ea1b676250f6]\n   ? __rseq_handle_notify_resume+0xa9/0x4a0\n   ? mntput_no_expire+0x4a/0x240\n   ? __seccomp_filter+0x319/0x4d0\n   __x64_sys_ioctl+0x90/0xd0\n   do_syscall_64+0x5b/0x80\n   ? syscall_exit_to_user_mode+0x17/0x40\n   ? do_syscall_64+0x67/0x80\n  entry_SYSCALL_64_after_hwframe+0x63/0xcd\n  RIP: 0033:0x7fd9b790d9bf\n   </TASK>\n\n[CAUSE]\nSince commit e15e9f43c7ca (\"btrfs: introduce\nBTRFS_QGROUP_RUNTIME_FLAG_NO_ACCOUNTING to skip qgroup accounting\"), if\nour qgroup is already in inconsistent state, we will no longer do the\ntime-consuming backref walk.\n\nThis can leave some qgroup records without a valid old_roots ulist.\nNormally this is fine, as btrfs_qgroup_account_extents() would also skip\nthose records if we have NO_ACCOUNTING flag set.\n\nBut there is a small window, if we have NO_ACCOUNTING flag set, and\ninserted some qgroup_record without a old_roots ulist, but then the user\ntriggered a qgroup rescan.\n\nDuring btrfs_qgroup_rescan(), we firstly clear NO_ACCOUNTING flag, then\ncommit current transaction.\n\nAnd since we have a qgroup_record with old_roots = NULL, we trigger the\nWARN_ON() during btrfs_qgroup_account_extents().\n\n[FIX]\nUnfortunately due to the introduction of NO_ACCOUNTING flag, the\nassumption that every qgroup_record would have its old_roots populated\nis no longer correct.\n\nFix the false alerts and drop the WARN_ON()."
+    },
+    {
+        "Modified": "2024-09-13T13:46:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52898",
+        "impact": {},
+        "last-modified": "2024-09-13T13:46:00",
+        "references": [
+            "https://git.kernel.org/stable/c/6fac4b5cecb3928a0a81069aaa815a2edc8dd5a1",
+            "https://git.kernel.org/stable/c/133b902378e4acbd824c29dd0d48570ad596e368",
+            "https://git.kernel.org/stable/c/081105213ff6f661c114781d469233c7d0e09c2e",
+            "https://git.kernel.org/stable/c/c462ac871f49753eca86bb960f573b993976a5ea",
+            "https://git.kernel.org/stable/c/ea2ee5e9991caf74e0604f994c1831a5867055b2",
+            "https://git.kernel.org/stable/c/a2bc47c43e70cf904b1af49f76d572326c08bca7"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nxhci: Fix null pointer dereference when host dies\n\nMake sure xhci_free_dev() and xhci_kill_endpoint_urbs() do not race\nand cause null pointer dereference when host suddenly dies.\n\nUsb core may call xhci_free_dev() which frees the xhci->devs[slot_id]\nvirt device at the same time that xhci_kill_endpoint_urbs() tries to\nloop through all the device's endpoints, checking if there are any\ncancelled urbs left to give back.\n\nhold the xhci spinlock while freeing the virt device"
+    },
+    {
+        "Modified": "2024-09-13T13:44:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52899",
+        "impact": {},
+        "last-modified": "2024-09-13T13:44:00",
+        "references": [
+            "https://git.kernel.org/stable/c/f534dc438828cc3f1f8c6895b8bdfbef079521fb",
+            "https://git.kernel.org/stable/c/53dd833fd0a2d8f0118d01ea063a70652689d31e",
+            "https://git.kernel.org/stable/c/20d0a6d17e85a8a816a64fa7d7cae616f1617833",
+            "https://git.kernel.org/stable/c/5054d001ffaf76155637c5e5b922c11016cd6a5d",
+            "https://git.kernel.org/stable/c/51a7ad5b60efac65691729d10745c28fa1016b96",
+            "https://git.kernel.org/stable/c/57054fe516d59d03a7bcf1888e82479ccc244f87"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nAdd exception protection processing for vd in axi_chan_handle_err function\n\nSince there is no protection for vd, a kernel panic will be\ntriggered here in exceptional cases.\n\nYou can refer to the processing of axi_chan_block_xfer_complete function\n\nThe triggered kernel panic is as follows:\n\n[   67.848444] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000060\n[   67.848447] Mem abort info:\n[   67.848449]   ESR = 0x96000004\n[   67.848451]   EC = 0x25: DABT (current EL), IL = 32 bits\n[   67.848454]   SET = 0, FnV = 0\n[   67.848456]   EA = 0, S1PTW = 0\n[   67.848458] Data abort info:\n[   67.848460]   ISV = 0, ISS = 0x00000004\n[   67.848462]   CM = 0, WnR = 0\n[   67.848465] user pgtable: 4k pages, 48-bit VAs, pgdp=00000800c4c0b000\n[   67.848468] [0000000000000060] pgd=0000000000000000, p4d=0000000000000000\n[   67.848472] Internal error: Oops: 96000004 [#1] SMP\n[   67.848475] Modules linked in: dmatest\n[   67.848479] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.10.100-emu_x2rc+ #11\n[   67.848483] pstate: 62000085 (nZCv daIf -PAN -UAO +TCO BTYPE=--)\n[   67.848487] pc : axi_chan_handle_err+0xc4/0x230\n[   67.848491] lr : axi_chan_handle_err+0x30/0x230\n[   67.848493] sp : ffff0803fe55ae50\n[   67.848495] x29: ffff0803fe55ae50 x28: ffff800011212200\n[   67.848500] x27: ffff0800c42c0080 x26: ffff0800c097c080\n[   67.848504] x25: ffff800010d33880 x24: ffff80001139d850\n[   67.848508] x23: ffff0800c097c168 x22: 0000000000000000\n[   67.848512] x21: 0000000000000080 x20: 0000000000002000\n[   67.848517] x19: ffff0800c097c080 x18: 0000000000000000\n[   67.848521] x17: 0000000000000000 x16: 0000000000000000\n[   67.848525] x15: 0000000000000000 x14: 0000000000000000\n[   67.848529] x13: 0000000000000000 x12: 0000000000000040\n[   67.848533] x11: ffff0800c0400248 x10: ffff0800c040024a\n[   67.848538] x9 : ffff800010576cd4 x8 : ffff0800c0400270\n[   67.848542] x7 : 0000000000000000 x6 : ffff0800c04003e0\n[   67.848546] x5 : ffff0800c0400248 x4 : ffff0800c4294480\n[   67.848550] x3 : dead000000000100 x2 : dead000000000122\n[   67.848555] x1 : 0000000000000100 x0 : ffff0800c097c168\n[   67.848559] Call trace:\n[   67.848562]  axi_chan_handle_err+0xc4/0x230\n[   67.848566]  dw_axi_dma_interrupt+0xf4/0x590\n[   67.848569]  __handle_irq_event_percpu+0x60/0x220\n[   67.848573]  handle_irq_event+0x64/0x120\n[   67.848576]  handle_fasteoi_irq+0xc4/0x220\n[   67.848580]  __handle_domain_irq+0x80/0xe0\n[   67.848583]  gic_handle_irq+0xc0/0x138\n[   67.848585]  el1_irq+0xc8/0x180\n[   67.848588]  arch_cpu_idle+0x14/0x2c\n[   67.848591]  default_idle_call+0x40/0x16c\n[   67.848594]  do_idle+0x1f0/0x250\n[   67.848597]  cpu_startup_entry+0x2c/0x60\n[   67.848600]  rest_init+0xc0/0xcc\n[   67.848603]  arch_call_rest_init+0x14/0x1c\n[   67.848606]  start_kernel+0x4cc/0x500\n[   67.848610] Code: eb0002ff 9a9f12d6 f2fbd5a2 f2fbd5a3 (a94602c1)\n[   67.848613] ---[ end trace 585a97036f88203a ]---"
+    },
+    {
+        "Modified": "2024-09-13T13:40:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-52900",
+        "impact": {},
+        "last-modified": "2024-09-13T13:40:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3c2a2ff67d46106715c2132021b98bd057c27545",
+            "https://git.kernel.org/stable/c/d9fde9eab1766170ff2ade67d09178d2cfd78749",
+            "https://git.kernel.org/stable/c/b0ba060d3287108eba17603bee3810e4cf2c272d",
+            "https://git.kernel.org/stable/c/712bd74eccb9d3626a0a236641962eca8e11a243",
+            "https://git.kernel.org/stable/c/45627a1a6450662e1e0f8174ef07b05710a20062",
+            "https://git.kernel.org/stable/c/0bf463939c09e5b2c35c71ed74a5fd60a74d6a04",
+            "https://git.kernel.org/stable/c/7633355e5c7f29c049a9048e461427d1d8ed3051"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix general protection fault in nilfs_btree_insert()\n\nIf nilfs2 reads a corrupted disk image and tries to reads a b-tree node\nblock by calling __nilfs_btree_get_block() against an invalid virtual\nblock address, it returns -ENOENT because conversion of the virtual block\naddress to a disk block address fails.  However, this return value is the\nsame as the internal code that b-tree lookup routines return to indicate\nthat the block being searched does not exist, so functions that operate on\nthat b-tree may misbehave.\n\nWhen nilfs_btree_insert() receives this spurious 'not found' code from\nnilfs_btree_do_lookup(), it misunderstands that the 'not found' check was\nsuccessful and continues the insert operation using incomplete lookup path\ndata, causing the following crash:\n\n general protection fault, probably for non-canonical address\n 0xdffffc0000000005: 0000 [#1] PREEMPT SMP KASAN\n KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]\n ...\n RIP: 0010:nilfs_btree_get_nonroot_node fs/nilfs2/btree.c:418 [inline]\n RIP: 0010:nilfs_btree_prepare_insert fs/nilfs2/btree.c:1077 [inline]\n RIP: 0010:nilfs_btree_insert+0x6d3/0x1c10 fs/nilfs2/btree.c:1238\n Code: bc 24 80 00 00 00 4c 89 f8 48 c1 e8 03 42 80 3c 28 00 74 08 4c 89\n ff e8 4b 02 92 fe 4d 8b 3f 49 83 c7 28 4c 89 f8 48 c1 e8 03 <42> 80 3c\n 28 00 74 08 4c 89 ff e8 2e 02 92 fe 4d 8b 3f 49 83 c7 02\n ...\n Call Trace:\n <TASK>\n  nilfs_bmap_do_insert fs/nilfs2/bmap.c:121 [inline]\n  nilfs_bmap_insert+0x20d/0x360 fs/nilfs2/bmap.c:147\n  nilfs_get_block+0x414/0x8d0 fs/nilfs2/inode.c:101\n  __block_write_begin_int+0x54c/0x1a80 fs/buffer.c:1991\n  __block_write_begin fs/buffer.c:2041 [inline]\n  block_write_begin+0x93/0x1e0 fs/buffer.c:2102\n  nilfs_write_begin+0x9c/0x110 fs/nilfs2/inode.c:261\n  generic_perform_write+0x2e4/0x5e0 mm/filemap.c:3772\n  __generic_file_write_iter+0x176/0x400 mm/filemap.c:3900\n  generic_file_write_iter+0xab/0x310 mm/filemap.c:3932\n  call_write_iter include/linux/fs.h:2186 [inline]\n  new_sync_write fs/read_write.c:491 [inline]\n  vfs_write+0x7dc/0xc50 fs/read_write.c:584\n  ksys_write+0x177/0x2a0 fs/read_write.c:637\n  do_syscall_x64 arch/x86/entry/common.c:50 [inline]\n  do_syscall_64+0x3d/0xb0 arch/x86/entry/common.c:80\n  entry_SYSCALL_64_after_hwframe+0x63/0xcd\n ...\n </TASK>\n\nThis patch fixes the root cause of this problem by replacing the error\ncode that __nilfs_btree_get_block() returns on block address conversion\nfailure from -ENOENT to another internal code -EINVAL which means that the\nb-tree metadata is corrupted.\n\nBy returning -EINVAL, it propagates without glitches, and for all relevant\nb-tree operations, functions in the upper bmap layer output an error\nmessage indicating corrupted b-tree metadata via\nnilfs_bmap_convert_error(), and code -EIO will be eventually returned as\nit should be."
+    },
+    {
+        "Modified": "2024-09-13T13:37:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2023-52901",
+        "impact": {},
+        "last-modified": "2024-09-13T13:37:00",
+        "references": [
+            "https://git.kernel.org/stable/c/375be2dd61a072f7b1cac9b17eea59e07b58db3a",
+            "https://git.kernel.org/stable/c/2d2820d5f375563690c96e60676855205abfb7f5",
+            "https://git.kernel.org/stable/c/9891e5c73cab3fd9ed532dc50e9799e55e974766",
+            "https://git.kernel.org/stable/c/66fc1600855c05c4ba4e997184c91cf298e0405c",
+            "https://git.kernel.org/stable/c/f39c813af0b64f44af94e435c07bfa1ddc2575f5",
+            "https://git.kernel.org/stable/c/08864dc14a6803f0377ca77b9740b26db30c020f",
+            "https://git.kernel.org/stable/c/e8fb5bc76eb86437ab87002d4a36d6da02165654"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: xhci: Check endpoint is valid before dereferencing it\n\nWhen the host controller is not responding, all URBs queued to all\nendpoints need to be killed. This can cause a kernel panic if we\ndereference an invalid endpoint.\n\nFix this by using xhci_get_virt_ep() helper to find the endpoint and\nchecking if the endpoint is valid before dereferencing it.\n\n[233311.853271] xhci-hcd xhci-hcd.1.auto: xHCI host controller not responding, assume dead\n[233311.853393] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000e8\n\n[233311.853964] pc : xhci_hc_died+0x10c/0x270\n[233311.853971] lr : xhci_hc_died+0x1ac/0x270\n\n[233311.854077] Call trace:\n[233311.854085]  xhci_hc_died+0x10c/0x270\n[233311.854093]  xhci_stop_endpoint_command_watchdog+0x100/0x1a4\n[233311.854105]  call_timer_fn+0x50/0x2d4\n[233311.854112]  expire_timers+0xac/0x2e4\n[233311.854118]  run_timer_softirq+0x300/0xabc\n[233311.854127]  __do_softirq+0x148/0x528\n[233311.854135]  irq_exit+0x194/0x1a8\n[233311.854143]  __handle_domain_irq+0x164/0x1d0\n[233311.854149]  gic_handle_irq.22273+0x10c/0x188\n[233311.854156]  el1_irq+0xfc/0x1a8\n[233311.854175]  lpm_cpuidle_enter+0x25c/0x418 [msm_pm]\n[233311.854185]  cpuidle_enter_state+0x1f0/0x764\n[233311.854194]  do_idle+0x594/0x6ac\n[233311.854201]  cpu_startup_entry+0x7c/0x80\n[233311.854209]  secondary_start_kernel+0x170/0x198"
+    },
+    {
+        "Modified": "2024-09-13T13:34:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-667",
+        "id": "CVE-2023-52903",
+        "impact": {},
+        "last-modified": "2024-09-13T13:34:00",
+        "references": [
+            "https://git.kernel.org/stable/c/de77faee280163ff03b7ab64af6c9d779a43d4c4",
+            "https://git.kernel.org/stable/c/ed4629d1e968359fbb91d0a3780b1e86a2c08845",
+            "https://git.kernel.org/stable/c/7fc3990dad04a677606337ebc61964094d6cb41b",
+            "https://git.kernel.org/stable/c/544d163d659d45a206d8929370d5a2984e546cb7"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nio_uring: lock overflowing for IOPOLL\n\nsyzbot reports an issue with overflow filling for IOPOLL:\n\nWARNING: CPU: 0 PID: 28 at io_uring/io_uring.c:734 io_cqring_event_overflow+0x1c0/0x230 io_uring/io_uring.c:734\nCPU: 0 PID: 28 Comm: kworker/u4:1 Not tainted 6.2.0-rc3-syzkaller-16369-g358a161a6a9e #0\nWorkqueue: events_unbound io_ring_exit_work\nCall trace:\n\u00a0io_cqring_event_overflow+0x1c0/0x230 io_uring/io_uring.c:734\n\u00a0io_req_cqe_overflow+0x5c/0x70 io_uring/io_uring.c:773\n\u00a0io_fill_cqe_req io_uring/io_uring.h:168 [inline]\n\u00a0io_do_iopoll+0x474/0x62c io_uring/rw.c:1065\n\u00a0io_iopoll_try_reap_events+0x6c/0x108 io_uring/io_uring.c:1513\n\u00a0io_uring_try_cancel_requests+0x13c/0x258 io_uring/io_uring.c:3056\n\u00a0io_ring_exit_work+0xec/0x390 io_uring/io_uring.c:2869\n\u00a0process_one_work+0x2d8/0x504 kernel/workqueue.c:2289\n\u00a0worker_thread+0x340/0x610 kernel/workqueue.c:2436\n\u00a0kthread+0x12c/0x158 kernel/kthread.c:376\n\u00a0ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:863\n\nThere is no real problem for normal IOPOLL as flush is also called with\nuring_lock taken, but it's getting more complicated for IOPOLL|SQPOLL,\nfor which __io_cqring_overflow_flush() happens from the CQ waiting path."
+    },
+    {
+        "Modified": "2024-09-13T13:29:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-401",
+        "id": "CVE-2023-52902",
+        "impact": {},
+        "last-modified": "2024-09-13T13:29:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1442d51026c58e7c11dd5f9b19650632a48676d4",
+            "https://git.kernel.org/stable/c/7f31cced5724e6d414fe750aa1cd7e7b578ec22f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnommu: fix memory leak in do_mmap() error path\n\nThe preallocation of the maple tree nodes may leak if the error path to\n\"error_just_free\" is taken.  Fix this by moving the freeing of the maple\ntree nodes to a shared location for all error paths."
+    },
+    {
+        "Modified": "2024-09-13T13:27:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2023-52905",
+        "impact": {},
+        "last-modified": "2024-09-13T13:27:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c8ca0ad10df08ea36bcac1288062d567d22604c9",
+            "https://git.kernel.org/stable/c/53da7aec32982f5ee775b69dce06d63992ce4af3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nocteontx2-pf: Fix resource leakage in VF driver unbind\n\nresources allocated like mcam entries to support the Ntuple feature\nand hash tables for the tc feature are not getting freed in driver\nunbind. This patch fixes the issue."
+    },
+    {
+        "Modified": "2024-09-13T13:21:00",
+        "Published": "2024-08-21T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-52906",
+        "impact": {},
+        "last-modified": "2024-09-13T13:21:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2b157c3c5d6b8ddca48d53c9e662032f65af8d61",
+            "https://git.kernel.org/stable/c/453277feb41c2235cf2c0de9209eef962c401457",
+            "https://git.kernel.org/stable/c/9e2c38827cdc6fdd3bb375c8607fc04d289756f9",
+            "https://git.kernel.org/stable/c/8a97b544b98e44f596219ebb290fd2ba2fd5d644",
+            "https://git.kernel.org/stable/c/9e17f99220d111ea031b44153fdfe364b0024ff2"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_mpls: Fix warning during failed attribute validation\n\nThe 'TCA_MPLS_LABEL' attribute is of 'NLA_U32' type, but has a\nvalidation type of 'NLA_VALIDATE_FUNCTION'. This is an invalid\ncombination according to the comment above 'struct nla_policy':\n\n\"\nMeaning of `validate' field, use via NLA_POLICY_VALIDATE_FN:\n   NLA_BINARY           Validation function called for the attribute.\n   All other            Unused - but note that it's a union\n\"\n\nThis can trigger the warning [1] in nla_get_range_unsigned() when\nvalidation of the attribute fails. Despite being of 'NLA_U32' type, the\nassociated 'min'/'max' fields in the policy are negative as they are\naliased by the 'validate' field.\n\nFix by changing the attribute type to 'NLA_BINARY' which is consistent\nwith the above comment and all other users of NLA_POLICY_VALIDATE_FN().\nAs a result, move the length validation to the validation function.\n\nNo regressions in MPLS tests:\n\n # ./tdc.py -f tc-tests/actions/mpls.json\n [...]\n # echo $?\n 0\n\n[1]\nWARNING: CPU: 0 PID: 17743 at lib/nlattr.c:118\nnla_get_range_unsigned+0x1d8/0x1e0 lib/nlattr.c:117\nModules linked in:\nCPU: 0 PID: 17743 Comm: syz-executor.0 Not tainted 6.1.0-rc8 #3\nHardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS\nrel-1.13.0-48-gd9c812dda519-prebuilt.qemu.org 04/01/2014\nRIP: 0010:nla_get_range_unsigned+0x1d8/0x1e0 lib/nlattr.c:117\n[...]\nCall Trace:\n <TASK>\n __netlink_policy_dump_write_attr+0x23d/0x990 net/netlink/policy.c:310\n netlink_policy_dump_write_attr+0x22/0x30 net/netlink/policy.c:411\n netlink_ack_tlv_fill net/netlink/af_netlink.c:2454 [inline]\n netlink_ack+0x546/0x760 net/netlink/af_netlink.c:2506\n netlink_rcv_skb+0x1b7/0x240 net/netlink/af_netlink.c:2546\n rtnetlink_rcv+0x18/0x20 net/core/rtnetlink.c:6109\n netlink_unicast_kernel net/netlink/af_netlink.c:1319 [inline]\n netlink_unicast+0x5e9/0x6b0 net/netlink/af_netlink.c:1345\n netlink_sendmsg+0x739/0x860 net/netlink/af_netlink.c:1921\n sock_sendmsg_nosec net/socket.c:714 [inline]\n sock_sendmsg net/socket.c:734 [inline]\n ____sys_sendmsg+0x38f/0x500 net/socket.c:2482\n ___sys_sendmsg net/socket.c:2536 [inline]\n __sys_sendmsg+0x197/0x230 net/socket.c:2565\n __do_sys_sendmsg net/socket.c:2574 [inline]\n __se_sys_sendmsg net/socket.c:2572 [inline]\n __x64_sys_sendmsg+0x42/0x50 net/socket.c:2572\n do_syscall_x64 arch/x86/entry/common.c:50 [inline]\n do_syscall_64+0x2b/0x70 arch/x86/entry/common.c:80\n entry_SYSCALL_64_after_hwframe+0x63/0xcd"
+    },
+    {
         "Modified": "2024-09-13T11:15:00",
         "Published": "2024-06-12T09:15:00",
         "access": {},
@@ -1490,159 +1657,5 @@
             "https://git.kernel.org/stable/c/919ddf8336f0b84c0453bac583808c9f165a85c2"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: aacraid: Fix double-free on probe failure\n\naac_probe_one() calls hardware-specific init functions through the\naac_driver_ident::init pointer, all of which eventually call down to\naac_init_adapter().\n\nIf aac_init_adapter() fails after allocating memory for aac_dev::queues,\nit frees the memory but does not clear that member.\n\nAfter the hardware-specific init function returns an error,\naac_probe_one() goes down an error path that frees the memory pointed to\nby aac_dev::queues, resulting.in a double-free."
-    },
-    {
-        "Modified": "2024-09-13T06:15:00",
-        "Published": "2024-09-13T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46677",
-        "impact": {},
-        "last-modified": "2024-09-13T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/620fe9809752fae91b4190e897b81ed9976dfb39",
-            "https://git.kernel.org/stable/c/bdd99e5f0ad5fa727b16f2101fe880aa2bff2f8e",
-            "https://git.kernel.org/stable/c/8bbb9e4e0e66a39282e582d0440724055404b38c",
-            "https://git.kernel.org/stable/c/4643b91691e969b1b9ad54bf552d7a990cfa3b87",
-            "https://git.kernel.org/stable/c/e8b9930b0eb045d19e883c65ff9676fc89320c70",
-            "https://git.kernel.org/stable/c/28c67f0f84f889fe9f4cbda8354132b20dc9212d",
-            "https://git.kernel.org/stable/c/612edd35f2a3910ab1f61c1f2338889d4ba99fa2",
-            "https://git.kernel.org/stable/c/defd8b3c37b0f9cb3e0f60f47d3d78d459d57fda"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ngtp: fix a potential NULL pointer dereference\n\nWhen sockfd_lookup() fails, gtp_encap_enable_socket() returns a\nNULL pointer, but its callers only check for error pointers thus miss\nthe NULL pointer case.\n\nFix it by returning an error pointer with the error code carried from\nsockfd_lookup().\n\n(I found this bug during code inspection.)"
-    },
-    {
-        "Modified": "2024-09-13T06:15:00",
-        "Published": "2024-09-13T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46681",
-        "impact": {},
-        "last-modified": "2024-09-13T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/5f5f7366dda8ae870e8305d6e7b3c0c2686cd2cf",
-            "https://git.kernel.org/stable/c/979b581e4c69257acab1af415ddad6b2d78a2fa5"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npktgen: use cpus_read_lock() in pg_net_init()\n\nI have seen the WARN_ON(smp_processor_id() != cpu) firing\nin pktgen_thread_worker() during tests.\n\nWe must use cpus_read_lock()/cpus_read_unlock()\naround the for_each_online_cpu(cpu) loop.\n\nWhile we are at it use WARN_ON_ONCE() to avoid a possible syslog flood."
-    },
-    {
-        "Modified": "2024-09-13T06:15:00",
-        "Published": "2024-09-13T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46684",
-        "impact": {},
-        "last-modified": "2024-09-13T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/c507da85e4f80c630deb9e98222ccf4118cbe6f8",
-            "https://git.kernel.org/stable/c/c6a09e342f8e6d3cac7f7c5c14085236aca284b9"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinfmt_elf_fdpic: fix AUXV size calculation when ELF_HWCAP2 is defined\n\ncreate_elf_fdpic_tables() does not correctly account the space for the\nAUX vector when an architecture has ELF_HWCAP2 defined. Prior to the\ncommit 10e29251be0e (\"binfmt_elf_fdpic: fix /proc/<pid>/auxv\") it\nresulted in the last entry of the AUX vector being set to zero, but with\nthat change it results in a kernel BUG.\n\nFix that by adding one to the number of AUXV entries (nitems) when\nELF_HWCAP2 is defined."
-    },
-    {
-        "Modified": "2024-09-13T06:15:00",
-        "Published": "2024-09-13T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46686",
-        "impact": {},
-        "last-modified": "2024-09-13T06:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/6df57c63c200cd05e085c3b695128260e21959b7",
-            "https://git.kernel.org/stable/c/a01859dd6aebf826576513850a3b05992809e9d2",
-            "https://git.kernel.org/stable/c/b902fb78ab21299e4dd1775e7e8d251d5c0735bc",
-            "https://git.kernel.org/stable/c/c724b2ab6a46435b4e7d58ad2fbbdb7a318823cf"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsmb/client: avoid dereferencing rdata=NULL in smb2_new_read_req()\n\nThis happens when called from SMB2_read() while using rdma\nand reaching the rdma_readwrite_threshold."
-    },
-    {
-        "Modified": "2024-09-13T04:15:00",
-        "Published": "2024-09-13T04:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-8656",
-        "impact": {},
-        "last-modified": "2024-09-13T04:15:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/cb62eefe-9993-43f7-b3ae-de47c0951bee?source=cve",
-            "https://plugins.trac.wordpress.org/browser/wpcodefactory-helper/tags/1.7.0/includes/class-alg-wpcodefactory-helper-site-key-manager.php#L350",
-            "https://plugins.trac.wordpress.org/changeset/3150715/wpcodefactory-helper/tags/1.7.1/includes/class-alg-wpcodefactory-helper-site-key-manager.php"
-        ],
-        "summary": "The WPFactory Helper plugin for WordPress is vulnerable to Reflected Cross-Site Scripting due to the use of add_query_arg without appropriate escaping on the URL in all versions up to, and including, 1.7.0. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2024-09-13T02:15:00",
-        "Published": "2024-09-13T02:15:00",
-        "access": {},
-        "assigner": "psirt@us.ibm.com",
-        "cvss": null,
-        "cwe": "CWE-614",
-        "id": "CVE-2024-43180",
-        "impact": {},
-        "last-modified": "2024-09-13T02:15:00",
-        "references": [
-            "https://www.ibm.com/support/pages/node/7168234",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/351213"
-        ],
-        "summary": "IBM Concert 1.0 does not set the secure attribute on authorization tokens or session cookies. Attackers may be able to get the cookie values by sending a http:// link to a user or by planting this link in a site the user goes to. The cookie will be sent to the insecure link and the attacker can then obtain the cookie value by snooping the traffic."
-    },
-    {
-        "Modified": "2024-09-13T01:15:00",
-        "Published": "2024-09-13T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-8762",
-        "impact": {},
-        "last-modified": "2024-09-13T01:15:00",
-        "references": [
-            "https://vuldb.com/?id.277341",
-            "https://vuldb.com/?ctiid.277341",
-            "https://vuldb.com/?submit.406159",
-            "https://github.com/Kangsiyuan/1/issues/1",
-            "https://code-projects.org/"
-        ],
-        "summary": "A vulnerability was found in code-projects Crud Operation System 1.0. It has been classified as critical. This affects an unknown part of the file /updatedata.php. The manipulation of the argument sid leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
-    },
-    {
-        "Modified": "2024-09-13T01:15:00",
-        "Published": "2024-09-11T00:15:00",
-        "access": {},
-        "assigner": "security@android.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-31336",
-        "impact": {},
-        "last-modified": "2024-09-13T01:15:00",
-        "references": [
-            "https://source.android.com/security/bulletin/2024-09-01"
-        ],
-        "summary": "In PVRSRVBridgeRGXKickTA3D2 of server_rgxta3d_bridge.c, there is a possible arbitrary code execution due to improper input validation. This could lead to local escalation of privilege in the kernel with no additional execution privileges needed. User interaction is not needed for exploitation."
-    },
-    {
-        "Modified": "2024-09-12T22:35:00",
-        "Published": "2024-09-12T02:15:00",
-        "access": {},
-        "assigner": "support@hackerone.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-32840",
-        "impact": {},
-        "last-modified": "2024-09-12T22:35:00",
-        "references": [
-            "https://forums.ivanti.com/s/article/Security-Advisory-EPM-September-2024-for-EPM-2024-and-EPM-2022"
-        ],
-        "summary": "An unspecified SQL injection in Ivanti EPM before 2022 SU6, or the 2024 September update allows a remote authenticated attacker with admin privileges to achieve remote code execution."
     }
 ]
