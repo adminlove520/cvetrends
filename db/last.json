@@ -1,5 +1,111 @@
 [
     {
+        "Modified": "2024-09-15T19:35:00",
+        "Published": "2024-06-05T19:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-36670",
+        "impact": {},
+        "last-modified": "2024-09-15T19:35:00",
+        "references": [
+            "https://github.com/sigubbs/cms/blob/main/33/csrf.md"
+        ],
+        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component admin/vpsClass_deal.php?mudi=del"
+    },
+    {
+        "Modified": "2024-09-15T19:35:00",
+        "Published": "2024-05-22T16:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-5158",
+        "impact": {},
+        "last-modified": "2024-09-15T19:35:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/05/stable-channel-update-for-desktop_21.html",
+            "https://issues.chromium.org/issues/338908243",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5KEVD4433KTOCYY6V4I7MMYKQ6URUS4L/",
+            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FX6IYZ6XF7B2WE66NFPNI2NHWJFI6VDF/"
+        ],
+        "summary": "Type Confusion in V8 in Google Chrome prior to 125.0.6422.76 allowed a remote attacker to potentially perform arbitrary read/write via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-09-15T19:35:00",
+        "Published": "2024-05-14T16:17:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-33868",
+        "impact": {},
+        "last-modified": "2024-09-15T19:35:00",
+        "references": [
+            "https://www.linqi.de/de-DE/blog.html",
+            "https://linqi.help/Updates/en#/SecurityUpdates"
+        ],
+        "summary": "An issue was discovered in linqi before 1.4.0.1 on Windows. There is LDAP injection."
+    },
+    {
+        "Modified": "2024-09-15T19:35:00",
+        "Published": "2024-04-18T21:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30922",
+        "impact": {},
+        "last-modified": "2024-09-15T19:35:00",
+        "references": [
+            "https://chocapikk.com/posts/2024/derbynet-vulnerabilities/"
+        ],
+        "summary": "SQL Injection vulnerability in DerbyNet v9.0 allows a remote attacker to execute arbitrary code via the where Clause in Award Document Rendering."
+    },
+    {
+        "Modified": "2024-09-15T18:15:00",
+        "Published": "2024-09-04T20:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45003",
+        "impact": {},
+        "last-modified": "2024-09-15T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3525ad25240dfdd8c78f3470911ed10aa727aa72",
+            "https://git.kernel.org/stable/c/03880af02a78bc9a98b5a581f529cf709c88a9b8",
+            "https://git.kernel.org/stable/c/cda54ec82c0f9d05393242b20b13f69b083f7e88",
+            "https://git.kernel.org/stable/c/437741eba63bf4e437e2beb5583f8633556a2b98",
+            "https://git.kernel.org/stable/c/b9bda5f6012dd00372f3a06a82ed8971a4c57c32",
+            "https://git.kernel.org/stable/c/9063ab49c11e9518a3f2352434bb276cc8134c5f",
+            "https://git.kernel.org/stable/c/2a0629834cd82f05d424bbc193374f9a43d1f87d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfs: Don't evict inode under the inode lru traversing context\n\nThe inode reclaiming process(See function prune_icache_sb) collects all\nreclaimable inodes and mark them with I_FREEING flag at first, at that\ntime, other processes will be stuck if they try getting these inodes\n(See function find_inode_fast), then the reclaiming process destroy the\ninodes by function dispose_list(). Some filesystems(eg. ext4 with\nea_inode feature, ubifs with xattr) may do inode lookup in the inode\nevicting callback function, if the inode lookup is operated under the\ninode lru traversing context, deadlock problems may happen.\n\nCase 1: In function ext4_evict_inode(), the ea inode lookup could happen\n        if ea_inode feature is enabled, the lookup process will be stuck\n\tunder the evicting context like this:\n\n 1. File A has inode i_reg and an ea inode i_ea\n 2. getfattr(A, xattr_buf) // i_ea is added into lru // lru->i_ea\n 3. Then, following three processes running like this:\n\n    PA                              PB\n echo 2 > /proc/sys/vm/drop_caches\n  shrink_slab\n   prune_dcache_sb\n   // i_reg is added into lru, lru->i_ea->i_reg\n   prune_icache_sb\n    list_lru_walk_one\n     inode_lru_isolate\n      i_ea->i_state |= I_FREEING // set inode state\n     inode_lru_isolate\n      __iget(i_reg)\n      spin_unlock(&i_reg->i_lock)\n      spin_unlock(lru_lock)\n                                     rm file A\n                                      i_reg->nlink = 0\n      iput(i_reg) // i_reg->nlink is 0, do evict\n       ext4_evict_inode\n        ext4_xattr_delete_inode\n         ext4_xattr_inode_dec_ref_all\n          ext4_xattr_inode_iget\n           ext4_iget(i_ea->i_ino)\n            iget_locked\n             find_inode_fast\n              __wait_on_freeing_inode(i_ea) ----? AA deadlock\n    dispose_list // cannot be executed by prune_icache_sb\n     wake_up_bit(&i_ea->i_state)\n\nCase 2: In deleted inode writing function ubifs_jnl_write_inode(), file\n        deleting process holds BASEHD's wbuf->io_mutex while getting the\n\txattr inode, which could race with inode reclaiming process(The\n        reclaiming process could try locking BASEHD's wbuf->io_mutex in\n\tinode evicting function), then an ABBA deadlock problem would\n\thappen as following:\n\n 1. File A has inode ia and a xattr(with inode ixa), regular file B has\n    inode ib and a xattr.\n 2. getfattr(A, xattr_buf) // ixa is added into lru // lru->ixa\n 3. Then, following three processes running like this:\n\n        PA                PB                        PC\n                echo 2 > /proc/sys/vm/drop_caches\n                 shrink_slab\n                  prune_dcache_sb\n                  // ib and ia are added into lru, lru->ixa->ib->ia\n                  prune_icache_sb\n                   list_lru_walk_one\n                    inode_lru_isolate\n                     ixa->i_state |= I_FREEING // set inode state\n                    inode_lru_isolate\n                     __iget(ib)\n                     spin_unlock(&ib->i_lock)\n                     spin_unlock(lru_lock)\n                                                   rm file B\n                                                    ib->nlink = 0\n rm file A\n  iput(ia)\n   ubifs_evict_inode(ia)\n    ubifs_jnl_delete_inode(ia)\n     ubifs_jnl_write_inode(ia)\n      make_reservation(BASEHD) // Lock wbuf->io_mutex\n      ubifs_iget(ixa->i_ino)\n       iget_locked\n        find_inode_fast\n         __wait_on_freeing_inode(ixa)\n          |          iput(ib) // ib->nlink is 0, do evict\n          |           ubifs_evict_inode\n          |            ubifs_jnl_delete_inode(ib)\n          ?             ubifs_jnl_write_inode\n     ABBA deadlock ?-----make_reservation(BASEHD)\n                   dispose_list // cannot be executed by prune_icache_sb\n                    wake_up_bit(&ixa->i_state)\n\nFix the possible deadlock by using new inode state flag I_LRU_ISOLATING\nto pin the inode in memory while inode_lru_isolate(\n---truncated---"
+    },
+    {
+        "Modified": "2024-09-15T18:15:00",
+        "Published": "2024-09-04T20:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-667",
+        "id": "CVE-2024-44995",
+        "impact": {},
+        "last-modified": "2024-09-15T18:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/67492d4d105c0a6321b00c393eec96b9a7a97a16",
+            "https://git.kernel.org/stable/c/fc250eca15bde34c4c8f806b9d88f55bd56a992c",
+            "https://git.kernel.org/stable/c/195918217448a6bb7f929d6a2ffffce9f1ece1cc",
+            "https://git.kernel.org/stable/c/6ae2b7d63cd056f363045eb65409143e16f23ae8",
+            "https://git.kernel.org/stable/c/fa1d4de7265c370e673583ac8d1bd17d21826cd9",
+            "https://git.kernel.org/stable/c/de37408d5c26fc4a296a28a0c96dcb814219bfa1",
+            "https://git.kernel.org/stable/c/be5e816d00a506719e9dbb1a9c861c5ced30a109"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hns3: fix a deadlock problem when config TC during resetting\n\nWhen config TC during the reset process, may cause a deadlock, the flow is\nas below:\n                             pf reset start\n                                 \u00a6\n                                 ?\n                              ......\nsetup tc                         \u00a6\n    \u00a6                            ?\n    ?                      DOWN: napi_disable()\nnapi_disable()(skip)             \u00a6\n    \u00a6                            \u00a6\n    ?                            ?\n  ......                      ......\n    \u00a6                            \u00a6\n    ?                            \u00a6\nnapi_enable()                    \u00a6\n                                 ?\n                           UINIT: netif_napi_del()\n                                 \u00a6\n                                 ?\n                              ......\n                                 \u00a6\n                                 ?\n                           INIT: netif_napi_add()\n                                 \u00a6\n                                 ?\n                              ......                 global reset start\n                                 \u00a6                      \u00a6\n                                 ?                      ?\n                           UP: napi_enable()(skip)    ......\n                                 \u00a6                      \u00a6\n                                 ?                      ?\n                              ......                 napi_disable()\n\nIn reset process, the driver will DOWN the port and then UINIT, in this\ncase, the setup tc process will UP the port before UINIT, so cause the\nproblem. Adds a DOWN process in UINIT to fix it."
+    },
+    {
         "Modified": "2024-09-15T11:15:00",
         "Published": "2024-09-15T11:15:00",
         "access": {},
@@ -1514,134 +1620,5 @@
             "https://forums.ivanti.com/s/article/Security-Advisory-Ivanti-Cloud-Service-Appliance-CSA-CVE-2024-8190"
         ],
         "summary": "An OS command injection vulnerability in Ivanti Cloud Services Appliance versions 4.6 Patch 518 and before allows a remote authenticated attacker to obtain remote code execution. The attacker must have admin level privileges to exploit this vulnerability."
-    },
-    {
-        "Modified": "2024-09-14T00:15:00",
-        "Published": "2024-03-21T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-789",
-        "id": "CVE-2024-2494",
-        "impact": {},
-        "last-modified": "2024-09-14T00:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2494",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2270115",
-            "https://lists.libvirt.org/archives/list/devel@lists.libvirt.org/thread/BKRQXPLPC6B7FLHJXSBQYW7HNDEBW6RJ/",
-            "https://access.redhat.com/errata/RHSA-2024:2560",
-            "https://access.redhat.com/errata/RHSA-2024:3253"
-        ],
-        "summary": "A flaw was found in the RPC library APIs of libvirt. The RPC server deserialization code allocates memory for arrays before the non-negative length check is performed by the C API entry points. Passing a negative length to the g_new0 function results in a crash due to the negative length being treated as a huge positive number. This flaw allows a local, unprivileged user to perform a denial of service attack by causing the libvirt daemon to crash."
-    },
-    {
-        "Modified": "2024-09-14T00:15:00",
-        "Published": "2024-03-18T13:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-2496",
-        "impact": {},
-        "last-modified": "2024-09-14T00:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2496",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2269672",
-            "https://access.redhat.com/errata/RHSA-2024:2236"
-        ],
-        "summary": "A NULL pointer dereference flaw was found in the udevConnectListAllInterfaces() function in libvirt. This issue can occur when detaching a host interface while at the same time collecting the list of interfaces via virConnectListAllInterfaces API. This flaw could be used to perform a denial of service attack by causing the libvirt daemon to crash."
-    },
-    {
-        "Modified": "2024-09-14T00:15:00",
-        "Published": "2024-03-12T17:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2182",
-        "impact": {},
-        "last-modified": "2024-09-14T00:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-2182",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2267840",
-            "https://mail.openvswitch.org/pipermail/ovs-announce/2024-March/000346.html",
-            "https://www.openwall.com/lists/oss-security/2024/03/12/5",
-            "https://access.redhat.com/errata/RHSA-2024:1385",
-            "https://access.redhat.com/errata/RHSA-2024:1386",
-            "https://access.redhat.com/errata/RHSA-2024:1387",
-            "https://access.redhat.com/errata/RHSA-2024:1388",
-            "https://access.redhat.com/errata/RHSA-2024:1390",
-            "https://access.redhat.com/errata/RHSA-2024:1391",
-            "https://access.redhat.com/errata/RHSA-2024:1392",
-            "https://access.redhat.com/errata/RHSA-2024:1393",
-            "https://access.redhat.com/errata/RHSA-2024:1394",
-            "https://access.redhat.com/errata/RHSA-2024:4035"
-        ],
-        "summary": "A flaw was found in the Open Virtual Network (OVN). In OVN clusters where BFD is used between hypervisors for high availability, an attacker can inject specially crafted BFD packets from inside unprivileged workloads, including virtual machines or containers, that can trigger a denial of service."
-    },
-    {
-        "Modified": "2024-09-14T00:15:00",
-        "Published": "2024-03-11T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-1441",
-        "impact": {},
-        "last-modified": "2024-09-14T00:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-1441",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2263841",
-            "https://access.redhat.com/errata/RHSA-2024:2560"
-        ],
-        "summary": "An off-by-one error flaw was found in the udevListInterfacesByStatus() function in libvirt when the number of interfaces exceeds the size of the `names` array. This issue can be reproduced by sending specially crafted data to the libvirt daemon, allowing an unprivileged client to perform a denial of service attack by causing the libvirt daemon to crash."
-    },
-    {
-        "Modified": "2024-09-14T00:15:00",
-        "Published": "2024-02-07T21:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2023-6535",
-        "impact": {},
-        "last-modified": "2024-09-14T00:15:00",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2024:0723",
-            "https://access.redhat.com/errata/RHSA-2024:0724",
-            "https://access.redhat.com/errata/RHSA-2024:0725",
-            "https://access.redhat.com/security/cve/CVE-2023-6535",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2254053",
-            "https://access.redhat.com/errata/RHSA-2024:0881",
-            "https://access.redhat.com/errata/RHSA-2024:0897",
-            "https://access.redhat.com/errata/RHSA-2024:1248",
-            "https://access.redhat.com/errata/RHSA-2024:3810",
-            "https://access.redhat.com/errata/RHSA-2024:2094"
-        ],
-        "summary": "A flaw was found in the Linux kernel's NVMe driver. This issue may allow an unauthenticated malicious actor to send a set of crafted TCP packages when using NVMe over TCP, leading the NVMe driver to a NULL pointer dereference in the NVMe driver, causing kernel panic and a denial of service."
-    },
-    {
-        "Modified": "2024-09-14T00:15:00",
-        "Published": "2024-02-07T21:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2023-6536",
-        "impact": {},
-        "last-modified": "2024-09-14T00:15:00",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2024:0723",
-            "https://access.redhat.com/errata/RHSA-2024:0724",
-            "https://access.redhat.com/errata/RHSA-2024:0725",
-            "https://access.redhat.com/security/cve/CVE-2023-6536",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2254052",
-            "https://access.redhat.com/errata/RHSA-2024:0881",
-            "https://access.redhat.com/errata/RHSA-2024:0897",
-            "https://access.redhat.com/errata/RHSA-2024:1248",
-            "https://access.redhat.com/errata/RHSA-2024:3810",
-            "https://access.redhat.com/errata/RHSA-2024:2094"
-        ],
-        "summary": "A flaw was found in the Linux kernel's NVMe driver. This issue may allow an unauthenticated malicious actor to send a set of crafted TCP packages when using NVMe over TCP, leading the NVMe driver to a NULL pointer dereference in the NVMe driver, causing kernel panic and a denial of service."
     }
 ]
