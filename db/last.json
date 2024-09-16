@@ -1,1083 +1,119 @@
 [
     {
-        "Modified": "2024-09-16T13:54:00",
-        "Published": "2024-07-30T08:15:00",
+        "Modified": "2024-09-16T15:59:00",
+        "Published": "2024-09-10T09:15:00",
         "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-190",
-        "id": "CVE-2024-42136",
-        "impact": {},
-        "last-modified": "2024-09-16T13:54:00",
-        "references": [
-            "https://git.kernel.org/stable/c/0c97527e916054acc4a46ffb02842988acb2e92b",
-            "https://git.kernel.org/stable/c/3ee21e14c8c329168a0b66bab00ecd18f5d0dee3",
-            "https://git.kernel.org/stable/c/e809bc112712da8f7e15822674c6562da6cdf24c",
-            "https://git.kernel.org/stable/c/efb905aeb44b0e99c0e6b07865b1885ae0471ebf"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ncdrom: rearrange last_media_change check to avoid unintentional overflow\n\nWhen running syzkaller with the newly reintroduced signed integer wrap\nsanitizer we encounter this splat:\n\n[  366.015950] UBSAN: signed-integer-overflow in ../drivers/cdrom/cdrom.c:2361:33\n[  366.021089] -9223372036854775808 - 346321 cannot be represented in type '__s64' (aka 'long long')\n[  366.025894] program syz-executor.4 is using a deprecated SCSI ioctl, please convert it to SG_IO\n[  366.027502] CPU: 5 PID: 28472 Comm: syz-executor.7 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1\n[  366.027512] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014\n[  366.027518] Call Trace:\n[  366.027523]  <TASK>\n[  366.027533]  dump_stack_lvl+0x93/0xd0\n[  366.027899]  handle_overflow+0x171/0x1b0\n[  366.038787] ata1.00: invalid multi_count 32 ignored\n[  366.043924]  cdrom_ioctl+0x2c3f/0x2d10\n[  366.063932]  ? __pm_runtime_resume+0xe6/0x130\n[  366.071923]  sr_block_ioctl+0x15d/0x1d0\n[  366.074624]  ? __pfx_sr_block_ioctl+0x10/0x10\n[  366.077642]  blkdev_ioctl+0x419/0x500\n[  366.080231]  ? __pfx_blkdev_ioctl+0x10/0x10\n...\n\nHistorically, the signed integer overflow sanitizer did not work in the\nkernel due to its interaction with `-fwrapv` but this has since been\nchanged [1] in the newest version of Clang. It was re-enabled in the\nkernel with Commit 557f8c582a9ba8ab (\"ubsan: Reintroduce signed overflow\nsanitizer\").\n\nLet's rearrange the check to not perform any arithmetic, thus not\ntripping the sanitizer."
-    },
-    {
-        "Modified": "2024-09-16T13:52:00",
-        "Published": "2024-07-30T08:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-190",
-        "id": "CVE-2024-42131",
-        "impact": {},
-        "last-modified": "2024-09-16T13:52:00",
-        "references": [
-            "https://git.kernel.org/stable/c/7a49389771ae7666f4dc3426e2a4594bf23ae290",
-            "https://git.kernel.org/stable/c/a25e8536184516b55ef89ab91dd2eea429de28d2",
-            "https://git.kernel.org/stable/c/c83ed422c24f0d4b264f89291d4fabe285f80dbc",
-            "https://git.kernel.org/stable/c/bd16a7ee339aef3ee4c90cb23902afb6af379ea0",
-            "https://git.kernel.org/stable/c/8e0b5e7f2895eccef5c2a0018b589266f90c4805",
-            "https://git.kernel.org/stable/c/385d838df280eba6c8680f9777bfa0d0bfe7e8b2",
-            "https://git.kernel.org/stable/c/2b2d2b8766db028bd827af34075f221ae9e9efff",
-            "https://git.kernel.org/stable/c/4d3817b64eda07491bdd86a234629fe0764fb42a"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: avoid overflows in dirty throttling logic\n\nThe dirty throttling logic is interspersed with assumptions that dirty\nlimits in PAGE_SIZE units fit into 32-bit (so that various multiplications\nfit into 64-bits).  If limits end up being larger, we will hit overflows,\npossible divisions by 0 etc.  Fix these problems by never allowing so\nlarge dirty limits as they have dubious practical value anyway.  For\ndirty_bytes / dirty_background_bytes interfaces we can just refuse to set\nso large limits.  For dirty_ratio / dirty_background_ratio it isn't so\nsimple as the dirty limit is computed from the amount of available memory\nwhich can change due to memory hotplug etc.  So when converting dirty\nlimits from ratios to numbers of pages, we just don't allow the result to\nexceed UINT_MAX.\n\nThis is root-only triggerable problem which occurs when the operator\nsets dirty limits to >16 TB."
-    },
-    {
-        "Modified": "2024-09-16T13:49:00",
-        "Published": "2024-07-30T08:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-42122",
-        "impact": {},
-        "last-modified": "2024-09-16T13:49:00",
-        "references": [
-            "https://git.kernel.org/stable/c/062edd612fcd300f0f79a36fca5b8b6a5e2fce70",
-            "https://git.kernel.org/stable/c/8e65a1b7118acf6af96449e1e66b7adbc9396912"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Add NULL pointer check for kzalloc\n\n[Why & How]\nCheck return pointer of kzalloc before using it."
-    },
-    {
-        "Modified": "2024-09-16T13:46:00",
-        "Published": "2024-08-12T13:38:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-40478",
-        "impact": {},
-        "last-modified": "2024-09-16T13:46:00",
-        "references": [
-            "https://www.kashipara.com/project/php/3/online-exam-php-project-source-code-download",
-            "https://github.com/takekaramey/CVE_Writeup/blob/main/Kashipara/Online%20Exam%20System%20v1.0/Stored%20XSS.pdf"
-        ],
-        "summary": "A Stored Cross Site Scripting (XSS) vulnerability was found in \"/admin/afeedback.php\" in Kashipara Online Exam System v1.0, which allows remote attackers to execute arbitrary code via \"rname\" and \"email\" parameter fields"
-    },
-    {
-        "Modified": "2024-09-16T13:44:00",
-        "Published": "2024-09-10T21:15:00",
-        "access": {},
-        "assigner": "responsible.disclosure@ivanti.com",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-8190",
-        "impact": {},
-        "last-modified": "2024-09-16T13:44:00",
-        "references": [
-            "https://forums.ivanti.com/s/article/Security-Advisory-Ivanti-Cloud-Service-Appliance-CSA-CVE-2024-8190"
-        ],
-        "summary": "An OS command injection vulnerability in Ivanti Cloud Services Appliance versions 4.6 Patch 518 and before allows a remote authenticated attacker to obtain remote code execution. The attacker must have admin level privileges to exploit this vulnerability."
-    },
-    {
-        "Modified": "2024-09-16T13:40:00",
-        "Published": "2024-06-19T12:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-46146",
-        "impact": {},
-        "last-modified": "2024-09-16T13:40:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/themify-ultra/wordpress-themify-ultra-theme-7-3-3-multiple-broken-access-control-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in Themify Themify Ultra.This issue affects Themify Ultra: from n/a through 7.3.5."
-    },
-    {
-        "Modified": "2024-09-16T13:39:00",
-        "Published": "2024-06-19T12:15:00",
-        "access": {},
-        "assigner": "audit@patchstack.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-46148",
-        "impact": {},
-        "last-modified": "2024-09-16T13:39:00",
-        "references": [
-            "https://patchstack.com/database/vulnerability/themify-ultra/wordpress-themify-ultra-theme-7-3-3-authenticated-arbitrary-settings-change-vulnerability?_s_id=cve"
-        ],
-        "summary": "Missing Authorization vulnerability in Themify Themify Ultra.This issue affects Themify Ultra: from n/a through 7.3.5."
-    },
-    {
-        "Modified": "2024-09-16T13:29:00",
-        "Published": "2024-09-09T09:15:00",
-        "access": {},
-        "assigner": "security@elastic.co",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2024-37288",
-        "impact": {},
-        "last-modified": "2024-09-16T13:29:00",
-        "references": [
-            "https://discuss.elastic.co/t/kibana-8-15-1-security-update-esa-2024-27-esa-2024-28/366119"
-        ],
-        "summary": "A deserialization issue in Kibana can lead to arbitrary code execution when Kibana attempts to parse a YAML document containing a crafted payload. This issue only affects users that use  Elastic Security\u2019s built-in AI tools https://www.elastic.co/guide/en/security/current/ai-for-security.html \u00a0and have configured an  Amazon Bedrock connector https://www.elastic.co/guide/en/security/current/assistant-connect-to-bedrock.html ."
-    },
-    {
-        "Modified": "2024-09-16T13:28:00",
-        "Published": "2024-09-09T03:15:00",
-        "access": {},
-        "assigner": "cve@cert.org.tw",
-        "cvss": null,
-        "cwe": "CWE-601",
-        "id": "CVE-2024-8586",
-        "impact": {},
-        "last-modified": "2024-09-16T13:28:00",
-        "references": [
-            "https://www.twcert.org.tw/tw/cp-132-8043-cc323-1.html",
-            "https://www.twcert.org.tw/en/cp-139-8044-65b84-2.html"
-        ],
-        "summary": "WebITR from Uniong has an Open Redirect vulnerability, which allows unauthorized remote attackers to exploit this vulnerability to forge URLs. Users, believing they are accessing a trusted domain, can be redirected to another page, potentially leading to phishing attacks."
-    },
-    {
-        "Modified": "2024-09-16T13:27:00",
-        "Published": "2024-09-09T07:15:00",
-        "access": {},
-        "assigner": "vultures@jpcert.or.jp",
+        "assigner": "secure@dell.com",
         "cvss": null,
         "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-45203",
+        "id": "CVE-2024-39574",
         "impact": {},
-        "last-modified": "2024-09-16T13:27:00",
+        "last-modified": "2024-09-16T15:59:00",
         "references": [
-            "https://jvn.jp/en/jp/JVN81570776/"
+            "https://www.dell.com/support/kbdoc/en-us/000228412/dsa-2024-360-security-update-for-dell-powerscale-insightiq-for-multiple-security-vulnerabilities"
         ],
-        "summary": "Improper authorization in handler for custom URL scheme issue in \"@cosme\" App for Android versions prior 5.69.0 and \"@cosme\" App for iOS versions prior to 6.74.0 allows an attacker to lead a user to access an arbitrary website via the vulnerable App. As a result, the user may become a victim of a phishing attack."
+        "summary": "Dell PowerScale InsightIQ, version 5.1, contain an Improper Privilege Management vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to Denial of service."
     },
     {
-        "Modified": "2024-09-16T13:27:00",
-        "Published": "2024-06-19T11:15:00",
+        "Modified": "2024-09-16T15:51:00",
+        "Published": "2024-09-03T20:15:00",
         "access": {},
-        "assigner": "audit@patchstack.com",
+        "assigner": "secalert@redhat.com",
         "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-48761",
+        "cwe": "CWE-837",
+        "id": "CVE-2024-4629",
         "impact": {},
-        "last-modified": "2024-09-16T13:27:00",
+        "last-modified": "2024-09-16T15:51:00",
         "references": [
-            "https://patchstack.com/database/vulnerability/jet-elements/wordpress-jetelements-for-elementor-plugin-2-6-13-broken-access-control-vulnerability?_s_id=cve"
+            "https://access.redhat.com/security/cve/CVE-2024-4629",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2276761",
+            "https://access.redhat.com/errata/RHSA-2024:6493",
+            "https://access.redhat.com/errata/RHSA-2024:6494",
+            "https://access.redhat.com/errata/RHSA-2024:6495",
+            "https://access.redhat.com/errata/RHSA-2024:6497",
+            "https://access.redhat.com/errata/RHSA-2024:6499",
+            "https://access.redhat.com/errata/RHSA-2024:6500",
+            "https://access.redhat.com/errata/RHSA-2024:6501"
         ],
-        "summary": "Missing Authorization vulnerability in Crocoblock JetElements For Elementor.This issue affects JetElements For Elementor: from n/a through 2.6.13."
+        "summary": "A vulnerability was found in Keycloak. This flaw allows attackers to bypass brute force protection by exploiting the timing of login attempts. By initiating multiple login requests simultaneously, attackers can exceed the configured limits for failed attempts before the system locks them out. This timing loophole enables attackers to make more guesses at passwords than intended, potentially compromising account security on affected systems."
     },
     {
-        "Modified": "2024-09-16T13:26:00",
-        "Published": "2024-06-19T11:15:00",
+        "Modified": "2024-09-16T15:50:00",
+        "Published": "2024-09-10T09:15:00",
         "access": {},
-        "assigner": "audit@patchstack.com",
+        "assigner": "secure@dell.com",
         "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-48760",
+        "cwe": "CWE-552",
+        "id": "CVE-2024-39581",
         "impact": {},
-        "last-modified": "2024-09-16T13:26:00",
+        "last-modified": "2024-09-16T15:50:00",
         "references": [
-            "https://patchstack.com/database/vulnerability/jet-elements/wordpress-jetelements-for-elementor-plugin-2-6-13-unauthenticated-broken-access-control-vulnerability?_s_id=cve"
+            "https://www.dell.com/support/kbdoc/en-us/000228412/dsa-2024-360-security-update-for-dell-powerscale-insightiq-for-multiple-security-vulnerabilities"
         ],
-        "summary": "Missing Authorization vulnerability in Crocoblock JetElements For Elementor.This issue affects JetElements For Elementor: from n/a through 2.6.13."
+        "summary": "Dell PowerScale InsightIQ, versions 5.0 through 5.1, contains a File or Directories Accessible to External Parties vulnerability. An unauthenticated attacker with remote access could potentially exploit this vulnerability to read, modify, and delete arbitrary files."
     },
     {
-        "Modified": "2024-09-16T13:25:00",
-        "Published": "2024-06-19T11:15:00",
+        "Modified": "2024-09-16T15:46:00",
+        "Published": "2024-09-10T09:15:00",
         "access": {},
-        "assigner": "audit@patchstack.com",
+        "assigner": "secure@dell.com",
         "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2023-48759",
+        "cwe": "CWE-119",
+        "id": "CVE-2024-42425",
         "impact": {},
-        "last-modified": "2024-09-16T13:25:00",
+        "last-modified": "2024-09-16T15:46:00",
         "references": [
-            "https://patchstack.com/database/vulnerability/jet-elements/wordpress-jetelements-for-elementor-plugin-2-6-13-unauthenticated-arbitrary-attachment-download-vulnerability?_s_id=cve"
+            "https://www.dell.com/support/kbdoc/en-us/000227015/dsa-2024-328"
         ],
-        "summary": "Missing Authorization vulnerability in Crocoblock JetElements For Elementor.This issue affects JetElements For Elementor: from n/a through 2.6.13."
+        "summary": "Dell Precision Rack, 14G Intel BIOS versions prior to 2.22.2, contains an Access of Memory Location After End of Buffer vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Information disclosure."
     },
     {
-        "Modified": "2024-09-16T13:22:00",
-        "Published": "2024-09-08T03:15:00",
+        "Modified": "2024-09-16T15:42:00",
+        "Published": "2024-09-10T09:15:00",
         "access": {},
-        "assigner": "cna@vuldb.com",
+        "assigner": "secure@dell.com",
         "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-8568",
+        "cwe": "CWE-327",
+        "id": "CVE-2024-39583",
         "impact": {},
-        "last-modified": "2024-09-16T13:22:00",
+        "last-modified": "2024-09-16T15:42:00",
         "references": [
-            "https://vuldb.com/?id.276798",
-            "https://vuldb.com/?ctiid.276798",
-            "https://vuldb.com/?submit.401010",
-            "https://gitee.com/A0kooo/cve_article/blob/master/Mini-Tmall/Tmall_demo%20OrderController.java%20SQL%20Injection.md"
+            "https://www.dell.com/support/kbdoc/en-us/000228412/dsa-2024-360-security-update-for-dell-powerscale-insightiq-for-multiple-security-vulnerabilities"
         ],
-        "summary": "A vulnerability, which was classified as critical, was found in Mini-Tmall up to 20240901. Affected is the function rewardMapper.select of the file tmall/admin/order/1/1. The manipulation of the argument orderBy leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+        "summary": "Dell PowerScale InsightIQ, versions 5.0 through 5.1, contains a Use of a Broken or Risky Cryptographic Algorithm vulnerability. An unauthenticated attacker with remote access could potentially exploit this vulnerability, leading to Elevation of privileges."
     },
     {
-        "Modified": "2024-09-16T13:21:00",
-        "Published": "2024-06-18T00:15:00",
+        "Modified": "2024-09-16T15:40:00",
+        "Published": "2024-09-10T09:15:00",
         "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-6083",
-        "impact": {},
-        "last-modified": "2024-09-16T13:21:00",
-        "references": [
-            "https://vuldb.com/?id.268824",
-            "https://vuldb.com/?ctiid.268824",
-            "https://vuldb.com/?submit.353552",
-            "https://github.com/WeikFu/PHPVibe-vulnerability-description/issues/2"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in PHPVibe 11.0.46. Affected is an unknown function of the file /app/uploading/upload-mp3.php of the component Media Upload Page. The manipulation of the argument file leads to unrestricted upload. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The identifier of this vulnerability is VDB-268824. NOTE: The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-09-16T13:19:00",
-        "Published": "2024-09-13T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-44798",
-        "impact": {},
-        "last-modified": "2024-09-16T13:19:00",
-        "references": [
-            "https://github.com/shouvikdutta1998/Bus_management"
-        ],
-        "summary": "phpgurukul Bus Pass Management System 1.0 is vulnerable to Cross-site scripting (XSS) in /admin/pass-bwdates-reports-details.php via fromdate and todate parameters."
-    },
-    {
-        "Modified": "2024-09-16T13:18:00",
-        "Published": "2024-09-13T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-191",
-        "id": "CVE-2024-41857",
-        "impact": {},
-        "last-modified": "2024-09-16T13:18:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/illustrator/apsb24-66.html"
-        ],
-        "summary": "Illustrator versions 28.6, 27.9.5 and earlier are affected by an Integer Underflow (Wrap or Wraparound) vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-09-16T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46424",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://github.com/TTTJJJWWW/AHU-IoT-vulnerable/blob/main/TOTOLINK/AC1200T8/UploadCustomModule.md"
-        ],
-        "summary": "TOTOLINK AC1200 T8 v4.1.5cu.861_B20230220 has a buffer overflow vulnerability in the UploadCustomModule function, which allows attackers to cause a Denial of Service (DoS) via the File parameter."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-09-16T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46451",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://github.com/offshore0315/loT-vulnerable/blob/main/TOTOLINK/AC1200%20T8/setWiFiAclRules.md"
-        ],
-        "summary": "TOTOLINK AC1200 T8 v4.1.5cu.861_B20230220 has a buffer overflow vulnerability in the setWiFiAclRules function via the desc parameter."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-09-16T13:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46937",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://mfasoft.ru",
-            "https://github.com/WI1D-41/IDOR-in-MFASOFT-Secure-Authentication-Server"
-        ],
-        "summary": "An improper access control (IDOR) vulnerability in the /api-selfportal/get-info-token-properties endpoint in MFASOFT Secure Authentication Server (SAS) 1.8.x through 1.9.x before 1.9.040924 allows remote attackers gain access to user tokens without authentication. The is a brute-force attack on the serial parameter by number identifier: GA00001, GA00002, GA00003, etc."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-09-13T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-41867",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/after_effects/apsb24-55.html"
-        ],
-        "summary": "After Effects versions 23.6.6, 24.5 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-08-14T15:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-367",
-        "id": "CVE-2024-39420",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/acrobat/apsb24-70.html"
-        ],
-        "summary": "Acrobat Reader versions 20.005.30636, 24.002.21005, 24.001.30159, 20.005.30655, 24.002.20965, 24.002.20964, 24.001.30123, 24.003.20054 and earlier are affected by a Time-of-check Time-of-use (TOCTOU) Race Condition vulnerability that could lead to arbitrary code execution. This vulnerability arises when the timing of actions changes the state of a resource between the checking of a condition and the use of the resource, allowing an attacker to manipulate the resource in a harmful way. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-08-14T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-39409",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/magento/apsb24-61.html"
-        ],
-        "summary": "Adobe Commerce versions 2.4.7-p1, 2.4.6-p6, 2.4.5-p8, 2.4.4-p9 and earlier are affected by a Cross-Site Request Forgery (CSRF) vulnerability that could allow an attacker to bypass security features and perform minor integrity changes on behalf of a user. The vulnerability could be exploited by tricking a victim into clicking a link or loading a page that submits a malicious request. Exploitation of this issue requires user interaction."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-08-14T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-39410",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/magento/apsb24-61.html"
-        ],
-        "summary": "Adobe Commerce versions 2.4.7-p1, 2.4.6-p6, 2.4.5-p8, 2.4.4-p9 and earlier are affected by a Cross-Site Request Forgery (CSRF) vulnerability that could allow an attacker to bypass security features and perform minor integrity changes on behalf of a user. The vulnerability could be exploited by tricking a victim into clicking a link or loading a page that submits a malicious request. Exploitation of this issue does not require user interaction."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-08-14T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
+        "assigner": "secure@dell.com",
         "cvss": null,
         "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-39412",
+        "id": "CVE-2024-39580",
         "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
+        "last-modified": "2024-09-16T15:40:00",
         "references": [
-            "https://helpx.adobe.com/security/products/magento/apsb24-61.html"
+            "https://www.dell.com/support/kbdoc/en-us/000228412/dsa-2024-360-security-update-for-dell-powerscale-insightiq-for-multiple-security-vulnerabilities"
         ],
-        "summary": "Adobe Commerce versions 2.4.7-p1, 2.4.6-p6, 2.4.5-p8, 2.4.4-p9 and earlier are affected by an Improper Authorization vulnerability that could result in a Security feature bypass. A low-privileged attacker could leverage this vulnerability to bypass security measures and perform a minor integrity change. Exploitation of this issue does not require user interaction."
+        "summary": "Dell PowerScale InsightIQ, versions 5.0 through 5.1, contains an Improper Access Control vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to Elevation of privileges."
     },
     {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-08-14T12:15:00",
+        "Modified": "2024-09-16T15:36:00",
+        "Published": "2024-09-10T09:15:00",
         "access": {},
-        "assigner": "psirt@adobe.com",
+        "assigner": "secure@dell.com",
         "cvss": null,
-        "cwe": "CWE-352",
-        "id": "CVE-2024-39408",
+        "cwe": "CWE-798",
+        "id": "CVE-2024-39582",
         "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
+        "last-modified": "2024-09-16T15:36:00",
         "references": [
-            "https://helpx.adobe.com/security/products/magento/apsb24-61.html"
+            "https://www.dell.com/support/kbdoc/en-us/000228412/dsa-2024-360-security-update-for-dell-powerscale-insightiq-for-multiple-security-vulnerabilities"
         ],
-        "summary": "Adobe Commerce versions 2.4.7-p1, 2.4.6-p6, 2.4.5-p8, 2.4.4-p9 and earlier are affected by a Cross-Site Request Forgery (CSRF) vulnerability that could allow an attacker to bypass security features and perform minor integrity changeson behalf of a user. The vulnerability could be exploited by tricking a victim into clicking a link or loading a page that submits a malicious request. Exploitation of this issue requires user interaction."
+        "summary": "Dell PowerScale InsightIQ, version 5.0, contain a Use of hard coded Credentials vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to Information disclosure."
     },
     {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-07-23T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-41839",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/experience-manager/apsb24-28.html"
-        ],
-        "summary": "Adobe Experience Manager versions 6.5.20 and earlier are affected by an Improper Input Validation vulnerability that could lead to a security feature bypass. A low-privileged attacker could leverage this vulnerability to bypass security measures and affect the integrity of the page. Exploitation of this issue requires user interaction."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-01-16T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-347",
-        "id": "CVE-2024-0567",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-0567",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2258544",
-            "https://gitlab.com/gnutls/gnutls/-/issues/1521",
-            "https://lists.gnupg.org/pipermail/gnutls-help/2024-January/004841.html",
-            "https://access.redhat.com/errata/RHSA-2024:0533",
-            "https://access.redhat.com/errata/RHSA-2024:1082",
-            "https://access.redhat.com/errata/RHSA-2024:1383",
-            "https://access.redhat.com/errata/RHSA-2024:2094"
-        ],
-        "summary": "A vulnerability was found in GnuTLS, where a cockpit (which uses gnuTLS) rejects a certificate chain with distributed trust. This issue occurs when validating a certificate chain with cockpit-certificate-ensure. This flaw allows an unauthenticated, remote client or attacker to initiate a denial of service attack."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2024-01-16T12:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-203",
-        "id": "CVE-2024-0553",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-0553",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2258412",
-            "https://gitlab.com/gnutls/gnutls/-/issues/1522",
-            "https://lists.gnupg.org/pipermail/gnutls-help/2024-January/004841.html",
-            "https://access.redhat.com/errata/RHSA-2024:0533",
-            "https://access.redhat.com/errata/RHSA-2024:0627",
-            "https://access.redhat.com/errata/RHSA-2024:0796",
-            "https://access.redhat.com/errata/RHSA-2024:1082",
-            "https://access.redhat.com/errata/RHSA-2024:1108",
-            "https://access.redhat.com/errata/RHSA-2024:1383",
-            "https://access.redhat.com/errata/RHSA-2024:2094"
-        ],
-        "summary": "A vulnerability was found in GnuTLS. The response times to malformed ciphertexts in RSA-PSK ClientKeyExchange differ from the response times of ciphertexts with correct PKCS#1 v1.5 padding. This issue may allow a remote attacker to perform a timing side-channel attack in the RSA-PSK key exchange, potentially leading to the leakage of sensitive data. CVE-2024-0553 is designated as an incomplete resolution for CVE-2023-5981."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-11-28T12:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-203",
-        "id": "CVE-2023-5981",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-5981",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2248445",
-            "https://gnutls.org/security-new.html#GNUTLS-SA-2023-10-23",
-            "https://access.redhat.com/errata/RHSA-2024:0155",
-            "https://access.redhat.com/errata/RHSA-2024:0319",
-            "https://access.redhat.com/errata/RHSA-2024:0399",
-            "https://access.redhat.com/errata/RHSA-2024:0451",
-            "https://access.redhat.com/errata/RHSA-2024:0533",
-            "https://access.redhat.com/errata/RHSA-2024:1383",
-            "https://access.redhat.com/errata/RHSA-2024:2094"
-        ],
-        "summary": "A vulnerability was found that the response times to malformed ciphertexts in RSA-PSK ClientKeyExchange differ from response times of ciphertexts with correct PKCS#1 v1.5 padding."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-10-04T19:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-401",
-        "id": "CVE-2023-3576",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-3576",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2219340",
-            "https://access.redhat.com/errata/RHSA-2023:6575"
-        ],
-        "summary": "A memory leak flaw was found in Libtiff's tiffcrop utility. This issue occurs when tiffcrop operates on a TIFF image file, allowing an attacker to pass a crafted TIFF image file to tiffcrop utility, which causes this memory leak issue, resulting an application crash, eventually leading to a denial of service."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-09-28T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-362",
-        "id": "CVE-2023-42756",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-42756",
-            "https://seclists.org/oss-sec/2023/q3/242",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2239848",
-            "https://access.redhat.com/errata/RHSA-2024:2394"
-        ],
-        "summary": "A flaw was found in the Netfilter subsystem of the Linux kernel. A race condition between IPSET_CMD_ADD and IPSET_CMD_SWAP can lead to a kernel panic due to the invocation of `__ip_set_put` on a wrong `set`. This issue may allow a local user to crash the system."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-08-25T17:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-38201",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-38201",
-            "https://github.com/keylime/keylime/security/advisories/GHSA-f4r5-q63f-gcww",
-            "https://github.com/keylime/keylime/commit/9e5ac9f25cd400b16d5969f531cee28290543f2a",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222693",
-            "https://access.redhat.com/errata/RHSA-2023:5080"
-        ],
-        "summary": "A flaw was found in the Keylime registrar that could allow a bypass of the challenge-response protocol during agent registration. This issue may allow an attacker to impersonate an agent and hide the true status of a monitored machine if the fake agent is added to the verifier list by a legitimate user, resulting in a breach of the integrity of the registrar database."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-08-23T11:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2023-3899",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/errata/RHSA-2023:4705",
-            "https://access.redhat.com/errata/RHSA-2023:4706",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2225407",
-            "https://access.redhat.com/errata/RHSA-2023:4707",
-            "https://access.redhat.com/errata/RHSA-2023:4708",
-            "https://access.redhat.com/errata/RHSA-2023:4701",
-            "https://access.redhat.com/errata/RHSA-2023:4702",
-            "https://access.redhat.com/errata/RHSA-2023:4703",
-            "https://access.redhat.com/errata/RHSA-2023:4704",
-            "https://access.redhat.com/security/cve/CVE-2023-3899"
-        ],
-        "summary": "A vulnerability was found in subscription-manager that allows local privilege escalation due to inadequate authorization. The D-Bus interface com.redhat.RHSM1 exposes a significant number of methods to all users that could change the state of the registration. By using the com.redhat.RHSM1.Config.SetAll() method, a low-privileged local user could tamper with the state of the registration, by unregistering the system or by changing the current entitlements. This flaw allows an attacker to set arbitrary configuration directives for /etc/rhsm/rhsm.conf, which can be abused to cause a local privilege escalation to an unconfined root."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-08-07T14:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2023-4147",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-4147",
-            "https://www.spinics.net/lists/stable/msg671573.html",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2225239",
-            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0ebc1064e4874d5987722a2ddbc18f94aa53b211",
-            "https://access.redhat.com/errata/RHSA-2023:5091",
-            "https://access.redhat.com/errata/RHSA-2023:5069",
-            "https://access.redhat.com/errata/RHSA-2023:5093",
-            "https://access.redhat.com/errata/RHSA-2023:7382",
-            "https://access.redhat.com/errata/RHSA-2023:7389",
-            "https://access.redhat.com/errata/RHSA-2023:7411"
-        ],
-        "summary": "A use-after-free flaw was found in the Linux kernel\u2019s Netfilter functionality when adding a rule with NFTA_RULE_CHAIN_ID. This flaw allows a local user to crash or escalate their privileges on the system."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-08-01T17:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-120",
-        "id": "CVE-2023-38559",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://git.ghostscript.com/?p=ghostpdl.git;a=commitdiff;h=d81b82c70bc1",
-            "https://access.redhat.com/security/cve/CVE-2023-38559",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2224367",
-            "https://bugs.ghostscript.com/show_bug.cgi?id=706897",
-            "https://access.redhat.com/errata/RHSA-2023:6544",
-            "https://access.redhat.com/errata/RHSA-2023:7053"
-        ],
-        "summary": "A buffer overflow flaw was found in base/gdevdevn.c:1973 in devn_pcx_write_rle() in ghostscript. This issue may allow a local attacker to cause a denial of service via outputting a crafted PDF file for a DEVN device with gs."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-07-24T16:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-834",
-        "id": "CVE-2023-38200",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-38200",
-            "https://github.com/keylime/keylime/pull/1421",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222692",
-            "https://access.redhat.com/errata/RHSA-2023:5080"
-        ],
-        "summary": "A flaw was found in Keylime. Due to their blocking nature, the Keylime registrar is subject to a remote denial of service against its SSL connections. This flaw allows an attacker to exhaust all available connections."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-07-20T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2022-2127",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://www.samba.org/samba/security/CVE-2022-2127.html",
-            "https://access.redhat.com/security/cve/CVE-2022-2127",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222791",
-            "https://access.redhat.com/errata/RHSA-2023:6667",
-            "https://access.redhat.com/errata/RHSA-2023:7139",
-            "https://access.redhat.com/errata/RHSA-2024:0423",
-            "https://access.redhat.com/errata/RHSA-2024:0580"
-        ],
-        "summary": "An out-of-bounds read vulnerability was found in Samba due to insufficient length checks in winbindd_pam_auth_crap.c. When performing NTLM authentication, the client replies to cryptographic challenges back to the server. These replies have variable lengths, and Winbind fails to check the lan manager response length. When Winbind is used for NTLM authentication, a maliciously crafted request can trigger an out-of-bounds read in Winbind, possibly resulting in a crash."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-07-20T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-835",
-        "id": "CVE-2023-34966",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-34966",
-            "https://www.samba.org/samba/security/CVE-2023-34966",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222793",
-            "https://access.redhat.com/errata/RHSA-2023:6667",
-            "https://access.redhat.com/errata/RHSA-2023:7139",
-            "https://access.redhat.com/errata/RHSA-2024:0423",
-            "https://access.redhat.com/errata/RHSA-2024:0580",
-            "https://access.redhat.com/errata/RHSA-2024:4101"
-        ],
-        "summary": "An infinite loop vulnerability was found in Samba's mdssvc RPC service for Spotlight. When parsing Spotlight mdssvc RPC packets sent by the client, the core unmarshalling function sl_unpack_loop() did not validate a field in the network packet that contains the count of elements in an array-like structure. By passing 0 as the count value, the attacked function will run in an endless loop consuming 100% CPU. This flaw allows an attacker to issue a malformed RPC request, triggering an infinite loop, resulting in a denial of service condition."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-07-20T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-843",
-        "id": "CVE-2023-34967",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-34967",
-            "https://www.samba.org/samba/security/CVE-2023-34967.html",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222794",
-            "https://access.redhat.com/errata/RHSA-2023:6667",
-            "https://access.redhat.com/errata/RHSA-2023:7139",
-            "https://access.redhat.com/errata/RHSA-2024:0423",
-            "https://access.redhat.com/errata/RHSA-2024:0580"
-        ],
-        "summary": "A Type Confusion vulnerability was found in Samba's mdssvc RPC service for Spotlight. When parsing Spotlight mdssvc RPC packets, one encoded data structure is a key-value style dictionary where the keys are character strings, and the values can be any of the supported types in the mdssvc protocol. Due to a lack of type checking in callers of the dalloc_value_for_key() function, which returns the object associated with a key, a caller may trigger a crash in talloc_get_size() when talloc detects that the passed-in pointer is not a valid talloc pointer. With an RPC worker process shared among multiple client connections, a malicious client or attacker can trigger a process crash in a shared RPC mdssvc worker process, affecting all other clients this worker serves."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-07-20T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-34968",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://www.samba.org/samba/security/CVE-2023-34968.html",
-            "https://access.redhat.com/security/cve/CVE-2023-34968",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222795",
-            "https://access.redhat.com/errata/RHSA-2023:6667",
-            "https://access.redhat.com/errata/RHSA-2023:7139",
-            "https://access.redhat.com/errata/RHSA-2024:0423",
-            "https://access.redhat.com/errata/RHSA-2024:0580"
-        ],
-        "summary": "A path disclosure vulnerability was found in Samba. As part of the Spotlight protocol, Samba discloses the server-side absolute path of shares, files, and directories in the results for search queries. This flaw allows a malicious client or an attacker with a targeted RPC request to view the information that is part of the disclosed path."
-    },
-    {
-        "Modified": "2024-09-16T13:15:00",
-        "Published": "2023-07-20T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-3347",
-        "impact": {},
-        "last-modified": "2024-09-16T13:15:00",
-        "references": [
-            "https://www.samba.org/samba/security/CVE-2023-3347.html",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2222792",
-            "https://access.redhat.com/security/cve/CVE-2023-3347",
-            "https://access.redhat.com/errata/RHSA-2023:4325",
-            "https://access.redhat.com/errata/RHSA-2023:4328"
-        ],
-        "summary": "A vulnerability was found in Samba's SMB2 packet signing mechanism. The SMB2 packet signing is not enforced if an admin configured \"server signing = required\" or for SMB2 connections to Domain Controllers where SMB2 packet signing is mandatory. This flaw allows an attacker to perform attacks, such as a man-in-the-middle attack, by intercepting the network traffic and modifying the SMB2 messages between client and server, affecting the integrity of the data."
-    },
-    {
-        "Modified": "2024-09-16T13:12:00",
-        "Published": "2024-09-13T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-416",
-        "id": "CVE-2024-39385",
-        "impact": {},
-        "last-modified": "2024-09-16T13:12:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/premiere_pro/apsb24-58.html"
-        ],
-        "summary": "Premiere Pro versions 24.5, 23.6.8 and earlier are affected by a Use After Free vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T13:01:00",
-        "Published": "2024-09-13T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-39384",
-        "impact": {},
-        "last-modified": "2024-09-16T13:01:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/premiere_pro/apsb24-58.html"
-        ],
-        "summary": "Premiere Pro versions 24.5, 23.6.8 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T12:35:00",
-        "Published": "2024-09-06T17:15:00",
-        "access": {},
-        "assigner": "security@qnap.com",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2024-38641",
-        "impact": {},
-        "last-modified": "2024-09-16T12:35:00",
-        "references": [
-            "https://www.qnap.com/en/security-advisory/qsa-24-33"
-        ],
-        "summary": "An OS command injection vulnerability has been reported to affect several QNAP operating system versions. If exploited, the vulnerability could allow local network users to execute commands via unspecified vectors.\n\nWe have already fixed the vulnerability in the following versions:\nQTS 5.1.8.2823 build 20240712 and later\nQuTS hero h5.1.8.2823 build 20240712 and later"
-    },
-    {
-        "Modified": "2024-09-16T12:33:00",
-        "Published": "2024-09-06T17:15:00",
-        "access": {},
-        "assigner": "security@qnap.com",
-        "cvss": null,
-        "cwe": "CWE-295",
-        "id": "CVE-2024-38642",
-        "impact": {},
-        "last-modified": "2024-09-16T12:33:00",
-        "references": [
-            "https://www.qnap.com/en/security-advisory/qsa-24-34"
-        ],
-        "summary": "An improper certificate validation vulnerability has been reported to affect QuMagie. If exploited, the vulnerability could allow local network users to compromise the security of the system via unspecified vectors.\n\nWe have already fixed the vulnerability in the following version:\nQuMagie 2.3.1 and later"
-    },
-    {
-        "Modified": "2024-09-16T12:27:00",
-        "Published": "2024-09-06T17:15:00",
-        "access": {},
-        "assigner": "security@qnap.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-38640",
-        "impact": {},
-        "last-modified": "2024-09-16T12:27:00",
-        "references": [
-            "https://www.qnap.com/en/security-advisory/qsa-24-35"
-        ],
-        "summary": "A cross-site scripting (XSS) vulnerability has been reported to affect Download Station. If exploited, the vulnerability could allow authenticated users to inject malicious code via a network.\n\nWe have already fixed the vulnerability in the following version:\nDownload Station 5.8.6.283 ( 2024/06/21 ) and later"
-    },
-    {
-        "Modified": "2024-09-16T12:21:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-674",
-        "id": "CVE-2024-44996",
-        "impact": {},
-        "last-modified": "2024-09-16T12:21:00",
-        "references": [
-            "https://git.kernel.org/stable/c/921f1acf0c3cf6b1260ab57a8a6e8b3d5f3023d5",
-            "https://git.kernel.org/stable/c/b4ee8cf1acc5018ed1369150d7bb3e0d0f79e135",
-            "https://git.kernel.org/stable/c/69139d2919dd4aa9a553c8245e7c63e82613e3fc"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvsock: fix recursive ->recvmsg calls\n\nAfter a vsock socket has been added to a BPF sockmap, its prot->recvmsg\nhas been replaced with vsock_bpf_recvmsg(). Thus the following\nrecursiion could happen:\n\nvsock_bpf_recvmsg()\n -> __vsock_recvmsg()\n  -> vsock_connectible_recvmsg()\n   -> prot->recvmsg()\n    -> vsock_bpf_recvmsg() again\n\nWe need to fix it by calling the original ->recvmsg() without any BPF\nsockmap logic in __vsock_recvmsg()."
-    },
-    {
-        "Modified": "2024-09-16T12:15:00",
-        "Published": "2024-09-16T12:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "CWE-502",
-        "id": "CVE-2024-22399",
-        "impact": {},
-        "last-modified": "2024-09-16T12:15:00",
-        "references": [
-            "https://lists.apache.org/thread/91nzzlxyj4nmks85gbzwkkjtbmnmlkc4"
-        ],
-        "summary": "Deserialization of Untrusted Data vulnerability in Apache Seata.\u00a0\n\nWhen developers disable authentication on the Seata-Server and do not use the Seata client SDK dependencies, they may construct uncontrolled serialized malicious requests by directly sending bytecode based on the Seata private protocol.\n\nThis issue affects Apache Seata: 2.0.0, from 1.0.0 through 1.8.0.\n\nUsers are recommended to upgrade to version 2.1.0/1.8.1, which fixes the issue."
-    },
-    {
-        "Modified": "2024-09-16T12:15:00",
-        "Published": "2024-08-14T15:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-34134",
-        "impact": {},
-        "last-modified": "2024-09-16T12:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/illustrator/apsb24-45.html"
-        ],
-        "summary": "Illustrator versions 28.5, 27.9.4 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T12:15:00",
-        "Published": "2024-08-14T12:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-39406",
-        "impact": {},
-        "last-modified": "2024-09-16T12:15:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/magento/apsb24-61.html"
-        ],
-        "summary": "Adobe Commerce versions 2.4.7-p1, 2.4.6-p6, 2.4.5-p8, 2.4.4-p9 and earlier are affected by an Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability that could lead to arbitrary file system read. An admin attacker could exploit this vulnerability to gain access to files and directories that are outside the restricted directory. Exploitation of this issue does not require user interaction and scope is changed."
-    },
-    {
-        "Modified": "2024-09-16T12:15:00",
-        "Published": "2024-07-31T13:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-39379",
-        "impact": {},
-        "last-modified": "2024-09-16T12:15:00",
-        "references": [
-            "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-39379"
-        ],
-        "summary": "Acrobat for Edge versions 126.0.2592.81 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T12:08:00",
-        "Published": "2024-06-25T16:15:00",
-        "access": {},
-        "assigner": "PSIRT@rockwellautomation.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-5989",
-        "impact": {},
-        "last-modified": "2024-09-16T12:08:00",
-        "references": [
-            "https://www.rockwellautomation.com/en-us/trust-center/security-advisories/advisory.SD1677.html"
-        ],
-        "summary": "Due to an improper input validation, an unauthenticated threat actor can send a malicious message to invoke SQL injection into the program and cause a remote code execution condition on the Rockwell Automation\u00a0ThinManager\u00ae ThinServer\u2122."
-    },
-    {
-        "Modified": "2024-09-16T12:07:00",
-        "Published": "2024-06-25T16:15:00",
-        "access": {},
-        "assigner": "PSIRT@rockwellautomation.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-5988",
-        "impact": {},
-        "last-modified": "2024-09-16T12:07:00",
-        "references": [
-            "https://www.rockwellautomation.com/en-us/trust-center/security-advisories/advisory.SD1677.html"
-        ],
-        "summary": "Due to an improper input validation, an unauthenticated threat actor can send a malicious message to invoke a local or remote executable and cause a remote code execution condition on the Rockwell Automation\u00a0ThinManager\u00ae ThinServer\u2122."
-    },
-    {
-        "Modified": "2024-09-16T11:58:00",
-        "Published": "2024-06-25T16:15:00",
-        "access": {},
-        "assigner": "PSIRT@rockwellautomation.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-5990",
-        "impact": {},
-        "last-modified": "2024-09-16T11:58:00",
-        "references": [
-            "https://www.rockwellautomation.com/en-us/trust-center/security-advisories/advisory.SD1677.html"
-        ],
-        "summary": "Due to an improper input validation, an unauthenticated threat actor can send a malicious message to a monitor thread within Rockwell Automation ThinServer\u2122 and cause a denial-of-service condition on the affected device."
-    },
-    {
-        "Modified": "2024-09-16T11:55:00",
-        "Published": "2024-09-13T09:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-190",
-        "id": "CVE-2024-34121",
-        "impact": {},
-        "last-modified": "2024-09-16T11:55:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/illustrator/apsb24-66.html"
-        ],
-        "summary": "Illustrator versions 28.6, 27.9.5 and earlier are affected by an Integer Overflow or Wraparound vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T11:39:00",
-        "Published": "2024-09-13T07:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-41873",
-        "impact": {},
-        "last-modified": "2024-09-16T11:39:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/media-encoder/apsb24-53.html"
-        ],
-        "summary": "Media Encoder versions 24.5, 23.6.8 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T11:16:00",
-        "Published": "2024-09-13T07:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-41872",
-        "impact": {},
-        "last-modified": "2024-09-16T11:16:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/media-encoder/apsb24-53.html"
-        ],
-        "summary": "Media Encoder versions 24.5, 23.6.8 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T11:15:00",
-        "Published": "2024-09-16T11:15:00",
-        "access": {},
-        "assigner": "security@jetbrains.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-46970",
-        "impact": {},
-        "last-modified": "2024-09-16T11:15:00",
-        "references": [
-            "https://www.jetbrains.com/privacy-security/issues-fixed/"
-        ],
-        "summary": "In JetBrains IntelliJ IDEA before 2024.1 hTML injection via the project name was possible"
-    },
-    {
-        "Modified": "2024-09-16T11:15:00",
-        "Published": "2023-08-09T15:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-4273",
-        "impact": {},
-        "last-modified": "2024-09-16T11:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-4273",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2221609",
-            "https://dfir.ru/2023/08/23/cve-2023-4273-a-vulnerability-in-the-linux-exfat-driver/",
-            "https://access.redhat.com/errata/RHSA-2023:6583"
-        ],
-        "summary": "A flaw was found in the exFAT driver of the Linux kernel. The vulnerability exists in the implementation of the file name reconstruction function, which is responsible for reading file name entries from a directory index and merging file name parts belonging to one file into a single long file name. Since the file name characters are copied into a stack variable, a local privileged attacker could use this flaw to overflow the kernel stack."
-    },
-    {
-        "Modified": "2024-09-16T11:15:00",
-        "Published": "2023-07-25T16:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2023-3773",
-        "impact": {},
-        "last-modified": "2024-09-16T11:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2023-3773",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2218944",
-            "https://access.redhat.com/errata/RHSA-2023:6583"
-        ],
-        "summary": "A flaw was found in the Linux kernel\u2019s IP framework for transforming packets (XFRM subsystem). This issue may allow a malicious user with CAP_NET_ADMIN privileges to cause a 4 byte out-of-bounds read of XFRMA_MTIMER_THRESH when parsing netlink attributes, leading to potential leakage of sensitive heap data to userspace."
-    },
-    {
-        "Modified": "2024-09-16T10:36:00",
-        "Published": "2024-09-13T07:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-41871",
-        "impact": {},
-        "last-modified": "2024-09-16T10:36:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/media-encoder/apsb24-53.html"
-        ],
-        "summary": "Media Encoder versions 24.5, 23.6.8 and earlier are affected by an out-of-bounds read vulnerability when parsing a crafted file, which could result in a read past the end of an allocated memory structure. An attacker could leverage this vulnerability to execute code in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T10:32:00",
-        "Published": "2024-09-13T07:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-41870",
-        "impact": {},
-        "last-modified": "2024-09-16T10:32:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/media-encoder/apsb24-53.html"
-        ],
-        "summary": "Media Encoder versions 24.5, 23.6.8 and earlier are affected by an out-of-bounds read vulnerability that could lead to disclosure of sensitive memory. An attacker could leverage this vulnerability to bypass mitigations such as ASLR. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T10:30:00",
-        "Published": "2024-09-13T07:15:00",
-        "access": {},
-        "assigner": "psirt@adobe.com",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-39377",
-        "impact": {},
-        "last-modified": "2024-09-16T10:30:00",
-        "references": [
-            "https://helpx.adobe.com/security/products/media-encoder/apsb24-53.html"
-        ],
-        "summary": "Media Encoder versions 24.5, 23.6.8 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file."
-    },
-    {
-        "Modified": "2024-09-16T07:15:00",
+        "Modified": "2024-09-16T15:35:00",
         "Published": "2024-09-16T07:15:00",
         "access": {},
         "assigner": "product-security@canon-europe.com",
@@ -1085,7 +121,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-1578",
         "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
+        "last-modified": "2024-09-16T15:35:00",
         "references": [
             "https://ntware.atlassian.net/wiki/spaces/SA/pages/11973853216/2024+Security+Advisory+Multiple+MiCard+PLUS+card+reader+dropped+characters",
             "https://www.canon-europe.com/psirt/advisory-information"
@@ -1093,132 +129,462 @@
         "summary": "The MiCard PLUS Ci and MiCard PLUS BLE reader products developed by rf IDEAS and rebranded by NT-ware have a firmware fault that may result in characters randomly being dropped from some ID card reads, which would result in the wrong ID card number being assigned during ID card self-registration and might result in failed login attempts for end-users. Random characters being dropped from ID card numbers compromises the uniqueness of ID cards that can, therefore, result in a security issue if the users are using the \u2018ID card self-registration\u2019 function."
     },
     {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T20:15:00",
         "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
+        "assigner": "cve@mitre.org",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-39613",
+        "id": "CVE-2024-44430",
         "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
+        "last-modified": "2024-09-16T15:35:00",
         "references": [
-            "https://mattermost.com/security-updates"
+            "https://blog.csdn.net/samwbs/article/details/140954482",
+            "https://github.com/samwbs/kortexcve/blob/main/xss_register_case/XSS_register_case.md"
         ],
-        "summary": "Mattermost Desktop App versions <=5.8.0 fail to\u00a0specify an absolute path when searching the cmd.exe file,  which allows a local attacker who is able to put an cmd.exe file in the Downloads folder of a user's machine to cause remote code execution on that machine."
+        "summary": "SQL Injection vulnerability in Best Free Law Office Management Software-v1.0 allows an attacker to execute arbitrary code and obtain sensitive information via a crafted payload to the kortex_lite/control/register_case.php interface"
     },
     {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T21:15:00",
         "access": {},
-        "assigner": "cve@cert.org.tw",
-        "cvss": null,
-        "cwe": "CWE-121",
-        "id": "CVE-2024-45694",
-        "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
-        "references": [
-            "https://www.twcert.org.tw/tw/cp-132-8080-7f494-1.html",
-            "https://www.twcert.org.tw/en/cp-139-8081-3fb39-2.html"
-        ],
-        "summary": "The web service of certain models of D-Link wireless routers contains a Stack-based Buffer Overflow vulnerability, which allows unauthenticated remote attackers to exploit this vulnerability to execute arbitrary code on the device."
-    },
-    {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
-        "access": {},
-        "assigner": "cve@cert.org.tw",
+        "assigner": "dsap-vuln-management@google.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-45695",
+        "id": "CVE-2024-29779",
         "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
+        "last-modified": "2024-09-16T15:35:00",
         "references": [
-            "https://www.twcert.org.tw/tw/cp-132-8082-f1687-1.html",
-            "https://www.twcert.org.tw/en/cp-139-8083-a299e-2.html"
+            "https://source.android.com/security/bulletin/pixel/2024-09-01"
         ],
-        "summary": "The web service of certain models of D-Link wireless routers contains a Stack-based Buffer Overflow vulnerability, which allows unauthenticated remote attackers to exploit this vulnerability to execute arbitrary code on the device."
+        "summary": "there is a possible escalation of privilege due to an unusual root cause. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
     },
     {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T21:15:00",
         "access": {},
-        "assigner": "cve@cert.org.tw",
-        "cvss": null,
-        "cwe": "CWE-912",
-        "id": "CVE-2024-45696",
-        "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
-        "references": [
-            "https://www.twcert.org.tw/tw/cp-132-8086-93ed5-1.html",
-            "https://www.twcert.org.tw/en/cp-139-8087-c3e70-2.html"
-        ],
-        "summary": "Certain models of D-Link wireless routers contain hidden functionality. By sending specific packets to the web service, the attacker can forcibly enable the telnet service and log in using hard-coded credentials. The telnet service enabled through this method can only be accessed from within the same local network as the device."
-    },
-    {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
-        "access": {},
-        "assigner": "cve@cert.org.tw",
-        "cvss": null,
-        "cwe": "CWE-912",
-        "id": "CVE-2024-45697",
-        "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
-        "references": [
-            "https://www.twcert.org.tw/tw/cp-132-8088-590ed-1.html",
-            "https://www.twcert.org.tw/en/cp-139-8089-32df6-2.html"
-        ],
-        "summary": "Certain models of D-Link wireless routers have a hidden functionality where the telnet service is enabled when the WAN port is plugged in. Unauthorized remote attackers can log in and execute OS commands using hard-coded credentials."
-    },
-    {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
-        "access": {},
-        "assigner": "cve@cert.org.tw",
-        "cvss": null,
-        "cwe": "CWE-78",
-        "id": "CVE-2024-45698",
-        "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
-        "references": [
-            "https://www.twcert.org.tw/tw/cp-132-8090-bf06b-1.html",
-            "https://www.twcert.org.tw/en/cp-139-8091-bcd52-2.html"
-        ],
-        "summary": "Certain models of D-Link wireless routers do not properly validate user input in the telnet service, allowing unauthenticated remote attackers to use hard-coded credentials to log into telnet and inject arbitrary OS commands, which can then be executed on the device."
-    },
-    {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-09-16T07:15:00",
-        "access": {},
-        "assigner": "responsibledisclosure@mattermost.com",
+        "assigner": "dsap-vuln-management@google.com",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-45833",
+        "id": "CVE-2024-44092",
         "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
+        "last-modified": "2024-09-16T15:35:00",
         "references": [
-            "https://mattermost.com/security-updates"
+            "https://source.android.com/security/bulletin/pixel/2024-09-01"
         ],
-        "summary": "Mattermost Mobile Apps versions <=2.18.0 fail to disable autocomplete during login while typing the password and visible password is selected, which allows the\u00a0password to get saved in the dictionary when the user has Swiftkey as the default keyboard, the masking is off and the password contains a special character.."
+        "summary": "In TBD of TBD, there is a possible LCS signing enforcement missing  due to test/debugging code left in a production build. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
     },
     {
-        "Modified": "2024-09-16T07:15:00",
-        "Published": "2024-08-27T10:15:00",
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T21:15:00",
         "access": {},
-        "assigner": "security@m-files.com",
+        "assigner": "dsap-vuln-management@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44093",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://source.android.com/security/bulletin/pixel/2024-09-01"
+        ],
+        "summary": "In ppmp_unprotect_buf of drm/code/drm_fw.c, there is a possible memory corruption due to a logic error in the code. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T21:15:00",
+        "access": {},
+        "assigner": "dsap-vuln-management@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44094",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://source.android.com/security/bulletin/pixel/2024-09-01"
+        ],
+        "summary": "In ppmp_protect_mfcfw_buf of code/drm_fw.c, there is a possible memory corruption due to improper input validation. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T21:15:00",
+        "access": {},
+        "assigner": "dsap-vuln-management@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44095",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://source.android.com/security/bulletin/pixel/2024-09-01"
+        ],
+        "summary": "In ppmp_protect_mfcfw_buf of code/drm_fw.c, there is a possible corrupt memory due to a logic error in the code. This could lead to local escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2024-09-13T21:15:00",
+        "access": {},
+        "assigner": "dsap-vuln-management@google.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44096",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://source.android.com/security/bulletin/pixel/2024-09-01"
+        ],
+        "summary": "there is a possible arbitrary read due to an insecure default value. This could lead to local information disclosure with System execution privileges needed. User interaction is not needed for exploitation."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-10-17T22:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-41629",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://github.com/post-cyberlabs/CVE-Advisory/blob/main/CVE-2023-41629-eSST-Path-Traversal.pdf"
+        ],
+        "summary": "A lack of input sanitizing in the file download feature of eSST Monitoring v2.147.1 allows attackers to execute a path traversal."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-10-16T17:15:00",
+        "access": {},
+        "assigner": "cve@rapid7.com",
         "cvss": null,
         "cwe": "CWE-22",
-        "id": "CVE-2024-6789",
+        "id": "CVE-2023-45685",
         "impact": {},
-        "last-modified": "2024-09-16T07:15:00",
+        "last-modified": "2024-09-16T15:35:00",
         "references": [
-            "https://product.m-files.com/security-advisories/cve-2024-6789/"
+            "https://helpdesk.southrivertech.com/portal/en/kb/articles/security-patch-for-issues-cve-2023-45685-through-cve-2023-45690",
+            "https://www.rapid7.com/blog/post/2023/10/16/multiple-vulnerabilities-in-south-river-technologies-titan-mft-and-titan-sftp-fixed/"
         ],
-        "summary": "A path traversal issue in API endpoint in M-Files Server before version 24.8.13981.0 and\u00a0LTS 24.2.13421.15 SR2 and\u00a0LTS 23.8.12892.0 SR6 allows authenticated user to read files"
+        "summary": "Insufficient path validation when extracting a zip archive in South River Technologies' Titan MFT and Titan SFTP servers on Windows and Linux allows an authenticated attacker to write a file to any location on the filesystem via path traversal"
     },
     {
-        "Modified": "2024-09-16T06:15:00",
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21925",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle Health Sciences InForm product of Oracle Health Sciences Applications (component: Core).  Supported versions that are affected are Prior to 6.3.1.3 and  Prior to 7.0.0.1. Easily exploitable vulnerability allows unauthenticated attacker with network access via HTTP to compromise Oracle Health Sciences InForm.  Successful attacks of this vulnerability can result in unauthorized ability to cause a partial denial of service (partial DOS) of Oracle Health Sciences InForm. CVSS 3.1 Base Score 5.3 (Availability impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21964",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle WebLogic Server product of Oracle Fusion Middleware (component: Core).  Supported versions that are affected are 12.2.1.3.0, 12.2.1.4.0 and  14.1.1.0.0. Easily exploitable vulnerability allows unauthenticated attacker with network access via T3 to compromise Oracle WebLogic Server.  Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of Oracle WebLogic Server. CVSS 3.1 Base Score 7.5 (Availability impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21969",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in Oracle SQL Developer (component: Installation).  Supported versions that are affected are Prior to 23.1.0. Easily exploitable vulnerability allows high privileged attacker with logon to the infrastructure where Oracle SQL Developer executes to compromise Oracle SQL Developer.  Successful attacks of this vulnerability can result in takeover of Oracle SQL Developer. CVSS 3.1 Base Score 6.7 (Confidentiality, Integrity and Availability impacts).  CVSS Vector: (CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21979",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle WebLogic Server product of Oracle Fusion Middleware (component: Core).  Supported versions that are affected are 12.2.1.3.0, 12.2.1.4.0 and  14.1.1.0.0. Easily exploitable vulnerability allows unauthenticated attacker with network access via T3 to compromise Oracle WebLogic Server.  Successful attacks of this vulnerability can result in  unauthorized access to critical data or complete access to all Oracle WebLogic Server accessible data. CVSS 3.1 Base Score 7.5 (Confidentiality impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21980",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html",
+            "https://security.netapp.com/advisory/ntap-20230427-0007/"
+        ],
+        "summary": "Vulnerability in the MySQL Server product of Oracle MySQL (component: Client programs).  Supported versions that are affected are 5.7.41 and prior and  8.0.32 and prior. Difficult to exploit vulnerability allows low privileged attacker with network access via multiple protocols to compromise MySQL Server.  Successful attacks require human interaction from a person other than the attacker. Successful attacks of this vulnerability can result in takeover of MySQL Server. CVSS 3.1 Base Score 7.1 (Confidentiality, Integrity and Availability impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21985",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle Solaris product of Oracle Systems (component: Utility).  Supported versions that are affected are 10 and  11. Easily exploitable vulnerability allows high privileged attacker with logon to the infrastructure where Oracle Solaris executes to compromise Oracle Solaris.  Successful attacks require human interaction from a person other than the attacker and while the vulnerability is in Oracle Solaris, attacks may significantly impact additional products (scope change). Successful attacks of this vulnerability can result in takeover of Oracle Solaris. CVSS 3.1 Base Score 7.7 (Confidentiality, Integrity and Availability impacts).  CVSS Vector: (CVSS:3.1/AV:L/AC:L/PR:H/UI:R/S:C/C:H/I:H/A:H)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21987",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle VM VirtualBox product of Oracle Virtualization (component: Core).  Supported versions that are affected are Prior to 6.1.44 and  Prior to 7.0.8. Difficult to exploit vulnerability allows low privileged attacker with logon to the infrastructure where Oracle VM VirtualBox executes to compromise Oracle VM VirtualBox.  While the vulnerability is in Oracle VM VirtualBox, attacks may significantly impact additional products (scope change).  Successful attacks of this vulnerability can result in takeover of Oracle VM VirtualBox. CVSS 3.1 Base Score 7.8 (Confidentiality, Integrity and Availability impacts).  CVSS Vector: (CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-04-18T20:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21990",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpuapr2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle VM VirtualBox product of Oracle Virtualization (component: Core).  Supported versions that are affected are Prior to 6.1.44 and  Prior to 7.0.8. Easily exploitable vulnerability allows high privileged attacker with logon to the infrastructure where Oracle VM VirtualBox executes to compromise Oracle VM VirtualBox.  While the vulnerability is in Oracle VM VirtualBox, attacks may significantly impact additional products (scope change).  Successful attacks of this vulnerability can result in takeover of Oracle VM VirtualBox. CVSS 3.1 Base Score 8.2 (Confidentiality, Integrity and Availability impacts).  CVSS Vector: (CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H)."
+    },
+    {
+        "Modified": "2024-09-16T15:35:00",
+        "Published": "2023-01-18T00:15:00",
+        "access": {},
+        "assigner": "secalert_us@oracle.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-21842",
+        "impact": {},
+        "last-modified": "2024-09-16T15:35:00",
+        "references": [
+            "https://www.oracle.com/security-alerts/cpujan2023.html"
+        ],
+        "summary": "Vulnerability in the Oracle WebLogic Server product of Oracle Fusion Middleware (component: Web Container).  Supported versions that are affected are 12.2.1.3.0, 12.2.1.4.0 and  14.1.1.0.0. Easily exploitable vulnerability allows unauthenticated attacker with network access via HTTP to compromise Oracle WebLogic Server.  Successful attacks of this vulnerability can result in  unauthorized access to critical data or complete access to all Oracle WebLogic Server accessible data. CVSS 3.1 Base Score 7.5 (Confidentiality impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N)."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T14:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-46419",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://github.com/TTTJJJWWW/AHU-IoT-vulnerable/blob/main/TOTOLINK/AC1200T8/setWizardCfg.md"
+        ],
+        "summary": "TOTOLINK AC1200 T8 v4.1.5cu.861_B20230220 has a buffer overflow vulnerability in the setWizardCfg function via the ssid5g parameter."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-613",
+        "id": "CVE-2024-38315",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7168379",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/294742"
+        ],
+        "summary": "IBM Aspera Shares 1.0 through 1.10.0 PL3 does not invalidate session after a password reset which could allow an authenticated user to impersonate another user on the system."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39772",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost Desktop App versions <=5.8.0 fail to safeguard screen capture functionality which allows an attacker to silently capture high-quality screenshots via JavaScript APIs."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45835",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost Desktop App versions <=5.8.0 fail to sufficiently configure Electron Fuses which allows an attacker to gather Chromium cookies or abuse other misconfigurations via remote/local access."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-6401",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1475"
+        ],
+        "summary": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in SFS Consulting InsureE GL allows SQL Injection.This issue affects InsureE GL: before 4.6.2."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-611",
+        "id": "CVE-2024-7098",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1475"
+        ],
+        "summary": "Improper Restriction of XML External Entity Reference vulnerability in SFS Consulting ww.Winsure allows XML Injection.This issue affects ww.Winsure: before 4.6.2."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2024-7104",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1475"
+        ],
+        "summary": "Improper Control of Generation of Code ('Code Injection') vulnerability in SFS Consulting ww.Winsure allows Code Injection.This issue affects ww.Winsure: before 4.6.2."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T12:15:00",
+        "access": {},
+        "assigner": "security@apache.org",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2024-22399",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://lists.apache.org/thread/91nzzlxyj4nmks85gbzwkkjtbmnmlkc4"
+        ],
+        "summary": "Deserialization of Untrusted Data vulnerability in Apache Seata.\u00a0\n\nWhen developers disable authentication on the Seata-Server and do not use the Seata client SDK dependencies, they may construct uncontrolled serialized malicious requests by directly sending bytecode based on the Seata private protocol.\n\nThis issue affects Apache Seata: 2.0.0, from 1.0.0 through 1.8.0.\n\nUsers are recommended to upgrade to version 2.1.0/1.8.1, which fixes the issue."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-46424",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://github.com/TTTJJJWWW/AHU-IoT-vulnerable/blob/main/TOTOLINK/AC1200T8/UploadCustomModule.md"
+        ],
+        "summary": "TOTOLINK AC1200 T8 v4.1.5cu.861_B20230220 has a buffer overflow vulnerability in the UploadCustomModule function, which allows attackers to cause a Denial of Service (DoS) via the File parameter."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-46451",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://github.com/offshore0315/loT-vulnerable/blob/main/TOTOLINK/AC1200%20T8/setWiFiAclRules.md"
+        ],
+        "summary": "TOTOLINK AC1200 T8 v4.1.5cu.861_B20230220 has a buffer overflow vulnerability in the setWiFiAclRules function via the desc parameter."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-46937",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://mfasoft.ru",
+            "https://github.com/WI1D-41/IDOR-in-MFASOFT-Secure-Authentication-Server"
+        ],
+        "summary": "An improper access control (IDOR) vulnerability in the /api-selfportal/get-info-token-properties endpoint in MFASOFT Secure Authentication Server (SAS) 1.8.x through 1.9.x before 1.9.040924 allows remote attackers gain access to user tokens without authentication. The is a brute-force attack on the serial parameter by number identifier: GA00001, GA00002, GA00003, etc."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T11:15:00",
+        "access": {},
+        "assigner": "security@jetbrains.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-46970",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.jetbrains.com/privacy-security/issues-fixed/"
+        ],
+        "summary": "In JetBrains IntelliJ IDEA before 2024.1 hTML injection via the project name was possible"
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-16T06:15:00",
         "access": {},
         "assigner": "cve@cert.org.tw",
@@ -1226,7 +592,7 @@
         "cwe": "CWE-284",
         "id": "CVE-2024-8779",
         "impact": {},
-        "last-modified": "2024-09-16T06:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://www.twcert.org.tw/tw/cp-132-8075-a0d06-1.html",
             "https://www.twcert.org.tw/en/cp-139-8076-6ade0-2.html"
@@ -1234,7 +600,117 @@
         "summary": "OMFLOW from The SYSCOM Group does not properly restrict access to the system settings modification functionality, allowing remote attackers with regular privileges to update system settings or create accounts with administrator privileges, thereby gaining control of the server."
     },
     {
-        "Modified": "2024-09-16T06:15:00",
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-39613",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost Desktop App versions <=5.8.0 fail to\u00a0specify an absolute path when searching the cmd.exe file,  which allows a local attacker who is able to put an cmd.exe file in the Downloads folder of a user's machine to cause remote code execution on that machine."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-121",
+        "id": "CVE-2024-45694",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8080-7f494-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8081-3fb39-2.html"
+        ],
+        "summary": "The web service of certain models of D-Link wireless routers contains a Stack-based Buffer Overflow vulnerability, which allows unauthenticated remote attackers to exploit this vulnerability to execute arbitrary code on the device."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45695",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8082-f1687-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8083-a299e-2.html"
+        ],
+        "summary": "The web service of certain models of D-Link wireless routers contains a Stack-based Buffer Overflow vulnerability, which allows unauthenticated remote attackers to exploit this vulnerability to execute arbitrary code on the device."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-912",
+        "id": "CVE-2024-45696",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8086-93ed5-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8087-c3e70-2.html"
+        ],
+        "summary": "Certain models of D-Link wireless routers contain hidden functionality. By sending specific packets to the web service, the attacker can forcibly enable the telnet service and log in using hard-coded credentials. The telnet service enabled through this method can only be accessed from within the same local network as the device."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-912",
+        "id": "CVE-2024-45697",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8088-590ed-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8089-32df6-2.html"
+        ],
+        "summary": "Certain models of D-Link wireless routers have a hidden functionality where the telnet service is enabled when the WAN port is plugged in. Unauthorized remote attackers can log in and execute OS commands using hard-coded credentials."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-78",
+        "id": "CVE-2024-45698",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8090-bf06b-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8091-bcd52-2.html"
+        ],
+        "summary": "Certain models of D-Link wireless routers do not properly validate user input in the telnet service, allowing unauthenticated remote attackers to use hard-coded credentials to log into telnet and inject arbitrary OS commands, which can then be executed on the device."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "responsibledisclosure@mattermost.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45833",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://mattermost.com/security-updates"
+        ],
+        "summary": "Mattermost Mobile Apps versions <=2.18.0 fail to disable autocomplete during login while typing the password and visible password is selected, which allows the\u00a0password to get saved in the dictionary when the user has Swiftkey as the default keyboard, the masking is off and the password contains a special character.."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-16T06:15:00",
         "access": {},
         "assigner": "cve@cert.org.tw",
@@ -1242,7 +718,7 @@
         "cwe": "CWE-79",
         "id": "CVE-2024-8776",
         "impact": {},
-        "last-modified": "2024-09-16T06:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://www.twcert.org.tw/tw/cp-132-8069-73393-1.html",
             "https://www.twcert.org.tw/en/cp-139-8070-d10bc-2.html"
@@ -1250,7 +726,7 @@
         "summary": "SmartRobot from INTUMIT does not properly validate a specific page parameter, allowing unautheticated remote attackers to inject JavaScript code to the parameter for Reflected Cross-site Scripting attacks."
     },
     {
-        "Modified": "2024-09-16T06:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-16T06:15:00",
         "access": {},
         "assigner": "cve@cert.org.tw",
@@ -1258,7 +734,7 @@
         "cwe": "CWE-200",
         "id": "CVE-2024-8777",
         "impact": {},
-        "last-modified": "2024-09-16T06:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://www.twcert.org.tw/tw/cp-132-8071-46589-1.html",
             "https://www.twcert.org.tw/en/cp-139-8072-928a5-2.html"
@@ -1266,7 +742,7 @@
         "summary": "OMFLOW from The SYSCOM Group has an information leakage vulnerability, allowing unauthorized remote attackers to read arbitrary system configurations. If LDAP authentication is enabled, attackers can obtain plaintext credentials."
     },
     {
-        "Modified": "2024-09-16T06:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-16T06:15:00",
         "access": {},
         "assigner": "cve@cert.org.tw",
@@ -1274,7 +750,7 @@
         "cwe": "CWE-36",
         "id": "CVE-2024-8778",
         "impact": {},
-        "last-modified": "2024-09-16T06:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://www.twcert.org.tw/tw/cp-132-8073-ff771-1.html",
             "https://www.twcert.org.tw/en/cp-139-8074-66457-2.html"
@@ -1282,7 +758,7 @@
         "summary": "OMFLOW from The SYSCOM Group does not properly validate user input of the download functionality, allowing remote attackers with regular privileges to read arbitrary system files."
     },
     {
-        "Modified": "2024-09-16T06:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-16T06:15:00",
         "access": {},
         "assigner": "cve@cert.org.tw",
@@ -1290,7 +766,7 @@
         "cwe": "CWE-200",
         "id": "CVE-2024-8780",
         "impact": {},
-        "last-modified": "2024-09-16T06:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://www.twcert.org.tw/tw/cp-132-8077-7a7c0-1.html",
             "https://www.twcert.org.tw/en/cp-139-8078-36fc9-2.html"
@@ -1298,7 +774,24 @@
         "summary": "OMFLOW from The SYSCOM Group does not properly restrict the query range of its data query functionality, allowing remote attackers with regular privileges to obtain accounts and password hashes of other users."
     },
     {
-        "Modified": "2024-09-16T02:15:00",
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-16T01:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2024-8880",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277524",
+            "https://vuldb.com/?ctiid.277524",
+            "https://vuldb.com/?submit.406095"
+        ],
+        "summary": "A vulnerability classified as critical has been found in playSMS 1.4.4/1.4.5/1.4.6/1.4.7. Affected is an unknown function of the file /playsms/index.php?app=main&inc=core_auth&route=forgot&op=forgot of the component Template Handler. The manipulation of the argument username/email/captcha leads to code injection. It is possible to launch the attack remotely. The complexity of an attack is rather high. The exploitability is told to be difficult. The exploit has been disclosed to the public and may be used. It is recommended to upgrade the affected component. The project maintainer was informed early about the issue. Investigation shows that playSMS up to 1.4.3 contained a fix but later versions re-introduced the flaw. As long as the latest version of the playsms/tpl package is used, the software is not affected. Version >=1.4.4 shall fix this issue for sure."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-16T02:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
@@ -1306,7 +799,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-46958",
         "impact": {},
-        "last-modified": "2024-09-16T02:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://github.com/nextcloud/desktop/issues/6863",
             "https://github.com/nextcloud/desktop/pull/7092",
@@ -1317,58 +810,7 @@
         "summary": "In Nextcloud Desktop Client 3.13.1 through 3.13.3 on Linux, synchronized files (between the server and client) may become world writable or world readable. This is fixed in 3.13.4."
     },
     {
-        "Modified": "2024-09-16T01:15:00",
-        "Published": "2024-09-16T01:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2024-8880",
-        "impact": {},
-        "last-modified": "2024-09-16T01:15:00",
-        "references": [
-            "https://vuldb.com/?id.277524",
-            "https://vuldb.com/?ctiid.277524",
-            "https://vuldb.com/?submit.406095"
-        ],
-        "summary": "A vulnerability classified as critical has been found in playSMS 1.4.4/1.4.5/1.4.6/1.4.7. Affected is an unknown function of the file /playsms/index.php?app=main&inc=core_auth&route=forgot&op=forgot of the component Template Handler. The manipulation of the argument username/email/captcha leads to code injection. It is possible to launch the attack remotely. The complexity of an attack is rather high. The exploitability is told to be difficult. The exploit has been disclosed to the public and may be used. It is recommended to upgrade the affected component. The project maintainer was informed early about the issue. Investigation shows that playSMS up to 1.4.3 contained a fix but later versions re-introduced the flaw. As long as the latest version of the playsms/tpl package is used, the software is not affected. Version >=1.4.4 shall fix this issue for sure."
-    },
-    {
-        "Modified": "2024-09-15T23:15:00",
-        "Published": "2024-09-15T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46942",
-        "impact": {},
-        "last-modified": "2024-09-15T23:15:00",
-        "references": [
-            "https://lf-opendaylight.atlassian.net/browse/MDSAL-869",
-            "https://doi.org/10.48550/arXiv.2408.16940",
-            "https://docs.opendaylight.org/en/latest/release-notes/projects/mdsal.html"
-        ],
-        "summary": "In OpenDaylight Model-Driven Service Abstraction Layer (MD-SAL) through 13.0.1, a controller with a follower role can configure flow entries in an OpenDaylight clustering deployment."
-    },
-    {
-        "Modified": "2024-09-15T23:15:00",
-        "Published": "2024-09-15T23:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46943",
-        "impact": {},
-        "last-modified": "2024-09-15T23:15:00",
-        "references": [
-            "https://doi.org/10.48550/arXiv.2408.16940",
-            "https://lf-opendaylight.atlassian.net/browse/AAA-285",
-            "https://docs.opendaylight.org/en/latest/release-notes/projects/aaa.html"
-        ],
-        "summary": "An issue was discovered in OpenDaylight Authentication, Authorization and Accounting (AAA) through 0.19.3. A rogue controller can join a cluster to impersonate an offline peer, even if this rogue controller does not possess the complete cluster configuration information."
-    },
-    {
-        "Modified": "2024-09-15T22:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T22:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
@@ -1376,14 +818,14 @@
         "cwe": "Unknown",
         "id": "CVE-2024-46938",
         "impact": {},
-        "last-modified": "2024-09-15T22:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://support.sitecore.com/kb?id=kb_article_view&sysparm_article=KB1003408"
         ],
         "summary": "An issue was discovered in Sitecore Experience Platform (XP), Experience Manager (XM), and Experience Commerce (XC) 8.0 Initial Release through 10.4 Initial Release. An unauthenticated attacker can read arbitrary files."
     },
     {
-        "Modified": "2024-09-15T22:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T22:15:00",
         "access": {},
         "assigner": "cna@vuldb.com",
@@ -1391,7 +833,7 @@
         "cwe": "CWE-22",
         "id": "CVE-2024-8875",
         "impact": {},
-        "last-modified": "2024-09-15T22:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://vuldb.com/?id.277507",
             "https://vuldb.com/?ctiid.277507",
@@ -1401,7 +843,7 @@
         "summary": "A vulnerability classified as critical was found in vedees wcms up to 0.3.2. Affected by this vulnerability is an unknown functionality of the file /wex/finder.php. The manipulation of the argument p leads to path traversal. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
     },
     {
-        "Modified": "2024-09-15T22:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T22:15:00",
         "access": {},
         "assigner": "cna@vuldb.com",
@@ -1409,7 +851,7 @@
         "cwe": "CWE-22",
         "id": "CVE-2024-8876",
         "impact": {},
-        "last-modified": "2024-09-15T22:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://vuldb.com/?id.277508",
             "https://vuldb.com/?ctiid.277508",
@@ -1419,56 +861,41 @@
         "summary": "A vulnerability, which was classified as problematic, has been found in xiaohe4966 TpMeCMS up to 1.3.3.1. Affected by this issue is some unknown functionality of the file /index/ajax/lang. The manipulation of the argument lang leads to path traversal. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. Upgrading to version 1.3.3.2 is able to address this issue. It is recommended to upgrade the affected component."
     },
     {
-        "Modified": "2024-09-15T20:35:00",
-        "Published": "2024-06-27T22:15:00",
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T23:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2024-39705",
+        "id": "CVE-2024-46942",
         "impact": {},
-        "last-modified": "2024-09-15T20:35:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
-            "https://github.com/nltk/nltk/issues/3266",
-            "https://github.com/nltk/nltk/issues/2522",
-            "https://www.vicarius.io/vsociety/posts/rce-in-python-nltk-cve-2024-39705-39706"
+            "https://lf-opendaylight.atlassian.net/browse/MDSAL-869",
+            "https://doi.org/10.48550/arXiv.2408.16940",
+            "https://docs.opendaylight.org/en/latest/release-notes/projects/mdsal.html"
         ],
-        "summary": "NLTK through 3.8.1 allows remote code execution if untrusted packages have pickled Python code, and the integrated data package download functionality is used. This affects, for example, averaged_perceptron_tagger and punkt."
+        "summary": "In OpenDaylight Model-Driven Service Abstraction Layer (MD-SAL) through 13.0.1, a controller with a follower role can configure flow entries in an OpenDaylight clustering deployment."
     },
     {
-        "Modified": "2024-09-15T20:35:00",
-        "Published": "2024-06-24T17:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-22",
-        "id": "CVE-2024-33881",
-        "impact": {},
-        "last-modified": "2024-09-15T20:35:00",
-        "references": [
-            "https://docs.virtosoftware.com/v/virto-security-frequently-asked-questions-faq",
-            "https://download.virtosoftware.com/Manuals/nu_ncsc_virto_one_bulk_file_download_v5.4.4_pt_disclosure.pdf"
-        ],
-        "summary": "An issue was discovered in VirtoSoftware Virto Bulk File Download 5.5.44 for SharePoint 2019. The Virto.SharePoint.FileDownloader/Api/Download.ashx isCompleted method allows an NTLMv2 hash leak via a UNC share pathname in the path parameter."
-    },
-    {
-        "Modified": "2024-09-15T20:35:00",
-        "Published": "2024-06-21T22:15:00",
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T23:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
         "cvss": null,
         "cwe": "Unknown",
-        "id": "CVE-2012-6664",
+        "id": "CVE-2024-46943",
         "impact": {},
-        "last-modified": "2024-09-15T20:35:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
-            "https://www.exploit-db.com/exploits/41714",
-            "https://www.fortiguard.com/encyclopedia/ips/48021"
+            "https://doi.org/10.48550/arXiv.2408.16940",
+            "https://lf-opendaylight.atlassian.net/browse/AAA-285",
+            "https://docs.opendaylight.org/en/latest/release-notes/projects/aaa.html"
         ],
-        "summary": "Multiple directory traversal vulnerabilities in the TFTP Server in Distinct Intranet Servers 3.10 and earlier allow remote attackers to read or write arbitrary files via a .. (dot dot) in the (1) get or (2) put commands."
+        "summary": "An issue was discovered in OpenDaylight Authentication, Authorization and Accounting (AAA) through 0.19.3. A rogue controller can join a cluster to impersonate an offline peer, even if this rogue controller does not possess the complete cluster configuration information."
     },
     {
-        "Modified": "2024-09-15T20:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T20:15:00",
         "access": {},
         "assigner": "cve@mitre.org",
@@ -1476,7 +903,7 @@
         "cwe": "Unknown",
         "id": "CVE-2024-46918",
         "impact": {},
-        "last-modified": "2024-09-15T20:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://github.com/MISP/MISP/commit/3a5227d7b3d4518ac109af61979a00145a0de6fa",
             "https://github.com/MISP/MISP/compare/v2.4.197...v2.4.198"
@@ -1484,113 +911,7 @@
         "summary": "app/Controller/UserLoginProfilesController.php in MISP before 2.4.198 does not prevent an org admin from viewing sensitive login fields of another org admin in the same org."
     },
     {
-        "Modified": "2024-09-15T19:35:00",
-        "Published": "2024-06-05T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-36670",
-        "impact": {},
-        "last-modified": "2024-09-15T19:35:00",
-        "references": [
-            "https://github.com/sigubbs/cms/blob/main/33/csrf.md"
-        ],
-        "summary": "idccms v1.35 was discovered to contain a Cross-Site Request Forgery (CSRF) via the component admin/vpsClass_deal.php?mudi=del"
-    },
-    {
-        "Modified": "2024-09-15T19:35:00",
-        "Published": "2024-05-22T16:15:00",
-        "access": {},
-        "assigner": "chrome-cve-admin@google.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-5158",
-        "impact": {},
-        "last-modified": "2024-09-15T19:35:00",
-        "references": [
-            "https://chromereleases.googleblog.com/2024/05/stable-channel-update-for-desktop_21.html",
-            "https://issues.chromium.org/issues/338908243",
-            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/5KEVD4433KTOCYY6V4I7MMYKQ6URUS4L/",
-            "https://lists.fedoraproject.org/archives/list/package-announce@lists.fedoraproject.org/message/FX6IYZ6XF7B2WE66NFPNI2NHWJFI6VDF/"
-        ],
-        "summary": "Type Confusion in V8 in Google Chrome prior to 125.0.6422.76 allowed a remote attacker to potentially perform arbitrary read/write via a crafted HTML page. (Chromium security severity: High)"
-    },
-    {
-        "Modified": "2024-09-15T19:35:00",
-        "Published": "2024-05-14T16:17:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-33868",
-        "impact": {},
-        "last-modified": "2024-09-15T19:35:00",
-        "references": [
-            "https://www.linqi.de/de-DE/blog.html",
-            "https://linqi.help/Updates/en#/SecurityUpdates"
-        ],
-        "summary": "An issue was discovered in linqi before 1.4.0.1 on Windows. There is LDAP injection."
-    },
-    {
-        "Modified": "2024-09-15T19:35:00",
-        "Published": "2024-04-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-30922",
-        "impact": {},
-        "last-modified": "2024-09-15T19:35:00",
-        "references": [
-            "https://chocapikk.com/posts/2024/derbynet-vulnerabilities/"
-        ],
-        "summary": "SQL Injection vulnerability in DerbyNet v9.0 allows a remote attacker to execute arbitrary code via the where Clause in Award Document Rendering."
-    },
-    {
-        "Modified": "2024-09-15T18:15:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-45003",
-        "impact": {},
-        "last-modified": "2024-09-15T18:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/3525ad25240dfdd8c78f3470911ed10aa727aa72",
-            "https://git.kernel.org/stable/c/03880af02a78bc9a98b5a581f529cf709c88a9b8",
-            "https://git.kernel.org/stable/c/cda54ec82c0f9d05393242b20b13f69b083f7e88",
-            "https://git.kernel.org/stable/c/437741eba63bf4e437e2beb5583f8633556a2b98",
-            "https://git.kernel.org/stable/c/b9bda5f6012dd00372f3a06a82ed8971a4c57c32",
-            "https://git.kernel.org/stable/c/9063ab49c11e9518a3f2352434bb276cc8134c5f",
-            "https://git.kernel.org/stable/c/2a0629834cd82f05d424bbc193374f9a43d1f87d"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nvfs: Don't evict inode under the inode lru traversing context\n\nThe inode reclaiming process(See function prune_icache_sb) collects all\nreclaimable inodes and mark them with I_FREEING flag at first, at that\ntime, other processes will be stuck if they try getting these inodes\n(See function find_inode_fast), then the reclaiming process destroy the\ninodes by function dispose_list(). Some filesystems(eg. ext4 with\nea_inode feature, ubifs with xattr) may do inode lookup in the inode\nevicting callback function, if the inode lookup is operated under the\ninode lru traversing context, deadlock problems may happen.\n\nCase 1: In function ext4_evict_inode(), the ea inode lookup could happen\n        if ea_inode feature is enabled, the lookup process will be stuck\n\tunder the evicting context like this:\n\n 1. File A has inode i_reg and an ea inode i_ea\n 2. getfattr(A, xattr_buf) // i_ea is added into lru // lru->i_ea\n 3. Then, following three processes running like this:\n\n    PA                              PB\n echo 2 > /proc/sys/vm/drop_caches\n  shrink_slab\n   prune_dcache_sb\n   // i_reg is added into lru, lru->i_ea->i_reg\n   prune_icache_sb\n    list_lru_walk_one\n     inode_lru_isolate\n      i_ea->i_state |= I_FREEING // set inode state\n     inode_lru_isolate\n      __iget(i_reg)\n      spin_unlock(&i_reg->i_lock)\n      spin_unlock(lru_lock)\n                                     rm file A\n                                      i_reg->nlink = 0\n      iput(i_reg) // i_reg->nlink is 0, do evict\n       ext4_evict_inode\n        ext4_xattr_delete_inode\n         ext4_xattr_inode_dec_ref_all\n          ext4_xattr_inode_iget\n           ext4_iget(i_ea->i_ino)\n            iget_locked\n             find_inode_fast\n              __wait_on_freeing_inode(i_ea) ----? AA deadlock\n    dispose_list // cannot be executed by prune_icache_sb\n     wake_up_bit(&i_ea->i_state)\n\nCase 2: In deleted inode writing function ubifs_jnl_write_inode(), file\n        deleting process holds BASEHD's wbuf->io_mutex while getting the\n\txattr inode, which could race with inode reclaiming process(The\n        reclaiming process could try locking BASEHD's wbuf->io_mutex in\n\tinode evicting function), then an ABBA deadlock problem would\n\thappen as following:\n\n 1. File A has inode ia and a xattr(with inode ixa), regular file B has\n    inode ib and a xattr.\n 2. getfattr(A, xattr_buf) // ixa is added into lru // lru->ixa\n 3. Then, following three processes running like this:\n\n        PA                PB                        PC\n                echo 2 > /proc/sys/vm/drop_caches\n                 shrink_slab\n                  prune_dcache_sb\n                  // ib and ia are added into lru, lru->ixa->ib->ia\n                  prune_icache_sb\n                   list_lru_walk_one\n                    inode_lru_isolate\n                     ixa->i_state |= I_FREEING // set inode state\n                    inode_lru_isolate\n                     __iget(ib)\n                     spin_unlock(&ib->i_lock)\n                     spin_unlock(lru_lock)\n                                                   rm file B\n                                                    ib->nlink = 0\n rm file A\n  iput(ia)\n   ubifs_evict_inode(ia)\n    ubifs_jnl_delete_inode(ia)\n     ubifs_jnl_write_inode(ia)\n      make_reservation(BASEHD) // Lock wbuf->io_mutex\n      ubifs_iget(ixa->i_ino)\n       iget_locked\n        find_inode_fast\n         __wait_on_freeing_inode(ixa)\n          |          iput(ib) // ib->nlink is 0, do evict\n          |           ubifs_evict_inode\n          |            ubifs_jnl_delete_inode(ib)\n          ?             ubifs_jnl_write_inode\n     ABBA deadlock ?-----make_reservation(BASEHD)\n                   dispose_list // cannot be executed by prune_icache_sb\n                    wake_up_bit(&ixa->i_state)\n\nFix the possible deadlock by using new inode state flag I_LRU_ISOLATING\nto pin the inode in memory while inode_lru_isolate(\n---truncated---"
-    },
-    {
-        "Modified": "2024-09-15T18:15:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-667",
-        "id": "CVE-2024-44995",
-        "impact": {},
-        "last-modified": "2024-09-15T18:15:00",
-        "references": [
-            "https://git.kernel.org/stable/c/67492d4d105c0a6321b00c393eec96b9a7a97a16",
-            "https://git.kernel.org/stable/c/fc250eca15bde34c4c8f806b9d88f55bd56a992c",
-            "https://git.kernel.org/stable/c/195918217448a6bb7f929d6a2ffffce9f1ece1cc",
-            "https://git.kernel.org/stable/c/6ae2b7d63cd056f363045eb65409143e16f23ae8",
-            "https://git.kernel.org/stable/c/fa1d4de7265c370e673583ac8d1bd17d21826cd9",
-            "https://git.kernel.org/stable/c/de37408d5c26fc4a296a28a0c96dcb814219bfa1",
-            "https://git.kernel.org/stable/c/be5e816d00a506719e9dbb1a9c861c5ced30a109"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: hns3: fix a deadlock problem when config TC during resetting\n\nWhen config TC during the reset process, may cause a deadlock, the flow is\nas below:\n                             pf reset start\n                                 \u00a6\n                                 ?\n                              ......\nsetup tc                         \u00a6\n    \u00a6                            ?\n    ?                      DOWN: napi_disable()\nnapi_disable()(skip)             \u00a6\n    \u00a6                            \u00a6\n    ?                            ?\n  ......                      ......\n    \u00a6                            \u00a6\n    ?                            \u00a6\nnapi_enable()                    \u00a6\n                                 ?\n                           UINIT: netif_napi_del()\n                                 \u00a6\n                                 ?\n                              ......\n                                 \u00a6\n                                 ?\n                           INIT: netif_napi_add()\n                                 \u00a6\n                                 ?\n                              ......                 global reset start\n                                 \u00a6                      \u00a6\n                                 ?                      ?\n                           UP: napi_enable()(skip)    ......\n                                 \u00a6                      \u00a6\n                                 ?                      ?\n                              ......                 napi_disable()\n\nIn reset process, the driver will DOWN the port and then UINIT, in this\ncase, the setup tc process will UP the port before UINIT, so cause the\nproblem. Adds a DOWN process in UINIT to fix it."
-    },
-    {
-        "Modified": "2024-09-15T11:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T11:15:00",
         "access": {},
         "assigner": "cna@vuldb.com",
@@ -1598,7 +919,7 @@
         "cwe": "CWE-78",
         "id": "CVE-2024-8869",
         "impact": {},
-        "last-modified": "2024-09-15T11:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://vuldb.com/?id.277506",
             "https://vuldb.com/?ctiid.277506",
@@ -1608,23 +929,37 @@
         "summary": "A vulnerability classified as critical has been found in TOTOLINK A720R 4.1.5. Affected is the function exportOvpn. The manipulation leads to os command injection. It is possible to launch the attack remotely. The complexity of an attack is rather high. The exploitability is told to be difficult. The vendor was contacted early about this disclosure but did not respond in any way."
     },
     {
-        "Modified": "2024-09-15T11:15:00",
-        "Published": "2024-08-14T16:15:00",
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
         "access": {},
-        "assigner": "psirt@us.ibm.com",
+        "assigner": "audit@patchstack.com",
         "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-28799",
+        "cwe": "CWE-79",
+        "id": "CVE-2024-44060",
         "impact": {},
-        "last-modified": "2024-09-15T11:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
-            "https://www.ibm.com/support/pages/node/7165488",
-            "https://exchange.xforce.ibmcloud.com/vulnerabilities/287173"
+            "https://patchstack.com/database/vulnerability/filmix/wordpress-filmix-theme-1-1-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
         ],
-        "summary": "IBM QRadar Suite Software 1.10.12.0 through 1.10.23.0 and IBM Cloud Pak for Security 1.10.0.0 through 1.10.11.0 displays sensitive data improperly to a local user during back-end commands which may result in the unexpected disclosure of this information under certain conditions.  IBM X-Force ID:  287173."
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Jennifer Hall Filmix allows Reflected XSS.This issue affects Filmix: from n/a through 1.1."
     },
     {
-        "Modified": "2024-09-15T09:15:00",
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-45456",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/wp-meta-seo/wordpress-wp-meta-seo-plugin-4-5-13-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in JoomUnited WP Meta SEO allows Stored XSS.This issue affects WP Meta SEO: from n/a through 4.5.13."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T09:15:00",
         "access": {},
         "assigner": "audit@patchstack.com",
@@ -1632,14 +967,14 @@
         "cwe": "CWE-79",
         "id": "CVE-2024-44053",
         "impact": {},
-        "last-modified": "2024-09-15T09:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://patchstack.com/database/vulnerability/opor-ayam/wordpress-opor-ayam-theme-1-8-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Mohammad Arif Opor Ayam allows Reflected XSS.This issue affects Opor Ayam: from n/a through 1.8."
     },
     {
-        "Modified": "2024-09-15T09:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T09:15:00",
         "access": {},
         "assigner": "audit@patchstack.com",
@@ -1647,14 +982,14 @@
         "cwe": "CWE-79",
         "id": "CVE-2024-44056",
         "impact": {},
-        "last-modified": "2024-09-15T09:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://patchstack.com/database/vulnerability/mantra/wordpress-mantra-theme-3-3-2-cross-site-scripting-xss-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in CryoutCreations Mantra allows Stored XSS.This issue affects Mantra: from n/a through 3.3.2."
     },
     {
-        "Modified": "2024-09-15T09:15:00",
+        "Modified": "2024-09-16T15:30:00",
         "Published": "2024-09-15T09:15:00",
         "access": {},
         "assigner": "audit@patchstack.com",
@@ -1662,10 +997,628 @@
         "cwe": "CWE-79",
         "id": "CVE-2024-44057",
         "impact": {},
-        "last-modified": "2024-09-15T09:15:00",
+        "last-modified": "2024-09-16T15:30:00",
         "references": [
             "https://patchstack.com/database/vulnerability/nirvana/wordpress-nirvana-theme-1-6-3-cross-site-scripting-xss-vulnerability?_s_id=cve"
         ],
         "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in CryoutCreations Nirvana allows Stored XSS.This issue affects Nirvana: from n/a through 1.6.3."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T09:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-44058",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/parabola/wordpress-parabola-theme-2-4-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in CryoutCreations Parabola allows Stored XSS.This issue affects Parabola: from n/a through 2.4.1."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T09:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-44059",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/post-type-archive-mapping/wordpress-custom-query-blocks-plugin-5-3-1-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in MediaRon LLC Custom Query Blocks allows Stored XSS.This issue affects Custom Query Blocks: from n/a through 5.3.1."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-45455",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/wp-meta-seo/wordpress-wp-meta-seo-plugin-4-5-13-cross-site-scripting-xss-vulnerability-2?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in JoomUnited WP Meta SEO allows Stored XSS.This issue affects WP Meta SEO: from n/a through 4.5.13."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-44063",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/happyforms/wordpress-happyforms-plugin-1-26-0-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Happyforms allows Stored XSS.This issue affects Happyforms: from n/a through 1.26.0."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45457",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/spiffy-calendar/wordpress-spiffy-calendar-plugin-4-9-13-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Spiffy Plugins Spiffy Calendar allows Stored XSS.This issue affects Spiffy Calendar: from n/a through 4.9.13."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-45458",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/spiffy-calendar/wordpress-spiffy-calendar-plugin-4-9-13-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Spiffy Plugins Spiffy Calendar allows Reflected XSS.This issue affects Spiffy Calendar: from n/a through 4.9.13."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-45459",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/woocommerce-products-slider/wordpress-product-slider-for-woocommerce-by-pickplugins-plugin-1-13-50-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in PickPlugins Product Slider for WooCommerce allows Reflected XSS.This issue affects Product Slider for WooCommerce: from n/a through 1.13.50."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-44062",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/custom-field-template/wordpress-custom-field-template-plugin-2-6-5-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Hiroaki Miyashita Custom Field Template allows Stored XSS.This issue affects Custom Field Template: from n/a through 2.6.5."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T08:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-45460",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/flipping-cards/wordpress-flipping-cards-plugin-1-30-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Manu225 Flipping Cards allows Stored XSS.This issue affects Flipping Cards: from n/a through 1.30."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T09:15:00",
+        "access": {},
+        "assigner": "audit@patchstack.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-44054",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://patchstack.com/database/vulnerability/fluida/wordpress-fluida-theme-1-8-8-cross-site-scripting-xss-vulnerability?_s_id=cve"
+        ],
+        "summary": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in CryoutCreations Fluida allows Stored XSS.This issue affects Fluida: from n/a through 1.8.8."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T01:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2024-8864",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277501",
+            "https://vuldb.com/?ctiid.277501",
+            "https://vuldb.com/?submit.403204",
+            "https://rumbling-slice-eb0.notion.site/Composio-s-Local-tools-Mathematical-has-a-code-injection-risk-in-composiohq-composio-ea0e89ee10fe4edfb9a8cfeed158c765?pvs=4"
+        ],
+        "summary": "A vulnerability has been found in composiohq composio up to 0.5.6 and classified as critical. Affected by this vulnerability is the function Calculator of the file python/composio/tools/local/mathematical/actions/calculator.py. The manipulation leads to code injection. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T01:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-8865",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277502",
+            "https://vuldb.com/?ctiid.277502",
+            "https://vuldb.com/?submit.403206",
+            "https://rumbling-slice-eb0.notion.site/There-is-an-arbitrary-file-read-vulnerability-at-api-download-in-composiohq-composio-f0ec1ec26a5f434a97bb1ffde435a35b?pvs=4"
+        ],
+        "summary": "A vulnerability was found in composiohq composio up to 0.5.8 and classified as problematic. Affected by this issue is the function path of the file composio\\server\\api.py. The manipulation of the argument file leads to path traversal. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T02:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8866",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277503",
+            "https://vuldb.com/?ctiid.277503",
+            "https://vuldb.com/?submit.407460",
+            "https://github.com/Hebing123/cve/issues/68"
+        ],
+        "summary": "A vulnerability was found in AutoCMS 5.4. It has been classified as problematic. This affects an unknown part of the file /admin/robot.php. The manipulation of the argument sidebar leads to cross site scripting. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T03:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8867",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277504",
+            "https://vuldb.com/?ctiid.277504",
+            "https://vuldb.com/?submit.408014",
+            "https://bytium.com/stored-cross-site-scripting-xss-vulnerability-in-perfex-crm/"
+        ],
+        "summary": "A vulnerability was found in Perfex CRM 3.1.6. It has been declared as problematic. This vulnerability affects unknown code of the file application/controllers/Clients.php of the component Parameter Handler. The manipulation of the argument message leads to cross site scripting. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. It is recommended to apply a patch to fix this issue."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-15T03:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-8868",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277505",
+            "https://vuldb.com/?ctiid.277505",
+            "https://vuldb.com/?submit.408322",
+            "https://github.com/ppp-src/a/issues/7",
+            "https://code-projects.org/"
+        ],
+        "summary": "A vulnerability was found in code-projects Crud Operation System 1.0. It has been rated as critical. This issue affects some unknown processing of the file savedata.php. The manipulation of the argument sname leads to sql injection. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-14T23:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-8863",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277500",
+            "https://vuldb.com/?ctiid.277500",
+            "https://vuldb.com/?submit.403203",
+            "https://rumbling-slice-eb0.notion.site/Stored-XSS-through-TEXT-EXPLORER-in-aimhubio-aim-d0f07b7194724950a673498546d80d43?pvs=4"
+        ],
+        "summary": "A vulnerability, which was classified as problematic, was found in aimhubio aim up to 3.24. Affected is the function dangerouslySetInnerHTML of the file textbox.tsx of the component Text Explorer. The manipulation of the argument query leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-14T20:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2024-8862",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://vuldb.com/?id.277499",
+            "https://vuldb.com/?ctiid.277499",
+            "https://vuldb.com/?submit.403200",
+            "https://rumbling-slice-eb0.notion.site/Unauthenticated-Remote-Command-Execution-via-Panda-df-query-9dc40f0477ee4b65806de7921876c222?pvs=4"
+        ],
+        "summary": "A vulnerability, which was classified as critical, has been found in h2oai h2o-3 3.46.0.4. This issue affects the function getConnectionSafe of the file /dtale/chart-data/1 of the component JDBC Connection Handler. The manipulation of the argument query leads to deserialization. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-16T15:30:00",
+        "Published": "2024-09-14T13:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-269",
+        "id": "CVE-2024-6482",
+        "impact": {},
+        "last-modified": "2024-09-16T15:30:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/de7cde2c-142c-4004-9302-be335265d87d?source=cve",
+            "https://plugins.trac.wordpress.org/browser/login-with-phone-number/trunk/login-with-phonenumber.php#L3803",
+            "https://plugins.trac.wordpress.org/changeset/3129185/"
+        ],
+        "summary": "The Login with phone number plugin for WordPress is vulnerable to privilege escalation in all versions up to, and including, 1.7.49. This is due to a lack of validation and missing capability check on user-supplied data in the 'lwp_update_password_action' function. This makes it possible for authenticated attackers, with Subscriber-level access and above, to update their role to any other role, including Administrator. The vulnerability was partially patched in version 1.7.40. The login with phone number pro plugin was required to exploit the vulnerability in versions 1.7.40 - 1.7.49."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2024-04-05T21:15:00",
+        "access": {},
+        "assigner": "psirt@lenovo.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-25493",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://support.lenovo.com/us/en/product_security/LEN-141775"
+        ],
+        "summary": "A potential vulnerability was reported in the BIOS update tool driver for some Desktop, Smart Edge, Smart Office, and ThinkStation products that could allow a local user with elevated privileges to execute arbitrary code."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-11-08T22:15:00",
+        "access": {},
+        "assigner": "psirt@lenovo.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-5078",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://support.lenovo.com/us/en/product_security/LEN-141775"
+        ],
+        "summary": "A vulnerability was reported in some ThinkPad BIOS that could allow a physical or local attacker with elevated privileges to tamper with BIOS firmware."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-11-06T07:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-42669",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://bugzilla.samba.org/show_bug.cgi?id=15474",
+            "https://www.samba.org/samba/security/CVE-2023-42669.html",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2241884",
+            "https://access.redhat.com/security/cve/CVE-2023-42669",
+            "https://access.redhat.com/errata/RHSA-2023:6209",
+            "https://access.redhat.com/errata/RHSA-2023:6744",
+            "https://access.redhat.com/errata/RHSA-2023:7371",
+            "https://access.redhat.com/errata/RHSA-2023:7408",
+            "https://access.redhat.com/errata/RHSA-2023:7464",
+            "https://access.redhat.com/errata/RHSA-2023:7467"
+        ],
+        "summary": "A vulnerability was found in Samba's \"rpcecho\" development server, a non-Windows RPC server used to test Samba's DCE/RPC stack elements. This vulnerability stems from an RPC function that can be blocked indefinitely. The issue arises because the \"rpcecho\" service operates with only one worker in the main RPC task, allowing calls to the \"rpcecho\" server to be blocked for a specified time, causing service disruptions. This disruption is triggered by a \"sleep()\" call in the \"dcesrv_echo_TestSleep()\" function under specific conditions. Authenticated users or attackers can exploit this vulnerability to make calls to the \"rpcecho\" server, requesting it to block for a specified duration, effectively disrupting most services and leading to a complete denial of service on the AD DC. The DoS affects all other services as \"rpcecho\" runs in the main RPC task."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2024-01-19T20:15:00",
+        "access": {},
+        "assigner": "psirt@lenovo.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-5080",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://support.lenovo.com/us/en/product_security/LEN-142135"
+        ],
+        "summary": "A privilege escalation vulnerability was reported in some Lenovo tablet products that could allow local applications access to device identifiers and system commands. "
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2024-01-19T20:15:00",
+        "access": {},
+        "assigner": "psirt@lenovo.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-5081",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://support.lenovo.com/us/en/product_security/LEN-142135"
+        ],
+        "summary": "An information disclosure vulnerability was reported in the Lenovo Tab M8 HD that could allow a local application to gather a non-resettable device identifier. "
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-12-18T14:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2023-5115",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://access.redhat.com/errata/RHSA-2023:5701",
+            "https://access.redhat.com/errata/RHSA-2023:5758",
+            "https://access.redhat.com/security/cve/CVE-2023-5115",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2233810"
+        ],
+        "summary": "An absolute path traversal attack exists in the Ansible automation platform. This flaw allows an attacker to craft a malicious Ansible role and make the victim execute the role. A symlink can be used to overwrite a file outside of the extraction path."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-11-03T13:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2023-3961",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://bugzilla.samba.org/show_bug.cgi?id=15422",
+            "https://access.redhat.com/security/cve/CVE-2023-3961",
+            "https://access.redhat.com/errata/RHSA-2023:6209",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2241881",
+            "https://www.samba.org/samba/security/CVE-2023-3961.html",
+            "https://access.redhat.com/errata/RHSA-2023:6744",
+            "https://access.redhat.com/errata/RHSA-2023:7371",
+            "https://access.redhat.com/errata/RHSA-2023:7408",
+            "https://access.redhat.com/errata/RHSA-2023:7464",
+            "https://access.redhat.com/errata/RHSA-2023:7467"
+        ],
+        "summary": "A path traversal vulnerability was identified in Samba when processing client pipe names connecting to Unix domain sockets within a private directory. Samba typically uses this mechanism to connect SMB clients to remote procedure call (RPC) services like SAMR LSA or SPOOLSS, which Samba initiates on demand. However, due to inadequate sanitization of incoming client pipe names, allowing a client to send a pipe name containing Unix directory traversal characters (../). This could result in SMB clients connecting as root to Unix domain sockets outside the private directory. If an attacker or client managed to send a pipe name resolving to an external service using an existing Unix domain socket, it could potentially lead to unauthorized access to the service and consequential adverse events, including compromise or service crashes."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-11-03T08:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-276",
+        "id": "CVE-2023-4091",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://www.samba.org/samba/security/CVE-2023-4091.html",
+            "https://bugzilla.samba.org/show_bug.cgi?id=15439",
+            "https://access.redhat.com/errata/RHSA-2023:6209",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2241882",
+            "https://access.redhat.com/security/cve/CVE-2023-4091",
+            "https://access.redhat.com/errata/RHSA-2023:6744",
+            "https://access.redhat.com/errata/RHSA-2023:7371",
+            "https://access.redhat.com/errata/RHSA-2023:7408",
+            "https://access.redhat.com/errata/RHSA-2023:7464",
+            "https://access.redhat.com/errata/RHSA-2023:7467"
+        ],
+        "summary": "A vulnerability was discovered in Samba, where the flaw allows SMB clients to truncate files, even with read-only permissions when the Samba VFS module \"acl_xattr\" is configured with \"acl_xattr:ignore system acls = yes\". The SMB protocol allows opening files when the client requests read-only access but then implicitly truncates the opened file to 0 bytes if the client specifies a separate OVERWRITE create disposition request. The issue arises in configurations that bypass kernel file system permissions checks, relying solely on Samba's permissions."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-10-12T12:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2023-43789",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-43789",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2242249",
+            "https://access.redhat.com/errata/RHSA-2024:2146",
+            "https://access.redhat.com/errata/RHSA-2024:2217",
+            "https://access.redhat.com/errata/RHSA-2024:2974",
+            "https://access.redhat.com/errata/RHSA-2024:3022"
+        ],
+        "summary": "A vulnerability was found in libXpm where a vulnerability exists due to a boundary condition, a local user can trigger an out-of-bounds read error and read contents of memory on the system."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-10-10T13:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2023-43785",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2242252",
+            "https://access.redhat.com/security/cve/CVE-2023-43785",
+            "https://access.redhat.com/errata/RHSA-2024:2145",
+            "https://access.redhat.com/errata/RHSA-2024:2973"
+        ],
+        "summary": "A vulnerability was found in libX11 due to a boundary condition within the _XkbReadKeySyms() function. This flaw allows a local user to trigger an out-of-bounds read error and read the contents of memory on the system."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-10-10T13:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-835",
+        "id": "CVE-2023-43786",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-43786",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2242253",
+            "https://access.redhat.com/errata/RHSA-2024:2145",
+            "https://access.redhat.com/errata/RHSA-2024:2973"
+        ],
+        "summary": "A vulnerability was found in libX11 due to an infinite loop within the PutSubImage() function. This flaw allows a local user to consume all available system resources and cause a denial of service condition."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-10-10T13:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-190",
+        "id": "CVE-2023-43787",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2023-43787",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2242254",
+            "https://access.redhat.com/errata/RHSA-2024:2145",
+            "https://access.redhat.com/errata/RHSA-2024:2973"
+        ],
+        "summary": "A vulnerability was found in libX11 due to an integer overflow within the XCreateImage() function. This flaw allows a local user to trigger an integer overflow and execute arbitrary code with elevated privileges."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-10-10T13:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-125",
+        "id": "CVE-2023-43788",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2242248",
+            "https://access.redhat.com/security/cve/CVE-2023-43788",
+            "https://access.redhat.com/errata/RHSA-2024:2146",
+            "https://access.redhat.com/errata/RHSA-2024:2217",
+            "https://access.redhat.com/errata/RHSA-2024:2974",
+            "https://access.redhat.com/errata/RHSA-2024:3022"
+        ],
+        "summary": "A vulnerability was found in libXpm due to a boundary condition within the XpmCreateXpmImageFromBuffer() function. This flaw allows a local attacker to trigger an out-of-bounds read error and read the contents of memory on the system."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-06-26T20:15:00",
+        "access": {},
+        "assigner": "psirt@lenovo.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-2290",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://support.lenovo.com/us/en/product_security/LEN-106014"
+        ],
+        "summary": "A potential vulnerability in the LenovoFlashDeviceInterface SMI handler may allow an attacker with local access and elevated privileges to execute arbitrary code."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-06-26T20:15:00",
+        "access": {},
+        "assigner": "psirt@lenovo.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-2992",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://support.lenovo.com/us/en/product_security/LEN-127357"
+        ],
+        "summary": "An unauthenticated \u00a0denial of service vulnerability exists in the SMM v1, SMM v2, and FPC management web server which can be triggered under crafted conditions.  Rebooting SMM or FPC will restore access to the management web server."
+    },
+    {
+        "Modified": "2024-09-16T15:15:00",
+        "Published": "2023-04-14T10:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2023-2042",
+        "impact": {},
+        "last-modified": "2024-09-16T15:15:00",
+        "references": [
+            "https://github.com/yangyanglo/ForCVE/blob/main/2023-0x06.md",
+            "https://vuldb.com/?ctiid.225920",
+            "https://vuldb.com/?id.225920",
+            "https://vuldb.com/?submit.109292"
+        ],
+        "summary": "A vulnerability, which was classified as problematic, has been found in DataGear up to 4.7.0/5.1.0. Affected by this issue is some unknown functionality of the component JDBC Server Handler. The manipulation leads to deserialization. The attack may be launched remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-16T14:30:00",
+        "Published": "2024-08-12T17:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-42474",
+        "impact": {},
+        "last-modified": "2024-09-16T14:30:00",
+        "references": [
+            "https://github.com/streamlit/streamlit/security/advisories/GHSA-rxff-vr5r-8cj5",
+            "https://github.com/streamlit/streamlit/commit/3a639859cfdfba2187c81897d44a3e33825eb0a3"
+        ],
+        "summary": "Streamlit is a data oriented application development framework for python. Snowflake Streamlit open source addressed a security vulnerability via the static file sharing feature. Users of hosted Streamlit app(s) on Windows were vulnerable to a path traversal vulnerability when the static file sharing feature is enabled. An attacker could utilize the vulnerability to leak the password hash of the Windows user running Streamlit. The vulnerability was patched on Jul 25, 2024, as part of Streamlit open source version 1.37.0. The vulnerability only affects Windows."
+    },
+    {
+        "Modified": "2024-09-16T14:26:00",
+        "Published": "2024-09-10T15:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2024-27257",
+        "impact": {},
+        "last-modified": "2024-09-16T14:26:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7167702",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/283966"
+        ],
+        "summary": "IBM OpenPages 8.3 and 9.0 potentially exposes information about client-side source code through use of JavaScript source maps to unauthorized users."
     }
 ]
