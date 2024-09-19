@@ -1,5 +1,445 @@
 [
     {
+        "Modified": "2024-09-19T13:57:00",
+        "Published": "2024-07-27T02:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-1804",
+        "impact": {},
+        "last-modified": "2024-09-19T13:57:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0a49a22e-d54e-461d-83c2-8278494eac13?source=cve",
+            "https://plugins.trac.wordpress.org/browser/tutor-lms-migration-tool/trunk/classes/LPtoTutorMigration.php#L579"
+        ],
+        "summary": "The Tutor LMS \u2013 Migration Tool plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the tutor_import_from_xml function in all versions up to, and including, 2.2.0. This makes it possible for authenticated attackers, with subscriber-level access and above, to import courses."
+    },
+    {
+        "Modified": "2024-09-19T13:53:00",
+        "Published": "2024-07-27T02:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-862",
+        "id": "CVE-2024-1798",
+        "impact": {},
+        "last-modified": "2024-09-19T13:53:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0cb67f55-6d21-4a4e-9651-fcf671788d16?source=cve",
+            "https://plugins.trac.wordpress.org/browser/tutor-lms-migration-tool/trunk/classes/LPtoTutorMigration.php#L762"
+        ],
+        "summary": "The Tutor LMS \u2013 Migration Tool plugin for WordPress is vulnerable to unauthorized access of data due to a missing capability check on the tutor_lp_export_xml function in all versions up to, and including, 2.2.0. This makes it possible for unauthenticated attackers to export courses, including private and password protected courses."
+    },
+    {
+        "Modified": "2024-09-19T13:42:00",
+        "Published": "2024-09-04T17:15:00",
+        "access": {},
+        "assigner": "psirt@cisco.com",
+        "cvss": null,
+        "cwe": "CWE-532",
+        "id": "CVE-2024-20440",
+        "impact": {},
+        "last-modified": "2024-09-19T13:42:00",
+        "references": [
+            "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-cslu-7gHMzWmw"
+        ],
+        "summary": "A vulnerability in Cisco Smart Licensing Utility could allow an unauthenticated, remote attacker to access sensitive information.\r\n\r\nThis vulnerability is due to excessive verbosity in a debug log file. An attacker could exploit this vulnerability by sending a crafted HTTP request to an affected device. A successful exploit could allow the attacker to obtain log files that contain sensitive data, including credentials that can be used to access the API."
+    },
+    {
+        "Modified": "2024-09-19T13:40:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-835",
+        "id": "CVE-2024-46701",
+        "impact": {},
+        "last-modified": "2024-09-19T13:40:00",
+        "references": [
+            "https://git.kernel.org/stable/c/308b4fc2403b335894592ee9dc212a5e58bb309f",
+            "https://git.kernel.org/stable/c/64a7ce76fb901bf9f9c36cf5d681328fc0fd4b5a"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nlibfs: fix infinite directory reads for offset dir\n\nAfter we switch tmpfs dir operations from simple_dir_operations to\nsimple_offset_dir_operations, every rename happened will fill new dentry\nto dest dir's maple tree(&SHMEM_I(inode)->dir_offsets->mt) with a free\nkey starting with octx->newx_offset, and then set newx_offset equals to\nfree key + 1. This will lead to infinite readdir combine with rename\nhappened at the same time, which fail generic/736 in xfstests(detail show\nas below).\n\n1. create 5000 files(1 2 3...) under one dir\n2. call readdir(man 3 readdir) once, and get one entry\n3. rename(entry, \"TEMPFILE\"), then rename(\"TEMPFILE\", entry)\n4. loop 2~3, until readdir return nothing or we loop too many\n   times(tmpfs break test with the second condition)\n\nWe choose the same logic what commit 9b378f6ad48cf (\"btrfs: fix infinite\ndirectory reads\") to fix it, record the last_index when we open dir, and\ndo not emit the entry which index >= last_index. The file->private_data\nnow used in offset dir can use directly to do this, and we also update\nthe last_index when we llseek the dir file.\n\n[brauner: only update last_index after seek when offset is zero like Jan suggested]"
+    },
+    {
+        "Modified": "2024-09-19T13:37:00",
+        "Published": "2024-08-31T09:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8108",
+        "impact": {},
+        "last-modified": "2024-09-19T13:37:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/5cb5368f-99b1-43e3-a2e4-67e90c8edfcf?source=cve",
+            "https://plugins.trac.wordpress.org/browser/share-this-image/tags/2.01/includes/modules/gutenberg/class-sti-gutenberg-init.php#L127",
+            "https://wordpress.org/plugins/share-this-image/#developers",
+            "https://plugins.trac.wordpress.org/browser/share-this-image/tags/2.01/includes/modules/gutenberg/sti-gutenberg-buttons.js#L42",
+            "https://plugins.trac.wordpress.org/browser/share-this-image/tags/2.01/includes/modules/gutenberg/sti-gutenberg-buttons.js#L146",
+            "https://plugins.trac.wordpress.org/changeset/3144334/"
+        ],
+        "summary": "The Share This Image plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'alignment' parameter in all versions up to, and including, 2.01 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-09-19T13:35:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46702",
+        "impact": {},
+        "last-modified": "2024-09-19T13:35:00",
+        "references": [
+            "https://git.kernel.org/stable/c/747bc154577de6e6af4bc99abfa859b8419bb4d8",
+            "https://git.kernel.org/stable/c/23ce6ba3b95488a2b9e9f6d43b340da0c15395dc",
+            "https://git.kernel.org/stable/c/80ac8d194831eca0c2f4fd862f7925532fda320c",
+            "https://git.kernel.org/stable/c/18b3ad2a3cc877dd4b16f48d84aa27b78d53bf1d",
+            "https://git.kernel.org/stable/c/7ca24cf9163c112bb6b580c6fb57c04a1f8b76e1",
+            "https://git.kernel.org/stable/c/e2006140ad2e01a02ed0aff49cc2ae3ceeb11f8d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nthunderbolt: Mark XDomain as unplugged when router is removed\n\nI noticed that when we do discrete host router NVM upgrade and it gets\nhot-removed from the PCIe side as a result of NVM firmware authentication,\nif there is another host connected with enabled paths we hang in tearing\nthem down. This is due to fact that the Thunderbolt networking driver\nalso tries to cleanup the paths and ends up blocking in\ntb_disconnect_xdomain_paths() waiting for the domain lock.\n\nHowever, at this point we already cleaned the paths in tb_stop() so\nthere is really no need for tb_disconnect_xdomain_paths() to do that\nanymore. Furthermore it already checks if the XDomain is unplugged and\nbails out early so take advantage of that and mark the XDomain as\nunplugged when we remove the parent router."
+    },
+    {
+        "Modified": "2024-09-19T13:33:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46703",
+        "impact": {},
+        "last-modified": "2024-09-19T13:33:00",
+        "references": [
+            "https://git.kernel.org/stable/c/321aecb079e9ca8b1af90778068a6fb40f2bf22d",
+            "https://git.kernel.org/stable/c/0863bffda1131fd2fa9c05b653ad9ee3d8db127e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"serial: 8250_omap: Set the console genpd always on if no console suspend\"\n\nThis reverts commit 68e6939ea9ec3d6579eadeab16060339cdeaf940.\n\nKevin reported that this causes a crash during suspend on platforms that\ndont use PM domains."
+    },
+    {
+        "Modified": "2024-09-19T13:32:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46704",
+        "impact": {},
+        "last-modified": "2024-09-19T13:32:00",
+        "references": [
+            "https://git.kernel.org/stable/c/91d09642127a32fde231face2ff489af70eef316",
+            "https://git.kernel.org/stable/c/8bc35475ef1a23b0e224f3242eb11c76cab0ea88"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nworkqueue: Fix spruious data race in __flush_work()\n\nWhen flushing a work item for cancellation, __flush_work() knows that it\nexclusively owns the work item through its PENDING bit. 134874e2eee9\n(\"workqueue: Allow cancel_work_sync() and disable_work() from atomic\ncontexts on BH work items\") added a read of @work->data to determine whether\nto use busy wait for BH work items that are being canceled. While the read\nis safe when @from_cancel, @work->data was read before testing @from_cancel\nto simplify code structure:\n\n\tdata = *work_data_bits(work);\n\tif (from_cancel &&\n\t    !WARN_ON_ONCE(data & WORK_STRUCT_PWQ) && (data & WORK_OFFQ_BH)) {\n\nWhile the read data was never used if !@from_cancel, this could trigger\nKCSAN data race detection spuriously:\n\n  ==================================================================\n  BUG: KCSAN: data-race in __flush_work / __flush_work\n\n  write to 0xffff8881223aa3e8 of 8 bytes by task 3998 on cpu 0:\n   instrument_write include/linux/instrumented.h:41 [inline]\n   ___set_bit include/asm-generic/bitops/instrumented-non-atomic.h:28 [inline]\n   insert_wq_barrier kernel/workqueue.c:3790 [inline]\n   start_flush_work kernel/workqueue.c:4142 [inline]\n   __flush_work+0x30b/0x570 kernel/workqueue.c:4178\n   flush_work kernel/workqueue.c:4229 [inline]\n   ...\n\n  read to 0xffff8881223aa3e8 of 8 bytes by task 50 on cpu 1:\n   __flush_work+0x42a/0x570 kernel/workqueue.c:4188\n   flush_work kernel/workqueue.c:4229 [inline]\n   flush_delayed_work+0x66/0x70 kernel/workqueue.c:4251\n   ...\n\n  value changed: 0x0000000000400000 -> 0xffff88810006c00d\n\nReorganize the code so that @from_cancel is tested before @work->data is\naccessed. The only problem is triggering KCSAN detection spuriously. This\nshouldn't need READ_ONCE() or other access qualifiers.\n\nNo functional changes."
+    },
+    {
+        "Modified": "2024-09-19T13:30:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-46705",
+        "impact": {},
+        "last-modified": "2024-09-19T13:30:00",
+        "references": [
+            "https://git.kernel.org/stable/c/b1c9fbed3884d3883021d699c7cdf5253a65543a",
+            "https://git.kernel.org/stable/c/c7117419784f612d59ee565145f722e8b5541fe6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/xe: reset mmio mappings with devm\n\nSet our various mmio mappings to NULL. This should make it easier to\ncatch something rogue trying to mess with mmio after device removal. For\nexample, we might unmap everything and then start hitting some mmio\naddress which has already been unmamped by us and then remapped by\nsomething else, causing all kinds of carnage."
+    },
+    {
+        "Modified": "2024-09-19T13:29:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-46707",
+        "impact": {},
+        "last-modified": "2024-09-19T13:29:00",
+        "references": [
+            "https://git.kernel.org/stable/c/15818af2f7aa55eff375333cb7689df15d3f24ef",
+            "https://git.kernel.org/stable/c/96b076e8ee5bc3a1126848c8add0f74bd30dc9d1",
+            "https://git.kernel.org/stable/c/94d4fbad01b19ec5eab3d6b50aaec4f9db8b2d8d",
+            "https://git.kernel.org/stable/c/9d7629bec5c3f80bd0e3bf8103c06a2f7046bd92",
+            "https://git.kernel.org/stable/c/2073132f6ed3079369e857a8deb33d11bdd983bc",
+            "https://git.kernel.org/stable/c/3e6245ebe7ef341639e9a7e402b3ade8ad45a19f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: Make ICC_*SGI*_EL1 undef in the absence of a vGICv3\n\nOn a system with a GICv3, if a guest hasn't been configured with\nGICv3 and that the host is not capable of GICv2 emulation,\na write to any of the ICC_*SGI*_EL1 registers is trapped to EL2.\n\nWe therefore try to emulate the SGI access, only to hit a NULL\npointer as no private interrupt is allocated (no GIC, remember?).\n\nThe obvious fix is to give the guest what it deserves, in the\nshape of a UNDEF exception."
+    },
+    {
+        "Modified": "2024-09-19T13:28:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46708",
+        "impact": {},
+        "last-modified": "2024-09-19T13:28:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0197bf772f657fbdea5e9bdec5eea6e67d82cbde",
+            "https://git.kernel.org/stable/c/d3692d95cc4d88114b070ee63cffc976f00f207f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\npinctrl: qcom: x1e80100: Fix special pin offsets\n\nRemove the erroneus 0x100000 offset to prevent the boards from crashing\non pin state setting, as well as for the intended state changes to take\neffect."
+    },
+    {
+        "Modified": "2024-09-19T13:27:00",
+        "Published": "2024-08-31T10:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-345",
+        "id": "CVE-2022-4539",
+        "impact": {},
+        "last-modified": "2024-09-19T13:27:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0e99531c-8742-4f91-8525-65bb3cb06644?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3055548/web-application-firewall/trunk/helper/utility.php"
+        ],
+        "summary": "The Web Application Firewall plugin for WordPress is vulnerable to IP Address Spoofing in versions up to, and including, 2.1.2. This is due to insufficient restrictions on where the IP Address information is being retrieved for request logging and login restrictions. Attackers can supply the X-Forwarded-For header with with a different IP Address that will be logged and can be used to bypass settings that may have blocked out an IP address or country from logging in."
+    },
+    {
+        "Modified": "2024-09-19T13:26:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46709",
+        "impact": {},
+        "last-modified": "2024-09-19T13:26:00",
+        "references": [
+            "https://git.kernel.org/stable/c/9a9716bbbf3dd6b6cbefba3abcc89af8b72631f4",
+            "https://git.kernel.org/stable/c/5c12391ee1ab59cb2f3be3f1f5e6d0fc0c2dc854",
+            "https://git.kernel.org/stable/c/50f1199250912568606b3778dc56646c10cb7b04"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/vmwgfx: Fix prime with external buffers\n\nMake sure that for external buffers mapping goes through the dma_buf\ninterface instead of trying to access pages directly.\n\nExternal buffers might not provide direct access to readable/writable\npages so to make sure the bo's created from external dma_bufs can be\nread dma_buf interface has to be used.\n\nFixes crashes in IGT's kms_prime with vgem. Regular desktop usage won't\ntrigger this due to the fact that virtual machines will not have\nmultiple GPUs but it enables better test coverage in IGT."
+    },
+    {
+        "Modified": "2024-09-19T13:24:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-129",
+        "id": "CVE-2024-38568",
+        "impact": {},
+        "last-modified": "2024-09-19T13:24:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3669baf308308385a2ab391324abdde5682af5aa",
+            "https://git.kernel.org/stable/c/be1fa711e59c874d049f592aef1d4685bdd22bdf",
+            "https://git.kernel.org/stable/c/b5120d322763c15c978bc47beb3b6dff45624304",
+            "https://git.kernel.org/stable/c/aa2d3d678895c8eedd003f1473f87d3f06fe6ec7",
+            "https://git.kernel.org/stable/c/81bdd60a3d1d3b05e6cc6674845afb1694dd3a0e"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/perf: hisi: hns3: Fix out-of-bound access when valid event group\n\nThe perf tool allows users to create event groups through following\ncmd [1], but the driver does not check whether the array index is out\nof bounds when writing data to the event_group array. If the number of\nevents in an event_group is greater than HNS3_PMU_MAX_HW_EVENTS, the\nmemory write overflow of event_group array occurs.\n\nAdd array index check to fix the possible array out of bounds violation,\nand return directly when write new events are written to array bounds.\n\nThere are 9 different events in an event_group.\n[1] perf stat -e '{pmu/event1/, ... ,pmu/event9/}"
+    },
+    {
+        "Modified": "2024-09-19T13:23:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-129",
+        "id": "CVE-2024-38569",
+        "impact": {},
+        "last-modified": "2024-09-19T13:23:00",
+        "references": [
+            "https://git.kernel.org/stable/c/3d1face00ebb7996842aee4214d7d0fb0c77b1e9",
+            "https://git.kernel.org/stable/c/8e9aab2492178f25372f1820bfd9289fbd74efd0",
+            "https://git.kernel.org/stable/c/567d34626c22b36579ec0abfdf5eda2949044220",
+            "https://git.kernel.org/stable/c/ff48247144d13a3a0817127703724256008efa78",
+            "https://git.kernel.org/stable/c/77fce82678ea5fd51442e62febec2004f79e041b"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrivers/perf: hisi_pcie: Fix out-of-bound access when valid event group\n\nThe perf tool allows users to create event groups through following\ncmd [1], but the driver does not check whether the array index is out of\nbounds when writing data to the event_group array. If the number of events\nin an event_group is greater than HISI_PCIE_MAX_COUNTERS, the memory write\noverflow of event_group array occurs.\n\nAdd array index check to fix the possible array out of bounds violation,\nand return directly when write new events are written to array bounds.\n\nThere are 9 different events in an event_group.\n[1] perf stat -e '{pmu/event1/, ... ,pmu/event9/}'"
+    },
+    {
+        "Modified": "2024-09-19T13:19:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-38588",
+        "impact": {},
+        "last-modified": "2024-09-19T13:19:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dbff5f0bfb2416b8b55c105ddbcd4f885e98fada",
+            "https://git.kernel.org/stable/c/7b4881da5b19f65709f5c18c1a4d8caa2e496461",
+            "https://git.kernel.org/stable/c/66df065b3106964e667b37bf8f7e55ec69d0c1f6",
+            "https://git.kernel.org/stable/c/31310e373f4c8c74e029d4326b283e757edabc0b",
+            "https://git.kernel.org/stable/c/e60b613df8b6253def41215402f72986fee3fc8d",
+            "https://git.kernel.org/stable/c/8ea8ef5e42173560ac510e92a1cc797ffeea8831"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nftrace: Fix possible use-after-free issue in ftrace_location()\n\nKASAN reports a bug:\n\n  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120\n  Read of size 8 at addr ffff888141d40010 by task insmod/424\n  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+\n  [...]\n  Call Trace:\n   <TASK>\n   dump_stack_lvl+0x68/0xa0\n   print_report+0xcf/0x610\n   kasan_report+0xb5/0xe0\n   ftrace_location+0x90/0x120\n   register_kprobe+0x14b/0xa40\n   kprobe_init+0x2d/0xff0 [kprobe_example]\n   do_one_initcall+0x8f/0x2d0\n   do_init_module+0x13a/0x3c0\n   load_module+0x3082/0x33d0\n   init_module_from_file+0xd2/0x130\n   __x64_sys_finit_module+0x306/0x440\n   do_syscall_64+0x68/0x140\n   entry_SYSCALL_64_after_hwframe+0x71/0x79\n\nThe root cause is that, in lookup_rec(), ftrace record of some address\nis being searched in ftrace pages of some module, but those ftrace pages\nat the same time is being freed in ftrace_release_mod() as the\ncorresponding module is being deleted:\n\n           CPU1                       |      CPU2\n  register_kprobes() {                | delete_module() {\n    check_kprobe_address_safe() {     |\n      arch_check_ftrace_location() {  |\n        ftrace_location() {           |\n          lookup_rec() // USE!        |   ftrace_release_mod() // Free!\n\nTo fix this issue:\n  1. Hold rcu lock as accessing ftrace pages in ftrace_location_range();\n  2. Use ftrace_location_range() instead of lookup_rec() in\n     ftrace_location();\n  3. Call synchronize_rcu() before freeing any ftrace pages both in\n     ftrace_process_locs()/ftrace_release_mod()/ftrace_free_mem()."
+    },
+    {
+        "Modified": "2024-09-19T13:19:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-38584",
+        "impact": {},
+        "last-modified": "2024-09-19T13:19:00",
+        "references": [
+            "https://git.kernel.org/stable/c/5cd17f0e74cb99d209945b9f1f06d411aa667eb1",
+            "https://git.kernel.org/stable/c/b0a82ebabbdc4c307f781bb0e5cd617949a3900d",
+            "https://git.kernel.org/stable/c/1e1d5bd7f4682e6925dd960aba2a1aa1d93da53a",
+            "https://git.kernel.org/stable/c/b31c7e78086127a7fcaa761e8d336ee855a920c6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: ti: icssg_prueth: Fix NULL pointer dereference in prueth_probe()\n\nIn the prueth_probe() function, if one of the calls to emac_phy_connect()\nfails due to of_phy_connect() returning NULL, then the subsequent call to\nphy_attached_info() will dereference a NULL pointer.\n\nCheck the return code of emac_phy_connect and fail cleanly if there is an\nerror."
+    },
+    {
+        "Modified": "2024-09-19T13:18:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-38590",
+        "impact": {},
+        "last-modified": "2024-09-19T13:18:00",
+        "references": [
+            "https://git.kernel.org/stable/c/45b31be4dd22827903df15c548b97b416790139b",
+            "https://git.kernel.org/stable/c/cc699b7eb2bc963c12ffcd37f80f45330d2924bd",
+            "https://git.kernel.org/stable/c/17f3741c65c4a042ae8ba094068b07a4b77e213c",
+            "https://git.kernel.org/stable/c/6f541a89ced8305da459e3ab0006e7528cf7da7b",
+            "https://git.kernel.org/stable/c/817a10a6df9354e67561922d2b7fce48dfbebc55",
+            "https://git.kernel.org/stable/c/06cf121346bbd3d83a5eea05bb87666c6b279990",
+            "https://git.kernel.org/stable/c/349e859952285ab9689779fb46de163f13f18f43"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nRDMA/hns: Modify the print level of CQE error\n\nToo much print may lead to a panic in kernel. Change ibdev_err() to\nibdev_err_ratelimited(), and change the printing level of cqe dump\nto debug level."
+    },
+    {
+        "Modified": "2024-09-19T13:17:00",
+        "Published": "2024-07-12T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2024-40904",
+        "impact": {},
+        "last-modified": "2024-09-19T13:17:00",
+        "references": [
+            "https://git.kernel.org/stable/c/217d1f44fff560b3995a685a60aa66e55a7f0f56",
+            "https://git.kernel.org/stable/c/05b2cd6d33f700597e6f081b53c668a226a96d28",
+            "https://git.kernel.org/stable/c/c0747d76eb05542b5d49f67069b64ef5ff732c6c",
+            "https://git.kernel.org/stable/c/53250b54c92fe087fd4b0c48f85529efe1ebd879",
+            "https://git.kernel.org/stable/c/02a4c0499fc3a02e992b4c69a9809912af372d94",
+            "https://git.kernel.org/stable/c/72a3fe36cf9f0d030865e571f45a40f9c1e07e8a",
+            "https://git.kernel.org/stable/c/82075aff7ffccb1e72b0ac8aa349e473624d857c",
+            "https://git.kernel.org/stable/c/22f00812862564b314784167a89f27b444f82a46"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nUSB: class: cdc-wdm: Fix CPU lockup caused by excessive log messages\n\nThe syzbot fuzzer found that the interrupt-URB completion callback in\nthe cdc-wdm driver was taking too long, and the driver's immediate\nresubmission of interrupt URBs with -EPROTO status combined with the\ndummy-hcd emulation to cause a CPU lockup:\n\ncdc_wdm 1-1:1.0: nonzero urb status received: -71\ncdc_wdm 1-1:1.0: wdm_int_callback - 0 bytes\nwatchdog: BUG: soft lockup - CPU#0 stuck for 26s! [syz-executor782:6625]\nCPU#0 Utilization every 4s during lockup:\n\t#1:  98% system,\t  0% softirq,\t  3% hardirq,\t  0% idle\n\t#2:  98% system,\t  0% softirq,\t  3% hardirq,\t  0% idle\n\t#3:  98% system,\t  0% softirq,\t  3% hardirq,\t  0% idle\n\t#4:  98% system,\t  0% softirq,\t  3% hardirq,\t  0% idle\n\t#5:  98% system,\t  1% softirq,\t  3% hardirq,\t  0% idle\nModules linked in:\nirq event stamp: 73096\nhardirqs last  enabled at (73095): [<ffff80008037bc00>] console_emit_next_record kernel/printk/printk.c:2935 [inline]\nhardirqs last  enabled at (73095): [<ffff80008037bc00>] console_flush_all+0x650/0xb74 kernel/printk/printk.c:2994\nhardirqs last disabled at (73096): [<ffff80008af10b00>] __el1_irq arch/arm64/kernel/entry-common.c:533 [inline]\nhardirqs last disabled at (73096): [<ffff80008af10b00>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:551\nsoftirqs last  enabled at (73048): [<ffff8000801ea530>] softirq_handle_end kernel/softirq.c:400 [inline]\nsoftirqs last  enabled at (73048): [<ffff8000801ea530>] handle_softirqs+0xa60/0xc34 kernel/softirq.c:582\nsoftirqs last disabled at (73043): [<ffff800080020de8>] __do_softirq+0x14/0x20 kernel/softirq.c:588\nCPU: 0 PID: 6625 Comm: syz-executor782 Tainted: G        W          6.10.0-rc2-syzkaller-g8867bbd4a056 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024\n\nTesting showed that the problem did not occur if the two error\nmessages -- the first two lines above -- were removed; apparently adding\nmaterial to the kernel log takes a surprisingly large amount of time.\n\nIn any case, the best approach for preventing these lockups and to\navoid spamming the log with thousands of error messages per second is\nto ratelimit the two dev_err() calls.  Therefore we replace them with\ndev_err_ratelimited()."
+    },
+    {
+        "Modified": "2024-09-19T13:16:00",
+        "Published": "2024-07-12T13:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-476",
+        "id": "CVE-2024-40905",
+        "impact": {},
+        "last-modified": "2024-09-19T13:16:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c90af1cced2f669a7b2304584be4ada495eaa0e5",
+            "https://git.kernel.org/stable/c/c693698787660c97950bc1f93a8dd19d8307153d",
+            "https://git.kernel.org/stable/c/a0bc020592b54a8f3fa2b7f244b6e39e526c2e12",
+            "https://git.kernel.org/stable/c/2498960dac9b6fc49b6d1574f7cd1a4872744adf",
+            "https://git.kernel.org/stable/c/7e796c3fefa8b17b30e7252886ae8cffacd2b9ef",
+            "https://git.kernel.org/stable/c/09e5a5a80e205922151136069e440477d6816914",
+            "https://git.kernel.org/stable/c/b01e1c030770ff3b4fe37fc7cc6bca03f594133f"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: fix possible race in __fib6_drop_pcpu_from()\n\nsyzbot found a race in __fib6_drop_pcpu_from() [1]\n\nIf compiler reads more than once (*ppcpu_rt),\nsecond read could read NULL, if another cpu clears\nthe value in rt6_get_pcpu_route().\n\nAdd a READ_ONCE() to prevent this race.\n\nAlso add rcu_read_lock()/rcu_read_unlock() because\nwe rely on RCU protection while dereferencing pcpu_rt.\n\n[1]\n\nOops: general protection fault, probably for non-canonical address 0xdffffc0000000012: 0000 [#1] PREEMPT SMP KASAN PTI\nKASAN: null-ptr-deref in range [0x0000000000000090-0x0000000000000097]\nCPU: 0 PID: 7543 Comm: kworker/u8:17 Not tainted 6.10.0-rc1-syzkaller-00013-g2bfcfd584ff5 #0\nHardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024\nWorkqueue: netns cleanup_net\n RIP: 0010:__fib6_drop_pcpu_from.part.0+0x10a/0x370 net/ipv6/ip6_fib.c:984\nCode: f8 48 c1 e8 03 80 3c 28 00 0f 85 16 02 00 00 4d 8b 3f 4d 85 ff 74 31 e8 74 a7 fa f7 49 8d bf 90 00 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 1e 02 00 00 49 8b 87 90 00 00 00 48 8b 0c 24 48\nRSP: 0018:ffffc900040df070 EFLAGS: 00010206\nRAX: 0000000000000012 RBX: 0000000000000001 RCX: ffffffff89932e16\nRDX: ffff888049dd1e00 RSI: ffffffff89932d7c RDI: 0000000000000091\nRBP: dffffc0000000000 R08: 0000000000000005 R09: 0000000000000007\nR10: 0000000000000001 R11: 0000000000000006 R12: ffff88807fa080b8\nR13: fffffbfff1a9a07d R14: ffffed100ff41022 R15: 0000000000000001\nFS:  0000000000000000(0000) GS:ffff8880b9200000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 0000001b32c26000 CR3: 000000005d56e000 CR4: 00000000003526f0\nDR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\nDR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\nCall Trace:\n <TASK>\n  __fib6_drop_pcpu_from net/ipv6/ip6_fib.c:966 [inline]\n  fib6_drop_pcpu_from net/ipv6/ip6_fib.c:1027 [inline]\n  fib6_purge_rt+0x7f2/0x9f0 net/ipv6/ip6_fib.c:1038\n  fib6_del_route net/ipv6/ip6_fib.c:1998 [inline]\n  fib6_del+0xa70/0x17b0 net/ipv6/ip6_fib.c:2043\n  fib6_clean_node+0x426/0x5b0 net/ipv6/ip6_fib.c:2205\n  fib6_walk_continue+0x44f/0x8d0 net/ipv6/ip6_fib.c:2127\n  fib6_walk+0x182/0x370 net/ipv6/ip6_fib.c:2175\n  fib6_clean_tree+0xd7/0x120 net/ipv6/ip6_fib.c:2255\n  __fib6_clean_all+0x100/0x2d0 net/ipv6/ip6_fib.c:2271\n  rt6_sync_down_dev net/ipv6/route.c:4906 [inline]\n  rt6_disable_ip+0x7ed/0xa00 net/ipv6/route.c:4911\n  addrconf_ifdown.isra.0+0x117/0x1b40 net/ipv6/addrconf.c:3855\n  addrconf_notify+0x223/0x19e0 net/ipv6/addrconf.c:3778\n  notifier_call_chain+0xb9/0x410 kernel/notifier.c:93\n  call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1992\n  call_netdevice_notifiers_extack net/core/dev.c:2030 [inline]\n  call_netdevice_notifiers net/core/dev.c:2044 [inline]\n  dev_close_many+0x333/0x6a0 net/core/dev.c:1585\n  unregister_netdevice_many_notify+0x46d/0x19f0 net/core/dev.c:11193\n  unregister_netdevice_many net/core/dev.c:11276 [inline]\n  default_device_exit_batch+0x85b/0xae0 net/core/dev.c:11759\n  ops_exit_list+0x128/0x180 net/core/net_namespace.c:178\n  cleanup_net+0x5b7/0xbf0 net/core/net_namespace.c:640\n  process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231\n  process_scheduled_works kernel/workqueue.c:3312 [inline]\n  worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393\n  kthread+0x2c1/0x3a0 kernel/kthread.c:389\n  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147\n  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244"
+    },
+    {
+        "Modified": "2024-09-19T13:15:00",
+        "Published": "2024-09-19T13:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-46382",
+        "impact": {},
+        "last-modified": "2024-09-19T13:15:00",
+        "references": [
+            "https://github.com/linlinjava/litemall/issues/552"
+        ],
+        "summary": "A SQL injection vulnerability in linlinjava litemall 1.8.0 allows a remote attacker to obtain sensitive information via the goodsId, goodsSn, and name parameters in AdminGoodscontroller.java."
+    },
+    {
+        "Modified": "2024-09-19T13:14:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46710",
+        "impact": {},
+        "last-modified": "2024-09-19T13:14:00",
+        "references": [
+            "https://git.kernel.org/stable/c/d5228d158e4c0b1663b3983044913c15c3d0135e",
+            "https://git.kernel.org/stable/c/aba07b9a0587f50e5d3346eaa19019cf3f86c0ea"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/vmwgfx: Prevent unmapping active read buffers\n\nThe kms paths keep a persistent map active to read and compare the cursor\nbuffer. These maps can race with each other in simple scenario where:\na) buffer \"a\" mapped for update\nb) buffer \"a\" mapped for compare\nc) do the compare\nd) unmap \"a\" for compare\ne) update the cursor\nf) unmap \"a\" for update\nAt step \"e\" the buffer has been unmapped and the read contents is bogus.\n\nPrevent unmapping of active read buffers by simply keeping a count of\nhow many paths have currently active maps and unmap only when the count\nreaches 0."
+    },
+    {
+        "Modified": "2024-09-19T13:12:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46711",
+        "impact": {},
+        "last-modified": "2024-09-19T13:12:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c9c744666f7308a4daba520191e29d395260bcfe",
+            "https://git.kernel.org/stable/c/53e2173172d26c0617b29dd83618b71664bed1fb",
+            "https://git.kernel.org/stable/c/119806ae4e46cf239db8e6ad92bc2fd3daae86dc",
+            "https://git.kernel.org/stable/c/9366922adc6a71378ca01f898c41be295309f044"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: pm: fix ID 0 endp usage after multiple re-creations\n\n'local_addr_used' and 'add_addr_accepted' are decremented for addresses\nnot related to the initial subflow (ID0), because the source and\ndestination addresses of the initial subflows are known from the\nbeginning: they don't count as \"additional local address being used\" or\n\"ADD_ADDR being accepted\".\n\nIt is then required not to increment them when the entrypoint used by\nthe initial subflow is removed and re-added during a connection. Without\nthis modification, this entrypoint cannot be removed and re-added more\nthan once."
+    },
+    {
+        "Modified": "2024-09-19T13:09:00",
+        "Published": "2024-09-13T07:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46712",
+        "impact": {},
+        "last-modified": "2024-09-19T13:09:00",
+        "references": [
+            "https://git.kernel.org/stable/c/c45558414b8f2e0b9dc34eb8f9d4e8359b887681",
+            "https://git.kernel.org/stable/c/e9fd436bb8fb9b9d31fdf07bbcdba6d30290c5e4"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/vmwgfx: Disable coherent dumb buffers without 3d\n\nCoherent surfaces make only sense if the host renders to them using\naccelerated apis. Without 3d the entire content of dumb buffers stays\nin the guest making all of the extra work they're doing to synchronize\nbetween guest and host useless.\n\nConfigurations without 3d also tend to run with very low graphics\nmemory limits. The pinned console fb, mob cursors and graphical login\nmanager tend to run out of 16MB graphics memory that those guests use.\n\nFix it by making sure the coherent dumb buffers are only used on\nconfigs with 3d enabled."
+    },
+    {
+        "Modified": "2024-09-19T13:05:00",
+        "Published": "2024-09-13T09:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2024-6656",
+        "impact": {},
+        "last-modified": "2024-09-19T13:05:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1466"
+        ],
+        "summary": "Use of Hard-coded Credentials vulnerability in TNB Mobile Solutions Cockpit Software allows Read Sensitive Strings Within an Executable.This issue affects Cockpit Software: before v2.13."
+    },
+    {
         "Modified": "2024-09-19T11:44:00",
         "Published": "2022-11-12T22:15:00",
         "access": {},
@@ -1448,390 +1888,5 @@
             "https://gist.github.com/idealeer/e41c7fb3b661d4262d0b6f21e12168ba"
         ],
         "summary": "CoreDNS through 1.10.1 enables attackers to achieve DNS cache poisoning and inject fake responses via a birthday attack."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40568",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/xiaobye-ctf/My-CVE/tree/main/BTstack/CVE-2024-40568"
-        ],
-        "summary": "Buffer Overflow vulnerability in btstack mesh commit before v.864e2f2b6b7878c8fab3cf5ee84ae566e3380c58 allows a remote attacker to execute arbitrary code via the pb_adv_handle_tranaction_cont function in the src/mesh/pb_adv.c component"
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46372",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/CVE-2024-46372.md"
-        ],
-        "summary": "DedeCMS 5.7.115 is vulnerable to Cross Site Scripting (XSS) via the advertisement code box in the advertisement management module."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46373",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/CVE-2024-46373.md"
-        ],
-        "summary": "Dedecms V5.7.115 contains an arbitrary code execution via file upload vulnerability in the backend."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46374",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/CVE-2024-46374.md"
-        ],
-        "summary": "Best House Rental Management System 1.0 contains a SQL injection vulnerability in the delete_category() function of the file rental/admin_class.php."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46375",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/CVE-2024-46375.md"
-        ],
-        "summary": "Best House Rental Management System 1.0 contains an arbitrary file upload vulnerability in the signup() function of the file rental/admin_class.php."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46376",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/CVE-2024-46376.md"
-        ],
-        "summary": "Best House Rental Management System 1.0 contains an arbitrary file upload vulnerability in the update_account() function of the file rental/admin_class.php."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-46377",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/gaorenyusi/gaorenyusi/blob/main/CVE-2024-46377.md"
-        ],
-        "summary": "Best House Rental Management System 1.0 contains an arbitrary file upload vulnerability in the save_settings() function of the file rental/admin_class.php."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "security@mautic.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-47050",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/mautic/mautic/security/advisories/GHSA-73gr-32wg-qhh7"
-        ],
-        "summary": "Prior to this patch being applied, Mautic's tracking was vulnerable to Cross-Site Scripting through the Page URL variable."
-    },
-    {
-        "Modified": "2024-09-18T21:15:00",
-        "Published": "2024-09-18T21:15:00",
-        "access": {},
-        "assigner": "security@mautic.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-47058",
-        "impact": {},
-        "last-modified": "2024-09-18T21:15:00",
-        "references": [
-            "https://github.com/mautic/mautic/security/advisories/GHSA-xv68-rrmw-9xwf"
-        ],
-        "summary": "With access to edit a Mautic form, the attacker can add Cross-Site Scripting stored in the html filed. This could be used to steal sensitive information from the user's current session."
-    },
-    {
-        "Modified": "2024-09-18T21:05:00",
-        "Published": "2024-09-12T13:15:00",
-        "access": {},
-        "assigner": "security@opentext.com",
-        "cvss": null,
-        "cwe": "CWE-521",
-        "id": "CVE-2021-38133",
-        "impact": {},
-        "last-modified": "2024-09-18T21:05:00",
-        "references": [
-            "https://www.netiq.com/documentation/edirectory-92/edirectory926_releasenotes/data/edirectory926_releasenotes.html"
-        ],
-        "summary": "Possible \nExternal Service Interaction attack\n\nin eDirectory has been discovered in\nOpenText\u2122 eDirectory. This impact all version before\u00a09.2.6.0000."
-    },
-    {
-        "Modified": "2024-09-18T21:04:00",
-        "Published": "2024-09-12T13:15:00",
-        "access": {},
-        "assigner": "security@opentext.com",
-        "cvss": null,
-        "cwe": "CWE-918",
-        "id": "CVE-2021-38132",
-        "impact": {},
-        "last-modified": "2024-09-18T21:04:00",
-        "references": [
-            "https://www.netiq.com/documentation/edirectory-92/edirectory926_releasenotes/data/edirectory926_releasenotes.html"
-        ],
-        "summary": "Possible \nExternal Service Interaction attack\n\nin eDirectory has been discovered in\nOpenText\u2122 eDirectory. This impact all version before\u00a09.2.6.0000."
-    },
-    {
-        "Modified": "2024-09-18T21:00:00",
-        "Published": "2024-09-12T13:15:00",
-        "access": {},
-        "assigner": "security@opentext.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2021-38131",
-        "impact": {},
-        "last-modified": "2024-09-18T21:00:00",
-        "references": [
-            "https://www.netiq.com/documentation/edirectory-92/edirectory926_releasenotes/data/edirectory926_releasenotes.html"
-        ],
-        "summary": "Possible Cross-Site Scripting (XSS) Vulnerability\n\nin eDirectory has been discovered in\nOpenText\u2122 eDirectory 9.2.5.0000."
-    },
-    {
-        "Modified": "2024-09-18T20:38:00",
-        "Published": "2024-09-12T12:15:00",
-        "access": {},
-        "assigner": "cve-coordination@incibe.es",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-8750",
-        "impact": {},
-        "last-modified": "2024-09-18T20:38:00",
-        "references": [
-            "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-synetics-idoit-pro"
-        ],
-        "summary": "Cross-site Scripting (XSS) vulnerability in idoit pro version 28. This vulnerability allows an attacker to retrieve session details of an authenticated user due to lack of proper sanitization of the following parameters (id,lang,mNavID,name,pID,treeNode,type,view)."
-    },
-    {
-        "Modified": "2024-09-18T20:35:00",
-        "Published": "2024-09-11T15:15:00",
-        "access": {},
-        "assigner": "prodsec@nozominetworks.com",
-        "cvss": null,
-        "cwe": "CWE-863",
-        "id": "CVE-2024-4465",
-        "impact": {},
-        "last-modified": "2024-09-18T20:35:00",
-        "references": [
-            "https://security.nozominetworks.com/NN-2024:2-01"
-        ],
-        "summary": "An access control vulnerability was discovered in the Reports section due to a specific access restriction not being properly enforced for users with limited privileges.\n\n\n\nIf a logged-in user with reporting privileges learns how to create a specific application request, they might be able to make limited changes to the reporting configuration. This could result in a partial loss of data integrity. In Guardian/CMC instances with a reporting configuration, there could be limited Denial of Service (DoS) impacts, as the reports may not reach their intended destination, and there could also be limited information disclosure impacts. Furthermore, modifying the destination SMTP server for the reports could lead to the compromise of external credentials, as they might be sent to an unauthorized server."
-    },
-    {
-        "Modified": "2024-09-18T20:35:00",
-        "Published": "2023-10-10T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-1188",
-        "id": "CVE-2023-45312",
-        "impact": {},
-        "last-modified": "2024-09-18T20:35:00",
-        "references": [
-            "https://medium.com/%40_sadshade/almost-2000-telegram-proxy-servers-are-potentially-vulnerable-to-rce-since-2018-742a455be16b"
-        ],
-        "summary": "In the mtproto_proxy (aka MTProto proxy) component through 0.7.2 for Erlang, a low-privileged remote attacker can access an improperly secured default installation without authenticating and achieve remote command execution ability."
-    },
-    {
-        "Modified": "2024-09-18T20:35:00",
-        "Published": "2023-10-10T03:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-77",
-        "id": "CVE-2023-44959",
-        "impact": {},
-        "last-modified": "2024-09-18T20:35:00",
-        "references": [
-            "https://github.com/FzBacon/CVE-2023-27216_D-Link_DSL-3782_Router_command_injection/blob/master/CVE-2023-27216_D-Link_DSL-3782_Router_command_injection.md#cve-2023-27216_d-link_dsl-3782_router_command_injection"
-        ],
-        "summary": "An issue found in D-Link DSL-3782 v.1.03 and before allows remote authenticated users to execute arbitrary code as root via the Router IP Address fields of the network settings page."
-    },
-    {
-        "Modified": "2024-09-18T20:32:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-34334",
-        "impact": {},
-        "last-modified": "2024-09-18T20:32:00",
-        "references": [
-            "http://foss-online.com",
-            "http://ordat.com",
-            "https://mind-bytes.de/sql-injection-in-foss-online-cve-2024-34334/"
-        ],
-        "summary": "ORDAT FOSS-Online before v2.24.01 was discovered to contain a SQL injection vulnerability via the forgot password function."
-    },
-    {
-        "Modified": "2024-09-18T20:32:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-34335",
-        "impact": {},
-        "last-modified": "2024-09-18T20:32:00",
-        "references": [
-            "http://foss-online.com",
-            "http://ordat.com",
-            "https://mind-bytes.de/cross-site-scripting-in-foss-online-cve-2024-34335/"
-        ],
-        "summary": "ORDAT FOSS-Online before version 2.24.01 was discovered to contain a reflected cross-site scripting (XSS) vulnerability via the login page."
-    },
-    {
-        "Modified": "2024-09-18T20:32:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-203",
-        "id": "CVE-2024-34336",
-        "impact": {},
-        "last-modified": "2024-09-18T20:32:00",
-        "references": [
-            "http://foss-online.com",
-            "http://ordat.com",
-            "https://mind-bytes.de/offenlegung-existierender-benutzerkonten-in-foss-online-cve-2024-34336/"
-        ],
-        "summary": "User enumeration vulnerability in ORDAT FOSS-Online before v2.24.01 allows attackers to determine if an account exists in the application by comparing the server responses of the forgot password functionality."
-    },
-    {
-        "Modified": "2024-09-18T20:32:00",
-        "Published": "2024-09-11T14:15:00",
-        "access": {},
-        "assigner": "csirt@divd.nl",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2024-27115",
-        "impact": {},
-        "last-modified": "2024-09-18T20:32:00",
-        "references": [
-            "https://csirt.divd.nl/CVE-2024-27115"
-        ],
-        "summary": "A unauthenticated Remote Code Execution (RCE) vulnerability is found in the SO Planning online planning tool. With this vulnerability, an attacker can upload executable files that are moved to a publicly accessible folder before verifying any requirements. This leads to the possibility of execution of code on the underlying system when the file is triggered. The vulnerability has been remediated in version 1.52.02."
-    },
-    {
-        "Modified": "2024-09-18T20:28:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-36066",
-        "impact": {},
-        "last-modified": "2024-09-18T20:28:00",
-        "references": [
-            "https://datatracker.ietf.org/doc/html/rfc4211#section-4.4",
-            "https://support.keyfactor.com/hc/en-us/articles/26965687021595-EJBCA-Security-Advisory-EJBCA-standalone-CMP-CLI-client"
-        ],
-        "summary": "The CMP CLI client in KeyFactor EJBCA before 8.3.1 has only 6 octets of salt, and is thus not compliant with the security requirements of RFC 4211, and might make man-in-the-middle attacks easier. CMP includes password-based MAC as one of the options for message integrity and authentication (the other option is certificate-based). RFC 4211 section 4.4 requires that password-based MAC parameters use a salt with a random value of at least 8 octets. This helps to inhibit dictionary attacks. Because the standalone CMP client originally was developed as test code, the salt was instead hardcoded and only 6 octets long."
-    },
-    {
-        "Modified": "2024-09-18T20:26:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-45181",
-        "impact": {},
-        "last-modified": "2024-09-18T20:26:00",
-        "references": [
-            "https://wibu.com",
-            "https://cdn.wibu.com/fileadmin/wibu_downloads/security_advisories/AdvisoryWIBU-94453.pdf"
-        ],
-        "summary": "An issue was discovered in WibuKey64.sys in WIBU-SYSTEMS WibuKey before v6.70 and fixed in v.6.70. An improper bounds check allows crafted packets to cause an arbitrary address write, resulting in kernel memory corruption."
-    },
-    {
-        "Modified": "2024-09-18T20:26:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-45182",
-        "impact": {},
-        "last-modified": "2024-09-18T20:26:00",
-        "references": [
-            "https://wibu.com",
-            "https://cdn.wibu.com/fileadmin/wibu_downloads/security_advisories/AdvisoryWIBU-94453.pdf"
-        ],
-        "summary": "An issue was discovered in WibuKey64.sys in WIBU-SYSTEMS WibuKey before v6.70 and fixed in v.6.70 An improper bounds check allows specially crafted packets to cause an arbitrary address read, resulting in Denial of Service."
-    },
-    {
-        "Modified": "2024-09-18T20:25:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-45303",
-        "impact": {},
-        "last-modified": "2024-09-18T20:25:00",
-        "references": [
-            "https://github.com/discourse/discourse-calendar/security/advisories/GHSA-rq37-8pf3-4xc8",
-            "https://github.com/discourse/discourse-calendar/commit/81e1c8e3c4c02276fb890da7e3f684259aeb685c"
-        ],
-        "summary": "Discourse Calendar plugin adds the ability to create a dynamic calendar in the first post of a topic to Discourse. Rendering event names can be susceptible to XSS attacks. This vulnerability only affects sites which have modified or disabled Discourse\u2019s default Content Security Policy. The issue is patched in version 0.5 of the Discourse Calendar plugin."
-    },
-    {
-        "Modified": "2024-09-18T20:24:00",
-        "Published": "2024-09-12T19:15:00",
-        "access": {},
-        "assigner": "talos-cna@cisco.com",
-        "cvss": null,
-        "cwe": "CWE-664",
-        "id": "CVE-2024-45383",
-        "impact": {},
-        "last-modified": "2024-09-18T20:24:00",
-        "references": [
-            "https://talosintelligence.com/vulnerability_reports/TALOS-2024-2008"
-        ],
-        "summary": "A mishandling of IRP requests vulnerability exists in the HDAudBus_DMA interface of Microsoft High Definition Audio Bus Driver 10.0.19041.3636 (WinBuild.160101.0800). A specially crafted application can issue multiple IRP Complete requests which leads to a local denial-of-service. An attacker can execute malicious script/application to trigger this vulnerability."
     }
 ]
