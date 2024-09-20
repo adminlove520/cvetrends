@@ -1,5 +1,659 @@
 [
     {
+        "Modified": "2024-09-20T15:55:00",
+        "Published": "2024-09-13T06:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-46690",
+        "impact": {},
+        "last-modified": "2024-09-20T15:55:00",
+        "references": [
+            "https://git.kernel.org/stable/c/1b46a871e980e3daa16fd5e77539966492e8910a",
+            "https://git.kernel.org/stable/c/40927f3d0972bf86357a32a5749be71a551241b6"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnfsd: fix nfsd4_deleg_getattr_conflict in presence of third party lease\n\nIt is not safe to dereference fl->c.flc_owner without first confirming\nfl->fl_lmops is the expected manager.  nfsd4_deleg_getattr_conflict()\ntests fl_lmops but largely ignores the result and assumes that flc_owner\nis an nfs4_delegation anyway.  This is wrong.\n\nWith this patch we restore the \"!= &nfsd_lease_mng_ops\" case to behave\nas it did before the change mentioned below.  This is the same as the\ncurrent code, but without any reference to a possible delegation."
+    },
+    {
+        "Modified": "2024-09-20T15:53:00",
+        "Published": "2024-09-09T19:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-384",
+        "id": "CVE-2024-7341",
+        "impact": {},
+        "last-modified": "2024-09-20T15:53:00",
+        "references": [
+            "https://access.redhat.com/errata/RHSA-2024:6493",
+            "https://access.redhat.com/errata/RHSA-2024:6494",
+            "https://access.redhat.com/errata/RHSA-2024:6495",
+            "https://access.redhat.com/errata/RHSA-2024:6497",
+            "https://access.redhat.com/errata/RHSA-2024:6499",
+            "https://access.redhat.com/errata/RHSA-2024:6500",
+            "https://access.redhat.com/errata/RHSA-2024:6501",
+            "https://access.redhat.com/errata/RHSA-2024:6502",
+            "https://access.redhat.com/errata/RHSA-2024:6503",
+            "https://access.redhat.com/security/cve/CVE-2024-7341",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2302064"
+        ],
+        "summary": "A session fixation issue was discovered in the SAML adapters provided by Keycloak. The session ID and JSESSIONID cookie are not changed at login time, even when the turnOffChangeSessionIdOnLogin option is configured. This flaw allows an attacker who hijacks the current session before authentication to trigger session fixation."
+    },
+    {
+        "Modified": "2024-09-20T15:52:00",
+        "Published": "2024-09-13T06:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-787",
+        "id": "CVE-2024-46689",
+        "impact": {},
+        "last-modified": "2024-09-20T15:52:00",
+        "references": [
+            "https://git.kernel.org/stable/c/0ee9594c974368a17e85a431e9fe1c14fb65c278",
+            "https://git.kernel.org/stable/c/f5a5a5a0e95f36e2792d48e6e4b64e665eb01374",
+            "https://git.kernel.org/stable/c/eaff392c1e34fb77cc61505a31b0191e5e46e271",
+            "https://git.kernel.org/stable/c/d9d48d70e922b272875cda60d2ada89291c840cf",
+            "https://git.kernel.org/stable/c/ef80520be0ff78ae5ed44cb6eee1525e65bebe70",
+            "https://git.kernel.org/stable/c/62c2d63605ca25b5db78a347ed303c0a0a77d5b4",
+            "https://git.kernel.org/stable/c/f9bb896eab221618927ae6a2f1d566567999839d"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsoc: qcom: cmd-db: Map shared memory as WC, not WB\n\nLinux does not write into cmd-db region. This region of memory is write\nprotected by XPU. XPU may sometime falsely detect clean cache eviction\nas \"write\" into the write protected region leading to secure interrupt\nwhich causes an endless loop somewhere in Trust Zone.\n\nThe only reason it is working right now is because Qualcomm Hypervisor\nmaps the same region as Non-Cacheable memory in Stage 2 translation\ntables. The issue manifests if we want to use another hypervisor (like\nXen or KVM), which does not know anything about those specific mappings.\n\nChanging the mapping of cmd-db memory from MEMREMAP_WB to MEMREMAP_WT/WC\nremoves dependency on correct mappings in Stage 2 tables. This patch\nfixes the issue by updating the mapping to MEMREMAP_WC.\n\nI tested this on SA8155P with Xen."
+    },
+    {
+        "Modified": "2024-09-20T15:47:00",
+        "Published": "2024-09-14T20:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2024-8862",
+        "impact": {},
+        "last-modified": "2024-09-20T15:47:00",
+        "references": [
+            "https://vuldb.com/?id.277499",
+            "https://vuldb.com/?ctiid.277499",
+            "https://vuldb.com/?submit.403200",
+            "https://rumbling-slice-eb0.notion.site/Unauthenticated-Remote-Command-Execution-via-Panda-df-query-9dc40f0477ee4b65806de7921876c222?pvs=4"
+        ],
+        "summary": "A vulnerability, which was classified as critical, has been found in h2oai h2o-3 3.46.0.4. This issue affects the function getConnectionSafe of the file /dtale/chart-data/1 of the component JDBC Connection Handler. The manipulation of the argument query leads to deserialization. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-20T15:43:00",
+        "Published": "2024-09-14T23:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8863",
+        "impact": {},
+        "last-modified": "2024-09-20T15:43:00",
+        "references": [
+            "https://vuldb.com/?id.277500",
+            "https://vuldb.com/?ctiid.277500",
+            "https://vuldb.com/?submit.403203",
+            "https://rumbling-slice-eb0.notion.site/Stored-XSS-through-TEXT-EXPLORER-in-aimhubio-aim-d0f07b7194724950a673498546d80d43?pvs=4"
+        ],
+        "summary": "A vulnerability, which was classified as problematic, was found in aimhubio aim up to 3.24. Affected is the function dangerouslySetInnerHTML of the file textbox.tsx of the component Text Explorer. The manipulation of the argument query leads to cross site scripting. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
+    },
+    {
+        "Modified": "2024-09-20T15:36:00",
+        "Published": "2024-09-15T02:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-8866",
+        "impact": {},
+        "last-modified": "2024-09-20T15:36:00",
+        "references": [
+            "https://vuldb.com/?id.277503",
+            "https://vuldb.com/?ctiid.277503",
+            "https://vuldb.com/?submit.407460",
+            "https://github.com/Hebing123/cve/issues/68"
+        ],
+        "summary": "A vulnerability was found in AutoCMS 5.4. It has been classified as problematic. This affects an unknown part of the file /admin/robot.php. The manipulation of the argument sidebar leads to cross site scripting. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-20T15:35:00",
+        "Published": "2023-10-05T01:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-26236",
+        "impact": {},
+        "last-modified": "2024-09-20T15:35:00",
+        "references": [
+            "https://www.watchguard.com/wgrd-psirt/advisory/wgsa-2023-00004"
+        ],
+        "summary": "An issue was discovered in WatchGuard EPDR 8.0.21.0002. Due to a weak implementation of message handling between WatchGuard EPDR processes, it is possible to perform a Local Privilege Escalation on Windows by sending a crafted message to a named pipe."
+    },
+    {
+        "Modified": "2024-09-20T15:35:00",
+        "Published": "2023-10-02T23:15:00",
+        "access": {},
+        "assigner": "psirt@purestorage.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-28372",
+        "impact": {},
+        "last-modified": "2024-09-20T15:35:00",
+        "references": [
+            "https://support.purestorage.com/Pure_Storage_Technical_Services/Field_Bulletins/Security_Bulletins/Security_Bulletin_for_FlashBlade_Object_Store_Privileged_Access_Vulnerability_CVE-2023-28372"
+        ],
+        "summary": "A flaw exists in FlashBlade Purity (OE) Version 4.1.0 whereby a user with privileges to extend an object\u2019s retention period can  affect the availability of the object lock.\n"
+    },
+    {
+        "Modified": "2024-09-20T15:18:00",
+        "Published": "2024-09-09T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2023-50883",
+        "impact": {},
+        "last-modified": "2024-09-20T15:18:00",
+        "references": [
+            "https://www.onlyoffice.com/",
+            "https://www.syss.de/fileadmin/dokumente/Publikationen/Advisories/SYSS-2023-027.txt",
+            "https://www.syss.de/pentest-blog/cross-site-scripting-schwachstelle-in-onlyoffice-docs-syss-2023-027"
+        ],
+        "summary": "ONLYOFFICE Docs before 8.0.1 allows XSS because a macro is an immediately-invoked function expression (IIFE), and therefore a sandbox escape is possible by directly calling the constructor of the Function object. NOTE: this issue exists because of an incorrect fix for CVE-2021-43446."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-09-20T15:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-9033",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://vuldb.com/?id.278203",
+            "https://vuldb.com/?ctiid.278203",
+            "https://vuldb.com/?submit.410977",
+            "https://github.com/para-paradise/webray.com.cn/blob/main/Best%20house%20rental%20management%20system%20project%20in%20php/Best%20house%20rental%20management%20system%20project%20in%20php%20Stored%20Cross-Site%20Scripting(XSS)%20vulnerability.md",
+            "https://www.sourcecodester.com/"
+        ],
+        "summary": "A vulnerability has been found in SourceCodester Best House Rental Management System 1.0 and classified as problematic. Affected by this vulnerability is an unknown functionality of the file /ajax.php?action=save_category. The manipulation of the argument name leads to cross site scripting. The attack can be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-09-20T15:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9034",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://vuldb.com/?id.278204",
+            "https://vuldb.com/?ctiid.278204",
+            "https://vuldb.com/?submit.411119",
+            "https://github.com/keepgoing2077/cve/issues/1",
+            "https://code-projects.org/"
+        ],
+        "summary": "A vulnerability was found in code-projects Patient Record Management System 1.0 and classified as critical. Affected by this issue is some unknown functionality of the file login.php. The manipulation of the argument username leads to sql injection. The attack may be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-09-20T15:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9035",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://vuldb.com/?id.278205",
+            "https://vuldb.com/?ctiid.278205",
+            "https://vuldb.com/?submit.411216",
+            "https://github.com/Kinsomnia/cve/blob/main/sql/sql.md",
+            "https://code-projects.org/"
+        ],
+        "summary": "A vulnerability was found in code-projects Blood Bank Management System 1.0. It has been classified as critical. This affects an unknown part of the file /admin/login.php of the component Admin Login. The manipulation of the argument username/password leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2023-11-15T00:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2023-43588",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://explore.zoom.us/en/trust/security/security-bulletin/"
+        ],
+        "summary": "Insufficient control flow management in some Zoom clients may allow an authenticated user to conduct an information disclosure via network access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-05-15T21:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27243",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/zsb-24014/"
+        ],
+        "summary": "Buffer overflow in some Zoom Workplace Apps and SDK\u2019s may allow an authenticated user to conduct a denial of service via network access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-05-15T21:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27244",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/zsb-24015/"
+        ],
+        "summary": "Insufficient verification of data authenticity in the installer for Zoom Workplace  VDI App for Windows may allow an authenticated user to conduct an escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-04-09T18:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-27247",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/zsb-24012/"
+        ],
+        "summary": "Improper privilege management in the installer for Zoom Desktop Client for macOS before version 5.17.10 may allow a privileged user to conduct an escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-04-09T18:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24694",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/zsb-24011/"
+        ],
+        "summary": "Improper privilege management in the installer for Zoom Desktop Client for Windows before version 5.17.10 may allow an authenticated user to conduct an escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-03-13T20:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2024-24693",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/zsb-24009/"
+        ],
+        "summary": "Improper access control in the installer for Zoom Rooms Client for Windows before version 5.17.5 may allow an authenticated user to conduct a denial of service via local access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-02-14T00:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24690",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/ZSB-24007/"
+        ],
+        "summary": "Improper input validation in some Zoom clients may allow an authenticated user to conduct a denial of service via network access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-02-14T00:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-24691",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/ZSB-24008/"
+        ],
+        "summary": "Improper input validation in Zoom Desktop Client for Windows, Zoom VDI Client for Windows, and Zoom Meeting SDK for Windows may allow an unauthenticated user to conduct an escalation of privilege via network access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2024-01-12T22:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-49647",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/ZSB-24001/"
+        ],
+        "summary": "Improper access control in Zoom Desktop Client for Windows, Zoom VDI Client for Windows, and Zoom SDKs for Windows before version 5.16.10 may allow an authenticated user to conduct an escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-09-20T15:15:00",
+        "Published": "2023-12-13T23:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-49646",
+        "impact": {},
+        "last-modified": "2024-09-20T15:15:00",
+        "references": [
+            "https://www.zoom.com/en/trust/security-bulletin/ZSB-23062/"
+        ],
+        "summary": "Improper authentication in some Zoom clients before version 5.16.5 may allow an authenticated user to conduct a denial of service via network access."
+    },
+    {
+        "Modified": "2024-09-20T14:55:00",
+        "Published": "2024-09-13T16:15:00",
+        "access": {},
+        "assigner": "security@huntr.dev",
+        "cvss": null,
+        "cwe": "CWE-918",
+        "id": "CVE-2024-6587",
+        "impact": {},
+        "last-modified": "2024-09-20T14:55:00",
+        "references": [
+            "https://huntr.com/bounties/4001e1a2-7b7a-4776-a3ae-e6692ec3d997",
+            "https://github.com/berriai/litellm/commit/ba1912afd1b19e38d3704bb156adf887f91ae1e0"
+        ],
+        "summary": "A Server-Side Request Forgery (SSRF) vulnerability exists in berriai/litellm version 1.38.10. This vulnerability allows users to specify the `api_base` parameter when making requests to `POST /chat/completions`, causing the application to send the request to the domain specified by `api_base`. This request includes the OpenAI API key. A malicious user can set the `api_base` to their own domain and intercept the OpenAI API key, leading to unauthorized access and potential misuse of the API key."
+    },
+    {
+        "Modified": "2024-09-20T14:55:00",
+        "Published": "2024-09-09T20:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-502",
+        "id": "CVE-2024-44902",
+        "impact": {},
+        "last-modified": "2024-09-20T14:55:00",
+        "references": [
+            "http://thinkphp.com",
+            "https://github.com/fru1ts/CVE-2024-44902"
+        ],
+        "summary": "A deserialization vulnerability in Thinkphp v6.1.3 to v8.0.4 allows attackers to execute arbitrary code."
+    },
+    {
+        "Modified": "2024-09-20T14:53:00",
+        "Published": "2024-09-09T20:15:00",
+        "access": {},
+        "assigner": "productsecurity@baxter.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-6795",
+        "impact": {},
+        "last-modified": "2024-09-20T14:53:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-medical-advisories/icsma-24-249-01"
+        ],
+        "summary": "In Connex health portal released before8/30/2024, SQL injection vulnerabilities were found that could have allowed an unauthenticated attacker to gain unauthorized access to Connex portal's database.\u00a0\n\nAn attacker could have submitted a crafted payload to Connex portal that could have resulted in modification and disclosure of database content \n\nand/or perform administrative operations including shutting down the database."
+    },
+    {
+        "Modified": "2024-09-20T14:53:00",
+        "Published": "2024-09-09T20:15:00",
+        "access": {},
+        "assigner": "productsecurity@baxter.com",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-6796",
+        "impact": {},
+        "last-modified": "2024-09-20T14:53:00",
+        "references": [
+            "https://www.cisa.gov/news-events/ics-medical-advisories/icsma-24-249-01"
+        ],
+        "summary": "In Baxter Connex health portal released before 8/30/2024, an improper access control vulnerability has been found that could allow an unauthenticated attacker to gain unauthorized access to Connex portal's database and/or modify content."
+    },
+    {
+        "Modified": "2024-09-20T14:44:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "cve@usom.gov.tr",
+        "cvss": null,
+        "cwe": "CWE-94",
+        "id": "CVE-2024-7104",
+        "impact": {},
+        "last-modified": "2024-09-20T14:44:00",
+        "references": [
+            "https://www.usom.gov.tr/bildirim/tr-24-1475"
+        ],
+        "summary": "Improper Control of Generation of Code ('Code Injection') vulnerability in SFS Consulting ww.Winsure allows Code Injection.This issue affects ww.Winsure: before 4.6.2."
+    },
+    {
+        "Modified": "2024-09-20T14:40:00",
+        "Published": "2024-09-13T16:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "CWE-77",
+        "id": "CVE-2024-42025",
+        "impact": {},
+        "last-modified": "2024-09-20T14:40:00",
+        "references": [
+            "https://community.ui.com/releases/Security-Advisory-Bulletin-042-042/c4f68b56-cdc4-4128-b2cb-5870209d1704"
+        ],
+        "summary": "A Command Injection vulnerability found in a Self-Hosted UniFi Network Servers (Linux) with UniFi Network Application (Version 8.3.32 and earlier) allows a malicious actor with unifi user shell access to escalate privileges to root on the host device."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2024-09-18T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2023-41612",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://www.trevorkems.com/operation-big-brother-iot-camera/"
+        ],
+        "summary": "Victure PC420 1.1.39 was discovered to use a weak encryption key for the file enabled_telnet.dat on the Micro SD card."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2024-09-18T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-45523",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://www.bravurasecurity.com/cve-2024-45523-resource-leak-in-api-after-a-failed-login-attempt"
+        ],
+        "summary": "An issue was discovered in Bravura Security Fabric versions 12.3.x before 12.3.5.32784, 12.4.x before 12.4.3.35110, 12.5.x before 12.5.2.35950, 12.6.x before 12.6.2.37183, and 12.7.x before 12.7.1.38241. An unauthenticated attacker can cause a resource leak by issuing multiple failed login attempts through API SOAP."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2024-09-18T18:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-46959",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://werewolves.world/blog/09072024"
+        ],
+        "summary": "runofast Indoor Security Camera for Baby Monitor has a default password of password for the root account. This allows access to the /stream1 URI via the rtsp:// protocol to receive the video and audio stream."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2024-09-16T06:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2024-8780",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8077-7a7c0-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8078-36fc9-2.html"
+        ],
+        "summary": "OMFLOW from The SYSCOM Group does not properly restrict the query range of its data query functionality, allowing remote attackers with regular privileges to obtain accounts and password hashes of other users."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2023-10-04T22:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-noinfo",
+        "id": "CVE-2023-40299",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://github.com/Kong/insomnia/releases",
+            "https://www.angelystor.com/posts/cve-2023-40299/",
+            "https://github.com/Kong/insomnia/pull/6217/commits",
+            "https://insomnia.rest/changelog"
+        ],
+        "summary": "Kong Insomnia 2023.4.0 on macOS allows attackers to execute code and access restricted files, or make requests for TCC permissions, by using the DYLD_INSERT_LIBRARIES environment variable."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2023-10-04T12:15:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2023-22618",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://www.nokia.com/about-us/security-and-privacy/product-security-advisory/cve-2023-22618/",
+            "https://nokia.com"
+        ],
+        "summary": "If Security Hardening guide rules are not followed, then Nokia WaveLite products allow a local user to create new users with administrative privileges by manipulating a web request. This affects (for example) WaveLite Metro 200 and Fan, WaveLite Metro 200 OPS and Fans, WaveLite Metro 200 and F2B fans, WaveLite Metro 200 OPS and F2B fans, WaveLite Metro 200 NE and F2B fans, and WaveLite Metro 200 NE OPS and F2B fans."
+    },
+    {
+        "Modified": "2024-09-20T14:35:00",
+        "Published": "2023-10-03T01:15:00",
+        "access": {},
+        "assigner": "vultures@jpcert.or.jp",
+        "cvss": null,
+        "cwe": "CWE-287",
+        "id": "CVE-2023-42771",
+        "impact": {},
+        "last-modified": "2024-09-20T14:35:00",
+        "references": [
+            "https://www.furunosystems.co.jp/news/info/vulner20231002.html",
+            "https://jvn.jp/en/vu/JVNVU94497038/"
+        ],
+        "summary": "Authentication bypass vulnerability in ACERA 1320 firmware ver.01.26 and earlier, and ACERA 1310 firmware ver.01.26 and earlier allows a network-adjacent unauthenticated attacker who can access the affected product to download configuration files and/or log files, and upload configuration files and/or firmware. They are affected when running in ST(Standalone) mode."
+    },
+    {
+        "Modified": "2024-09-20T14:23:00",
+        "Published": "2024-09-16T06:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-8778",
+        "impact": {},
+        "last-modified": "2024-09-20T14:23:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8073-ff771-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8074-66457-2.html"
+        ],
+        "summary": "OMFLOW from The SYSCOM Group does not properly validate user input of the download functionality, allowing remote attackers with regular privileges to read arbitrary system files."
+    },
+    {
+        "Modified": "2024-09-20T14:22:00",
+        "Published": "2024-09-16T06:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-522",
+        "id": "CVE-2024-8777",
+        "impact": {},
+        "last-modified": "2024-09-20T14:22:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8071-46589-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8072-928a5-2.html"
+        ],
+        "summary": "OMFLOW from The SYSCOM Group has an information leakage vulnerability, allowing unauthorized remote attackers to read arbitrary system configurations. If LDAP authentication is enabled, attackers can obtain plaintext credentials."
+    },
+    {
+        "Modified": "2024-09-20T14:15:00",
+        "Published": "2023-07-11T18:15:00",
+        "access": {},
+        "assigner": "security@zoom.us",
+        "cvss": null,
+        "cwe": "NVD-CWE-Other",
+        "id": "CVE-2023-36538",
+        "impact": {},
+        "last-modified": "2024-09-20T14:15:00",
+        "references": [
+            "https://explore.zoom.us/en/trust/security/security-bulletin/"
+        ],
+        "summary": "Improper access control in Zoom Rooms for Windows before version 5.15.0 may allow an authenticated user to enable an escalation of privilege via local access."
+    },
+    {
+        "Modified": "2024-09-20T14:13:00",
+        "Published": "2024-09-10T19:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-347",
+        "id": "CVE-2024-45409",
+        "impact": {},
+        "last-modified": "2024-09-20T14:13:00",
+        "references": [
+            "https://github.com/SAML-Toolkits/ruby-saml/security/advisories/GHSA-jw9c-mfg7-9rx2",
+            "https://github.com/SAML-Toolkits/ruby-saml/commit/1ec5392bc506fe43a02dbb66b68741051c5ffeae",
+            "https://github.com/SAML-Toolkits/ruby-saml/commit/4865d030cae9705ee5cdb12415c654c634093ae7",
+            "https://github.com/omniauth/omniauth-saml/security/advisories/GHSA-cvp8-5r8g-fhvq"
+        ],
+        "summary": "The Ruby SAML library is for implementing the client side of a SAML authorization. Ruby-SAML in <= 12.2 and 1.13.0 <= 1.16.0 does not properly verify the signature of the SAML Response. An unauthenticated attacker with access to any signed saml document (by the IdP) can thus forge a SAML Response/Assertion with arbitrary contents. This would allow the attacker to log in as arbitrary user within the vulnerable system. This vulnerability is fixed in 1.17.0 and 1.12.3."
+    },
+    {
+        "Modified": "2024-09-20T14:09:00",
+        "Published": "2024-09-16T15:15:00",
+        "access": {},
+        "assigner": "psirt@us.ibm.com",
+        "cvss": null,
+        "cwe": "CWE-613",
+        "id": "CVE-2024-38315",
+        "impact": {},
+        "last-modified": "2024-09-20T14:09:00",
+        "references": [
+            "https://www.ibm.com/support/pages/node/7168379",
+            "https://exchange.xforce.ibmcloud.com/vulnerabilities/294742"
+        ],
+        "summary": "IBM Aspera Shares 1.0 through 1.10.0 PL3 does not invalidate session after a password reset which could allow an authenticated user to impersonate another user on the system."
+    },
+    {
         "Modified": "2024-09-20T13:59:00",
         "Published": "2024-09-16T07:15:00",
         "access": {},
@@ -957,662 +1611,5 @@
             "https://support.apple.com/en-us/121250"
         ],
         "summary": "This issue was addressed with improved data protection. This issue is fixed in iOS 18 and iPadOS 18. An app may be able to leak sensitive user information."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40862",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121239"
-        ],
-        "summary": "A privacy issue was addressed by removing sensitive data. This issue is fixed in Xcode 16. An attacker may be able to determine the Apple ID of the owner of the computer."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44127",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121246",
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "This issue was addressed through improved state management. This issue is fixed in iOS 17.7 and iPadOS 17.7, iOS 18 and iPadOS 18. Private Browsing tabs may be accessed without authentication."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44130",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "This issue was addressed with improved data protection. This issue is fixed in macOS Sequoia 15. An app with root privileges may be able to access private information."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44132",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "This issue was addressed with improved handling of symlinks. This issue is fixed in macOS Sequoia 15. An app may be able to break out of its sandbox."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44139",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in iOS 18 and iPadOS 18. An attacker with physical access may be able to access contacts from the lock screen."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44149",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "A permissions issue was addressed with additional restrictions. This issue is fixed in macOS Sequoia 15. An app may be able to access protected user data."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44189",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in macOS Sequoia 15. A logic issue existed where a process may be able to capture screen contents without user consent."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44191",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121239",
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121248",
-            "https://support.apple.com/en-us/121249",
-            "https://support.apple.com/en-us/121246",
-            "https://support.apple.com/en-us/121250",
-            "https://support.apple.com/en-us/121240"
-        ],
-        "summary": "This issue was addressed through improved state management. This issue is fixed in iOS 17.7 and iPadOS 17.7, Xcode 16, visionOS 2, watchOS 11, macOS Sequoia 15, iOS 18 and iPadOS 18, tvOS 18. An app may gain unauthorized access to Bluetooth."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44198",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121248",
-            "https://support.apple.com/en-us/121249",
-            "https://support.apple.com/en-us/121250",
-            "https://support.apple.com/en-us/121240"
-        ],
-        "summary": "An integer overflow was addressed through improved input validation. This issue is fixed in visionOS 2, watchOS 11, macOS Sequoia 15, iOS 18 and iPadOS 18, tvOS 18. Processing maliciously crafted web content may lead to an unexpected process crash."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44202",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "An authentication issue was addressed with improved state management. This issue is fixed in iOS 18 and iPadOS 18. Private Browsing tabs may be accessed without authentication."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-269",
-        "id": "CVE-2024-45496",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-45496",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2308661",
-            "https://access.redhat.com/errata/RHSA-2024:6691",
-            "https://access.redhat.com/errata/RHSA-2024:6687",
-            "https://access.redhat.com/errata/RHSA-2024:6689",
-            "https://access.redhat.com/errata/RHSA-2024:6685",
-            "https://access.redhat.com/errata/RHSA-2024:6705"
-        ],
-        "summary": "A flaw was found in OpenShift. This issue occurs due to the misuse of elevated privileges in the OpenShift Container Platform's build process. During the build initialization step, the git-clone container is run with a privileged security context, allowing unrestricted access to the node. An attacker with developer-level access can provide a crafted .gitconfig file containing commands executed during the cloning process, leading to arbitrary command execution on the worker node. An attacker running code in a privileged container could escalate their permissions on the node running the container."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-250",
-        "id": "CVE-2024-7387",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-7387",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2302259",
-            "https://access.redhat.com/errata/RHSA-2024:6691",
-            "https://access.redhat.com/errata/RHSA-2024:6687",
-            "https://access.redhat.com/errata/RHSA-2024:6689",
-            "https://access.redhat.com/errata/RHSA-2024:6685",
-            "https://access.redhat.com/errata/RHSA-2024:6705"
-        ],
-        "summary": "A flaw was found in openshift/builder. This vulnerability allows command injection via path traversal, where a malicious user can execute arbitrary commands on the OpenShift node running the builder container. When using the \u201cDocker\u201d strategy, executable files inside the privileged build container can be overridden using the `spec.source.secrets.secret.destinationDir` attribute of the `BuildConfig` definition. An attacker running code in a privileged container could escalate their permissions on the node running the container."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T02:15:00",
-        "access": {},
-        "assigner": "cve@yokogawaGroup.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-8110",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://web-material3.yokogawa.com/1/36276/files/YSAR-24-0003-E.pdf"
-        ],
-        "summary": "Denial of Service (DoS) vulnerability has been found in Dual-redundant Platform for Computer.\nIf a computer on which the affected product is installed receives a large number of UDP broadcast packets in a short period, occasionally that computer may restart.\nIf both the active and standby computers are restarted at the same time, the functionality on that computer may be temporarily unavailable."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27880",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121248",
-            "https://support.apple.com/en-us/121249",
-            "https://support.apple.com/en-us/121246",
-            "https://support.apple.com/en-us/121250",
-            "https://support.apple.com/en-us/121247",
-            "https://support.apple.com/en-us/121240"
-        ],
-        "summary": "An out-of-bounds read issue was addressed with improved input validation. This issue is fixed in iOS 17.7 and iPadOS 17.7, visionOS 2, watchOS 11, macOS Sequoia 15, iOS 18 and iPadOS 18, macOS Sonoma 14.7, tvOS 18. Processing a maliciously crafted file may lead to unexpected app termination."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27876",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121234",
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121249",
-            "https://support.apple.com/en-us/121246",
-            "https://support.apple.com/en-us/121250",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "A race condition was addressed with improved locking. This issue is fixed in macOS Ventura 13.7, iOS 17.7 and iPadOS 17.7, visionOS 2, iOS 18 and iPadOS 18, macOS Sonoma 14.7, macOS Sequoia 15. Unpacking a maliciously crafted archive may allow an attacker to write arbitrary files."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40790",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121249"
-        ],
-        "summary": "The issue was addressed with improved handling of caches. This issue is fixed in visionOS 2. An app may be able to read sensitive data from the GPU memory."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40797",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121234",
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "This issue was addressed through improved state management. This issue is fixed in macOS Ventura 13.7, macOS Sonoma 14.7, macOS Sequoia 15. Visiting a malicious website may lead to user interface spoofing."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40826",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "A privacy issue was addressed with improved handling of files. This issue is fixed in iOS 18 and iPadOS 18, macOS Sequoia 15. An unencrypted document may be written to a temporary file when using print preview."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40843",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in macOS Sequoia 15. An app may be able to modify protected parts of the file system."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40845",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "The issue was addressed with improved memory handling. This issue is fixed in macOS Sonoma 14.7, macOS Sequoia 15. Processing a maliciously crafted video file may lead to unexpected app termination."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40841",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "An out-of-bounds write issue was addressed with improved bounds checking. This issue is fixed in macOS Sonoma 14.7, macOS Sequoia 15. Processing a maliciously crafted video file may lead to unexpected app termination."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40850",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121234",
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121248",
-            "https://support.apple.com/en-us/121249",
-            "https://support.apple.com/en-us/121246",
-            "https://support.apple.com/en-us/121250",
-            "https://support.apple.com/en-us/121247",
-            "https://support.apple.com/en-us/121240"
-        ],
-        "summary": "A file access issue was addressed with improved input validation. This issue is fixed in macOS Ventura 13.7, iOS 17.7 and iPadOS 17.7, visionOS 2, watchOS 11, macOS Sequoia 15, iOS 18 and iPadOS 18, macOS Sonoma 14.7, tvOS 18. An app may be able to access user-sensitive data."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40856",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121248",
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "An integrity issue was addressed with Beacon Protection. This issue is fixed in iOS 18 and iPadOS 18, tvOS 18, macOS Sequoia 15. An attacker may be able to force a device to disconnect from a secure network."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40848",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121234",
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "A downgrade issue was addressed with additional code-signing restrictions. This issue is fixed in macOS Ventura 13.7, macOS Sonoma 14.7, macOS Sequoia 15. An attacker may be able to read sensitive information."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40852",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "This issue was addressed by restricting options offered on a locked device. This issue is fixed in iOS 18 and iPadOS 18. An attacker may be able to see recent photos without authentication in Assistive Access."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40859",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "A permissions issue was addressed with additional restrictions. This issue is fixed in macOS Sequoia 15. An app may be able to access user-sensitive data."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40861",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in macOS Sequoia 15. An app may be able to gain root privileges."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44124",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "This issue was addressed through improved state management. This issue is fixed in iOS 18 and iPadOS 18. A malicious Bluetooth input device may bypass pairing."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40866",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121241"
-        ],
-        "summary": "The issue was addressed with improved UI. This issue is fixed in Safari 18, macOS Sequoia 15. Visiting a malicious website may lead to address bar spoofing."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44125",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in macOS Sonoma 14.7, macOS Sequoia 15. A malicious application may be able to leak sensitive user information."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44129",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121234",
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "The issue was addressed with improved checks. This issue is fixed in macOS Ventura 13.7, macOS Sequoia 15. An app may be able to leak sensitive user information."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44131",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "This issue was addressed with improved validation of symlinks. This issue is fixed in iOS 18 and iPadOS 18, macOS Sequoia 15. An app may be able to access sensitive user data."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44133",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "This issue was addressed by removing the vulnerable code. This issue is fixed in macOS Sequoia 15. On MDM managed devices, an app may be able to bypass certain Privacy preferences."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44134",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "This issue was addressed with improved redaction of sensitive information. This issue is fixed in macOS Sequoia 15. An app may be able to read sensitive location information."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44135",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "A permissions issue was addressed with additional restrictions. This issue is fixed in macOS Sonoma 14.7, macOS Sequoia 15. An app may be able to access protected files within an App Sandbox container."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44146",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "A logic issue was addressed with improved file handling. This issue is fixed in macOS Sequoia 15. An app may be able to break out of its sandbox."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44147",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121250"
-        ],
-        "summary": "This issue was addressed through improved state management. This issue is fixed in iOS 18 and iPadOS 18. An app may gain unauthorized access to Local Network."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44148",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "This issue was addressed with improved validation of file attributes. This issue is fixed in macOS Sequoia 15. An app may be able to break out of its sandbox."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44151",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121234",
-            "https://support.apple.com/en-us/121238",
-            "https://support.apple.com/en-us/121247"
-        ],
-        "summary": "A permissions issue was addressed with additional restrictions. This issue is fixed in macOS Ventura 13.7, macOS Sonoma 14.7, macOS Sequoia 15. An app may be able to modify protected parts of the file system."
-    },
-    {
-        "Modified": "2024-09-20T12:31:00",
-        "Published": "2024-09-17T00:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-44152",
-        "impact": {},
-        "last-modified": "2024-09-20T12:31:00",
-        "references": [
-            "https://support.apple.com/en-us/121238"
-        ],
-        "summary": "A privacy issue was addressed with improved private data redaction for log entries. This issue is fixed in macOS Sequoia 15. An app may be able to access user-sensitive data."
     }
 ]
