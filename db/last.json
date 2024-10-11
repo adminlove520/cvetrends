@@ -1,5 +1,295 @@
 [
     {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-345",
+        "id": "CVE-2024-47867",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-8c87-gvhj-xm8m"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability is a **lack of integrity check** on the downloaded FRP client, which could potentially allow attackers to introduce malicious code. If an attacker gains access to the remote URL from which the FRP client is downloaded, they could modify the binary without detection, as the Gradio server does not verify the file's checksum or signature.  Any users utilizing the Gradio server's sharing mechanism that downloads the FRP client could be affected by this vulnerability, especially those relying on the executable binary for secure data tunneling. There is no direct workaround for this issue without upgrading. However, users can manually validate the integrity of the downloaded FRP client by implementing checksum or signature verification in their own environment to ensure the binary hasn't been tampered with."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-200",
+        "id": "CVE-2024-47868",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-4q3c-cj7g-jcwf"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This is a **data validation vulnerability** affecting several Gradio components, which allows arbitrary file leaks through the post-processing step. Attackers can exploit these components by crafting requests that bypass expected input constraints. This issue could lead to sensitive files being exposed to unauthorized users, especially when combined with other vulnerabilities, such as issue TOB-GRADIO-15. The components most at risk are those that return or handle file data. Vulnerable Components: 1. **String to FileData:** DownloadButton, Audio, ImageEditor, Video, Model3D, File, UploadButton. 2. **Complex data to FileData:** Chatbot, MultimodalTextbox. 3. **Direct file read in preprocess:** Code. 4. **Dictionary converted to FileData:** ParamViewer, Dataset. Exploit Scenarios: 1. A developer creates a Dropdown list that passes values to a DownloadButton. An attacker bypasses the allowed inputs, sends an arbitrary file path (like `/etc/passwd`), and downloads sensitive files. 2. An attacker crafts a malicious payload in a ParamViewer component, leaking sensitive files from a server through the arbitrary file leak. This issue has been resolved in `gradio>5.0`. Upgrading to the latest version will mitigate this vulnerability. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-203",
+        "id": "CVE-2024-47869",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-j757-pf57-f8r4"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability involves a **timing attack** in the way Gradio compares hashes for the `analytics_dashboard` function. Since the comparison is not done in constant time, an attacker could exploit this by measuring the response time of different requests to infer the correct hash byte-by-byte. This can lead to unauthorized access to the analytics dashboard, especially if the attacker can repeatedly query the system with different keys. Users are advised to upgrade to `gradio>4.44` to mitigate this issue. To mitigate the risk before applying the patch, developers can manually patch the `analytics_dashboard` dashboard to use a **constant-time comparison** function for comparing sensitive values, such as hashes. Alternatively, access to the analytics dashboard can be disabled."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-362",
+        "id": "CVE-2024-47870",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-xh2x-3mrm-fwqm"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability involves a **race condition** in the `update_root_in_config` function, allowing an attacker to modify the `root` URL used by the Gradio frontend to communicate with the backend. By exploiting this flaw, an attacker can redirect user traffic to a malicious server. This could lead to the interception of sensitive data such as authentication credentials or uploaded files. This impacts all users who connect to a Gradio server, especially those exposed to the internet, where malicious actors could exploit this race condition. Users are advised to upgrade to `gradio>=5` to address this issue. There are no known workarounds for this issue."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-311",
+        "id": "CVE-2024-47871",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-279j-x4gx-hfrh"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability involves **insecure communication** between the FRP (Fast Reverse Proxy) client and server when Gradio's `share=True` option is used. HTTPS is not enforced on the connection, allowing attackers to intercept and read files uploaded to the Gradio server, as well as modify responses or data sent between the client and server. This impacts users who are sharing Gradio demos publicly over the internet using `share=True` without proper encryption, exposing sensitive data to potential eavesdroppers. Users are advised to upgrade to `gradio>=5` to address this issue. As a workaround, users can avoid using `share=True` in production environments and instead host their Gradio applications on servers with HTTPS enabled to ensure secure communication."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-47872",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-gvv6-33j7-884g"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability involves **Cross-Site Scripting (XSS)** on any Gradio server that allows file uploads. Authenticated users can upload files such as HTML, JavaScript, or SVG files containing malicious scripts. When other users download or view these files, the scripts will execute in their browser, allowing attackers to perform unauthorized actions or steal sensitive information from their sessions. This impacts any Gradio server that allows file uploads, particularly those using components that process or display user-uploaded files. Users are advised to upgrade to `gradio>=5` to address this issue. As a workaround, users can restrict the types of files that can be uploaded to the Gradio server by limiting uploads to non-executable file types such as images or text. Additionally, developers can implement server-side validation to sanitize uploaded files, ensuring that HTML, JavaScript, and SVG files are properly handled or rejected before being stored or displayed to users."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9817",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://vuldb.com/?id.279969",
+            "https://vuldb.com/?ctiid.279969",
+            "https://vuldb.com/?submit.421134",
+            "https://github.com/RonenWen/cve/blob/main/sql6-update-name.md",
+            "https://code-projects.org/"
+        ],
+        "summary": "A vulnerability was found in code-projects Blood Bank System 1.0. It has been classified as critical. This affects an unknown part of the file /update.php. The manipulation of the argument name leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-10T23:15:00",
+        "Published": "2024-10-10T23:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9818",
+        "impact": {},
+        "last-modified": "2024-10-10T23:15:00",
+        "references": [
+            "https://vuldb.com/?id.279972",
+            "https://vuldb.com/?ctiid.279972",
+            "https://vuldb.com/?submit.421548",
+            "https://github.com/fezzyang/CVE_report/blob/main/online-veterinary-appointment-system/SQLi.md",
+            "https://www.sourcecodester.com/"
+        ],
+        "summary": "A vulnerability classified as critical has been found in SourceCodester Online Veterinary Appointment System 1.0. Affected is an unknown function of the file /admin/categories/manage_category.php. The manipulation of the argument id leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-285",
+        "id": "CVE-2024-47084",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-3c67-5hwx-f6wx"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability is related to **CORS origin validation**, where the Gradio server fails to validate the request origin when a cookie is present. This allows an attacker\u2019s website to make unauthorized requests to a local Gradio server. Potentially, attackers can upload files, steal authentication tokens, and access user data if the victim visits a malicious website while logged into Gradio. This impacts users who have deployed Gradio locally and use basic authentication. Users are advised to upgrade to `gradio>4.44` to address this issue. As a workaround, users can manually enforce stricter CORS origin validation by modifying the `CustomCORSMiddleware` class in their local Gradio server code. Specifically, they can bypass the condition that skips CORS validation for requests containing cookies to prevent potential exploitation."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-47164",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-77xq-6g77-h274"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability relates to the **bypass of directory traversal checks** within the `is_in_or_equal` function. This function, intended to check if a file resides within a given directory, can be bypassed with certain payloads that manipulate file paths using `..` (parent directory) sequences. Attackers could potentially access restricted files if they are able to exploit this flaw, although the difficulty is high. This primarily impacts users relying on Gradio\u2019s blocklist or directory access validation, particularly when handling file uploads. Users are advised to upgrade to `gradio>=5.0` to address this issue. As a workaround, users can manually sanitize and normalize file paths in their Gradio deployment before passing them to the `is_in_or_equal` function. Ensuring that all file paths are properly resolved and absolute can help mitigate the bypass vulnerabilities caused by the improper handling of `..` sequences or malformed paths."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-285",
+        "id": "CVE-2024-47165",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-89v2-pqfv-c5r9"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability relates to **CORS origin validation accepting a null origin**. When a Gradio server is deployed locally, the `localhost_aliases` variable includes \"null\" as a valid origin. This allows attackers to make unauthorized requests from sandboxed iframes or other sources with a null origin, potentially leading to data theft, such as user authentication tokens or uploaded files. This impacts users running Gradio locally, especially those using basic authentication. Users are advised to upgrade to `gradio>=5.0` to address this issue. As a workaround, users can manually modify the `localhost_aliases` list in their local Gradio deployment to exclude \"null\" as a valid origin. By removing this value, the Gradio server will no longer accept requests from sandboxed iframes or sources with a null origin, mitigating the potential for exploitation."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-47166",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-37qc-qgx6-9xjv"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability involves a **one-level read path traversal** in the `/custom_component` endpoint. Attackers can exploit this flaw to access and leak source code from custom Gradio components by manipulating the file path in the request. Although the traversal is limited to a single directory level, it could expose proprietary or sensitive code that developers intended to keep private. This impacts users who have developed custom Gradio components and are hosting them on publicly accessible servers. Users are advised to upgrade to `gradio>=4.44` to address this issue. As a workaround, developers can sanitize the file paths and ensure that components are not stored in publicly accessible directories."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-47167",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-576c-3j53-r9jj"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability relates to **Server-Side Request Forgery (SSRF)** in the `/queue/join` endpoint. Gradio\u2019s `async_save_url_to_cache` function allows attackers to force the Gradio server to send HTTP requests to user-controlled URLs. This could enable attackers to target internal servers or services within a local network and possibly exfiltrate data or cause unwanted internal requests. Additionally, the content from these URLs is stored locally, making it easier for attackers to upload potentially malicious files to the server. This impacts users deploying Gradio servers that use components like the Video component which involve URL fetching. Users are advised to upgrade to `gradio>=5` to address this issue.  As a workaround, users can disable or heavily restrict URL-based inputs in their Gradio applications to trusted domains only. Additionally, implementing stricter URL validation (such as allowinglist-based validation) and ensuring that local or internal network addresses cannot be requested via the `/queue/join` endpoint can help mitigate the risk of SSRF attacks."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "security-advisories@github.com",
+        "cvss": null,
+        "cwe": "CWE-670",
+        "id": "CVE-2024-47168",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://github.com/gradio-app/gradio/security/advisories/GHSA-hm3c-93pg-4cxw"
+        ],
+        "summary": "Gradio is an open-source Python package designed for quick prototyping. This vulnerability involves data exposure due to the enable_monitoring flag not properly disabling monitoring when set to False. Even when monitoring is supposedly disabled, an attacker or unauthorized user can still access the monitoring dashboard by directly requesting the /monitoring endpoint. This means that sensitive application analytics may still be exposed, particularly in environments where monitoring is expected to be disabled. Users who set enable_monitoring=False to prevent unauthorized access to monitoring data are impacted. Users are advised to upgrade to gradio>=4.44 to address this issue. There are no known workarounds for this vulnerability."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "product-cna@github.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-9487",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://docs.github.com/en/enterprise-server@3.11/admin/release-notes#3.11.16",
+            "https://docs.github.com/en/enterprise-server@3.12/admin/release-notes#3.12.10",
+            "https://docs.github.com/en/enterprise-server@3.13/admin/release-notes#3.13.5",
+            "https://docs.github.com/en/enterprise-server@3.14/admin/release-notes#3.14.2"
+        ],
+        "summary": "An improper verification of cryptographic signature vulnerability was identified in GitHub Enterprise Server that allowed SAML SSO authentication to be bypassed resulting in unauthorized provisioning of users and access to the instance. Exploitation required the encrypted assertions feature to be enabled, and the attacker would require direct network access as well as a signed SAML response or metadata document. This vulnerability affected all versions of GitHub Enterprise Server prior to 3.15 and was fixed in versions 3.11.16, 3.12.10, 3.13.5, and 3.14.2. This vulnerability was reported via the GitHub Bug Bounty program."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9814",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://vuldb.com/?id.279966",
+            "https://vuldb.com/?ctiid.279966",
+            "https://vuldb.com/?submit.418905",
+            "https://github.com/ppp-src/CVE/issues/11"
+        ],
+        "summary": "A vulnerability, which was classified as critical, was found in Codezips Pharmacy Management System 1.0. Affected is an unknown function of the file product/update.php. The manipulation of the argument id leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-9815",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://vuldb.com/?id.279967",
+            "https://vuldb.com/?ctiid.279967",
+            "https://vuldb.com/?submit.418917",
+            "https://github.com/ppp-src/CVE/issues/12"
+        ],
+        "summary": "A vulnerability has been found in Codezips Tourist Management System 1.0 and classified as critical. Affected by this vulnerability is an unknown functionality of the file /admin/create-package.php. The manipulation of the argument packageimage leads to unrestricted upload. The attack can be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-10T22:15:00",
+        "Published": "2024-10-10T22:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-9816",
+        "impact": {},
+        "last-modified": "2024-10-10T22:15:00",
+        "references": [
+            "https://vuldb.com/?id.279968",
+            "https://vuldb.com/?ctiid.279968",
+            "https://vuldb.com/?submit.418918",
+            "https://github.com/ppp-src/CVE/issues/13"
+        ],
+        "summary": "A vulnerability was found in Codezips Tourist Management System 1.0 and classified as critical. Affected by this issue is some unknown functionality of the file /admin/change-image.php. The manipulation of the argument packageimage leads to unrestricted upload. The attack may be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
         "Modified": "2024-10-10T21:51:00",
         "Published": "2024-10-10T10:15:00",
         "access": {},
@@ -1311,309 +1601,5 @@
             "https://www.cisa.gov/news-events/ics-advisories/icsa-24-284-21"
         ],
         "summary": "Delta Electronics CNCSoft-G2 lacks proper validation of user-supplied data, which can result in a read past the end of an allocated buffer. An attacker can manipulate users to visit a malicious page or file to leverage this vulnerability to execute code in the context of the current process."
-    },
-    {
-        "Modified": "2024-10-10T18:15:00",
-        "Published": "2024-10-10T18:15:00",
-        "access": {},
-        "assigner": "ics-cert@hq.dhs.gov",
-        "cvss": null,
-        "cwe": "CWE-457",
-        "id": "CVE-2024-47966",
-        "impact": {},
-        "last-modified": "2024-10-10T18:15:00",
-        "references": [
-            "https://www.cisa.gov/news-events/ics-advisories/icsa-24-284-21"
-        ],
-        "summary": "Delta Electronics CNCSoft-G2 lacks proper initialization of memory prior to accessing it. An attacker can manipulate users to visit a malicious page or file to leverage this vulnerability to execute code in the context of the current process."
-    },
-    {
-        "Modified": "2024-10-10T18:15:00",
-        "Published": "2024-10-10T18:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-9804",
-        "impact": {},
-        "last-modified": "2024-10-10T18:15:00",
-        "references": [
-            "https://vuldb.com/?id.279952",
-            "https://vuldb.com/?ctiid.279952",
-            "https://vuldb.com/?submit.418618",
-            "https://github.com/sternstundes/cve/blob/main/sql5-campdetails.md",
-            "https://code-projects.org/"
-        ],
-        "summary": "A vulnerability was found in code-projects Blood Bank System 1.0. It has been declared as critical. This vulnerability affects unknown code of the file /admin/campsdetails.php. The manipulation of the argument hospital leads to sql injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used. Other parameters might be affected as well."
-    },
-    {
-        "Modified": "2024-10-10T18:15:00",
-        "Published": "2024-10-10T18:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-9805",
-        "impact": {},
-        "last-modified": "2024-10-10T18:15:00",
-        "references": [
-            "https://vuldb.com/?id.279953",
-            "https://vuldb.com/?ctiid.279953",
-            "https://vuldb.com/?submit.418619",
-            "https://github.com/sternstundes/cve/blob/main/xss5.md",
-            "https://code-projects.org/"
-        ],
-        "summary": "A vulnerability was found in code-projects Blood Bank System 1.0. It has been rated as problematic. This issue affects some unknown processing of the file /admin/campsdetails.php. The manipulation of the argument hospital/address/city/contact leads to cross site scripting. The attack may be initiated remotely. The exploit has been disclosed to the public and may be used. The initial researcher advisory only mentions the parameter \"hospital\"."
-    },
-    {
-        "Modified": "2024-10-10T18:07:00",
-        "Published": "2024-10-07T03:15:00",
-        "access": {},
-        "assigner": "security@mediatek.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20095",
-        "impact": {},
-        "last-modified": "2024-10-10T18:07:00",
-        "references": [
-            "https://corp.mediatek.com/product-security-bulletin/October-2024"
-        ],
-        "summary": "In m4u, there is a possible out of bounds read due to a missing bounds check. This could lead to local information disclosure with System execution privileges needed. User interaction is not needed for exploitation. Patch ID: ALPS08996894; Issue ID: MSV-1636."
-    },
-    {
-        "Modified": "2024-10-10T18:07:00",
-        "Published": "2024-10-07T03:15:00",
-        "access": {},
-        "assigner": "security@mediatek.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20096",
-        "impact": {},
-        "last-modified": "2024-10-10T18:07:00",
-        "references": [
-            "https://corp.mediatek.com/product-security-bulletin/October-2024"
-        ],
-        "summary": "In m4u, there is a possible out of bounds read due to a missing bounds check. This could lead to local information disclosure with System execution privileges needed. User interaction is not needed for exploitation. Patch ID: ALPS08996900; Issue ID: MSV-1635."
-    },
-    {
-        "Modified": "2024-10-10T18:07:00",
-        "Published": "2024-10-07T03:15:00",
-        "access": {},
-        "assigner": "security@mediatek.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20097",
-        "impact": {},
-        "last-modified": "2024-10-10T18:07:00",
-        "references": [
-            "https://corp.mediatek.com/product-security-bulletin/October-2024"
-        ],
-        "summary": "In vdec, there is a possible out of bounds read due to a missing bounds check. This could lead to local information disclosure with System execution privileges needed. User interaction is not needed for exploitation. Patch ID: ALPS09028313; Issue ID: MSV-1630."
-    },
-    {
-        "Modified": "2024-10-10T18:06:00",
-        "Published": "2024-10-07T03:15:00",
-        "access": {},
-        "assigner": "security@mediatek.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20091",
-        "impact": {},
-        "last-modified": "2024-10-10T18:06:00",
-        "references": [
-            "https://corp.mediatek.com/product-security-bulletin/October-2024"
-        ],
-        "summary": "In vdec, there is a possible out of bounds read due to a missing bounds check. This could lead to local information disclosure with System execution privileges needed. User interaction is not needed for exploitation. Patch ID: ALPS09028313; Issue ID: MSV-1701."
-    },
-    {
-        "Modified": "2024-10-10T18:06:00",
-        "Published": "2024-10-07T03:15:00",
-        "access": {},
-        "assigner": "security@mediatek.com",
-        "cvss": null,
-        "cwe": "CWE-125",
-        "id": "CVE-2024-20093",
-        "impact": {},
-        "last-modified": "2024-10-10T18:06:00",
-        "references": [
-            "https://corp.mediatek.com/product-security-bulletin/October-2024"
-        ],
-        "summary": "In vdec, there is a possible out of bounds read due to a missing bounds check. This could lead to local information disclosure with System execution privileges needed. User interaction is not needed for exploitation. Patch ID: ALPS09028313; Issue ID: MSV-1699."
-    },
-    {
-        "Modified": "2024-10-10T18:02:00",
-        "Published": "2024-09-04T19:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-362",
-        "id": "CVE-2024-44954",
-        "impact": {},
-        "last-modified": "2024-10-10T18:02:00",
-        "references": [
-            "https://git.kernel.org/stable/c/643293b68fbb6c03f5e907736498da17d43f0d81",
-            "https://git.kernel.org/stable/c/40f3d5cb0e0cbf7fa697913a27d5d361373bdcf5",
-            "https://git.kernel.org/stable/c/e7e7d2b180d8f297cea6db43ea72402fd33e1a29",
-            "https://git.kernel.org/stable/c/a54da4b787dcac60b598da69c9c0072812b8282d",
-            "https://git.kernel.org/stable/c/c80f454a805443c274394b1db0d1ebf477abd94e",
-            "https://git.kernel.org/stable/c/535df7f896a568a8a1564114eaea49d002cb1747",
-            "https://git.kernel.org/stable/c/51d87f11dd199bbc6a85982b088ff27bde53b48a",
-            "https://git.kernel.org/stable/c/15b7a03205b31bc5623378c190d22b7ff60026f1"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nALSA: line6: Fix racy access to midibuf\n\nThere can be concurrent accesses to line6 midibuf from both the URB\ncompletion callback and the rawmidi API access.  This could be a cause\nof KMSAN warning triggered by syzkaller below (so put as reported-by\nhere).\n\nThis patch protects the midibuf call of the former code path with a\nspinlock for avoiding the possible races."
-    },
-    {
-        "Modified": "2024-10-10T17:57:00",
-        "Published": "2024-09-04T19:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-476",
-        "id": "CVE-2024-44955",
-        "impact": {},
-        "last-modified": "2024-10-10T17:57:00",
-        "references": [
-            "https://git.kernel.org/stable/c/39b217193729aa45eded8de24d9245468a0c0263",
-            "https://git.kernel.org/stable/c/fcf6a49d79923a234844b8efe830a61f3f0584e4"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amd/display: Don't refer to dc_sink in is_dsc_need_re_compute\n\n[Why]\nWhen unplug one of monitors connected after mst hub, encounter null pointer dereference.\n\nIt's due to dc_sink get released immediately in early_unregister() or detect_ctx(). When\ncommit new state which directly referring to info stored in dc_sink will cause null pointer\ndereference.\n\n[how]\nRemove redundant checking condition. Relevant condition should already be covered by checking\nif dsc_aux is null or not. Also reset dsc_aux to NULL when the connector is disconnected."
-    },
-    {
-        "Modified": "2024-10-10T17:56:00",
-        "Published": "2024-09-04T19:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-44958",
-        "impact": {},
-        "last-modified": "2024-10-10T17:56:00",
-        "references": [
-            "https://git.kernel.org/stable/c/2a3548c7ef2e135aee40e7e5e44e7d11b893e7c4",
-            "https://git.kernel.org/stable/c/2cf7665efe451e48d27953e6b5bc627d518c902b",
-            "https://git.kernel.org/stable/c/65727331b60197b742089855ac09464c22b96f66",
-            "https://git.kernel.org/stable/c/d0c87a3c6be10a57aa3463c32c3fc6b2a47c3dab",
-            "https://git.kernel.org/stable/c/e22f910a26cc2a3ac9c66b8e935ef2a7dd881117"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsched/smt: Fix unbalance sched_smt_present dec/inc\n\nI got the following warn report while doing stress test:\n\njump label: negative count!\nWARNING: CPU: 3 PID: 38 at kernel/jump_label.c:263 static_key_slow_try_dec+0x9d/0xb0\nCall Trace:\n <TASK>\n __static_key_slow_dec_cpuslocked+0x16/0x70\n sched_cpu_deactivate+0x26e/0x2a0\n cpuhp_invoke_callback+0x3ad/0x10d0\n cpuhp_thread_fun+0x3f5/0x680\n smpboot_thread_fn+0x56d/0x8d0\n kthread+0x309/0x400\n ret_from_fork+0x41/0x70\n ret_from_fork_asm+0x1b/0x30\n </TASK>\n\nBecause when cpuset_cpu_inactive() fails in sched_cpu_deactivate(),\nthe cpu offline failed, but sched_smt_present is decremented before\ncalling sched_cpu_deactivate(), it leads to unbalanced dec/inc, so\nfix it by incrementing sched_smt_present in the error path."
-    },
-    {
-        "Modified": "2024-10-10T17:54:00",
-        "Published": "2024-09-04T19:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-44959",
-        "impact": {},
-        "last-modified": "2024-10-10T17:54:00",
-        "references": [
-            "https://git.kernel.org/stable/c/726f4c241e17be75a9cf6870d80cd7479dc89e8f",
-            "https://git.kernel.org/stable/c/061da60716ce0cde99f62f31937b81e1c03acef6",
-            "https://git.kernel.org/stable/c/0b6743bd60a56a701070b89fb80c327a44b7b3e2"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ntracefs: Use generic inode RCU for synchronizing freeing\n\nWith structure layout randomization enabled for 'struct inode' we need to\navoid overlapping any of the RCU-used / initialized-only-once members,\ne.g. i_lru or i_sb_list to not corrupt related list traversals when making\nuse of the rcu_head.\n\nFor an unlucky structure layout of 'struct inode' we may end up with the\nfollowing splat when running the ftrace selftests:\n\n[<...>] list_del corruption, ffff888103ee2cb0->next (tracefs_inode_cache+0x0/0x4e0 [slab object]) is NULL (prev is tracefs_inode_cache+0x78/0x4e0 [slab object])\n[<...>] ------------[ cut here ]------------\n[<...>] kernel BUG at lib/list_debug.c:54!\n[<...>] invalid opcode: 0000 [#1] PREEMPT SMP KASAN\n[<...>] CPU: 3 PID: 2550 Comm: mount Tainted: G                 N  6.8.12-grsec+ #122 ed2f536ca62f28b087b90e3cc906a8d25b3ddc65\n[<...>] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-2 04/01/2014\n[<...>] RIP: 0010:[<ffffffff84656018>] __list_del_entry_valid_or_report+0x138/0x3e0\n[<...>] Code: 48 b8 99 fb 65 f2 ff ff ff ff e9 03 5c d9 fc cc 48 b8 99 fb 65 f2 ff ff ff ff e9 33 5a d9 fc cc 48 b8 99 fb 65 f2 ff ff ff ff <0f> 0b 4c 89 e9 48 89 ea 48 89 ee 48 c7 c7 60 8f dd 89 31 c0 e8 2f\n[<...>] RSP: 0018:fffffe80416afaf0 EFLAGS: 00010283\n[<...>] RAX: 0000000000000098 RBX: ffff888103ee2cb0 RCX: 0000000000000000\n[<...>] RDX: ffffffff84655fe8 RSI: ffffffff89dd8b60 RDI: 0000000000000001\n[<...>] RBP: ffff888103ee2cb0 R08: 0000000000000001 R09: fffffbd0082d5f25\n[<...>] R10: fffffe80416af92f R11: 0000000000000001 R12: fdf99c16731d9b6d\n[<...>] R13: 0000000000000000 R14: ffff88819ad4b8b8 R15: 0000000000000000\n[<...>] RBX: tracefs_inode_cache+0x0/0x4e0 [slab object]\n[<...>] RDX: __list_del_entry_valid_or_report+0x108/0x3e0\n[<...>] RSI: __func__.47+0x4340/0x4400\n[<...>] RBP: tracefs_inode_cache+0x0/0x4e0 [slab object]\n[<...>] RSP: process kstack fffffe80416afaf0+0x7af0/0x8000 [mount 2550 2550]\n[<...>] R09: kasan shadow of process kstack fffffe80416af928+0x7928/0x8000 [mount 2550 2550]\n[<...>] R10: process kstack fffffe80416af92f+0x792f/0x8000 [mount 2550 2550]\n[<...>] R14: tracefs_inode_cache+0x78/0x4e0 [slab object]\n[<...>] FS:  00006dcb380c1840(0000) GS:ffff8881e0600000(0000) knlGS:0000000000000000\n[<...>] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[<...>] CR2: 000076ab72b30e84 CR3: 000000000b088004 CR4: 0000000000360ef0 shadow CR4: 0000000000360ef0\n[<...>] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000\n[<...>] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400\n[<...>] ASID: 0003\n[<...>] Stack:\n[<...>]  ffffffff818a2315 00000000f5c856ee ffffffff896f1840 ffff888103ee2cb0\n[<...>]  ffff88812b6b9750 0000000079d714b6 fffffbfff1e9280b ffffffff8f49405f\n[<...>]  0000000000000001 0000000000000000 ffff888104457280 ffffffff8248b392\n[<...>] Call Trace:\n[<...>]  <TASK>\n[<...>]  [<ffffffff818a2315>] ? lock_release+0x175/0x380 fffffe80416afaf0\n[<...>]  [<ffffffff8248b392>] list_lru_del+0x152/0x740 fffffe80416afb48\n[<...>]  [<ffffffff8248ba93>] list_lru_del_obj+0x113/0x280 fffffe80416afb88\n[<...>]  [<ffffffff8940fd19>] ? _atomic_dec_and_lock+0x119/0x200 fffffe80416afb90\n[<...>]  [<ffffffff8295b244>] iput_final+0x1c4/0x9a0 fffffe80416afbb8\n[<...>]  [<ffffffff8293a52b>] dentry_unlink_inode+0x44b/0xaa0 fffffe80416afbf8\n[<...>]  [<ffffffff8293fefc>] __dentry_kill+0x23c/0xf00 fffffe80416afc40\n[<...>]  [<ffffffff8953a85f>] ? __this_cpu_preempt_check+0x1f/0xa0 fffffe80416afc48\n[<...>]  [<ffffffff82949ce5>] ? shrink_dentry_list+0x1c5/0x760 fffffe80416afc70\n[<...>]  [<ffffffff82949b71>] ? shrink_dentry_list+0x51/0x760 fffffe80416afc78\n[<...>]  [<ffffffff82949da8>] shrink_dentry_list+0x288/0x760 fffffe80416afc80\n[<...>]  [<ffffffff8294ae75>] shrink_dcache_sb+0x155/0x420 fffffe80416afcc8\n[<...>]  [<ffffffff8953a7c3>] ? debug_smp_processor_id+0x23/0xa0 fffffe80416afce0\n[<...>]  [<ffffffff8294ad20>] ? do_one_tre\n---truncated---"
-    },
-    {
-        "Modified": "2024-10-10T17:50:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-44976",
-        "impact": {},
-        "last-modified": "2024-10-10T17:50:00",
-        "references": [
-            "https://git.kernel.org/stable/c/709e4c8f78e156ab332297bdd87527ec3da4e2d4",
-            "https://git.kernel.org/stable/c/822c8020aebcf5804a143b891e34f29873fee5e2"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nata: pata_macio: Fix DMA table overflow\n\nKolbj\u00f8rn and Jon\u00e1\u0161 reported that their 32-bit PowerMacs were crashing\nin pata-macio since commit 09fe2bfa6b83 (\"ata: pata_macio: Fix\nmax_segment_size with PAGE_SIZE == 64K\").\n\nFor example:\n\n  kernel BUG at drivers/ata/pata_macio.c:544!\n  Oops: Exception in kernel mode, sig: 5 [#1]\n  BE PAGE_SIZE=4K MMU=Hash SMP NR_CPUS=2 DEBUG_PAGEALLOC PowerMac\n  ...\n  NIP pata_macio_qc_prep+0xf4/0x190\n  LR  pata_macio_qc_prep+0xfc/0x190\n  Call Trace:\n    0xc1421660 (unreliable)\n    ata_qc_issue+0x14c/0x2d4\n    __ata_scsi_queuecmd+0x200/0x53c\n    ata_scsi_queuecmd+0x50/0xe0\n    scsi_queue_rq+0x788/0xb1c\n    __blk_mq_issue_directly+0x58/0xf4\n    blk_mq_plug_issue_direct+0x8c/0x1b4\n    blk_mq_flush_plug_list.part.0+0x584/0x5e0\n    __blk_flush_plug+0xf8/0x194\n    __submit_bio+0x1b8/0x2e0\n    submit_bio_noacct_nocheck+0x230/0x304\n    btrfs_work_helper+0x200/0x338\n    process_one_work+0x1a8/0x338\n    worker_thread+0x364/0x4c0\n    kthread+0x100/0x104\n    start_kernel_thread+0x10/0x14\n\nThat commit increased max_segment_size to 64KB, with the justification\nthat the SCSI core was already using that size when PAGE_SIZE == 64KB,\nand that there was existing logic to split over-sized requests.\n\nHowever with a sufficiently large request, the splitting logic causes\neach sg to be split into two commands in the DMA table, leading to\noverflow of the DMA table, triggering the BUG_ON().\n\nWith default settings the bug doesn't trigger, because the request size\nis limited by max_sectors_kb == 1280, however max_sectors_kb can be\nincreased, and apparently some distros do that by default using udev\nrules.\n\nFix the bug for 4KB kernels by reverting to the old max_segment_size.\n\nFor 64KB kernels the sg_tablesize needs to be halved, to allow for the\npossibility that each sg will be split into two."
-    },
-    {
-        "Modified": "2024-10-10T17:47:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2024-44977",
-        "impact": {},
-        "last-modified": "2024-10-10T17:47:00",
-        "references": [
-            "https://git.kernel.org/stable/c/5ab8793b9a6cc059f503cbe6fe596f80765e0f19",
-            "https://git.kernel.org/stable/c/50553ea7cbd3344fbf40afb065f6a2d38171c1ad",
-            "https://git.kernel.org/stable/c/e562415248f402203e7fb6d8c38c1b32fa99220f",
-            "https://git.kernel.org/stable/c/c99769bceab4ecb6a067b9af11f9db281eea3e2a"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdgpu: Validate TA binary size\n\nAdd TA binary size validation to avoid OOB write.\n\n(cherry picked from commit c0a04e3570d72aaf090962156ad085e37c62e442)"
-    },
-    {
-        "Modified": "2024-10-10T17:44:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "CWE-401",
-        "id": "CVE-2024-44979",
-        "impact": {},
-        "last-modified": "2024-10-10T17:44:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b09ef3b762a7fc641fb2f89afd3ebdb65b8ba1b9",
-            "https://git.kernel.org/stable/c/a6f78359ac75f24cac3c1bdd753c49c1877bcd82"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/xe: Fix missing workqueue destroy in xe_gt_pagefault\n\nOn driver reload we never free up the memory for the pagefault and\naccess counter workqueues. Add those destroy calls here.\n\n(cherry picked from commit 7586fc52b14e0b8edd0d1f8a434e0de2078b7b2b)"
-    },
-    {
-        "Modified": "2024-10-10T17:42:00",
-        "Published": "2024-09-04T20:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-44980",
-        "impact": {},
-        "last-modified": "2024-10-10T17:42:00",
-        "references": [
-            "https://git.kernel.org/stable/c/f7ecdd9853dd9f34e7cdfdadfb70b8f40644ebb4",
-            "https://git.kernel.org/stable/c/f4b2a0ae1a31fd3d1b5ca18ee08319b479cf9b5f"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/xe: Fix opregion leak\n\nBeing part o the display, ideally the setup and cleanup would be done by\ndisplay itself. However this is a bigger refactor that needs to be done\non both i915 and xe. For now, just fix the leak:\n\nunreferenced object 0xffff8881a0300008 (size 192):\n  comm \"modprobe\", pid 4354, jiffies 4295647021\n  hex dump (first 32 bytes):\n    00 00 87 27 81 88 ff ff 18 80 9b 00 00 c9 ff ff  ...'............\n    18 81 9b 00 00 c9 ff ff 00 00 00 00 00 00 00 00  ................\n  backtrace (crc 99260e31):\n    [<ffffffff823ce65b>] kmemleak_alloc+0x4b/0x80\n    [<ffffffff81493be2>] kmalloc_trace_noprof+0x312/0x3d0\n    [<ffffffffa1345679>] intel_opregion_setup+0x89/0x700 [xe]\n    [<ffffffffa125bfaf>] xe_display_init_noirq+0x2f/0x90 [xe]\n    [<ffffffffa1199ec3>] xe_device_probe+0x7a3/0xbf0 [xe]\n    [<ffffffffa11f3713>] xe_pci_probe+0x333/0x5b0 [xe]\n    [<ffffffff81af6be8>] local_pci_probe+0x48/0xb0\n    [<ffffffff81af8778>] pci_device_probe+0xc8/0x280\n    [<ffffffff81d09048>] really_probe+0xf8/0x390\n    [<ffffffff81d0937a>] __driver_probe_device+0x8a/0x170\n    [<ffffffff81d09503>] driver_probe_device+0x23/0xb0\n    [<ffffffff81d097b7>] __driver_attach+0xc7/0x190\n    [<ffffffff81d0628d>] bus_for_each_dev+0x7d/0xd0\n    [<ffffffff81d0851e>] driver_attach+0x1e/0x30\n    [<ffffffff81d07ac7>] bus_add_driver+0x117/0x250\n\n(cherry picked from commit 6f4e43a2f771b737d991142ec4f6d4b7ff31fbb4)"
-    },
-    {
-        "Modified": "2024-10-10T17:25:00",
-        "Published": "2024-07-29T16:15:00",
-        "access": {},
-        "assigner": "security-advisories@github.com",
-        "cvss": null,
-        "cwe": "CWE-427",
-        "id": "CVE-2024-41817",
-        "impact": {},
-        "last-modified": "2024-10-10T17:25:00",
-        "references": [
-            "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-8rxc-922v-phg8",
-            "https://github.com/ImageMagick/ImageMagick/commit/6526a2b28510ead6a3e14de711bb991ad9abff38",
-            "https://github.com/ImageMagick/ImageMagick/blob/3b22378a23d59d7517c43b65b1822f023df357a0/app-image/AppRun#L11-L14"
-        ],
-        "summary": "ImageMagick is a free and open-source software suite, used for editing and manipulating digital images. The `AppImage` version `ImageMagick` might use an empty path when setting `MAGICK_CONFIGURE_PATH` and `LD_LIBRARY_PATH` environment variables while executing, which might lead to arbitrary code execution by loading malicious configuration files or shared libraries in the current working directory while executing `ImageMagick`. The vulnerability is fixed in 7.11-36."
-    },
-    {
-        "Modified": "2024-10-10T17:15:00",
-        "Published": "2024-10-10T17:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-9797",
-        "impact": {},
-        "last-modified": "2024-10-10T17:15:00",
-        "references": [
-            "https://vuldb.com/?id.279948",
-            "https://vuldb.com/?ctiid.279948",
-            "https://vuldb.com/?submit.417586",
-            "https://github.com/siyuancn-hub/cve/blob/main/sql4-user.md",
-            "https://code-projects.org/"
-        ],
-        "summary": "A vulnerability, which was classified as critical, was found in code-projects Blood Bank System 1.0. Affected is an unknown function of the file register.php. The manipulation of the argument user leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used."
     }
 ]
