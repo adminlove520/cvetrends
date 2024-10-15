@@ -1,5 +1,335 @@
 [
     {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "info@cert.vde.com",
+        "cvss": null,
+        "cwe": "CWE-20",
+        "id": "CVE-2024-45271",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://cert.vde.com/en/advisories/VDE-2024-056",
+            "https://cert.vde.com/en/advisories/VDE-2024-066"
+        ],
+        "summary": "An unauthenticated local attacker can gain admin privileges by deploying a config file due to improper input validation."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "info@cert.vde.com",
+        "cvss": null,
+        "cwe": "CWE-1391",
+        "id": "CVE-2024-45272",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://cert.vde.com/en/advisories/VDE-2024-068",
+            "https://cert.vde.com/en/advisories/VDE-2024-069"
+        ],
+        "summary": "An unauthenticated remote attacker can perform a brute-force attack on the credentials of the remote service portal with a high chance of success, resulting in connection lost."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "info@cert.vde.com",
+        "cvss": null,
+        "cwe": "CWE-261",
+        "id": "CVE-2024-45273",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://cert.vde.com/en/advisories/VDE-2024-056",
+            "https://cert.vde.com/en/advisories/VDE-2024-066",
+            "https://cert.vde.com/en/advisories/VDE-2024-068",
+            "https://cert.vde.com/en/advisories/VDE-2024-069"
+        ],
+        "summary": "An unauthenticated local attacker can decrypt the devices config file and therefore compromise the device due to a weak implementation of the encryption used."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "info@cert.vde.com",
+        "cvss": null,
+        "cwe": "CWE-306",
+        "id": "CVE-2024-45274",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://cert.vde.com/en/advisories/VDE-2024-056",
+            "https://cert.vde.com/en/advisories/VDE-2024-066"
+        ],
+        "summary": "An unauthenticated remote attacker can execute OS commands via UDP on the device due to missing authentication."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "info@cert.vde.com",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2024-45275",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://cert.vde.com/en/advisories/VDE-2024-056",
+            "https://cert.vde.com/en/advisories/VDE-2024-066"
+        ],
+        "summary": "The devices contain two hard coded user accounts with hardcoded passwords that allow an unauthenticated remote attacker for full control of the affected devices."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "info@cert.vde.com",
+        "cvss": null,
+        "cwe": "CWE-552",
+        "id": "CVE-2024-45276",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://cert.vde.com/en/advisories/VDE-2024-056",
+            "https://cert.vde.com/en/advisories/VDE-2024-066"
+        ],
+        "summary": "An unauthenticated remote attacker can get read access to files in the \"/tmp\" directory due to missing authentication."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-47674",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/65d0db500d7c07f0f76fc24a4d837791c4862cd2",
+            "https://git.kernel.org/stable/c/a95a24fcaee1b892e47d5e6dcc403f713874ee80",
+            "https://git.kernel.org/stable/c/954fd4c81f22c4b6ba65379a81fd252971bf4ef3",
+            "https://git.kernel.org/stable/c/79a61cc3fc0466ad2b7b89618a6157785f0293b3"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: avoid leaving partial pfn mappings around in error case\n\nAs Jann points out, PFN mappings are special, because unlike normal\nmemory mappings, there is no lifetime information associated with the\nmapping - it is just a raw mapping of PFNs with no reference counting of\na 'struct page'.\n\nThat's all very much intentional, but it does mean that it's easy to\nmess up the cleanup in case of errors.  Yes, a failed mmap() will always\neventually clean up any partial mappings, but without any explicit\nlifetime in the page table mapping itself, it's very easy to do the\nerror handling in the wrong order.\n\nIn particular, it's easy to mistakenly free the physical backing store\nbefore the page tables are actually cleaned up and (temporarily) have\nstale dangling PTE entries.\n\nTo make this situation less error-prone, just make sure that any partial\npfn mapping is torn down early, before any other error handling."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-1327",
+        "id": "CVE-2024-49382",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-7286"
+        ],
+        "summary": "Excessive attack surface in archive-server service due to binding to an unrestricted IP address. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 38690."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-1327",
+        "id": "CVE-2024-49383",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-7285"
+        ],
+        "summary": "Excessive attack surface in acep-importer service due to binding to an unrestricted IP address. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 38690."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-1327",
+        "id": "CVE-2024-49384",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-7284"
+        ],
+        "summary": "Excessive attack surface in acep-collector service due to binding to an unrestricted IP address. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 38690."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-319",
+        "id": "CVE-2024-49387",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-7022"
+        ],
+        "summary": "Cleartext transmission of sensitive information in acep-collector service. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 38690."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-639",
+        "id": "CVE-2024-49388",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-5984"
+        ],
+        "summary": "Sensitive information manipulation due to improper authorization. The following products are affected: Acronis Cyber Protect 16 (Linux, Windows) before build 38690."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-9975",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://vuldb.com/?id.280340",
+            "https://vuldb.com/?ctiid.280340",
+            "https://vuldb.com/?submit.423445",
+            "https://github.com/JunMing27/CVE/blob/main/SourceCodester%20-%20Arbitrary%20File%20Upload%20vulnerability%20leads%20to%20RCE%20in%20Drag%20and%20Drop%20Image%20Upload%20without%20Refresh%20Reload%20Using%20PHP%20and%20Ajax.md",
+            "https://www.sourcecodester.com/"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Drag and Drop Image Upload 1.0. It has been rated as critical. Affected by this issue is some unknown functionality of the file /upload.php. The manipulation leads to unrestricted upload. The attack may be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-10-15T11:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9976",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://vuldb.com/?id.280341",
+            "https://vuldb.com/?ctiid.280341",
+            "https://vuldb.com/?submit.423448",
+            "https://gist.github.com/higordiego/b57040961b993cb5f1bfe0005f6b57be",
+            "https://code-projects.org/"
+        ],
+        "summary": "A vulnerability classified as critical has been found in code-projects Pharmacy Management System 1.0. This affects an unknown part of the file /php/manage_customer.php?action=search. The manipulation of the argument text leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2024-04-29T16:15:00",
+        "access": {},
+        "assigner": "security@acronis.com",
+        "cvss": null,
+        "cwe": "CWE-428",
+        "id": "CVE-2024-34010",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://security-advisory.acronis.com/advisories/SEC-7110"
+        ],
+        "summary": "Local privilege escalation due to unquoted search path vulnerability. The following products are affected: Acronis Cyber Protect Cloud Agent (Windows) before build 37758, Acronis Cyber Protect 16 (Windows) before build 38690."
+    },
+    {
+        "Modified": "2024-10-15T11:15:00",
+        "Published": "2023-09-20T09:15:00",
+        "access": {},
+        "assigner": "security@suse.com",
+        "cvss": null,
+        "cwe": "CWE-532",
+        "id": "CVE-2023-22644",
+        "impact": {},
+        "last-modified": "2024-10-15T11:15:00",
+        "references": [
+            "https://bugzilla.suse.com/show_bug.cgi?id=CVE-2023-22649",
+            "https://github.com/rancher/rancher/security/advisories/GHSA-xfj7-qf8w-2gcr"
+        ],
+        "summary": "A vulnerability has been identified which may lead to sensitive data being leaked into Rancher's audit logs. [Rancher Audit Logging](https://ranchermanager.docs.rancher.com/how-to-guides/advanced-user-guides/enable-api-audit-log) is an opt-in feature, only deployments that have it enabled and have [AUDIT_LEVEL](https://ranchermanager.docs.rancher.com/how-to-guides/advanced-user-guides/enable-api-audit-log#audit-log-levels) set to `1 or above` are impacted by this issue."
+    },
+    {
+        "Modified": "2024-10-15T10:15:00",
+        "Published": "2024-10-15T10:15:00",
+        "access": {},
+        "assigner": "security-research@sec-consult.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-47945",
+        "impact": {},
+        "last-modified": "2024-10-15T10:15:00",
+        "references": [
+            "https://r.sec-consult.com/rittaliot",
+            "https://www.rittal.com/de-de/products/deep/3124300"
+        ],
+        "summary": "The devices are vulnerable to session hijacking due to insufficient \nentropy in its session ID generation algorithm. The session IDs are \npredictable, with only 32,768 possible values per user, which allows \nattackers to pre-generate valid session IDs, leading to unauthorized \naccess to user sessions. This is not only due to the use of an \n(insecure) rand() function call but also because of missing \ninitialization via srand(). As a result only the PIDs are effectively \nused as seed."
+    },
+    {
+        "Modified": "2024-10-15T10:15:00",
+        "Published": "2024-10-15T10:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9973",
+        "impact": {},
+        "last-modified": "2024-10-15T10:15:00",
+        "references": [
+            "https://vuldb.com/?id.280338",
+            "https://vuldb.com/?ctiid.280338",
+            "https://vuldb.com/?submit.423167",
+            "https://gist.github.com/higordiego/b9699573de61b26f2290e69f38d23fd0",
+            "https://www.sourcecodester.com/"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Online Eyewear Shop 1.0. It has been classified as critical. Affected is an unknown function of the file /admin/?page=reports of the component Report Viewing Page. The manipulation of the argument date leads to sql injection. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-15T10:15:00",
+        "Published": "2024-10-15T10:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-89",
+        "id": "CVE-2024-9974",
+        "impact": {},
+        "last-modified": "2024-10-15T10:15:00",
+        "references": [
+            "https://vuldb.com/?id.280339",
+            "https://vuldb.com/?ctiid.280339",
+            "https://vuldb.com/?submit.423231",
+            "https://gist.github.com/higordiego/2373b9e3e89f03e5f8888efd38eb4b48",
+            "https://www.sourcecodester.com/"
+        ],
+        "summary": "A vulnerability was found in SourceCodester Online Eyewear Shop 1.0. It has been declared as critical. Affected by this vulnerability is an unknown functionality of the file classes/Master.php?f=add_to_card of the component POST Request Handler. The manipulation of the argument product_id leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-10-15T10:15:00",
+        "Published": "2024-09-16T07:15:00",
+        "access": {},
+        "assigner": "cve@cert.org.tw",
+        "cvss": null,
+        "cwe": "CWE-798",
+        "id": "CVE-2024-45698",
+        "impact": {},
+        "last-modified": "2024-10-15T10:15:00",
+        "references": [
+            "https://www.twcert.org.tw/tw/cp-132-8090-bf06b-1.html",
+            "https://www.twcert.org.tw/en/cp-139-8091-bcd52-2.html"
+        ],
+        "summary": "Certain models of D-Link wireless routers do not properly validate user input in the telnet service, allowing unauthenticated remote attackers to use hard-coded credentials to log into telnet and inject arbitrary OS commands, which can then be executed on the device."
+    },
+    {
         "Modified": "2024-10-15T09:15:00",
         "Published": "2024-10-15T09:15:00",
         "access": {},
@@ -1289,355 +1619,5 @@
             "https://github.com/jetty/jetty.project/pull/12012"
         ],
         "summary": "Eclipse Jetty is a lightweight, highly scalable, Java-based web server and Servlet engine . It includes a utility class, HttpURI, for URI/URL parsing.\n\nThe HttpURI class does insufficient validation on the authority segment of a URI.  However the behaviour of HttpURI\n differs from the common browsers in how it handles a URI that would be \nconsidered invalid if fully validated against the RRC.  Specifically HttpURI\n and the browser may differ on the value of the host extracted from an \ninvalid URI and thus a combination of Jetty and a vulnerable browser may\n be vulnerable to a open redirect attack or to a SSRF attack if the URI \nis used after passing validation checks."
-    },
-    {
-        "Modified": "2024-10-14T16:15:00",
-        "Published": "2024-10-14T16:15:00",
-        "access": {},
-        "assigner": "security@eclipse.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-8184",
-        "impact": {},
-        "last-modified": "2024-10-14T16:15:00",
-        "references": [
-            "https://github.com/jetty/jetty.project/security/advisories/GHSA-g8m5-722r-8whq",
-            "https://gitlab.eclipse.org/security/cve-assignement/-/issues/30",
-            "https://github.com/jetty/jetty.project/pull/11723"
-        ],
-        "summary": "There exists a security vulnerability in Jetty's ThreadLimitHandler.getRemote() which can be exploited by unauthorized users to cause remote denial-of-service (DoS) attack.  By repeatedly sending crafted requests, attackers can trigger OutofMemory errors and exhaust the server's memory."
-    },
-    {
-        "Modified": "2024-10-14T16:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "security@eclipse.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-9823",
-        "impact": {},
-        "last-modified": "2024-10-14T16:15:00",
-        "references": [
-            "https://github.com/jetty/jetty.project/security/advisories/GHSA-7hcf-ppf8-5w5h",
-            "https://gitlab.eclipse.org/security/cve-assignement/-/issues/39",
-            "https://github.com/jetty/jetty.project/issues/1256"
-        ],
-        "summary": "There exists a security vulnerability in Jetty's DosFilter which can be exploited by unauthorized users to cause remote denial-of-service (DoS) attack on the server using DosFilter. By repeatedly sending crafted requests, attackers can trigger OutofMemory errors and exhaust the server's memory finally."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-40616",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [],
-        "summary": "Rejected reason: DO NOT USE THIS CANDIDATE NUMBER. ConsultIDs: none. Reason: This candidate was withdrawn by its CNA. Further investigation showed that it was not a security issue. Notes: none."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-48249",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.wavelog.org",
-            "https://github.com/wavelog/wavelog/commit/0bf2675d93602b591850790c8fcfced886eca423",
-            "https://chiggerlor.substack.com/p/unauthenticated-sql-injection-in"
-        ],
-        "summary": "Wavelog 1.8.5 allows Gridmap_model.php get_band_confirmed SQL injection via band, sat, propagation, or mode."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-48251",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.wavelog.org",
-            "https://github.com/wavelog/wavelog/commit/0bf2675d93602b591850790c8fcfced886eca423",
-            "https://chiggerlor.substack.com/p/unauthenticated-sql-injection-in"
-        ],
-        "summary": "Wavelog 1.8.5 allows Activated_gridmap_model.php get_band_confirmed SQL injection via band, sat, propagation, or mode."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-48257",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.wavelog.org",
-            "https://github.com/wavelog/wavelog/commit/0bf2675d93602b591850790c8fcfced886eca423",
-            "https://chiggerlor.substack.com/p/unauthenticated-sql-injection-in"
-        ],
-        "summary": "Wavelog 1.8.5 allows Oqrs_model.php get_worked_modes station_id SQL injectioin."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-48259",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://github.com/magicbug/Cloudlog",
-            "https://www.magicbug.co.uk/cloudlog/",
-            "https://chiggerlor.substack.com/p/unauthenticated-sql-injection-in-9a3"
-        ],
-        "summary": "Cloudlog 2.6.15 allows Oqrs.php request_form SQL injection via station_id or callsign."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-14T15:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-48261",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [],
-        "summary": "Rejected reason: DO NOT USE THIS CANDIDATE NUMBER. ConsultIDs: CVE-2024-48251. Reason: This candidate is a reservation duplicate of CVE-2024-48251. Notes: All CVE users should reference CVE-2024-48251 instead of this candidate. All references and descriptions in this candidate have been removed to prevent accidental usage."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-10-01T19:15:00",
-        "access": {},
-        "assigner": "secalert@redhat.com",
-        "cvss": null,
-        "cwe": "CWE-59",
-        "id": "CVE-2024-9341",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://access.redhat.com/security/cve/CVE-2024-9341",
-            "https://bugzilla.redhat.com/show_bug.cgi?id=2315691",
-            "https://github.com/containers/common/blob/384f77532f67afc8a73d8e0c4adb0d195df57714/pkg/subscriptions/subscriptions.go#L169",
-            "https://github.com/containers/common/blob/384f77532f67afc8a73d8e0c4adb0d195df57714/pkg/subscriptions/subscriptions.go#L349",
-            "https://access.redhat.com/errata/RHSA-2024:8039"
-        ],
-        "summary": "A flaw was found in Go. When FIPS mode is enabled on a system, container runtimes may incorrectly handle certain file paths due to improper validation in the containers/common Go library. This flaw allows an attacker to exploit symbolic links and trick the system into mounting sensitive host directories inside a container. This issue also allows attackers to access critical host files, bypassing the intended isolation between containers and the host system."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-05-16T16:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-4603",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20240516.txt",
-            "https://github.com/openssl/openssl/commit/3559e868e58005d15c6013a0c1fd832e51c73397",
-            "https://github.com/openssl/openssl/commit/9c39b3858091c152f52513c066ff2c5a47969f0d",
-            "https://github.com/openssl/openssl/commit/da343d0605c826ef197aceedc67e8e04f065f740",
-            "https://github.com/openssl/openssl/commit/53ea06486d296b890d565fb971b2764fcd826e7e"
-        ],
-        "summary": "Issue summary: Checking excessively long DSA keys or parameters may be very\nslow.\n\nImpact summary: Applications that use the functions EVP_PKEY_param_check()\nor EVP_PKEY_public_check() to check a DSA public key or DSA parameters may\nexperience long delays. Where the key or parameters that are being checked\nhave been obtained from an untrusted source this may lead to a Denial of\nService.\n\nThe functions EVP_PKEY_param_check() or EVP_PKEY_public_check() perform\nvarious checks on DSA parameters. Some of those computations take a long time\nif the modulus (`p` parameter) is too large.\n\nTrying to use a very large modulus is slow and OpenSSL will not allow using\npublic keys with a modulus which is over 10,000 bits in length for signature\nverification. However the key and parameter check functions do not limit\nthe modulus size when performing the checks.\n\nAn application that calls EVP_PKEY_param_check() or EVP_PKEY_public_check()\nand supplies a key or parameters obtained from an untrusted source could be\nvulnerable to a Denial of Service attack.\n\nThese functions are not called by OpenSSL itself on untrusted DSA keys so\nonly applications that directly call these functions may be vulnerable.\n\nAlso vulnerable are the OpenSSL pkey and pkeyparam command line applications\nwhen using the `-check` option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2023-11-06T16:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "CWE-754",
-        "id": "CVE-2023-5678",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=710fee740904b6290fef0dd5536fbcedbc38ff0c",
-            "https://www.openssl.org/news/secadv/20231106.txt",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=db925ae2e65d0d925adef429afc37f75bd1c2017",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=ddeb4b6c6d527e54ce9a99cba785c0f7776e54b6",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=34efaef6c103d636ab507a0cc34dca4d3aecc055"
-        ],
-        "summary": "Issue summary: Generating excessively long X9.42 DH keys or checking\nexcessively long X9.42 DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_generate_key() to\ngenerate an X9.42 DH key may experience long delays.  Likewise, applications\nthat use DH_check_pub_key(), DH_check_pub_key_ex() or EVP_PKEY_public_check()\nto check an X9.42 DH key or X9.42 DH parameters may experience long delays.\nWhere the key or parameters that are being checked have been obtained from\nan untrusted source this may lead to a Denial of Service.\n\nWhile DH_check() performs all the necessary checks (as of CVE-2023-3817),\nDH_check_pub_key() doesn't make any of these checks, and is therefore\nvulnerable for excessively large P and Q parameters.\n\nLikewise, while DH_generate_key() performs a check for an excessively large\nP, it doesn't check for an excessively large Q.\n\nAn application that calls DH_generate_key() or DH_check_pub_key() and\nsupplies a key or parameters obtained from an untrusted source could be\nvulnerable to a Denial of Service attack.\n\nDH_generate_key() and DH_check_pub_key() are also called by a number of\nother OpenSSL functions.  An application calling any of those other\nfunctions may similarly be affected.  The other functions affected by this\nare DH_check_pub_key_ex(), EVP_PKEY_public_check(), and EVP_PKEY_generate().\n\nAlso vulnerable are the OpenSSL pkey command line application when using the\n\"-pubcheck\" option, as well as the OpenSSL genpkey command line application.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-04-08T14:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-2511",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20240408.txt",
-            "https://github.com/openssl/openssl/commit/e9d7083e241670332e0443da0f0d4ffb52829f08",
-            "https://github.com/openssl/openssl/commit/7e4d731b1c07201ad9374c1cd9ac5263bdf35bce",
-            "https://github.com/openssl/openssl/commit/b52867a9f618bb955bed2a3ce3db4d4f97ed8e5d",
-            "https://github.openssl.org/openssl/extended-releases/commit/5f8d25770ae6437db119dfc951e207271a326640"
-        ],
-        "summary": "Issue summary: Some non-default TLS server configurations can cause unbounded\nmemory growth when processing TLSv1.3 sessions\n\nImpact summary: An attacker may exploit certain server configurations to trigger\nunbounded memory growth that would lead to a Denial of Service\n\nThis problem can occur in TLSv1.3 if the non-default SSL_OP_NO_TICKET option is\nbeing used (but not if early_data support is also configured and the default\nanti-replay protection is in use). In this case, under certain conditions, the\nsession cache can get into an incorrect state and it will fail to flush properly\nas it fills. The session cache will continue to grow in an unbounded manner. A\nmalicious client could deliberately create the scenario for this failure to\nforce a Denial of Service. It may also happen by accident in normal operation.\n\nThis issue only affects TLS servers supporting TLSv1.3. It does not affect TLS\nclients.\n\nThe FIPS modules in 3.2, 3.1 and 3.0 are not affected by this issue. OpenSSL\n1.0.2 is also not affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-04-25T07:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-6237",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20240115.txt",
-            "https://github.com/openssl/openssl/commit/18c02492138d1eb8b6548cb26e7b625fb2414a2a",
-            "https://github.com/openssl/openssl/commit/a830f551557d3d66a84bbb18a5b889c640c36294",
-            "https://github.com/openssl/openssl/commit/0b0f7abfb37350794a4b8960fafc292cd5d1b84d"
-        ],
-        "summary": "Issue summary: Checking excessively long invalid RSA public keys may take\na long time.\n\nImpact summary: Applications that use the function EVP_PKEY_public_check()\nto check RSA public keys may experience long delays. Where the key that\nis being checked has been obtained from an untrusted source this may lead\nto a Denial of Service.\n\nWhen function EVP_PKEY_public_check() is called on RSA public keys,\na computation is done to confirm that the RSA modulus, n, is composite.\nFor valid RSA keys, n is a product of two or more large primes and this\ncomputation completes quickly. However, if n is an overly large prime,\nthen this computation would take a long time.\n\nAn application that calls EVP_PKEY_public_check() and supplies an RSA key\nobtained from an untrusted source could be vulnerable to a Denial of Service\nattack.\n\nThe function EVP_PKEY_public_check() is not called from other OpenSSL\nfunctions however it is called from the OpenSSL pkey command line\napplication. For that reason that application is also vulnerable if used\nwith the '-pubin' and '-check' options on untrusted data.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-01-26T09:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-0727",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20240125.txt",
-            "https://github.com/openssl/openssl/commit/775acfdbd0c6af9ac855f34969cdab0c0c90844a",
-            "https://github.com/openssl/openssl/commit/d135eeab8a5dbf72b3da5240bab9ddb7678dbd2c",
-            "https://github.com/openssl/openssl/commit/09df4395b5071217b76dc7d3d2e630eb8c5a79c2",
-            "https://github.openssl.org/openssl/extended-releases/commit/03b3941d60c4bce58fab69a0c22377ab439bc0e8",
-            "https://github.openssl.org/openssl/extended-releases/commit/aebaa5883e31122b404e450732dc833dc9dee539"
-        ],
-        "summary": "Issue summary: Processing a maliciously formatted PKCS12 file may lead OpenSSL\nto crash leading to a potential Denial of Service attack\n\nImpact summary: Applications loading files in the PKCS12 format from untrusted\nsources might terminate abruptly.\n\nA file in PKCS12 format can contain certificates and keys and may come from an\nuntrusted source. The PKCS12 specification allows certain fields to be NULL, but\nOpenSSL does not correctly check for this case. This can lead to a NULL pointer\ndereference that results in OpenSSL crashing. If an application processes PKCS12\nfiles from an untrusted source using the OpenSSL APIs then that application will\nbe vulnerable to this issue.\n\nOpenSSL APIs that are vulnerable to this are: PKCS12_parse(),\nPKCS12_unpack_p7data(), PKCS12_unpack_p7encdata(), PKCS12_unpack_authsafes()\nand PKCS12_newpass().\n\nWe have also fixed a similar issue in SMIME_write_PKCS7(). However since this\nfunction is related to writing data we do not consider it security significant.\n\nThe FIPS modules in 3.2, 3.1 and 3.0 are not affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2024-01-09T17:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "CWE-787",
-        "id": "CVE-2023-6129",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20240109.txt",
-            "https://github.com/openssl/openssl/commit/5b139f95c9a47a55a0c54100f3837b1eee942b04",
-            "https://github.com/openssl/openssl/commit/f3fc5808fe9ff74042d639839610d03b8fdcc015",
-            "https://github.com/openssl/openssl/commit/050d26383d4e264966fb83428e72d5d48f402d35"
-        ],
-        "summary": "Issue summary: The POLY1305 MAC (message authentication code) implementation\ncontains a bug that might corrupt the internal state of applications running\non PowerPC CPU based platforms if the CPU provides vector instructions.\n\nImpact summary: If an attacker can influence whether the POLY1305 MAC\nalgorithm is used, the application state might be corrupted with various\napplication dependent consequences.\n\nThe POLY1305 MAC (message authentication code) implementation in OpenSSL for\nPowerPC CPUs restores the contents of vector registers in a different order\nthan they are saved. Thus the contents of some of these vector registers\nare corrupted when returning to the caller. The vulnerable code is used only\non newer PowerPC processors supporting the PowerISA 2.07 instructions.\n\nThe consequences of this kind of internal application state corruption can\nbe various - from no consequences, if the calling application does not\ndepend on the contents of non-volatile XMM registers at all, to the worst\nconsequences, where the attacker could get complete control of the application\nprocess. However unless the compiler uses the vector registers for storing\npointers, the most likely consequence, if any, would be an incorrect result\nof some application dependent calculations or a crash leading to a denial of\nservice.\n\nThe POLY1305 MAC algorithm is most frequently used as part of the\nCHACHA20-POLY1305 AEAD (authenticated encryption with associated data)\nalgorithm. The most common usage of this AEAD cipher is with TLS protocol\nversions 1.2 and 1.3. If this cipher is enabled on the server a malicious\nclient can influence whether this AEAD cipher is used. This implies that\nTLS server applications using OpenSSL can be potentially impacted. However\nwe are currently not aware of any concrete application that would be affected\nby this issue therefore we consider this a Low severity security issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2023-10-25T18:17:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-5363",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20231024.txt",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=0df40630850fb2740e6be6890bb905d3fc623b2d",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=5f69f5c65e483928c4b28ed16af6e5742929f1ee"
-        ],
-        "summary": "Issue summary: A bug has been identified in the processing of key and\ninitialisation vector (IV) lengths.  This can lead to potential truncation\nor overruns during the initialisation of some symmetric ciphers.\n\nImpact summary: A truncation in the IV can result in non-uniqueness,\nwhich could result in loss of confidentiality for some cipher modes.\n\nWhen calling EVP_EncryptInit_ex2(), EVP_DecryptInit_ex2() or\nEVP_CipherInit_ex2() the provided OSSL_PARAM array is processed after\nthe key and IV have been established.  Any alterations to the key length,\nvia the \"keylen\" parameter or the IV length, via the \"ivlen\" parameter,\nwithin the OSSL_PARAM array will not take effect as intended, potentially\ncausing truncation or overreading of these values.  The following ciphers\nand cipher modes are impacted: RC2, RC4, RC5, CCM, GCM and OCB.\n\nFor the CCM, GCM and OCB cipher modes, truncation of the IV can result in\nloss of confidentiality.  For example, when following NIST's SP 800-38D\nsection 8.2.1 guidance for constructing a deterministic IV for AES in\nGCM mode, truncation of the counter portion could lead to IV reuse.\n\nBoth truncations and overruns of the key and overruns of the IV will\nproduce incorrect results and could, in some cases, trigger a memory\nexception.  However, these issues are not currently assessed as security\ncritical.\n\nChanging the key and/or IV lengths is not considered to be a common operation\nand the vulnerable API was recently introduced. Furthermore it is likely that\napplication developers will have spotted this problem during testing since\ndecryption would fail unless both peers in the communication were similarly\nvulnerable. For these reasons we expect the probability of an application being\nvulnerable to this to be quite low. However if an application is vulnerable then\nthis issue is considered very serious. For these reasons we have assessed this\nissue as Moderate severity overall.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this because\nthe issue lies outside of the FIPS provider boundary.\n\nOpenSSL 3.1 and 3.0 are vulnerable to this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2023-09-08T12:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2023-4807",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=a632d534c73eeb3e3db8c7540d811194ef7c79ff",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=4bfac4471f53c4f74c8d81020beb938f92d84ca5",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=6754de4a121ec7f261b16723180df6592cbb4508",
-            "https://www.openssl.org/news/secadv/20230908.txt"
-        ],
-        "summary": "Issue summary: The POLY1305 MAC (message authentication code) implementation\ncontains a bug that might corrupt the internal state of applications on the\nWindows 64 platform when running on newer X86_64 processors supporting the\nAVX512-IFMA instructions.\n\nImpact summary: If in an application that uses the OpenSSL library an attacker\ncan influence whether the POLY1305 MAC algorithm is used, the application\nstate might be corrupted with various application dependent consequences.\n\nThe POLY1305 MAC (message authentication code) implementation in OpenSSL does\nnot save the contents of non-volatile XMM registers on Windows 64 platform\nwhen calculating the MAC of data larger than 64 bytes. Before returning to\nthe caller all the XMM registers are set to zero rather than restoring their\nprevious content. The vulnerable code is used only on newer x86_64 processors\nsupporting the AVX512-IFMA instructions.\n\nThe consequences of this kind of internal application state corruption can\nbe various - from no consequences, if the calling application does not\ndepend on the contents of non-volatile XMM registers at all, to the worst\nconsequences, where the attacker could get complete control of the application\nprocess. However given the contents of the registers are just zeroized so\nthe attacker cannot put arbitrary values inside, the most likely consequence,\nif any, would be an incorrect result of some application dependent\ncalculations or a crash leading to a denial of service.\n\nThe POLY1305 MAC algorithm is most frequently used as part of the\nCHACHA20-POLY1305 AEAD (authenticated encryption with associated data)\nalgorithm. The most common usage of this AEAD cipher is with TLS protocol\nversions 1.2 and 1.3 and a malicious client can influence whether this AEAD\ncipher is used by the server. This implies that server applications using\nOpenSSL can be potentially impacted. However we are currently not aware of\nany concrete application that would be affected by this issue therefore we\nconsider this a Low severity security issue.\n\nAs a workaround the AVX512-IFMA instructions support can be disabled at\nruntime by setting the environment variable OPENSSL_ia32cap:\n\n   OPENSSL_ia32cap=:~0x200000\n\nThe FIPS provider is not affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2023-07-31T16:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "CWE-834",
-        "id": "CVE-2023-3817",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://www.openssl.org/news/secadv/20230731.txt",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=6a1eb62c29db6cb5eec707f9338aee00f44e26f5",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9002fd07327a91f35ba6c1307e71fa6fd4409b7f",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=91ddeba0f2269b017dc06c46c993a788974b1aa5",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=869ad69aadd985c7b8ca6f4e5dd0eb274c9f3644"
-        ],
-        "summary": "Issue summary: Checking excessively long DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_check(), DH_check_ex()\nor EVP_PKEY_param_check() to check a DH key or DH parameters may experience long\ndelays. Where the key or parameters that are being checked have been obtained\nfrom an untrusted source this may lead to a Denial of Service.\n\nThe function DH_check() performs various checks on DH parameters. After fixing\nCVE-2023-3446 it was discovered that a large q parameter value can also trigger\nan overly long computation during some of these checks. A correct q value,\nif present, cannot be larger than the modulus p parameter, thus it is\nunnecessary to perform these checks if q is larger than p.\n\nAn application that calls DH_check() and supplies a key or parameters obtained\nfrom an untrusted source could be vulnerable to a Denial of Service attack.\n\nThe function DH_check() is itself called by a number of other OpenSSL functions.\nAn application calling any of those other functions may similarly be affected.\nThe other functions affected by this are DH_check_ex() and\nEVP_PKEY_param_check().\n\nAlso vulnerable are the OpenSSL dhparam and pkeyparam command line applications\nwhen using the \"-check\" option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\n\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2023-07-19T12:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "CWE-1333",
-        "id": "CVE-2023-3446",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=fc9867c1e03c22ebf56943be205202e576aabf23",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=8780a896543a654e757db1b9396383f9d8095528",
-            "https://www.openssl.org/news/secadv/20230719.txt",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=9a0a4d3c1e7138915563c0df4fe6a3f9377b839c",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=1fa20cf2f506113c761777127a38bce5068740eb"
-        ],
-        "summary": "Issue summary: Checking excessively long DH keys or parameters may be very slow.\n\nImpact summary: Applications that use the functions DH_check(), DH_check_ex()\nor EVP_PKEY_param_check() to check a DH key or DH parameters may experience long\ndelays. Where the key or parameters that are being checked have been obtained\nfrom an untrusted source this may lead to a Denial of Service.\n\nThe function DH_check() performs various checks on DH parameters. One of those\nchecks confirms that the modulus ('p' parameter) is not too large. Trying to use\na very large modulus is slow and OpenSSL will not normally use a modulus which\nis over 10,000 bits in length.\n\nHowever the DH_check() function checks numerous aspects of the key or parameters\nthat have been supplied. Some of those checks use the supplied modulus value\neven if it has already been found to be too large.\n\nAn application that calls DH_check() and supplies a key or parameters obtained\nfrom an untrusted source could be vulernable to a Denial of Service attack.\n\nThe function DH_check() is itself called by a number of other OpenSSL functions.\nAn application calling any of those other functions may similarly be affected.\nThe other functions affected by this are DH_check_ex() and\nEVP_PKEY_param_check().\n\nAlso vulnerable are the OpenSSL dhparam and pkeyparam command line applications\nwhen using the '-check' option.\n\nThe OpenSSL SSL/TLS implementation is not affected by this issue.\nThe OpenSSL 3.0 and 3.1 FIPS providers are not affected by this issue."
-    },
-    {
-        "Modified": "2024-10-14T15:15:00",
-        "Published": "2023-07-14T12:15:00",
-        "access": {},
-        "assigner": "openssl-security@openssl.org",
-        "cvss": null,
-        "cwe": "CWE-287",
-        "id": "CVE-2023-2975",
-        "impact": {},
-        "last-modified": "2024-10-14T15:15:00",
-        "references": [
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=6a83f0c958811f07e0d11dfc6b5a6a98edfd5bdc",
-            "https://www.openssl.org/news/secadv/20230714.txt",
-            "https://git.openssl.org/gitweb/?p=openssl.git;a=commitdiff;h=00e2f5eea29994d19293ec4e8c8775ba73678598"
-        ],
-        "summary": "Issue summary: The AES-SIV cipher implementation contains a bug that causes\nit to ignore empty associated data entries which are unauthenticated as\na consequence.\n\nImpact summary: Applications that use the AES-SIV algorithm and want to\nauthenticate empty data entries as associated data can be misled by removing,\nadding or reordering such empty entries as these are ignored by the OpenSSL\nimplementation. We are currently unaware of any such applications.\n\nThe AES-SIV algorithm allows for authentication of multiple associated\ndata entries along with the encryption. To authenticate empty data the\napplication has to call EVP_EncryptUpdate() (or EVP_CipherUpdate()) with\nNULL pointer as the output buffer and 0 as the input buffer length.\nThe AES-SIV implementation in OpenSSL just returns success for such a call\ninstead of performing the associated data authentication operation.\nThe empty data thus will not be authenticated.\n\nAs this issue does not affect non-empty associated data authentication and\nwe expect it to be rare for an application to use empty associated data\nentries this is qualified as Low severity issue."
     }
 ]
