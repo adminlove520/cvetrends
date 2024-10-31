@@ -1,5 +1,271 @@
 [
     {
+        "Modified": "2024-10-31T09:15:00",
+        "Published": "2024-10-31T09:15:00",
+        "access": {},
+        "assigner": "psirt@hcl.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-30149",
+        "impact": {},
+        "last-modified": "2024-10-31T09:15:00",
+        "references": [
+            "https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0116990"
+        ],
+        "summary": "HCL AppScan Source <= 10.6.0 does not properly validate a TLS/SSL certificate for an executable."
+    },
+    {
+        "Modified": "2024-10-31T08:35:00",
+        "Published": "2024-10-22T22:15:00",
+        "access": {},
+        "assigner": "chrome-cve-admin@google.com",
+        "cvss": null,
+        "cwe": "CWE-843",
+        "id": "CVE-2024-10230",
+        "impact": {},
+        "last-modified": "2024-10-31T08:35:00",
+        "references": [
+            "https://chromereleases.googleblog.com/2024/10/stable-channel-update-for-desktop_22.html",
+            "https://issues.chromium.org/issues/371565065"
+        ],
+        "summary": "Type Confusion in V8 in Google Chrome prior to 130.0.6723.69 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: High)"
+    },
+    {
+        "Modified": "2024-10-31T08:35:00",
+        "Published": "2024-08-02T18:16:00",
+        "access": {},
+        "assigner": "cve@mitre.org",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-33893",
+        "impact": {},
+        "last-modified": "2024-10-31T08:35:00",
+        "references": [
+            "https://www.ewon.biz/products/cosy/ewon-cosy-wifi",
+            "https://www.hms-networks.com/cyber-security",
+            "https://hmsnetworks.blob.core.windows.net/nlw/docs/default-source/products/cybersecurity/security-advisory/hms-security-advisory-2024-07-29-001--ewon-several-cosy--vulnerabilities.pdf",
+            "https://blog.syss.com/posts/hacking-a-secure-industrial-remote-access-gateway/"
+        ],
+        "summary": "Cosy+ devices running a firmware 21.x below 21.2s10 or a firmware 22.x below 22.1s3 are vulnerable to XSS when displaying the logs due to improper input sanitization. This is fixed in version 21.2s10 and 22.1s3."
+    },
+    {
+        "Modified": "2024-10-31T08:35:00",
+        "Published": "2024-06-19T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "CWE-416",
+        "id": "CVE-2024-38588",
+        "impact": {},
+        "last-modified": "2024-10-31T08:35:00",
+        "references": [
+            "https://git.kernel.org/stable/c/dbff5f0bfb2416b8b55c105ddbcd4f885e98fada",
+            "https://git.kernel.org/stable/c/7b4881da5b19f65709f5c18c1a4d8caa2e496461",
+            "https://git.kernel.org/stable/c/66df065b3106964e667b37bf8f7e55ec69d0c1f6",
+            "https://git.kernel.org/stable/c/31310e373f4c8c74e029d4326b283e757edabc0b",
+            "https://git.kernel.org/stable/c/e60b613df8b6253def41215402f72986fee3fc8d",
+            "https://git.kernel.org/stable/c/8ea8ef5e42173560ac510e92a1cc797ffeea8831",
+            "https://git.kernel.org/stable/c/1880a324af1c95940a7c954b6b937e86844a33bd"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nftrace: Fix possible use-after-free issue in ftrace_location()\n\nKASAN reports a bug:\n\n  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120\n  Read of size 8 at addr ffff888141d40010 by task insmod/424\n  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+\n  [...]\n  Call Trace:\n   <TASK>\n   dump_stack_lvl+0x68/0xa0\n   print_report+0xcf/0x610\n   kasan_report+0xb5/0xe0\n   ftrace_location+0x90/0x120\n   register_kprobe+0x14b/0xa40\n   kprobe_init+0x2d/0xff0 [kprobe_example]\n   do_one_initcall+0x8f/0x2d0\n   do_init_module+0x13a/0x3c0\n   load_module+0x3082/0x33d0\n   init_module_from_file+0xd2/0x130\n   __x64_sys_finit_module+0x306/0x440\n   do_syscall_64+0x68/0x140\n   entry_SYSCALL_64_after_hwframe+0x71/0x79\n\nThe root cause is that, in lookup_rec(), ftrace record of some address\nis being searched in ftrace pages of some module, but those ftrace pages\nat the same time is being freed in ftrace_release_mod() as the\ncorresponding module is being deleted:\n\n           CPU1                       |      CPU2\n  register_kprobes() {                | delete_module() {\n    check_kprobe_address_safe() {     |\n      arch_check_ftrace_location() {  |\n        ftrace_location() {           |\n          lookup_rec() // USE!        |   ftrace_release_mod() // Free!\n\nTo fix this issue:\n  1. Hold rcu lock as accessing ftrace pages in ftrace_location_range();\n  2. Use ftrace_location_range() instead of lookup_rec() in\n     ftrace_location();\n  3. Call synchronize_rcu() before freeing any ftrace pages both in\n     ftrace_process_locs()/ftrace_release_mod()/ftrace_free_mem()."
+    },
+    {
+        "Modified": "2024-10-31T07:15:00",
+        "Published": "2024-10-31T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-9165",
+        "impact": {},
+        "last-modified": "2024-10-31T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0dfbee4c-b720-4d10-bfe0-fe9dc12e6268?source=cve",
+            "https://wordpress.org/plugins/gift-voucher/#developers",
+            "https://plugins.trac.wordpress.org/browser/gift-voucher/trunk/giftcard.php#L515"
+        ],
+        "summary": "The Gift Cards (Gift Vouchers and Packages) (WooCommerce Supported) plugin for WordPress is vulnerable to Stored Cross-Site Scripting via SVG File uploads in all versions up to, and including, 4.4.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses the SVG file."
+    },
+    {
+        "Modified": "2024-10-31T07:15:00",
+        "Published": "2024-10-31T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-306",
+        "id": "CVE-2024-9430",
+        "impact": {},
+        "last-modified": "2024-10-31T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/4d0a0aa7-7bd9-4883-85b6-b7abf338aa75?source=cve",
+            "https://plugins.trac.wordpress.org/browser/get-a-quote-for-woocommerce/trunk/includes/admin/class-ct-rfq-admin.php"
+        ],
+        "summary": "The Get Quote For Woocommerce \u2013 Request A Quote For Woocommerce plugin for WordPress is vulnerable to unauthorized access of Quote data due to a missing capability check on the ct_tepfw_wp_loaded function in all versions up to, and including, 1.0.0. This makes it possible for unauthenticated attackers to download Quote PDF and CSV documents."
+    },
+    {
+        "Modified": "2024-10-31T07:15:00",
+        "Published": "2024-10-31T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-9434",
+        "impact": {},
+        "last-modified": "2024-10-31T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/ddca65fa-0744-4b2a-808c-a913586edc60?source=cve",
+            "https://plugins.trac.wordpress.org/browser/wpglobus-translate-options/trunk/includes/class-wpglobus-translate-options.php#L442"
+        ],
+        "summary": "The WPGlobus Translate Options plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 2.2.0. This is due to missing or incorrect nonce validation on the on__translate_options_page() function. This makes it possible for unauthenticated attackers to inject malicious web scripts and update plugin settings via a forged request granted they can trick a site administrator into performing an action such as clicking on a link."
+    },
+    {
+        "Modified": "2024-10-31T07:15:00",
+        "Published": "2024-10-31T07:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-79",
+        "id": "CVE-2024-9446",
+        "impact": {},
+        "last-modified": "2024-10-31T07:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/d851ad1f-be74-49eb-9c0d-c1b309581209?source=cve",
+            "https://plugins.trac.wordpress.org/browser/wp-simple-anchors-links/trunk/wpsimpleanchorslinks_class.php#L221",
+            "https://wordpress.org/plugins/wp-simple-anchors-links/"
+        ],
+        "summary": "The WP Simple Anchors Links plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's wpanchor shortcode in all versions up to, and including, 1.0.0 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page."
+    },
+    {
+        "Modified": "2024-10-31T06:15:00",
+        "Published": "2024-10-31T06:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-434",
+        "id": "CVE-2024-10392",
+        "impact": {},
+        "last-modified": "2024-10-31T06:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/cd8a45c9-ca48-4ea6-b34e-f05206f16155?source=cve",
+            "https://plugins.trac.wordpress.org/changeset/3176122/gpt3-ai-content-generator#file508"
+        ],
+        "summary": "The AI Power: Complete AI Pack plugin for WordPress is vulnerable to arbitrary file uploads due to missing file type validation in the 'handle_image_upload' function in all versions up to, and including, 1.8.89. This makes it possible for unauthenticated attackers to upload arbitrary files on the affected site's server which may make remote code execution possible."
+    },
+    {
+        "Modified": "2024-10-31T06:15:00",
+        "Published": "2024-10-31T06:15:00",
+        "access": {},
+        "assigner": "cve-request@wordfence.com",
+        "cvss": null,
+        "cwe": "CWE-639",
+        "id": "CVE-2024-9700",
+        "impact": {},
+        "last-modified": "2024-10-31T06:15:00",
+        "references": [
+            "https://www.wordfence.com/threat-intel/vulnerabilities/id/fbed35ca-1630-46a4-8b1f-60cc7216f294?source=cve",
+            "https://plugins.trac.wordpress.org/browser/forminator/tags/1.35.1/library/modules/quizzes/front/front-action.php#L548",
+            "https://plugins.trac.wordpress.org/changeset/3172942"
+        ],
+        "summary": "The Forminator Forms \u2013 Contact Form, Payment Form & Custom Form Builder plugin for WordPress is vulnerable to Insecure Direct Object Reference in all versions up to, and including, 1.36.0 via the submit_quizzes() function due to missing validation on the 'entry_id' user controlled key. This makes it possible for unauthenticated attackers to modify other user's quiz submissions."
+    },
+    {
+        "Modified": "2024-10-31T05:15:00",
+        "Published": "2024-10-31T05:15:00",
+        "access": {},
+        "assigner": "report@snyk.io",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-21537",
+        "impact": {},
+        "last-modified": "2024-10-31T05:15:00",
+        "references": [
+            "https://security.snyk.io/vuln/SNYK-JS-LILCONFIG-6263789",
+            "https://github.com/antonk52/lilconfig/pull/48",
+            "https://github.com/antonk52/lilconfig/releases/tag/v3.1.1",
+            "https://github.com/antonk52/lilconfig/commit/2c68a1ab8764fc74acc46771e1ad39ab07a9b0a7"
+        ],
+        "summary": "Versions of the package lilconfig from 3.1.0 and before 3.1.1 are vulnerable to Arbitrary Code Execution due to the insecure usage of eval in the dynamicImport function. An attacker can exploit this vulnerability by passing a malicious input through the defaultLoaders function."
+    },
+    {
+        "Modified": "2024-10-31T05:15:00",
+        "Published": "2024-10-15T16:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-22",
+        "id": "CVE-2024-9676",
+        "impact": {},
+        "last-modified": "2024-10-31T05:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-9676",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2317467",
+            "https://github.com/advisories/GHSA-wq2p-5pc6-wpgf",
+            "https://access.redhat.com/errata/RHSA-2024:8418",
+            "https://access.redhat.com/errata/RHSA-2024:8437",
+            "https://access.redhat.com/errata/RHSA-2024:8428"
+        ],
+        "summary": "A vulnerability was found in Podman, Buildah, and CRI-O. A symlink traversal vulnerability in the containers/storage library can cause Podman, Buildah, and CRI-O to hang and result in a denial of service via OOM kill when running a malicious image using an automatically assigned user namespace (`--userns=auto` in Podman and Buildah). The containers/storage library will read /etc/passwd inside the container, but does not properly validate if that file is a symlink, which can be used to cause the library to read an arbitrary file on the host."
+    },
+    {
+        "Modified": "2024-10-31T05:15:00",
+        "Published": "2024-10-01T19:15:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-59",
+        "id": "CVE-2024-9341",
+        "impact": {},
+        "last-modified": "2024-10-31T05:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-9341",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2315691",
+            "https://github.com/containers/common/blob/384f77532f67afc8a73d8e0c4adb0d195df57714/pkg/subscriptions/subscriptions.go#L169",
+            "https://github.com/containers/common/blob/384f77532f67afc8a73d8e0c4adb0d195df57714/pkg/subscriptions/subscriptions.go#L349",
+            "https://access.redhat.com/errata/RHSA-2024:8039",
+            "https://access.redhat.com/errata/RHSA-2024:8112",
+            "https://access.redhat.com/errata/RHSA-2024:7925",
+            "https://access.redhat.com/errata/RHSA-2024:8238",
+            "https://access.redhat.com/errata/RHSA-2024:8263",
+            "https://access.redhat.com/errata/RHSA-2024:8428"
+        ],
+        "summary": "A flaw was found in Go. When FIPS mode is enabled on a system, container runtimes may incorrectly handle certain file paths due to improper validation in the containers/common Go library. This flaw allows an attacker to exploit symbolic links and trick the system into mounting sensitive host directories inside a container. This issue also allows attackers to access critical host files, bypassing the intended isolation between containers and the host system."
+    },
+    {
+        "Modified": "2024-10-31T05:15:00",
+        "Published": "2024-05-14T15:42:00",
+        "access": {},
+        "assigner": "secalert@redhat.com",
+        "cvss": null,
+        "cwe": "CWE-354",
+        "id": "CVE-2024-3727",
+        "impact": {},
+        "last-modified": "2024-10-31T05:15:00",
+        "references": [
+            "https://access.redhat.com/security/cve/CVE-2024-3727",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2274767",
+            "https://access.redhat.com/errata/RHSA-2024:0045",
+            "https://access.redhat.com/errata/RHSA-2024:4159",
+            "https://access.redhat.com/errata/RHSA-2024:4613",
+            "https://access.redhat.com/errata/RHSA-2024:4850",
+            "https://access.redhat.com/errata/RHSA-2024:4960",
+            "https://access.redhat.com/errata/RHSA-2024:5258",
+            "https://access.redhat.com/errata/RHSA-2024:5951",
+            "https://access.redhat.com/errata/RHSA-2024:6054",
+            "https://access.redhat.com/errata/RHSA-2024:6708",
+            "https://access.redhat.com/errata/RHSA-2024:6824",
+            "https://access.redhat.com/errata/RHSA-2024:7164",
+            "https://access.redhat.com/errata/RHSA-2024:3718",
+            "https://access.redhat.com/errata/RHSA-2024:7174",
+            "https://access.redhat.com/errata/RHSA-2024:7182",
+            "https://access.redhat.com/errata/RHSA-2024:7187",
+            "https://access.redhat.com/errata/RHSA-2024:7922",
+            "https://access.redhat.com/errata/RHSA-2024:7941",
+            "https://access.redhat.com/errata/RHSA-2024:8260",
+            "https://access.redhat.com/errata/RHSA-2024:8425"
+        ],
+        "summary": "A flaw was found in the github.com/containers/image library. This flaw allows attackers to trigger unexpected authenticated registry accesses on behalf of a victim user, causing resource exhaustion, local path traversal, and other attacks."
+    },
+    {
         "Modified": "2024-10-31T04:15:00",
         "Published": "2024-01-03T13:15:00",
         "access": {},
@@ -1445,232 +1711,5 @@
             "https://github.com/shadia0/Patienc/blob/main/eladmin_rce.md"
         ],
         "summary": "The eladmin v2.7 and before contains a remote code execution (RCE) vulnerability that can control all application deployment servers of this management system via DeployController.java."
-    },
-    {
-        "Modified": "2024-10-30T21:15:00",
-        "Published": "2024-10-30T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-51419",
-        "impact": {},
-        "last-modified": "2024-10-30T21:15:00",
-        "references": [
-            "https://gist.github.com/475bd8bc21c4f4dfc8f26ce35eb6ca28.git"
-        ],
-        "summary": "Cross Site Scripting vulnerability in Shenzhen Interconnection Harbor Network Technology Co., Ltd Ofweek Online Exhibition v.1.0.0 allows a remote attacker to execute arbitrary code."
-    },
-    {
-        "Modified": "2024-10-30T21:15:00",
-        "Published": "2024-10-30T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-51424",
-        "impact": {},
-        "last-modified": "2024-10-30T21:15:00",
-        "references": [
-            "https://github.com/Wzy-source/Gala/blob/main/CVEs/AURA_0x967d176328948e4db4446b8caf623ff9b47221fb.md"
-        ],
-        "summary": "An issue in Ethereum v.1.12.2 allows remote attacker to execute arbitrary code via the Owned.setOwner function"
-    },
-    {
-        "Modified": "2024-10-30T21:15:00",
-        "Published": "2024-10-30T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-51425",
-        "impact": {},
-        "last-modified": "2024-10-30T21:15:00",
-        "references": [
-            "https://github.com/Wzy-source/Gala/blob/main/CVEs/WaterToken_0x8890963266f895aca11fbe4679a1f9cc472f6531.md"
-        ],
-        "summary": "Insecure Permissions vulnerability in Ethereum v.1.12.2 allows a remote attacker to escalate privileges via the WaterToken Contract."
-    },
-    {
-        "Modified": "2024-10-30T21:15:00",
-        "Published": "2024-10-30T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-51426",
-        "impact": {},
-        "last-modified": "2024-10-30T21:15:00",
-        "references": [
-            "https://github.com/Wzy-source/Gala/blob/main/CVEs/EOTT_0x5fe0971167215aade651f76492f8489e43ceb48a.md"
-        ],
-        "summary": "Insecure Permissions vulnerability in Ethereum v.1.12.2 allows a remote attacker to escalate privileges via the _transfer function."
-    },
-    {
-        "Modified": "2024-10-30T21:15:00",
-        "Published": "2024-10-30T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-51427",
-        "impact": {},
-        "last-modified": "2024-10-30T21:15:00",
-        "references": [
-            "https://github.com/Wzy-source/Gala/blob/main/CVEs/PepeGxng_0x5d8d1f28cad84fad8d2fea9fdd4ab5022d23b0fe.md"
-        ],
-        "summary": "An issue in Ethereum v.1.12.2 allows remote attacker to execute arbitrary code via the PepeGxng smart contract mint function."
-    },
-    {
-        "Modified": "2024-10-30T21:15:00",
-        "Published": "2024-10-18T22:15:00",
-        "access": {},
-        "assigner": "cna@vuldb.com",
-        "cvss": null,
-        "cwe": "CWE-89",
-        "id": "CVE-2024-10129",
-        "impact": {},
-        "last-modified": "2024-10-30T21:15:00",
-        "references": [
-            "https://vuldb.com/?id.280917",
-            "https://vuldb.com/?ctiid.280917",
-            "https://vuldb.com/?submit.421391",
-            "https://github.com/timeflykai/shudong_share_sql_injection"
-        ],
-        "summary": "A vulnerability classified as critical has been found in HFO4 shudong-share up to 2.4.7. This affects an unknown part of the file /includes/create_share.php of the component Share Handler. The manipulation of the argument fkey leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way."
-    },
-    {
-        "Modified": "2024-10-30T21:12:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2016-15042",
-        "impact": {},
-        "last-modified": "2024-10-30T21:12:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/2c1e6298-f243-49a5-b1b7-52bd6a6c8858?source=cve",
-            "https://www.pluginvulnerabilities.com/2016/09/19/arbitrary-file-upload-vulnerability-in-front-end-file-upload-and-manager-plugin/",
-            "https://wordpress.org/plugins/nmedia-user-file-uploader/#developers",
-            "https://wpscan.com/vulnerability/052f7d9a-aaff-4fb1-92b7-aeb83cc705a7",
-            "https://www.pluginvulnerabilities.com/2016/09/19/arbitrary-file-upload-vulnerability-in-n-media-post-front-end-form/",
-            "https://www.acunetix.com/vulnerabilities/web/wordpress-plugin-n-media-post-front-end-form-arbitrary-file-upload-1-0/"
-        ],
-        "summary": "The Frontend File Manager (versions < 4.0), N-Media Post Front-end Form (versions < 1.1) plugins for WordPress are vulnerable to arbitrary file uploads due to missing file type validation via the `nm_filemanager_upload_file` and `nm_postfront_upload_file` AJAX actions. This makes it possible for unauthenticated attackers to upload arbitrary files on the affected sites server which may make remote code execution possible."
-    },
-    {
-        "Modified": "2024-10-30T21:11:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-94",
-        "id": "CVE-2024-9061",
-        "impact": {},
-        "last-modified": "2024-10-30T21:11:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/0cac1dc0-87dc-43eb-9db1-638a91200b43?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/3166506/wp-popup-builder"
-        ],
-        "summary": "The The WP Popup Builder \u2013 Popup Forms and Marketing Lead Generation plugin for WordPress is vulnerable to arbitrary shortcode execution via the wp_ajax_nopriv_shortcode_Api_Add AJAX action in all versions up to, and including, 1.3.5. This is due to the software allowing users to execute an action that does not properly validate a value before running do_shortcode. This makes it possible for unauthenticated attackers to execute arbitrary shortcodes. NOTE: This vulnerability was partially fixed in version 1.3.5 with a nonce check, which effectively prevented access to the affected function. However, version 1.3.6 incorporates the correct authorization check to prevent unauthorized access."
-    },
-    {
-        "Modified": "2024-10-30T21:08:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "security@suse.com",
-        "cvss": null,
-        "cwe": "CWE-532",
-        "id": "CVE-2023-22649",
-        "impact": {},
-        "last-modified": "2024-10-30T21:08:00",
-        "references": [
-            "https://bugzilla.suse.com/show_bug.cgi?id=CVE-2023-22649",
-            "https://github.com/rancher/rancher/security/advisories/GHSA-xfj7-qf8w-2gcr"
-        ],
-        "summary": "A vulnerability has been identified which may lead to sensitive data being leaked into Rancher's audit logs. [Rancher Audit Logging](https://ranchermanager.docs.rancher.com/how-to-guides/advanced-user-guides/enable-api-audit-log) is an opt-in feature, only deployments that have it enabled and have [AUDIT_LEVEL](https://ranchermanager.docs.rancher.com/how-to-guides/advanced-user-guides/enable-api-audit-log#audit-log-levels) set to `1 or above` are impacted by this issue."
-    },
-    {
-        "Modified": "2024-10-30T21:06:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-862",
-        "id": "CVE-2020-36840",
-        "impact": {},
-        "last-modified": "2024-10-30T21:06:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/988d7b33-f985-4d22-a2db-3922002fcecb?source=cve",
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=2288592%40mp-timetable&new=2288592%40mp-timetable&sfp_email=&sfph_mail="
-        ],
-        "summary": "The Timetable and Event Schedule by MotoPress plugin for WordPress is vulnerable to authorization bypass due to a missing capability check on the wp_ajax_route_url() function called via a nopriv AJAX action in versions up to, and including, 2.3.8. This makes it possible for unauthenticated attackers to call that function and perform a wide variety of actions such as including random template, injecting malicious web scripts, and more."
-    },
-    {
-        "Modified": "2024-10-30T21:03:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-434",
-        "id": "CVE-2020-36842",
-        "impact": {},
-        "last-modified": "2024-10-30T21:03:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/de1da248-2e03-40fa-8997-7176dc06abc9?source=cve",
-            "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=2261665%40wpvivid-backuprestore%2Ftrunk&old=2252870%40wpvivid-backuprestore%2Ftrunk&sfp_email=&sfph_mail=",
-            "https://www.webarxsecurity.com/vulnerability-in-wpvivid-backup-plugin-can-lead-to-database-leak/?fbclid=IwAR3Ve74ZIvmx-aC0OssIWYwcWEjGq6yU16DcyVGHD1XUT3uYaZ3QyVu_Eos&utm_content=buffer4435b&utm_medium=social&utm_source=facebook.com&utm_campaign=buffer"
-        ],
-        "summary": "The Migration, Backup, Staging \u2013 WPvivid plugin for WordPress is vulnerable to arbitrary file uploads due to a missing capability check on the wpvivid_upload_import_files and wpvivid_upload_files AJAX actions that allows low-level authenticated attackers to upload zip files that can be subsequently extracted. This affects versions up to, and including 0.9.35."
-    },
-    {
-        "Modified": "2024-10-30T21:00:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2017-20194",
-        "impact": {},
-        "last-modified": "2024-10-30T21:00:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/c7600fe1-94e4-4e3e-a9a6-ff3589813715?source=cve",
-            "https://klikki.fi/formidable-forms-vulnerabilities/"
-        ],
-        "summary": "The Formidable Form Builder plugin for WordPress is vulnerable to Sensitive Data Exposure in versions up to, and including, 2.05.03 via the frm_forms_preview AJAX action. This makes it possible for unauthenticated attackers to export all of the form entries for a given form."
-    },
-    {
-        "Modified": "2024-10-30T20:59:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "psirt@solarwinds.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2024-45715",
-        "impact": {},
-        "last-modified": "2024-10-30T20:59:00",
-        "references": [
-            "https://www.solarwinds.com/trust-center/security-advisories/CVE-2024-45715"
-        ],
-        "summary": "The SolarWinds Platform was susceptible to a Cross-Site Scripting vulnerability when performing an edit function to existing elements."
-    },
-    {
-        "Modified": "2024-10-30T20:57:00",
-        "Published": "2024-10-16T08:15:00",
-        "access": {},
-        "assigner": "cve-request@wordfence.com",
-        "cvss": null,
-        "cwe": "CWE-79",
-        "id": "CVE-2021-4452",
-        "impact": {},
-        "last-modified": "2024-10-30T20:57:00",
-        "references": [
-            "https://www.wordfence.com/threat-intel/vulnerabilities/id/aa2bd74a-563a-4a2d-b1d7-b3678db82b00?source=cve",
-            "https://plugins.trac.wordpress.org/changeset/2567706",
-            "https://plugins.trac.wordpress.org/changeset/2567703",
-            "https://wpscan.com/vulnerability/1bd8bc19-5a6f-410b-897e-4887c05378ea"
-        ],
-        "summary": "The Google Language Translator plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via multiple parameters in versions up to, and including, 6.0.9 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link. Specifically affects users with older browsers that lack proper URL encoding support."
     }
 ]
