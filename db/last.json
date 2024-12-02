@@ -1,5 +1,54 @@
 [
     {
+        "Modified": "2024-12-01T23:15:00",
+        "Published": "2024-12-01T23:15:00",
+        "access": {},
+        "assigner": "cna@vuldb.com",
+        "cvss": null,
+        "cwe": "CWE-74",
+        "id": "CVE-2024-12007",
+        "impact": {},
+        "last-modified": "2024-12-01T23:15:00",
+        "references": [
+            "https://code-projects.org/",
+            "https://github.com/LamentXU123/cve/blob/main/cve-l.md",
+            "https://vuldb.com/?ctiid.286491",
+            "https://vuldb.com/?id.286491",
+            "https://vuldb.com/?submit.454715"
+        ],
+        "summary": "A vulnerability, which was classified as critical, was found in code-projects Farmacia 1.0. This affects an unknown part of the file /visualizar-produto.php. The manipulation of the argument id leads to sql injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used."
+    },
+    {
+        "Modified": "2024-12-01T23:15:00",
+        "Published": "2024-11-30T03:15:00",
+        "access": {},
+        "assigner": "security@imgtec.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43702",
+        "impact": {},
+        "last-modified": "2024-12-01T23:15:00",
+        "references": [
+            "https://www.imaginationtech.com/gpu-driver-vulnerabilities/"
+        ],
+        "summary": "Software installed and run as a non-privileged user may conduct improper GPU system calls to allow unprivileged access to arbitrary physical memory page."
+    },
+    {
+        "Modified": "2024-12-01T23:15:00",
+        "Published": "2024-11-30T03:15:00",
+        "access": {},
+        "assigner": "security@imgtec.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-43703",
+        "impact": {},
+        "last-modified": "2024-12-01T23:15:00",
+        "references": [
+            "https://www.imaginationtech.com/gpu-driver-vulnerabilities/"
+        ],
+        "summary": "Software installed and run as a non-privileged user may conduct improper GPU system calls to achieve unauthorised reads and writes of physical memory from the GPU HW."
+    },
+    {
         "Modified": "2024-12-01T22:15:00",
         "Published": "2024-12-01T22:15:00",
         "access": {},
@@ -749,36 +798,6 @@
             "https://www.wordfence.com/threat-intel/vulnerabilities/id/3d065c2a-da7d-469a-b57d-f2fd5b760ff4?source=cve"
         ],
         "summary": "The Social Sharing Plugin \u2013 Sassy Social Share plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via the heateor_mastodon_share parameter in all versions up to, and including, 3.3.69 due to insufficient input sanitization and output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link."
-    },
-    {
-        "Modified": "2024-11-30T03:15:00",
-        "Published": "2024-11-30T03:15:00",
-        "access": {},
-        "assigner": "security@imgtec.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-43702",
-        "impact": {},
-        "last-modified": "2024-11-30T03:15:00",
-        "references": [
-            "https://www.imaginationtech.com/gpu-driver-vulnerabilities/"
-        ],
-        "summary": "Software installed and run as a non-privileged user may conduct improper GPU system calls to allow unprivileged access to arbitrary physical memory page."
-    },
-    {
-        "Modified": "2024-11-30T03:15:00",
-        "Published": "2024-11-30T03:15:00",
-        "access": {},
-        "assigner": "security@imgtec.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-43703",
-        "impact": {},
-        "last-modified": "2024-11-30T03:15:00",
-        "references": [
-            "https://www.imaginationtech.com/gpu-driver-vulnerabilities/"
-        ],
-        "summary": "Software installed and run as a non-privileged user may conduct improper GPU system calls to achieve unauthorised reads and writes of physical memory from the GPU HW."
     },
     {
         "Modified": "2024-11-29T23:15:00",
@@ -1584,25 +1603,5 @@
             "https://git.kernel.org/stable/c/532b53cebe58f34ce1c0f34d866f5c0e335c53c6"
         ],
         "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nsecretmem: disable memfd_secret() if arch cannot set direct map\n\nReturn -ENOSYS from memfd_secret() syscall if !can_set_direct_map().  This\nis the case for example on some arm64 configurations, where marking 4k\nPTEs in the direct map not present can only be done if the direct map is\nset up at 4k granularity in the first place (as ARM's break-before-make\nsemantics do not easily allow breaking apart large/gigantic pages).\n\nMore precisely, on arm64 systems with !can_set_direct_map(),\nset_direct_map_invalid_noflush() is a no-op, however it returns success\n(0) instead of an error.  This means that memfd_secret will seemingly\n\"work\" (e.g.  syscall succeeds, you can mmap the fd and fault in pages),\nbut it does not actually achieve its goal of removing its memory from the\ndirect map.\n\nNote that with this patch, memfd_secret() will start erroring on systems\nwhere can_set_direct_map() returns false (arm64 with\nCONFIG_RODATA_FULL_DEFAULT_ENABLED=n, CONFIG_DEBUG_PAGEALLOC=n and\nCONFIG_KFENCE=n), but that still seems better than the current silent\nfailure.  Since CONFIG_RODATA_FULL_DEFAULT_ENABLED defaults to 'y', most\narm64 systems actually have a working memfd_secret() and aren't be\naffected.\n\nFrom going through the iterations of the original memfd_secret patch\nseries, it seems that disabling the syscall in these scenarios was the\nintended behavior [1] (preferred over having\nset_direct_map_invalid_noflush return an error as that would result in\nSIGBUSes at page-fault time), however the check for it got dropped between\nv16 [2] and v17 [3], when secretmem moved away from CMA allocations.\n\n[1]: https://lore.kernel.org/lkml/20201124164930.GK8537@kernel.org/\n[2]: https://lore.kernel.org/lkml/20210121122723.3446-11-rppt@kernel.org/#t\n[3]: https://lore.kernel.org/lkml/20201125092208.12544-10-rppt@kernel.org/"
-    },
-    {
-        "Modified": "2024-11-29T20:36:00",
-        "Published": "2024-11-08T06:15:00",
-        "access": {},
-        "assigner": "cve@kernel.org",
-        "cvss": null,
-        "cwe": "NVD-CWE-noinfo",
-        "id": "CVE-2024-50181",
-        "impact": {},
-        "last-modified": "2024-11-29T20:36:00",
-        "references": [
-            "https://git.kernel.org/stable/c/b677b94a9193ec7b6607bd1255172ae59174a382",
-            "https://git.kernel.org/stable/c/d18dc8e14b9c794f58dae1577ccb2ab84a4a1b11",
-            "https://git.kernel.org/stable/c/11ceb17e6f07cc30410f3a6276cddda248a9b863",
-            "https://git.kernel.org/stable/c/339273a9ddfe7632b717c2e13e81cbd5d383e1ff",
-            "https://git.kernel.org/stable/c/94f6cdc837e38371324cee97dfd2ef1a99a82c98",
-            "https://git.kernel.org/stable/c/a54c441b46a0745683c2eef5a359d22856d27323"
-        ],
-        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nclk: imx: Remove CLK_SET_PARENT_GATE for DRAM mux for i.MX7D\n\nFor i.MX7D DRAM related mux clock, the clock source change should ONLY\nbe done done in low level asm code without accessing DRAM, and then\ncalling clk API to sync the HW clock status with clk tree, it should never\ntouch real clock source switch via clk API, so CLK_SET_PARENT_GATE flag\nshould NOT be added, otherwise, DRAM's clock parent will be disabled when\nDRAM is active, and system will hang."
     }
 ]
