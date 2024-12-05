@@ -1,5 +1,186 @@
 [
     {
+        "Modified": "2024-12-05T12:15:00",
+        "Published": "2024-12-04T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-53130",
+        "impact": {},
+        "last-modified": "2024-12-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/2026559a6c4ce34db117d2db8f710fe2a9420d5a",
+            "https://git.kernel.org/stable/c/7af3309c7a2ef26831a67125b11c34a7e01c1b2a",
+            "https://git.kernel.org/stable/c/86b19031dbc79abc378dfae357f6ea33ebeb0c95",
+            "https://git.kernel.org/stable/c/b0e4765740040c44039282057ecacd7435d1d2ba",
+            "https://git.kernel.org/stable/c/ffc440a76a0f476a7e6ea838ec0dc8e9979944d1"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix null-ptr-deref in block_dirty_buffer tracepoint\n\nWhen using the \"block:block_dirty_buffer\" tracepoint, mark_buffer_dirty()\nmay cause a NULL pointer dereference, or a general protection fault when\nKASAN is enabled.\n\nThis happens because, since the tracepoint was added in\nmark_buffer_dirty(), it references the dev_t member bh->b_bdev->bd_dev\nregardless of whether the buffer head has a pointer to a block_device\nstructure.\n\nIn the current implementation, nilfs_grab_buffer(), which grabs a buffer\nto read (or create) a block of metadata, including b-tree node blocks,\ndoes not set the block device, but instead does so only if the buffer is\nnot in the \"uptodate\" state for each of its caller block reading\nfunctions.  However, if the uptodate flag is set on a folio/page, and the\nbuffer heads are detached from it by try_to_free_buffers(), and new buffer\nheads are then attached by create_empty_buffers(), the uptodate flag may\nbe restored to each buffer without the block device being set to\nbh->b_bdev, and mark_buffer_dirty() may be called later in that state,\nresulting in the bug mentioned above.\n\nFix this issue by making nilfs_grab_buffer() always set the block device\nof the super block structure to the buffer head, regardless of the state\nof the buffer's uptodate flag."
+    },
+    {
+        "Modified": "2024-12-05T12:15:00",
+        "Published": "2024-12-04T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-53136",
+        "impact": {},
+        "last-modified": "2024-12-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/36b537e8f302f670c7cf35d88a3a294443e32d52",
+            "https://git.kernel.org/stable/c/5874c1150e77296565ad6e495ef41fbf87570d14",
+            "https://git.kernel.org/stable/c/64e67e8694252c1bf01b802ee911be3fee62c36b",
+            "https://git.kernel.org/stable/c/901dc2ad7c3789fa87dc3956f6697c5d62d5cf7e",
+            "https://git.kernel.org/stable/c/d1aa0c04294e29883d65eac6c2f72fe95cc7c049"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm: revert \"mm: shmem: fix data-race in shmem_getattr()\"\n\nRevert d949d1d14fa2 (\"mm: shmem: fix data-race in shmem_getattr()\") as\nsuggested by Chuck [1].  It is causing deadlocks when accessing tmpfs over\nNFS.\n\nAs Hugh commented, \"added just to silence a syzbot sanitizer splat: added\nwhere there has never been any practical problem\"."
+    },
+    {
+        "Modified": "2024-12-05T12:15:00",
+        "Published": "2024-12-04T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-53127",
+        "impact": {},
+        "last-modified": "2024-12-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/00bff71745bc3583bd5ca59be91e0ee1d27f1944",
+            "https://git.kernel.org/stable/c/1635e407a4a64d08a8517ac59ca14ad4fc785e75",
+            "https://git.kernel.org/stable/c/56de724c58c07a7ca3aac027cfd2ccb184ed9e4e",
+            "https://git.kernel.org/stable/c/8f9416147d7ed414109d3501f1cb3d7a1735b25a",
+            "https://git.kernel.org/stable/c/a4685366f07448420badb710ff5c12aaaadf63ad"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"mmc: dw_mmc: Fix IDMAC operation with pages bigger than 4K\"\n\nThe commit 8396c793ffdf (\"mmc: dw_mmc: Fix IDMAC operation with pages\nbigger than 4K\") increased the max_req_size, even for 4K pages, causing\nvarious issues:\n- Panic booting the kernel/rootfs from an SD card on Rockchip RK3566\n- Panic booting the kernel/rootfs from an SD card on StarFive JH7100\n- \"swiotlb buffer is full\" and data corruption on StarFive JH7110\n\nAt this stage no fix have been found, so it's probably better to just\nrevert the change.\n\nThis reverts commit 8396c793ffdf28bb8aee7cfe0891080f8cab7890."
+    },
+    {
+        "Modified": "2024-12-05T12:15:00",
+        "Published": "2024-12-04T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-53131",
+        "impact": {},
+        "last-modified": "2024-12-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/085556bf8c70e2629e02e79268dac3016a08b8bf",
+            "https://git.kernel.org/stable/c/3b2a4fd9bbee77afdd3ed5a05a0c02b6cde8d3b9",
+            "https://git.kernel.org/stable/c/59b49ca67cca7b007a5afd3de0283c8008157665",
+            "https://git.kernel.org/stable/c/77e47f89d32c2d72eb33d0becbce7abe14d061f4",
+            "https://git.kernel.org/stable/c/cd45e963e44b0f10d90b9e6c0e8b4f47f3c92471"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnilfs2: fix null-ptr-deref in block_touch_buffer tracepoint\n\nPatch series \"nilfs2: fix null-ptr-deref bugs on block tracepoints\".\n\nThis series fixes null pointer dereference bugs that occur when using\nnilfs2 and two block-related tracepoints.\n\n\nThis patch (of 2):\n\nIt has been reported that when using \"block:block_touch_buffer\"\ntracepoint, touch_buffer() called from __nilfs_get_folio_block() causes a\nNULL pointer dereference, or a general protection fault when KASAN is\nenabled.\n\nThis happens because since the tracepoint was added in touch_buffer(), it\nreferences the dev_t member bh->b_bdev->bd_dev regardless of whether the\nbuffer head has a pointer to a block_device structure.  In the current\nimplementation, the block_device structure is set after the function\nreturns to the caller.\n\nHere, touch_buffer() is used to mark the folio/page that owns the buffer\nhead as accessed, but the common search helper for folio/page used by the\ncaller function was optimized to mark the folio/page as accessed when it\nwas reimplemented a long time ago, eliminating the need to call\ntouch_buffer() here in the first place.\n\nSo this solves the issue by eliminating the touch_buffer() call itself."
+    },
+    {
+        "Modified": "2024-12-05T12:15:00",
+        "Published": "2024-12-04T15:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-53140",
+        "impact": {},
+        "last-modified": "2024-12-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/114a61d8d94ae3a43b82446cf737fd757021b834",
+            "https://git.kernel.org/stable/c/176c41b3ca9281a9736b67c6121b03dbf0c8c08f",
+            "https://git.kernel.org/stable/c/1904fb9ebf911441f90a68e96b22aa73e4410505",
+            "https://git.kernel.org/stable/c/4e87a52133284afbd40fb522dbf96e258af52a98",
+            "https://git.kernel.org/stable/c/bbc769d2fa1b8b368c5fbe013b5b096afa3c05ca"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetlink: terminate outstanding dump on socket close\n\nNetlink supports iterative dumping of data. It provides the families\nthe following ops:\n - start - (optional) kicks off the dumping process\n - dump  - actual dump helper, keeps getting called until it returns 0\n - done  - (optional) pairs with .start, can be used for cleanup\nThe whole process is asynchronous and the repeated calls to .dump\ndon't actually happen in a tight loop, but rather are triggered\nin response to recvmsg() on the socket.\n\nThis gives the user full control over the dump, but also means that\nthe user can close the socket without getting to the end of the dump.\nTo make sure .start is always paired with .done we check if there\nis an ongoing dump before freeing the socket, and if so call .done.\n\nThe complication is that sockets can get freed from BH and .done\nis allowed to sleep. So we use a workqueue to defer the call, when\nneeded.\n\nUnfortunately this does not work correctly. What we defer is not\nthe cleanup but rather releasing a reference on the socket.\nWe have no guarantee that we own the last reference, if someone\nelse holds the socket they may release it in BH and we're back\nto square one.\n\nThe whole dance, however, appears to be unnecessary. Only the user\ncan interact with dumps, so we can clean up when socket is closed.\nAnd close always happens in process context. Some async code may\nstill access the socket after close, queue notification skbs to it etc.\nbut no dumps can start, end or otherwise make progress.\n\nDelete the workqueue and flush the dump state directly from the release\nhandler. Note that further cleanup is possible in -next, for instance\nwe now always call .done before releasing the main module reference,\nso dump doesn't have to take a reference of its own."
+    },
+    {
+        "Modified": "2024-12-05T12:15:00",
+        "Published": "2024-12-02T14:15:00",
+        "access": {},
+        "assigner": "cve@kernel.org",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-53112",
+        "impact": {},
+        "last-modified": "2024-12-05T12:15:00",
+        "references": [
+            "https://git.kernel.org/stable/c/620d22598110b0d0cb97a3fcca65fc473ea86e73",
+            "https://git.kernel.org/stable/c/737f34137844d6572ab7d473c998c7f977ff30eb",
+            "https://git.kernel.org/stable/c/843dfc804af4b338ead42331dd58081b428ecdf8",
+            "https://git.kernel.org/stable/c/ac0cfe8ac35cf1be54131b90d114087b558777ca",
+            "https://git.kernel.org/stable/c/b751c50e19d66cfb7360c0b55cf17b0722252d12"
+        ],
+        "summary": "In the Linux kernel, the following vulnerability has been resolved:\n\nocfs2: uncache inode which has failed entering the group\n\nSyzbot has reported the following BUG:\n\nkernel BUG at fs/ocfs2/uptodate.c:509!\n...\nCall Trace:\n <TASK>\n ? __die_body+0x5f/0xb0\n ? die+0x9e/0xc0\n ? do_trap+0x15a/0x3a0\n ? ocfs2_set_new_buffer_uptodate+0x145/0x160\n ? do_error_trap+0x1dc/0x2c0\n ? ocfs2_set_new_buffer_uptodate+0x145/0x160\n ? __pfx_do_error_trap+0x10/0x10\n ? handle_invalid_op+0x34/0x40\n ? ocfs2_set_new_buffer_uptodate+0x145/0x160\n ? exc_invalid_op+0x38/0x50\n ? asm_exc_invalid_op+0x1a/0x20\n ? ocfs2_set_new_buffer_uptodate+0x2e/0x160\n ? ocfs2_set_new_buffer_uptodate+0x144/0x160\n ? ocfs2_set_new_buffer_uptodate+0x145/0x160\n ocfs2_group_add+0x39f/0x15a0\n ? __pfx_ocfs2_group_add+0x10/0x10\n ? __pfx_lock_acquire+0x10/0x10\n ? mnt_get_write_access+0x68/0x2b0\n ? __pfx_lock_release+0x10/0x10\n ? rcu_read_lock_any_held+0xb7/0x160\n ? __pfx_rcu_read_lock_any_held+0x10/0x10\n ? smack_log+0x123/0x540\n ? mnt_get_write_access+0x68/0x2b0\n ? mnt_get_write_access+0x68/0x2b0\n ? mnt_get_write_access+0x226/0x2b0\n ocfs2_ioctl+0x65e/0x7d0\n ? __pfx_ocfs2_ioctl+0x10/0x10\n ? smack_file_ioctl+0x29e/0x3a0\n ? __pfx_smack_file_ioctl+0x10/0x10\n ? lockdep_hardirqs_on_prepare+0x43d/0x780\n ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10\n ? __pfx_ocfs2_ioctl+0x10/0x10\n __se_sys_ioctl+0xfb/0x170\n do_syscall_64+0xf3/0x230\n entry_SYSCALL_64_after_hwframe+0x77/0x7f\n...\n </TASK>\n\nWhen 'ioctl(OCFS2_IOC_GROUP_ADD, ...)' has failed for the particular\ninode in 'ocfs2_verify_group_and_input()', corresponding buffer head\nremains cached and subsequent call to the same 'ioctl()' for the same\ninode issues the BUG() in 'ocfs2_set_new_buffer_uptodate()' (trying\nto cache the same buffer head of that inode). Fix this by uncaching\nthe buffer head with 'ocfs2_remove_from_cache()' on error path in\n'ocfs2_group_add()'."
+    },
+    {
+        "Modified": "2024-12-05T11:15:00",
+        "Published": "2024-12-05T11:15:00",
+        "access": {},
+        "assigner": "vulseclabs@example.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-52270",
+        "impact": {},
+        "last-modified": "2024-12-05T11:15:00",
+        "references": [
+            "https://drive.proton.me/urls/Z6DHXNRZQC#jkfO38rjOiOj",
+            "https://new.space/s/ZuHoujvkjdzfY7Uihah7Yg#SKWLU_g2Cihfj4qsq9XNy6F4saxVAzD876PujiDOYfs",
+            "https://www.loom.com/share/48f63594e14c49e19840ad9cb7d60453?sid=816c6afa-0b67-4b0b-98ff-d5c58d464038",
+            "https://www.vulsec.org/advisories"
+        ],
+        "summary": "User Interface (UI) Misrepresentation of Critical Information vulnerability in DropBox Sign(HelloSign) allows Content Spoofing.\nDisplayed version does not show the layer flattened version, once download, If printed (e.g. via Google Chrome -> Examine the print preview): Will render the vulnerability only, not all layers are flattened.\nThis issue affects DropBox Sign(HelloSign): through 2024-12-04."
+    },
+    {
+        "Modified": "2024-12-05T11:15:00",
+        "Published": "2024-12-04T11:30:00",
+        "access": {},
+        "assigner": "vulseclabs@example.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-52276",
+        "impact": {},
+        "last-modified": "2024-12-05T11:15:00",
+        "references": [
+            "https://drive.proton.me/urls/QD7Z493XX4#Yn3eKAjuZA5m",
+            "https://new.space/s/3SG3wQxTSg7lq-vLzUjy-Q#mmrg4t0wMThwTqs9nogVHdLAjMFlkgFnKHn_Q8u9cCs",
+            "https://www.loom.com/share/65ce5423d2a04e0bbd2688a178d5427f",
+            "https://www.vulsec.org/advisories"
+        ],
+        "summary": "User Interface (UI) Misrepresentation of Critical Information vulnerability in DocuSign allows Content Spoofing.\n1. Displayed version does not show the layer flattened version, which is provided when the \"Print\" option is used.\n2.\u00a0Displayed version does not show the layer flattened version, which is provided when the combined download option is used.\n3. Displayed version does not show the layer flattened version, which is also the provided version when downloading the result in the uncombined option.\nOnce download, If printed (e.g. via Google Chrome -> Examine the print preview): Will render the vulnerability only, not all layers are flattened.\nThis issue affects DocuSign: through 2024-12-04."
+    },
+    {
+        "Modified": "2024-12-05T11:15:00",
+        "Published": "2024-12-04T12:15:00",
+        "access": {},
+        "assigner": "vulseclabs@example.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-52269",
+        "impact": {},
+        "last-modified": "2024-12-05T11:15:00",
+        "references": [
+            "https://www.loom.com/share/65ce5423d2a04e0bbd2688a178d5427f",
+            "https://www.vulsec.org/advisories"
+        ],
+        "summary": "User Interface (UI) Misrepresentation of Critical Information vulnerability in DocuSign allows Content Spoofing.\nThe SaaS AI assistant ignores hidden content that is rendered after signing, misleading the user.\nFor reference see:\u00a0CVE-2024-52276\nThis issue affects DocuSign: through 2024-12-04."
+    },
+    {
+        "Modified": "2024-12-05T11:15:00",
+        "Published": "2024-12-04T02:15:00",
+        "access": {},
+        "assigner": "support@hackerone.com",
+        "cvss": null,
+        "cwe": "Unknown",
+        "id": "CVE-2024-42455",
+        "impact": {},
+        "last-modified": "2024-12-05T11:15:00",
+        "references": [
+            "https://www.veeam.com/kb4693"
+        ],
+        "summary": "A vulnerability in Veeam Backup & Replication allows a low-privileged user to connect to remoting services and exploit insecure deserialization by sending a serialized temporary file collection. This exploit allows the attacker to delete any file on the system with service account privileges. The vulnerability is caused by an insufficient blacklist during the deserialization process."
+    },
+    {
         "Modified": "2024-12-05T10:31:00",
         "Published": "2024-12-05T10:31:00",
         "access": {},
@@ -188,7 +369,7 @@
         "access": {},
         "assigner": "cve-request@wordfence.com",
         "cvss": null,
-        "cwe": "CWE-284",
+        "cwe": "Unknown",
         "id": "CVE-2024-10937",
         "impact": {},
         "last-modified": "2024-12-05T09:15:00",
@@ -219,7 +400,7 @@
         "access": {},
         "assigner": "cve-request@wordfence.com",
         "cvss": null,
-        "cwe": "CWE-98",
+        "cwe": "Unknown",
         "id": "CVE-2024-11429",
         "impact": {},
         "last-modified": "2024-12-05T06:15:00",
@@ -1497,179 +1678,5 @@
             "https://forum.rukovoditel.net/viewtopic.php?t=5071"
         ],
         "summary": "Rukovoditel before 3.5.3 allows XSS via user_photo to My Page."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-04-30T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52724",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "https://github.com/onosproject/onos-kpimon/pull/120",
-            "https://github.com/onosproject/onos-kpimon/pull/120"
-        ],
-        "summary": "Open Networking Foundation SD-RAN onos-kpimon 0.4.7 allows out-of-bounds array access in the processIndicationFormat1 function."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-04-28T00:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-52722",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "http://www.openwall.com/lists/oss-security/2024/06/28/2",
-            "http://www.openwall.com/lists/oss-security/2024/06/28/2",
-            "https://cgit.ghostscript.com/cgi-bin/cgit.cgi/ghostpdl.git/commit/?id=afd7188f74918cb51b5fb89f52b54eb16e8acfd1",
-            "https://cgit.ghostscript.com/cgi-bin/cgit.cgi/ghostpdl.git/commit/?id=afd7188f74918cb51b5fb89f52b54eb16e8acfd1"
-        ],
-        "summary": "An issue was discovered in Artifex Ghostscript before 10.03.1. psi/zmisc1.c, when SAFER mode is used, allows eexec seeds other than the Type 1 standard."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-04-10T16:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-23735",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "https://help.savignano.net/snotify-email-encryption/sa-2023-11-02",
-            "https://help.savignano.net/snotify-email-encryption/sa-2023-11-02",
-            "https://help.savignano.net/snotify-email-encryption/security-advisories",
-            "https://help.savignano.net/snotify-email-encryption/security-advisories"
-        ],
-        "summary": "Cross Site Scripting (XSS) vulnerability in in the S/MIME certificate upload functionality of the User Profile pages in savignano S/Notify before 4.0.0 for Confluence allows attackers to manipulate user data via specially crafted certificate."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-04-16T22:15:00",
-        "access": {},
-        "assigner": "secalert_us@oracle.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-21105",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "https://www.oracle.com/security-alerts/cpuapr2024.html",
-            "https://www.oracle.com/security-alerts/cpuapr2024.html"
-        ],
-        "summary": "Vulnerability in the Oracle Solaris product of Oracle Systems (component: Utility).   The supported version that is affected is 11. Easily exploitable vulnerability allows high privileged attacker with logon to the infrastructure where Oracle Solaris executes to compromise Oracle Solaris.  Successful attacks require human interaction from a person other than the attacker. Successful attacks of this vulnerability can result in  unauthorized read access to a subset of Oracle Solaris accessible data. CVSS 3.1 Base Score 2.0 (Confidentiality impacts).  CVSS Vector: (CVSS:3.1/AV:L/AC:L/PR:H/UI:R/S:U/C:L/I:N/A:N)."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-03-20T06:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-28565",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "http://www.openwall.com/lists/oss-security/2024/04/11/10",
-            "http://www.openwall.com/lists/oss-security/2024/04/11/10",
-            "http://www.openwall.com/lists/oss-security/2024/04/11/2",
-            "http://www.openwall.com/lists/oss-security/2024/04/11/2",
-            "http://www.openwall.com/lists/oss-security/2024/04/11/3",
-            "http://www.openwall.com/lists/oss-security/2024/04/11/3",
-            "https://github.com/Ruanxingzhi/vul-report/tree/master/freeimage-r1909",
-            "https://github.com/Ruanxingzhi/vul-report/tree/master/freeimage-r1909"
-        ],
-        "summary": "Buffer Overflow vulnerability in open source FreeImage v.3.19.0 [r1909] allows a local attacker to cause a denial of service (DoS) via the psdParser::ReadImageData() function when reading images in PSD format."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-03-13T21:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2023-36238",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "https://github.com/Ek-Saini/security/blob/main/IDOR-Bagisto",
-            "https://github.com/Ek-Saini/security/blob/main/IDOR-Bagisto"
-        ],
-        "summary": "Insecure Direct Object Reference (IDOR) in Bagisto v.1.5.1 allows an attacker to obtain sensitive information via the invoice ID parameter."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-03-08T02:15:00",
-        "access": {},
-        "assigner": "product-security@apple.com",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-23249",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "http://seclists.org/fulldisclosure/2024/Mar/21",
-            "http://seclists.org/fulldisclosure/2024/Mar/21",
-            "https://support.apple.com/en-us/HT214084",
-            "https://support.apple.com/en-us/HT214084"
-        ],
-        "summary": "The issue was addressed with improved memory handling. This issue is fixed in macOS Sonoma 14.4. Processing a file may lead to a denial-of-service or potentially disclose memory contents."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-03-03T10:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26469",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-productdesigner-918.md",
-            "https://github.com/friends-of-presta/security-advisories/blob/main/_posts/2024-02-29-productdesigner-918.md"
-        ],
-        "summary": "Server-Side Request Forgery (SSRF) vulnerability in Tunis Soft \"Product Designer\" (productdesigner) module for PrestaShop before version 1.178.36, allows remote attackers to cause a denial of service (DoS) and escalate privileges via the url parameter in the postProcess() method."
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-03-01T16:15:00",
-        "access": {},
-        "assigner": "security@apache.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-27140",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "http://www.openwall.com/lists/oss-security/2024/03/01/2",
-            "http://www.openwall.com/lists/oss-security/2024/03/01/2",
-            "https://lists.apache.org/thread/xrn6nt904ozh3jym60c3f5hj2fb75pjy",
-            "https://lists.apache.org/thread/xrn6nt904ozh3jym60c3f5hj2fb75pjy"
-        ],
-        "summary": "** UNSUPPORTED WHEN ASSIGNED **\n\nImproper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in Apache Archiva.\n\nThis issue affects Apache Archiva: from 2.0.0.\n\nAs this project is retired, we do not plan to release a version that fixes this issue. Users are recommended to find an alternative or restrict access to the instance to trusted users. Alternatively, you could configure a HTTP proxy in front of your Archiva instance to only forward requests that do not have malicious characters in the URL.\n\nNOTE: This vulnerability only affects products that are no longer supported by the maintainer.\n\n"
-    },
-    {
-        "Modified": "2024-12-04T21:15:00",
-        "Published": "2024-02-28T22:15:00",
-        "access": {},
-        "assigner": "cve@mitre.org",
-        "cvss": null,
-        "cwe": "Unknown",
-        "id": "CVE-2024-26450",
-        "impact": {},
-        "last-modified": "2024-12-04T21:15:00",
-        "references": [
-            "https://github.com/Piwigo/Piwigo/security/advisories/GHSA-p362-cfpj-q55f",
-            "https://github.com/Piwigo/Piwigo/security/advisories/GHSA-p362-cfpj-q55f"
-        ],
-        "summary": "An issue exists within Piwigo before v.14.2.0 allowing a malicious user to take over the application. This exploit involves chaining a Cross Site Request Forgery vulnerability to issue a Stored Cross Site Scripting payload stored within an Admin user's dashboard, executing remote JavaScript. This can be used to upload a new PHP file under an administrator and directly call that file from the victim's instance to connect back to a malicious listener."
     }
 ]
